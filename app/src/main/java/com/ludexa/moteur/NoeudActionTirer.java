@@ -38,6 +38,9 @@ public class NoeudActionTirer extends NoeudBase {
                     if (modele != null) {
                         ObjetBase clone = modele.clonerProfond();
                         
+                        // Sécurisation de l'identité du clone
+                        clone.nom = modele.nom + "_clone_" + System.currentTimeMillis();
+                        
                         // 1. Positionnement au centre du point de départ
                         clone.x = spawnPoint.x + (spawnPoint.largeur / 2f) - (clone.largeur / 2f);
                         clone.y = spawnPoint.y + (spawnPoint.hauteur / 2f) - (clone.hauteur / 2f);
