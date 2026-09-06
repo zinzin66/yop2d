@@ -111,6 +111,7 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_opacite"), Traducteur.get("cat_apparence_objets"), "NoeudActionOpacite")); 
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_mode_affichage"), Traducteur.get("cat_apparence_objets"), "NoeudActionModeAffichage")); 
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_parallaxe"), Traducteur.get("cat_apparence_objets"), "NoeudActionParallaxe")); 
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_tirer_nom"), Traducteur.get("cat_apparence_objets"), "NoeudActionTirer"));
         
         // TEXTES & DIALOGUES
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_modifier_texte"), Traducteur.get("cat_textes_dialogues"), "NoeudActionModifierTexte"));
