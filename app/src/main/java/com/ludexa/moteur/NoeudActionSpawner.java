@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class NoeudActionSpawner extends NoeudBase {
+    
+    // Conservation stricte des champs originaux pour éviter toute régression de sauvegarde JSON
     private transient ObjetBase cible; 
     private String nomCibleObjet;
     private String nomModele = ""; 
@@ -91,6 +93,11 @@ public class NoeudActionSpawner extends NoeudBase {
 
     @Override
     public ObjetBase getCibleObjet() {
+        // CORRECTION : Prise en charge de l'objet impliqué (manquant dans l'original)
+        if ("__OBJET_IMPLIQUE__".equals(nomCibleObjet)) {
+            return MoteurLogique.dernierObjetImplique;
+        }
+        
         if (cible == null && nomCibleObjet != null && contexteApplication != null) {
             try {
                 java.lang.reflect.Field sceneField = contexteApplication.getClass().getField("sceneActive");
