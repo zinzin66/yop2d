@@ -5,6 +5,13 @@ import java.util.List;
 
 public class NoeudActionTirer extends NoeudBase {
     
+    // Champs obligatoires pour que le Blueprint sérialise (sauvegarde) les cibles
+    private transient ObjetBase cible; 
+    public String nomCibleObjet;
+    
+    private transient ObjetBase cibleB; 
+    public String nomCibleObjetB;
+
     private String nomModele = ""; 
     private String modeDirection; 
     private String vitesseStr = "10.0"; 
@@ -38,14 +45,15 @@ public class NoeudActionTirer extends NoeudBase {
                     if (modele != null) {
                         ObjetBase clone = modele.clonerProfond();
                         
-                        // Sécurisation de l'identité du clone
+                        // CORRECTION CRITIQUE : Identité unique du clone.
+                        // Empêche le moteur de détruire le modèle d'origine lors des collisions.
                         clone.nom = modele.nom + "_clone_" + System.currentTimeMillis();
                         
-                        // 1. Positionnement au centre du point de départ
+                        // 1. Positionnement
                         clone.x = spawnPoint.x + (spawnPoint.largeur / 2f) - (clone.largeur / 2f);
                         clone.y = spawnPoint.y + (spawnPoint.hauteur / 2f) - (clone.hauteur / 2f);
                         
-                        // 2. Calcul de la rotation selon le mode
+                        // 2. Calcul de la rotation
                         if (modeDirection != null && modeDirection.equals(Traducteur.get("opt_vers_cible"))) {
                             ObjetBase targetB = getCibleObjetB(); 
                             if (targetB != null) {
@@ -130,9 +138,61 @@ public class NoeudActionTirer extends NoeudBase {
         return super.getOptionsChoixListe(nomParametre);
     }
 
+    // --- CIBLE A : Point de départ ---
     @Override
     public boolean requiertCibleObjet() { return true; }
 
     @Override
+    public void setCibleObjet(ObjetBase objet) {
+        this.cible = objet;
+        this.nomCibleObjet = (objet != null) ? objet.nom : null;
+    }
+
+    @Override
+    public ObjetBase getCibleObjet() {
+        if ("__OBJET_IMPLIQUE__".equals(nomCibleObjet)) {
+            return MoteurLogique.dernierObjetImplique;
+        }
+        if (cible == null && nomCibleObjet != null && contexteApplication != null) {
+            try {
+                java.lang.reflect.Field sceneField = contexteApplication.getClass().getField("sceneActive");
+                Scene s = (Scene) sceneField.get(contexteApplication);
+                if (s != null && s.objets != null) {
+                    for (ObjetBase o : s.objets) {
+                        if (nomCibleObjet.equals(o.nom)) { cible = o; break; }
+                    }
+                }
+            } catch (Exception e) {}
+        }
+        return cible;
+    }
+
+    // --- CIBLE B : Objet à viser ---
+    @Override
     public boolean requiertCibleObjetB() { return true; }
+
+    @Override
+    public void setCibleObjetB(ObjetBase objet) {
+        this.cibleB = objet;
+        this.nomCibleObjetB = (objet != null) ? objet.nom : null;
+    }
+
+    @Override
+    public ObjetBase getCibleObjetB() {
+        if ("__OBJET_IMPLIQUE__".equals(nomCibleObjetB)) {
+            return MoteurLogique.dernierObjetImplique;
+        }
+        if (cibleB == null && nomCibleObjetB != null && contexteApplication != null) {
+            try {
+                java.lang.reflect.Field sceneField = contexteApplication.getClass().getField("sceneActive");
+                Scene s = (Scene) sceneField.get(contexteApplication);
+                if (s != null && s.objets != null) {
+                    for (ObjetBase o : s.objets) {
+                        if (nomCibleObjetB.equals(o.nom)) { cibleB = o; break; }
+                    }
+                }
+            } catch (Exception e) {}
+        }
+        return cibleB;
+    }
 }
