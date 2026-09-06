@@ -5,17 +5,9 @@ import java.util.List;
 
 public class NoeudActionTirer extends NoeudBase {
     
-    // Cible A : Le point de départ (ex: Le Canon)
-    private transient ObjetBase cible; 
-    private String nomCibleObjet;
-    
-    // Cible B : L'objet à viser (ex: Le Joueur)
-    private transient ObjetBase cibleB; 
-    private String nomCibleObjetB;
-
     private String nomModele = ""; 
     private String modeDirection; 
-    private String vitesseStr = "10.0"; // Valeur par défaut textuelle
+    private String vitesseStr = "10.0"; 
 
     public NoeudActionTirer() {
         super(genererId(), Traducteur.get("noeud_tirer_nom"), Traducteur.get("cat_apparence_objets"));
@@ -28,7 +20,7 @@ public class NoeudActionTirer extends NoeudBase {
 
     @Override
     public void executer() {
-        ObjetBase spawnPoint = getCibleObjet();
+        ObjetBase spawnPoint = getCibleObjet(); 
         if (spawnPoint != null && contexteApplication != null) {
             try {
                 java.lang.reflect.Field sceneField = contexteApplication.getClass().getField("sceneActive");
@@ -52,7 +44,7 @@ public class NoeudActionTirer extends NoeudBase {
                         
                         // 2. Calcul de la rotation selon le mode
                         if (modeDirection != null && modeDirection.equals(Traducteur.get("opt_vers_cible"))) {
-                            ObjetBase targetB = getCibleObjetB();
+                            ObjetBase targetB = getCibleObjetB(); 
                             if (targetB != null) {
                                 float centreCloneX = clone.x + (clone.largeur / 2f);
                                 float centreCloneY = clone.y + (clone.hauteur / 2f);
@@ -135,55 +127,9 @@ public class NoeudActionTirer extends NoeudBase {
         return super.getOptionsChoixListe(nomParametre);
     }
 
-    // --- CIBLE A : Point de départ ---
     @Override
     public boolean requiertCibleObjet() { return true; }
 
     @Override
-    public void setCibleObjet(ObjetBase objet) {
-        this.cible = objet;
-        this.nomCibleObjet = (objet != null) ? objet.nom : null;
-    }
-
-    @Override
-    public ObjetBase getCibleObjet() {
-        if (cible == null && nomCibleObjet != null && contexteApplication != null) {
-            try {
-                java.lang.reflect.Field sceneField = contexteApplication.getClass().getField("sceneActive");
-                Scene s = (Scene) sceneField.get(contexteApplication);
-                if (s != null && s.objets != null) {
-                    for (ObjetBase o : s.objets) {
-                        if (nomCibleObjet.equals(o.nom)) { cible = o; break; }
-                    }
-                }
-            } catch (Exception e) {}
-        }
-        return cible;
-    }
-
-    // --- CIBLE B : Objet à viser ---
-    @Override
     public boolean requiertCibleObjetB() { return true; }
-
-    @Override
-    public void setCibleObjetB(ObjetBase objet) {
-        this.cibleB = objet;
-        this.nomCibleObjetB = (objet != null) ? objet.nom : null;
-    }
-
-    @Override
-    public ObjetBase getCibleObjetB() {
-        if (cibleB == null && nomCibleObjetB != null && contexteApplication != null) {
-            try {
-                java.lang.reflect.Field sceneField = contexteApplication.getClass().getField("sceneActive");
-                Scene s = (Scene) sceneField.get(contexteApplication);
-                if (s != null && s.objets != null) {
-                    for (ObjetBase o : s.objets) {
-                        if (nomCibleObjetB.equals(o.nom)) { cibleB = o; break; }
-                    }
-                }
-            } catch (Exception e) {}
-        }
-        return cibleB;
-    }
 }
