@@ -1,240 +1,100 @@
-// haut 1
-package com.ludexa.moteur;
+public ObjetBase clonerProfond() {
+    ObjetBase copie = new ObjetBase();
 
-import android.graphics.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+    // IMPORTANT : ne pas recopier l'ID du modèle.
+    // Le constructeur de ObjetBase() a déjà créé un nouvel ID unique.
 
-public class ObjetBase {
-    public String id;
-    public String nom;
-    public float x;
-    public float y;
-    public float largeur;
-    public float hauteur;
-    
-    public int zOrder = 0;
-    public boolean visible = true;
-    public boolean estDeplacable = false;
-    
-    public boolean estVerrouille = false;
-    public boolean estRamassable = false;
-    public boolean estZoneDeClic = false;
-    
-    public transient boolean estTouche = false;
-    
-    public int couleur = Color.BLUE;
-    public String cheminImage = null;
-    
-    public String cheminImagePresse = null;
-    public String cheminImageDesactive = null;
-    public boolean estDesactive = false;
-    
-    public String cibleJoystickId = null;
-    
-    public String sceneLieeId = null;
-    
-    public HashMap<String, String> surchargesVariables = new HashMap<>();
-    
-    public String filtreCouleur = "Aucun";
-    
-    public boolean clignotementActif = false;
-    public long clignotementVitesseMs = 500;
-    public long clignotementDureeTotalMs = 0;
-    public long tempsDebutClignotement = 0;
-    public transient boolean etatVisibleClignotement = true; 
-    
-    public boolean surbrillanceActive = false;
-    public String couleurSurbrillance = "Jaune";
-    
-    public float vitesseAvanceContinue = 0f;
-    public String idCiblePoursuite = null;
-    public float vitessePoursuite = 0f;
-    public boolean fuiteActive = false;
-    
-    public float intentionDeplacementX = 0f;
-    public float intentionDeplacementY = 0f;
-    
-    public float facteurParallaxe = 1.0f;
-    
-    public String tag = ""; 
+    copie.nom = this.nom;
+    copie.x = this.x;
+    copie.y = this.y;
+    copie.largeur = this.largeur;
+    copie.hauteur = this.hauteur;
+    copie.zOrder = this.zOrder;
+    copie.visible = this.visible;
+    copie.estDeplacable = this.estDeplacable;
+    copie.estVerrouille = this.estVerrouille;
+    copie.estRamassable = this.estRamassable;
+    copie.estZoneDeClic = this.estZoneDeClic;
+    copie.couleur = this.couleur;
+    copie.cheminImage = this.cheminImage;
+    copie.cheminImagePresse = this.cheminImagePresse;
+    copie.cheminImageDesactive = this.cheminImageDesactive;
+    copie.estDesactive = this.estDesactive;
+    copie.cibleJoystickId = this.cibleJoystickId;
+    copie.sceneLieeId = this.sceneLieeId;
 
-    public String type = "carre"; 
-    public boolean afficherFondColore = true;
-    
-    public String contenuTexte = "";
-    public String cheminPolice = null;
-    public float tailleFonte = 24f;
-    
-    public float scaleX = 1.0f;
-    public float scaleY = 1.0f;
-    public float rotation = 0f;
-    
-    public String parentId = null;
-    public float alpha = 1.0f;
+    copie.surchargesVariables = new HashMap<>(this.surchargesVariables);
 
-    public boolean estPhysique = false;
-    public boolean estStatique = true;
-    public float vitesseY = 0f;
-    public float rebond = 0.4f;
-    public float graviteScale = 1.0f;
+    copie.filtreCouleur = this.filtreCouleur;
+    copie.clignotementActif = this.clignotementActif;
+    copie.clignotementVitesseMs = this.clignotementVitesseMs;
+    copie.clignotementDureeTotalMs = this.clignotementDureeTotalMs;
+    copie.tempsDebutClignotement = this.tempsDebutClignotement;
+    copie.etatVisibleClignotement = this.etatVisibleClignotement;
 
-    public HashMap<String, List<String>> animations = new HashMap<>();
-    public String animationActive = null;
-    public int frameCourante = 0;
-    public long dernierTempsFrame = 0;
-    public int vitesseFps = 8;
-    public boolean boucleAnimation = false;
-    public boolean animationEnCours = false;
+    copie.surbrillanceActive = this.surbrillanceActive;
+    copie.couleurSurbrillance = this.couleurSurbrillance;
 
-    public boolean sautillementActif = false;
-    public float sautillementIntensite = 0f;
-    public long sautillementDureeMs = 0;
-    public long tempsDebutSautillement = 0;
-    
-    public boolean sautillementInfiniMouvement = false;
-    public transient float ancienneX = 0f;
-    public transient float ancienneY = 0f;
+    copie.vitesseAvanceContinue = this.vitesseAvanceContinue;
+    copie.idCiblePoursuite = this.idCiblePoursuite;
+    copie.vitessePoursuite = this.vitessePoursuite;
+    copie.fuiteActive = this.fuiteActive;
 
-    // Variables locales de l'instance
-    public List<Variable> variablesLocales = new ArrayList<>();
+    copie.intentionDeplacementX = this.intentionDeplacementX;
+    copie.intentionDeplacementY = this.intentionDeplacementY;
+    copie.facteurParallaxe = this.facteurParallaxe;
 
-    public transient String idCloneRacine = null;
+    copie.tag = this.tag;
+    copie.type = this.type;
+    copie.afficherFondColore = this.afficherFondColore;
+    copie.contenuTexte = this.contenuTexte;
+    copie.cheminPolice = this.cheminPolice;
+    copie.tailleFonte = this.tailleFonte;
 
-    public ObjetBase() {
-        this.id = UUID.randomUUID().toString();
-    }
+    copie.scaleX = this.scaleX;
+    copie.scaleY = this.scaleY;
+    copie.rotation = this.rotation;
+    copie.parentId = this.parentId;
+    copie.alpha = this.alpha;
 
-    public ObjetBase(String nom, float x, float y, float largeur, float hauteur) {
-        this.id = UUID.randomUUID().toString();
-        this.nom = nom;
-        this.x = x;
-        this.y = y;
-        this.largeur = largeur;
-        this.hauteur = hauteur;
-        this.ancienneX = x;
-        this.ancienneY = y;
-    }
+    copie.estPhysique = this.estPhysique;
+    copie.estStatique = this.estStatique;
+    copie.vitesseY = this.vitesseY;
+    copie.rebond = this.rebond;
+    copie.graviteScale = this.graviteScale;
 
-    public ObjetBase clonerProfond() {
-        ObjetBase copie = new ObjetBase();
-        copie.id = this.id; 
-        copie.nom = this.nom;
-        copie.x = this.x;
-        copie.y = this.y;
-        copie.largeur = this.largeur;
-        copie.hauteur = this.hauteur;
-        copie.zOrder = this.zOrder;
-        copie.visible = this.visible;
-        copie.estDeplacable = this.estDeplacable;
-        copie.estVerrouille = this.estVerrouille;
-        copie.estRamassable = this.estRamassable;
-        copie.estZoneDeClic = this.estZoneDeClic;
-        copie.couleur = this.couleur;
-        copie.cheminImage = this.cheminImage;
-        
-        copie.cheminImagePresse = this.cheminImagePresse;
-        copie.cheminImageDesactive = this.cheminImageDesactive;
-        copie.estDesactive = this.estDesactive;
-        copie.cibleJoystickId = this.cibleJoystickId;
-        copie.sceneLieeId = this.sceneLieeId; 
-        
-        copie.surchargesVariables = new HashMap<>(this.surchargesVariables);
-        
-        copie.filtreCouleur = this.filtreCouleur;
-        copie.clignotementActif = this.clignotementActif;
-        copie.clignotementVitesseMs = this.clignotementVitesseMs;
-        copie.clignotementDureeTotalMs = this.clignotementDureeTotalMs;
-        copie.tempsDebutClignotement = this.tempsDebutClignotement;
-        copie.etatVisibleClignotement = this.etatVisibleClignotement;
-        copie.surbrillanceActive = this.surbrillanceActive;
-        copie.couleurSurbrillance = this.couleurSurbrillance;
-        
-        copie.vitesseAvanceContinue = this.vitesseAvanceContinue;
-        copie.idCiblePoursuite = this.idCiblePoursuite;
-        copie.vitessePoursuite = this.vitessePoursuite;
-        copie.fuiteActive = this.fuiteActive;
-        
-        copie.intentionDeplacementX = this.intentionDeplacementX;
-        copie.intentionDeplacementY = this.intentionDeplacementY;
-        
-        copie.facteurParallaxe = this.facteurParallaxe;
-        copie.tag = this.tag; 
-        copie.type = this.type;
-        copie.afficherFondColore = this.afficherFondColore;
-        copie.contenuTexte = this.contenuTexte;
-        copie.cheminPolice = this.cheminPolice;
-        copie.tailleFonte = this.tailleFonte;
-        copie.scaleX = this.scaleX;
-        copie.scaleY = this.scaleY;
-        copie.rotation = this.rotation;
-        copie.parentId = this.parentId;
-        copie.alpha = this.alpha;
-        
-        copie.estPhysique = this.estPhysique;
-        copie.estStatique = this.estStatique;
-        copie.vitesseY = this.vitesseY;
-        copie.rebond = this.rebond;
-        copie.graviteScale = this.graviteScale;
-        
-        copie.sautillementActif = this.sautillementActif;
-        copie.sautillementIntensite = this.sautillementIntensite;
-        copie.sautillementDureeMs = this.sautillementDureeMs;
-        copie.tempsDebutSautillement = this.tempsDebutSautillement;
-        
-        copie.sautillementInfiniMouvement = this.sautillementInfiniMouvement;
-        copie.ancienneX = this.x;
-        copie.ancienneY = this.y;
+    copie.sautillementActif = this.sautillementActif;
+    copie.sautillementIntensite = this.sautillementIntensite;
+    copie.sautillementDureeMs = this.sautillementDureeMs;
+    copie.tempsDebutSautillement = this.tempsDebutSautillement;
+    copie.sautillementInfiniMouvement = this.sautillementInfiniMouvement;
 
-        copie.variablesLocales = new ArrayList<>();
-        if (this.variablesLocales != null) {
-            for (Variable v : this.variablesLocales) {
-                // CORRECTION : Instanciation avec 3 chaînes de caractères.
-                Variable nouvVar = new Variable(v.nom, v.type, "");
-                nouvVar.valeur = v.valeur;
-                copie.variablesLocales.add(nouvVar);
-            }
+    copie.ancienneX = this.x;
+    copie.ancienneY = this.y;
+
+    copie.variablesLocales = new ArrayList<>();
+
+    if (this.variablesLocales != null) {
+        for (Variable v : this.variablesLocales) {
+            Variable nouvVar = new Variable(v.nom, v.type, "");
+            nouvVar.valeur = v.valeur;
+            copie.variablesLocales.add(nouvVar);
         }
-        
-        for (Map.Entry<String, List<String>> entry : this.animations.entrySet()) {
-            copie.animations.put(entry.getKey(), new ArrayList<>(entry.getValue()));
-        }
-        copie.animationActive = this.animationActive;
-        copie.frameCourante = this.frameCourante;
-        copie.dernierTempsFrame = this.dernierTempsFrame;
-        copie.vitesseFps = this.vitesseFps;
-        copie.boucleAnimation = this.boucleAnimation;
-        copie.animationEnCours = this.animationEnCours;
-
-        return copie;
     }
 
-    public static boolean verifierBoucleParent(String idEnfant, String idParentPropose, List<ObjetBase> objets) {
-        if (idParentPropose == null) return false;
-        if (idEnfant.equals(idParentPropose)) return true;
-        
-        String curParentId = idParentPropose;
-        while (curParentId != null) {
-            ObjetBase parentObj = null;
-            for (ObjetBase o : objets) {
-                if (o.id.equals(curParentId)) {
-                    parentObj = o;
-                    break;
-                }
-            }
-            if (parentObj != null) {
-                if (idEnfant.equals(parentObj.parentId)) {
-                    return true;
-                }
-                curParentId = parentObj.parentId;
-            } else {
-                break;
-            }
-        }
-        return false;
+    for (Map.Entry<String, List<String>> entry : this.animations.entrySet()) {
+        copie.animations.put(
+            entry.getKey(),
+            new ArrayList<>(entry.getValue())
+        );
     }
+
+    copie.animationActive = this.animationActive;
+    copie.frameCourante = this.frameCourante;
+    copie.dernierTempsFrame = this.dernierTempsFrame;
+    copie.vitesseFps = this.vitesseFps;
+    copie.boucleAnimation = this.boucleAnimation;
+    copie.animationEnCours = this.animationEnCours;
+
+    return copie;
 }
-// bas 1
