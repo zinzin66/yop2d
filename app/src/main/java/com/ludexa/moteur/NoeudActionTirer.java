@@ -5,16 +5,9 @@ import java.util.List;
 
 public class NoeudActionTirer extends NoeudBase {
     
-    // Champs obligatoires pour que le Blueprint sérialise (sauvegarde) les cibles
-    private transient ObjetBase cible; 
-    public String nomCibleObjet;
-    
-    private transient ObjetBase cibleB; 
-    public String nomCibleObjetB;
-
-    private String nomModele = ""; 
-    private String modeDirection; 
-    private String vitesseStr = "10.0"; 
+    public String nomModele = ""; 
+    public String modeDirection; 
+    public String vitesseStr = "10.0"; 
 
     public NoeudActionTirer() {
         super(genererId(), Traducteur.get("noeud_tirer_nom"), Traducteur.get("cat_apparence_objets"));
@@ -27,6 +20,7 @@ public class NoeudActionTirer extends NoeudBase {
 
     @Override
     public void executer() {
+        // Appelle directement la méthode de la classe mère qui est parfaitement synchronisée
         ObjetBase spawnPoint = getCibleObjet(); 
         if (spawnPoint != null && contexteApplication != null) {
             try {
@@ -36,7 +30,8 @@ public class NoeudActionTirer extends NoeudBase {
                     
                     ObjetBase modele = null;
                     for (ObjetBase o : s.objets) {
-                        if (nomModele.equals(o.nom)) {
+                        // Le .trim() sécurise la lecture si un espace s'est glissé dans le champ de texte
+                        if (nomModele != null && nomModele.trim().equals(o.nom)) {
                             modele = o;
                             break;
                         }
@@ -45,8 +40,7 @@ public class NoeudActionTirer extends NoeudBase {
                     if (modele != null) {
                         ObjetBase clone = modele.clonerProfond();
                         
-                        // CORRECTION CRITIQUE : Identité unique du clone.
-                        // Empêche le moteur de détruire le modèle d'origine lors des collisions.
+                        // Sécurisation de l'identité du clone pour éviter la destruction du modèle racine
                         clone.nom = modele.nom + "_clone_" + System.currentTimeMillis();
                         
                         // 1. Positionnement
@@ -138,61 +132,10 @@ public class NoeudActionTirer extends NoeudBase {
         return super.getOptionsChoixListe(nomParametre);
     }
 
-    // --- CIBLE A : Point de départ ---
+    // Seules surcharges obligatoires : on indique à l'éditeur d'afficher les deux boutons de cible
     @Override
     public boolean requiertCibleObjet() { return true; }
 
     @Override
-    public void setCibleObjet(ObjetBase objet) {
-        this.cible = objet;
-        this.nomCibleObjet = (objet != null) ? objet.nom : null;
-    }
-
-    @Override
-    public ObjetBase getCibleObjet() {
-        if ("__OBJET_IMPLIQUE__".equals(nomCibleObjet)) {
-            return MoteurLogique.dernierObjetImplique;
-        }
-        if (cible == null && nomCibleObjet != null && contexteApplication != null) {
-            try {
-                java.lang.reflect.Field sceneField = contexteApplication.getClass().getField("sceneActive");
-                Scene s = (Scene) sceneField.get(contexteApplication);
-                if (s != null && s.objets != null) {
-                    for (ObjetBase o : s.objets) {
-                        if (nomCibleObjet.equals(o.nom)) { cible = o; break; }
-                    }
-                }
-            } catch (Exception e) {}
-        }
-        return cible;
-    }
-
-    // --- CIBLE B : Objet à viser ---
-    @Override
     public boolean requiertCibleObjetB() { return true; }
-
-    @Override
-    public void setCibleObjetB(ObjetBase objet) {
-        this.cibleB = objet;
-        this.nomCibleObjetB = (objet != null) ? objet.nom : null;
-    }
-
-    @Override
-    public ObjetBase getCibleObjetB() {
-        if ("__OBJET_IMPLIQUE__".equals(nomCibleObjetB)) {
-            return MoteurLogique.dernierObjetImplique;
-        }
-        if (cibleB == null && nomCibleObjetB != null && contexteApplication != null) {
-            try {
-                java.lang.reflect.Field sceneField = contexteApplication.getClass().getField("sceneActive");
-                Scene s = (Scene) sceneField.get(contexteApplication);
-                if (s != null && s.objets != null) {
-                    for (ObjetBase o : s.objets) {
-                        if (nomCibleObjetB.equals(o.nom)) { cibleB = o; break; }
-                    }
-                }
-            } catch (Exception e) {}
-        }
-        return cibleB;
-    }
 }
