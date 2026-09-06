@@ -110,6 +110,17 @@ public class Traducteur {
         if (cle.equals("erreur_aucune_autre_scene")) return "Aucune autre scène disponible.";
         if (cle.equals("insp_btn_editer_scene_liee")) return "Éditer la scène source ➔";
         if (cle.equals("insp_erreur_scene_introuvable")) return "Erreur : Scène introuvable";
+
+
+                // --- NOUVEAU NOEUD TIRER ---
+        if (cle.equals("noeud_tirer_nom")) return "Tirer un objet";
+        if (cle.equals("param_nom_modele")) return "Nom Objet à cloner";
+        if (cle.equals("param_mode_direction")) return "Mode de direction";
+        if (cle.equals("param_vitesse")) return "Vitesse du projectile";
+        if (cle.equals("opt_angle_depart")) return "Angle du point de départ";
+        if (cle.equals("opt_vers_cible")) return "Vers une cible";
+        if (cle.equals("port_entrer")) return "Entrer";
+        if (cle.equals("port_suivant")) return "Suivant";
         
 
         return "[" + cle + "]";

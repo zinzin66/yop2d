@@ -488,7 +488,16 @@
     "insp_sep_variables_objet": "Object Variables",
   "insp_btn_ajouter_variable": "Add Variable",
   "insp_titre_ajouter_variable": "New Variable",
-  "insp_hint_nom_variable": "Variable name"
+  "insp_hint_nom_variable": "Variable name",
+    "noeud_tirer_nom": "Shoot an object",
+  "param_nom_modele": "Name of object to clone",
+  "param_mode_direction": "Direction mode",
+  "param_vitesse": "Projectile speed",
+  "opt_angle_depart": "Start point angle",
+  "opt_vers_cible": "Towards a target",
+  "port_entrer": "Enter",
+  "port_suivant": "Next"
+  
   
   
   

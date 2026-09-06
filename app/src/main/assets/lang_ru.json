@@ -488,7 +488,16 @@
     "insp_sep_variables_objet": "Переменные объекта",
   "insp_btn_ajouter_variable": "Добавить переменную",
   "insp_titre_ajouter_variable": "Новая переменная",
-  "insp_hint_nom_variable": "Имя переменной"
+  "insp_hint_nom_variable": "Имя переменной",
+    "noeud_tirer_nom": "Стрелять объектом",
+  "param_nom_modele": "Имя клонируемого объекта",
+  "param_mode_direction": "Режим направления",
+  "param_vitesse": "Скорость снаряда",
+  "opt_angle_depart": "Угол начальной точки",
+  "opt_vers_cible": "В направлении цели",
+  "port_entrer": "Вход",
+  "port_suivant": "Дальше"
+  
   
   
   
