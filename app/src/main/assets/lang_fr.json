@@ -488,7 +488,16 @@
     "insp_sep_variables_objet": "Variables de l'objet",
   "insp_btn_ajouter_variable": "Ajouter une variable",
   "insp_titre_ajouter_variable": "Nouvelle variable",
-  "insp_hint_nom_variable": "Nom de la variable"
+  "insp_hint_nom_variable": "Nom de la variable",
+    "noeud_tirer_nom": "Tirer un objet",
+  "param_nom_modele": "Nom Objet à cloner",
+  "param_mode_direction": "Mode de direction",
+  "param_vitesse": "Vitesse du projectile",
+  "opt_angle_depart": "Angle du point de départ",
+  "opt_vers_cible": "Vers une cible",
+  "port_entrer": "Entrer",
+  "port_suivant": "Suivant"
+  
   
   
   
