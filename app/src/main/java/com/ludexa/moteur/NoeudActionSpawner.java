@@ -1,13 +1,12 @@
-// haut 1
 package com.ludexa.moteur;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class NoeudActionSpawner extends NoeudBase {
-    private transient ObjetBase cible; // L'objet d'où sortira le clone (ex: Le Canon)
+    private transient ObjetBase cible; 
     private String nomCibleObjet;
-    private String nomModele = ""; // Le nom de l'objet à cloner (ex: La Balle)
+    private String nomModele = ""; 
 
     public NoeudActionSpawner() {
         super(genererId(), "Générer un clone (Spawner)", "Apparence & Objets");
@@ -34,6 +33,10 @@ public class NoeudActionSpawner extends NoeudBase {
                     
                     if (modele != null) {
                         ObjetBase clone = modele.clonerProfond();
+                        
+                        // Sécurisation de l'identité du clone
+                        clone.nom = modele.nom + "_clone_" + System.currentTimeMillis();
+                        
                         // Centre le clone exactement sur l'objet qui sert de Spawner
                         clone.x = spawnPoint.x + (spawnPoint.largeur / 2f) - (clone.largeur / 2f);
                         clone.y = spawnPoint.y + (spawnPoint.hauteur / 2f) - (clone.hauteur / 2f);
@@ -102,4 +105,3 @@ public class NoeudActionSpawner extends NoeudBase {
         return cible;
     }
 }
-// bas 1
