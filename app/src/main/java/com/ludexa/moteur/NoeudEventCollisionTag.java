@@ -1,4 +1,3 @@
-// haut 1
 package com.ludexa.moteur;
 
 import java.util.HashSet;
@@ -7,37 +6,46 @@ import java.util.Set;
 public class NoeudEventCollisionTag extends NoeudBase {
 
     private transient ObjetBase cible;
-    private transient Set<String> objetsEnCollision = new HashSet<>();
+
+    private transient Set<String> objetsEnCollision =
+            new HashSet<>();
 
     public NoeudEventCollisionTag() {
-        super(genererId(), "Si objet touche Tag", "Événements");
+        super(
+                genererId(),
+                "Si objet touche Tag",
+                "Événements"
+        );
 
         this.ajouterPort(
-            new Port("Sortie", Port.TYPE_EXECUTION_SORTIE)
+                new Port(
+                        "Sortie",
+                        Port.TYPE_EXECUTION_SORTIE
+                )
         );
 
         this.ajouterParametre(
-            "Tag",
-            "",
-            "TYPE_CHOIX_TAG"
+                "Tag",
+                "",
+                "TYPE_CHOIX_TAG"
         );
     }
 
     @Override
     public void executer() {
-
         /*
-         * Le moteur a déjà placé le bon objet dans :
+         * CORRECTION IMPORTANTE :
          *
-         * MoteurLogique.dernierObjetImplique
+         * On ne recherche plus l'objet dans la scène à partir de son ID.
+         * Cette recherche pouvait retrouver l'objet original au lieu du clone.
          *
-         * Il ne faut surtout pas refaire une recherche dans la scène
-         * avec un ID, car cela pouvait retrouver le modèle original.
+         * MoteurLogique.dernierObjetImplique contient déjà l'objet
+         * réellement impliqué dans la collision.
          */
 
         DiagLogger.log(
-            NoeudBase.cheminProjetCourant,
-            "COLLISION_TAG executer() appele, propagation Sortie..."
+                NoeudBase.cheminProjetCourant,
+                "COLLISION_TAG executer() appele, propagation Sortie..."
         );
 
         propagerExecution("Sortie");
@@ -64,7 +72,6 @@ public class NoeudEventCollisionTag extends NoeudBase {
 
     @Override
     public ObjetBase getCibleObjet() {
-
         if (cibleObjetResolue != null) {
             return cibleObjetResolue;
         }
@@ -74,11 +81,12 @@ public class NoeudEventCollisionTag extends NoeudBase {
         }
 
         if (nomCibleObjet != null) {
-
             if (NoeudBase.sceneActiveCourante != null
                     && NoeudBase.sceneActiveCourante.objets != null) {
 
-                for (ObjetBase o : NoeudBase.sceneActiveCourante.objets) {
+                for (ObjetBase o
+                        : NoeudBase.sceneActiveCourante.objets) {
+
                     if (nomCibleObjet.equals(o.nom)) {
                         return o;
                     }
@@ -88,7 +96,9 @@ public class NoeudEventCollisionTag extends NoeudBase {
             if (NoeudBase.sceneHudActiveCourante != null
                     && NoeudBase.sceneHudActiveCourante.objets != null) {
 
-                for (ObjetBase o : NoeudBase.sceneHudActiveCourante.objets) {
+                for (ObjetBase o
+                        : NoeudBase.sceneHudActiveCourante.objets) {
+
                     if (nomCibleObjet.equals(o.nom)) {
                         return o;
                     }
