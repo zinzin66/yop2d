@@ -490,7 +490,16 @@
     "insp_sep_variables_objet": "オブジェクト変数",
   "insp_btn_ajouter_variable": "変数を追加",
   "insp_titre_ajouter_variable": "新しい変数",
-  "insp_hint_nom_variable": "変数名"
+  "insp_hint_nom_variable": "変数名",
+    "noeud_tirer_nom": "オブジェクトを発射",
+  "param_nom_modele": "クローンするオブジェクト名",
+  "param_mode_direction": "方向モード",
+  "param_vitesse": "発射体の速度",
+  "opt_angle_depart": "始点の角度",
+  "opt_vers_cible": "ターゲットへ",
+  "port_entrer": "入力",
+  "port_suivant": "次へ"
+  
   
   
   
