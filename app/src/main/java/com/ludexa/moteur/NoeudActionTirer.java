@@ -5,9 +5,9 @@ import java.util.List;
 
 public class NoeudActionTirer extends NoeudBase {
     
-    public String nomModele = ""; 
-    public String modeDirection; 
-    public String vitesseStr = "10.0"; 
+    private String nomModele = ""; 
+    private String modeDirection; 
+    private String vitesseStr = "10.0"; 
 
     public NoeudActionTirer() {
         super(genererId(), Traducteur.get("noeud_tirer_nom"), Traducteur.get("cat_apparence_objets"));
@@ -20,7 +20,6 @@ public class NoeudActionTirer extends NoeudBase {
 
     @Override
     public void executer() {
-        // Appelle directement la méthode de la classe mère qui est parfaitement synchronisée
         ObjetBase spawnPoint = getCibleObjet(); 
         if (spawnPoint != null && contexteApplication != null) {
             try {
@@ -30,8 +29,7 @@ public class NoeudActionTirer extends NoeudBase {
                     
                     ObjetBase modele = null;
                     for (ObjetBase o : s.objets) {
-                        // Le .trim() sécurise la lecture si un espace s'est glissé dans le champ de texte
-                        if (nomModele != null && nomModele.trim().equals(o.nom)) {
+                        if (nomModele.equals(o.nom)) {
                             modele = o;
                             break;
                         }
@@ -40,14 +38,11 @@ public class NoeudActionTirer extends NoeudBase {
                     if (modele != null) {
                         ObjetBase clone = modele.clonerProfond();
                         
-                        // Sécurisation de l'identité du clone pour éviter la destruction du modèle racine
-                        clone.nom = modele.nom + "_clone_" + System.currentTimeMillis();
-                        
-                        // 1. Positionnement
+                        // 1. Positionnement au centre du point de départ
                         clone.x = spawnPoint.x + (spawnPoint.largeur / 2f) - (clone.largeur / 2f);
                         clone.y = spawnPoint.y + (spawnPoint.hauteur / 2f) - (clone.hauteur / 2f);
                         
-                        // 2. Calcul de la rotation
+                        // 2. Calcul de la rotation selon le mode
                         if (modeDirection != null && modeDirection.equals(Traducteur.get("opt_vers_cible"))) {
                             ObjetBase targetB = getCibleObjetB(); 
                             if (targetB != null) {
@@ -132,7 +127,6 @@ public class NoeudActionTirer extends NoeudBase {
         return super.getOptionsChoixListe(nomParametre);
     }
 
-    // Seules surcharges obligatoires : on indique à l'éditeur d'afficher les deux boutons de cible
     @Override
     public boolean requiertCibleObjet() { return true; }
 
