@@ -10,6 +10,9 @@ public class MoteurLogique {
     private Blueprint blueprintActif;
     private String cheminProjet;
 
+    // Throttle pour éviter le spam de logs à chaque frame (cause de plantage)
+    private long dernierLogCollisionCheck = 0;
+
     public MoteurLogique(Blueprint blueprint) {
         this.blueprintActif = blueprint;
     }
@@ -76,10 +79,15 @@ public class MoteurLogique {
 
     public void verifierCollisions(VueJeu vueJeu, List<ObjetBase> objetsContexte) {
         if (blueprintActif == null || blueprintActif.noeuds == null || objetsContexte == null) return;
+
+        long tempsActuel = System.currentTimeMillis();
+        boolean doitLoguerCetteFrame = (tempsActuel - dernierLogCollisionCheck > 500);
+        if (doitLoguerCetteFrame) {
+            dernierLogCollisionCheck = tempsActuel;
+        }
         
         java.util.List<NoeudBase> copieNoeuds = new java.util.ArrayList<>(blueprintActif.noeuds);
         for (NoeudBase noeud : copieNoeuds) {
-            logDiag("VERIF_COLLISIONS_BOUCLE noeud=" + noeud.getClass().getSimpleName() + " id=" + noeud.id);
             if (noeud instanceof NoeudEventCollisionAB) {
                 NoeudEventCollisionAB noeudCol = (NoeudEventCollisionAB) noeud;
                 ObjetBase objA = noeudCol.getCibleObjet();
@@ -116,9 +124,11 @@ public class MoteurLogique {
                 ObjetBase objA = noeudTag.getCibleObjet();
                 String cibleTag = noeudTag.getTagCible();
 
-                logDiag("COLLISION_TAG_CHECK noeud=" + noeud.id
-                        + " objA=" + (objA != null ? (objA.nom + " id=" + objA.id) : "NULL")
-                        + " cibleTag='" + cibleTag + "'");
+                if (doitLoguerCetteFrame) {
+                    logDiag("COLLISION_TAG_CHECK noeud=" + noeud.id
+                            + " objA=" + (objA != null ? (objA.nom + " id=" + objA.id) : "NULL")
+                            + " cibleTag='" + cibleTag + "'");
+                }
 
                 if (objA != null && cibleTag != null && !cibleTag.trim().isEmpty()) {
 
@@ -130,10 +140,6 @@ public class MoteurLogique {
                         if (objA != objB && objB.tag != null && cibleTag.trim().equalsIgnoreCase(objB.tag.trim())) {
                             if (UtilCollision.rectanglesSeChevauchent(objA, objetsContexte, objB, objetsContexte, vueJeu)) {
                                 idsEnCollisionCetteFrame.add(objB.id);
-
-                                logDiag("COLLISION_TAG frame: objA=" + objA.nom + " objB=" + objB.nom
-                                    + " (id=" + objB.id + ") tag=" + cibleTag
-                                    + " dejaEnCollision=" + noeudTag.isEnCollisionAvec(objB.id));
 
                                 if (!noeudTag.isEnCollisionAvec(objB.id)) {
                                     noeudTag.marquerEnCollision(objB.id);
