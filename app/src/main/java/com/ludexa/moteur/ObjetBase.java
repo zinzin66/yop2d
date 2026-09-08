@@ -217,14 +217,7 @@ public class ObjetBase {
 
         if (this.variablesLocales != null) {
             for (Variable v : this.variablesLocales) {
-                Variable nouvVar = new Variable(
-                        v.nom,
-                        v.type,
-                        ""
-                );
-
-                nouvVar.valeur = v.valeur;
-                copie.variablesLocales.add(nouvVar);
+                copie.variablesLocales.add(v.clonerProfond());
             }
         }
 
