@@ -490,7 +490,16 @@
     "insp_sep_variables_objet": "Objektvariablen",
   "insp_btn_ajouter_variable": "Variable hinzufügen",
   "insp_titre_ajouter_variable": "Neue Variable",
-  "insp_hint_nom_variable": "Variablenname"
+  "insp_hint_nom_variable": "Variablenname",
+    "noeud_tirer_nom": "Ein Objekt abfeuern",
+  "param_nom_modele": "Name des zu klonenden Objekts",
+  "param_mode_direction": "Richtungsmodus",
+  "param_vitesse": "Projektilgeschwindigkeit",
+  "opt_angle_depart": "Winkel des Startpunkts",
+  "opt_vers_cible": "Auf ein Ziel",
+  "port_entrer": "Eingang",
+  "port_suivant": "Weiter"
+  
   
   
   
