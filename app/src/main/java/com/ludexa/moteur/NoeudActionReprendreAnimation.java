@@ -1,8 +1,7 @@
-// haut 1
+// NoeudActionReprendreAnimation.java
 package com.ludexa.moteur;
 
 public class NoeudActionReprendreAnimation extends NoeudBase {
-    private ObjetBase cibleObj;
 
     public NoeudActionReprendreAnimation() {
         super(genererId(), Traducteur.get("noeud_reprendre_anim"), Traducteur.get("cat_animations"));
@@ -22,11 +21,4 @@ public class NoeudActionReprendreAnimation extends NoeudBase {
 
     @Override
     public boolean requiertCibleObjet() { return true; }
-    
-    @Override
-    public void setCibleObjet(ObjetBase objet) { this.cibleObj = objet; }
-    
-    @Override
-    public ObjetBase getCibleObjet() { return this.cibleObj; }
 }
-// bas 1
