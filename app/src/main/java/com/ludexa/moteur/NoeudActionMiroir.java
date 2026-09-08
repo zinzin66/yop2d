@@ -1,10 +1,9 @@
-// haut 1
+// NoeudActionMiroir.java
 package com.ludexa.moteur;
 
 import java.util.Arrays;
 
 public class NoeudActionMiroir extends NoeudBase {
-    private ObjetBase cibleObj;
 
     public NoeudActionMiroir() {
         super(genererId(), Traducteur.get("noeud_miroir"), Traducteur.get("cat_apparence_objets"));
@@ -33,11 +32,4 @@ public class NoeudActionMiroir extends NoeudBase {
 
     @Override
     public boolean requiertCibleObjet() { return true; }
-    
-    @Override
-    public void setCibleObjet(ObjetBase objet) { this.cibleObj = objet; }
-    
-    @Override
-    public ObjetBase getCibleObjet() { return this.cibleObj; }
 }
-// bas 1
