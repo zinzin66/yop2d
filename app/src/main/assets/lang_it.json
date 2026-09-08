@@ -498,7 +498,9 @@
   "opt_angle_depart": "Angolo del punto di partenza",
   "opt_vers_cible": "Verso un bersaglio",
   "port_entrer": "Entra",
-  "port_suivant": "Successivo"
+  "port_suivant": "Successivo",
+    "noeud_sequence": "Sequenza (Y)"
+  
   
   
   
