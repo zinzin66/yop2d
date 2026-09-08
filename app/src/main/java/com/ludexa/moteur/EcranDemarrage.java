@@ -53,6 +53,8 @@ public class EcranDemarrage extends Activity {
     
     private static final int REQUEST_CODE_EXPORT_PROJET = 2001;
     private static final int REQUEST_CODE_EXPORT_APK = 2002;
+    private static final int REQUEST_CODE_IMPORT_PROJET = 2003;
+    
     private File projetAExporter = null;
     
     // NOUVEAU : On garde en mémoire le nom final choisi par l'utilisateur
@@ -182,85 +184,177 @@ public class EcranDemarrage extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         
-        if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null && projetAExporter != null) {
+        if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             
-            // CAS 1 : EXPORT DU PROJET BRUT (.ZIP)
-            if (requestCode == REQUEST_CODE_EXPORT_PROJET) {
-                try {
-                    OutputStream out = getContentResolver().openOutputStream(data.getData());
-                    ZipOutputStream zip = new ZipOutputStream(out);
-                    zipperRecursif(projetAExporter, "", zip);
-                    zip.close();
-                    if (out != null) out.close();
+            // EXPORTS (nécessitent un projet source défini)
+            if (projetAExporter != null) {
+                // CAS 1 : EXPORT DU PROJET BRUT (.ZIP)
+                if (requestCode == REQUEST_CODE_EXPORT_PROJET) {
+                    try {
+                        OutputStream out = getContentResolver().openOutputStream(data.getData());
+                        ZipOutputStream zip = new ZipOutputStream(out);
+                        zipperRecursif(projetAExporter, "", zip);
+                        zip.close();
+                        if (out != null) out.close();
 
-                    new AlertDialog.Builder(this)
-                            .setTitle(Traducteur.get("export_termine"))
-                            .setMessage(Traducteur.get("archive_creee"))
-                            .setPositiveButton(Traducteur.get("bouton_ok"), null)
-                            .show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, Traducteur.get("erreur_export"), Toast.LENGTH_SHORT).show();
-                }
-                projetAExporter = null;
-            }
-            
-            // CAS 2 : BUILD DE L'APK FINAL (.APK)
-            else if (requestCode == REQUEST_CODE_EXPORT_APK) {
-                AlertDialog dialogueProgression = new AlertDialog.Builder(this)
-                        .setTitle(Traducteur.get("export_apk_titre"))
-                        .setMessage(Traducteur.get("export_apk_init"))
-                        .setCancelable(false)
-                        .show();
-
-                ExportateurAPK.exporterJeu(this, projetAExporter, new ExportateurAPK.InterfaceExport() {
-                    @Override
-                    public void surProgression(String message) {
-                        dialogueProgression.setMessage(message);
-                    }
-
-                    @Override
-                    public void surSucces(File apkFinal) {
-                        try {
-                            InputStream in = new FileInputStream(apkFinal);
-                            OutputStream out = getContentResolver().openOutputStream(data.getData());
-                            byte[] buffer = new byte[8192];
-                            int lus;
-                            while ((lus = in.read(buffer)) > 0) {
-                                out.write(buffer, 0, lus);
-                            }
-                            in.close();
-                            if (out != null) out.close();
-
-                            dialogueProgression.dismiss();
-                            projetAExporter = null;
-
-                            new AlertDialog.Builder(EcranDemarrage.this)
-                                    .setTitle(Traducteur.get("export_termine"))
-                                    .setMessage(Traducteur.get("export_apk_succes"))
-                                    .setPositiveButton(Traducteur.get("bouton_ok"), null)
-                                    .show();
-
-                        } catch (Exception e) {
-                            surErreur(Traducteur.get("erreur_sauvegarde") + " : " + e.getMessage());
-                        }
-                    }
-
-                    @Override
-                    public void surErreur(String erreur) {
-                        dialogueProgression.dismiss();
-                        projetAExporter = null;
-                        new AlertDialog.Builder(EcranDemarrage.this)
-                                .setTitle(Traducteur.get("erreur_export"))
-                                .setMessage(erreur)
+                        new AlertDialog.Builder(this)
+                                .setTitle(Traducteur.get("export_termine"))
+                                .setMessage(Traducteur.get("archive_creee"))
                                 .setPositiveButton(Traducteur.get("bouton_ok"), null)
                                 .show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, Traducteur.get("erreur_export"), Toast.LENGTH_SHORT).show();
                     }
-                });
+                    projetAExporter = null;
+                }
+                
+                // CAS 2 : BUILD DE L'APK FINAL (.APK)
+                else if (requestCode == REQUEST_CODE_EXPORT_APK) {
+                    AlertDialog dialogueProgression = new AlertDialog.Builder(this)
+                            .setTitle(Traducteur.get("export_apk_titre"))
+                            .setMessage(Traducteur.get("export_apk_init"))
+                            .setCancelable(false)
+                            .show();
+
+                    ExportateurAPK.exporterJeu(this, projetAExporter, new ExportateurAPK.InterfaceExport() {
+                        @Override
+                        public void surProgression(String message) {
+                            dialogueProgression.setMessage(message);
+                        }
+
+                        @Override
+                        public void surSucces(File apkFinal) {
+                            try {
+                                InputStream in = new FileInputStream(apkFinal);
+                                OutputStream out = getContentResolver().openOutputStream(data.getData());
+                                byte[] buffer = new byte[8192];
+                                int lus;
+                                while ((lus = in.read(buffer)) > 0) {
+                                    out.write(buffer, 0, lus);
+                                }
+                                in.close();
+                                if (out != null) out.close();
+
+                                dialogueProgression.dismiss();
+                                projetAExporter = null;
+
+                                new AlertDialog.Builder(EcranDemarrage.this)
+                                        .setTitle(Traducteur.get("export_termine"))
+                                        .setMessage(Traducteur.get("export_apk_succes"))
+                                        .setPositiveButton(Traducteur.get("bouton_ok"), null)
+                                        .show();
+
+                            } catch (Exception e) {
+                                surErreur(Traducteur.get("erreur_sauvegarde") + " : " + e.getMessage());
+                            }
+                        }
+
+                        @Override
+                        public void surErreur(String erreur) {
+                            dialogueProgression.dismiss();
+                            projetAExporter = null;
+                            new AlertDialog.Builder(EcranDemarrage.this)
+                                    .setTitle(Traducteur.get("erreur_export"))
+                                    .setMessage(erreur)
+                                    .setPositiveButton(Traducteur.get("bouton_ok"), null)
+                                    .show();
+                        }
+                    });
+                }
+            }
+            
+            // CAS 3 : IMPORT D'UN PROJET (.ZIP)
+            if (requestCode == REQUEST_CODE_IMPORT_PROJET) {
+                File dossierCible = null;
+                
+                try (InputStream is = getContentResolver().openInputStream(data.getData())) {
+                    if (is == null) throw new Exception("Flux de données inaccessible");
+
+                    String uuid = UUID.randomUUID().toString();
+                    dossierCible = new File(new File(getFilesDir(), "projets"), uuid);
+                    dossierCible.mkdirs();
+
+                    boolean contientMeta = false;
+                    boolean contientSauvegarde = false;
+                    String cheminCanoniqueCible = dossierCible.getCanonicalPath();
+
+                    try (java.util.zip.ZipInputStream zis = new java.util.zip.ZipInputStream(is)) {
+                        java.util.zip.ZipEntry entry;
+                        
+                        while ((entry = zis.getNextEntry()) != null) {
+                            File outFile = new File(dossierCible, entry.getName());
+                            
+                            if (!outFile.getCanonicalPath().startsWith(cheminCanoniqueCible + File.separator)) {
+                                zis.closeEntry();
+                                continue; 
+                            }
+
+                            if (entry.isDirectory()) {
+                                outFile.mkdirs();
+                            } else {
+                                outFile.getParentFile().mkdirs();
+                                try (FileOutputStream fos = new FileOutputStream(outFile)) {
+                                    byte[] buffer = new byte[8192];
+                                    int len;
+                                    while ((len = zis.read(buffer)) > 0) {
+                                        fos.write(buffer, 0, len);
+                                    }
+                                }
+                                
+                                if (entry.getName().equals("meta.json")) contientMeta = true;
+                                if (entry.getName().equals("projet_sauvegarde.json")) contientSauvegarde = true;
+                            }
+                            zis.closeEntry();
+                        }
+                    } 
+
+                    if (!contientMeta || !contientSauvegarde) {
+                        supprimerDossierRecursif(dossierCible); 
+                        new AlertDialog.Builder(this)
+                                .setTitle(Traducteur.get("erreur_import_exemple")) 
+                                .setMessage("Ce fichier ZIP ne contient pas un projet Yop2D valide (meta.json ou projet_sauvegarde.json manquant).")
+                                .setPositiveButton(Traducteur.get("bouton_ok"), null)
+                                .show();
+                        return;
+                    }
+
+                    File metaFile = new File(dossierCible, "meta.json");
+                    JSONObject metaJson = lireJson(metaFile);
+                    String nomImport = metaJson.optString("nom", Traducteur.get("projet_sans_nom"));
+                    String nomUnique = nomImport;
+                    
+                    int index = 2;
+                    while (nomDejaUtilise(nomUnique, null)) {
+                        nomUnique = nomImport + " " + index;
+                        index++;
+                    }
+
+                    metaJson.put("nom", nomUnique);
+                    metaJson.put("dateModif", dateMaintenant());
+                    try (FileWriter fw = new FileWriter(metaFile)) {
+                        fw.write(metaJson.toString(4));
+                    }
+
+                    chargerListeProjets();
+                    
+                    String msgSucces = nomUnique.equals(nomImport) ? 
+                            "Projet importé avec succès" : "Projet importé et renommé en : " + nomUnique;
+                    Toast.makeText(this, msgSucces, Toast.LENGTH_SHORT).show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (dossierCible != null && dossierCible.exists()) {
+                        supprimerDossierRecursif(dossierCible);
+                    }
+                    Toast.makeText(this, "Erreur lors de l'importation : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
+// bas 1
 
+// haut 2
     // ---------------------------------------------------------------- colonne gauche
 
     private View construireColonneGauche() {
@@ -372,14 +466,11 @@ public class EcranDemarrage extends Activity {
 
             if (fichiersAssets != null) {
                 for (String fichier : fichiersAssets) {
-                    // On cherche les fichiers comme "lang_fr.json"
                     if (fichier.startsWith("lang_") && fichier.endsWith(".json")) {
                         String code = fichier.substring(5, fichier.lastIndexOf('.'));
                         codesLangues.add(code);
                         
-                        // On récupère le nom traduit pour l'affichage (ex: "Français" pour la clé "langue_fr")
                         String nomAffiche = Traducteur.get("langue_" + code);
-                        // Sécurité : si la clé n'existe pas encore dans le dictionnaire actuel, on affiche le code en majuscule
                         if (nomAffiche.startsWith("[")) nomAffiche = code.toUpperCase();
                         
                         nomsLangues.add(nomAffiche);
@@ -405,11 +496,8 @@ public class EcranDemarrage extends Activity {
             e.printStackTrace();
         }
     }
-// bas 1
-                        
 
-// haut 2
-    // ---------------------------------------------------------------- colonne droite (DIVISÉE EN DEUX)
+    // ---------------------------------------------------------------- colonne droite
 
     private View construireColonneDroite() {
         LinearLayout colonneDroite = new LinearLayout(this);
@@ -460,12 +548,10 @@ public class EcranDemarrage extends Activity {
         bandeau.addView(boutonBandeau(R.drawable.add_24px, Traducteur.get("demarrage_creer_projet"),
                 v -> afficherDialogueCreationProjet()));
         bandeau.addView(boutonBandeau(R.drawable.folder_open_24px, Traducteur.get("demarrage_ouvrir_projet"),
-                v -> Toast.makeText(this, Traducteur.get("toast_import_a_venir"), Toast.LENGTH_SHORT).show()));
+                v -> actionImporterProjetZip()));
 
         bandeau.addView(separateurVertical());
 
-        // MODIFIÉ : le bouton "bug" ouvre désormais le journal de debug du projet sélectionné
-        // (diag_ludexa.txt), au lieu de l'ancien diagnostic de dossier.
         bandeau.addView(boutonBandeau(R.drawable.bug_report_24px, Traducteur.get("demarrage_diagnostic"),
                 v -> afficherLogProjet()));
         bandeau.addView(boutonBandeau(R.drawable.build_24px, Traducteur.get("demarrage_test_mkdirs"),
@@ -483,7 +569,9 @@ public class EcranDemarrage extends Activity {
 
         return bandeau;
     }
+// bas 2
 
+// haut 3
     private View construireEnteteListe(String titre) {
         TextView titreListe = new TextView(this);
         titreListe.setText(titre);
@@ -669,9 +757,7 @@ public class EcranDemarrage extends Activity {
             return ligne;
         }
     }
-// bas 2
 
-// haut 3
     // ---------------------------------------------------------------- chargement des données
 
     private void chargerListeProjets() {
@@ -742,7 +828,6 @@ public class EcranDemarrage extends Activity {
                         ItemProjet item = new ItemProjet();
                         item.estExemple = true;
                         item.nomZipExemple = fichier;
-                        // On formate le nom proprement (ex: escape_game -> Escape Game)
                         item.nom = nomSansExt.replace("_", " ");
                         if (item.nom.length() > 0) {
                             item.nom = item.nom.substring(0, 1).toUpperCase() + item.nom.substring(1);
@@ -828,6 +913,7 @@ public class EcranDemarrage extends Activity {
         return false;
     }
 // bas 3
+
 // haut 4
     // ---------------------------------------------------------------- actions
 
@@ -1063,6 +1149,13 @@ public class EcranDemarrage extends Activity {
             Toast.makeText(this, Traducteur.get("erreur_import_exemple"), Toast.LENGTH_SHORT).show();
         }
     }
+    
+    private void actionImporterProjetZip() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/zip");
+        startActivityForResult(intent, REQUEST_CODE_IMPORT_PROJET);
+    }
 
     // ---------------------------------------------------------------- création projet
 
@@ -1192,9 +1285,6 @@ public class EcranDemarrage extends Activity {
 
     // ---------------------------------------------------------------- debug
 
-    // REMPLACÉ : ancien afficherDiagnosticDossier() -> nouveau visualiseur du journal
-    // de debug permanent (diag_ludexa.txt) du projet actuellement sélectionné dans la liste.
-    // Alimenté par DiagLogger / VueJeu.logDiag() pendant les sessions de test en jeu.
     private void afficherLogProjet() {
         File dossier = dossierSelectionne();
         if (dossier == null) return;
