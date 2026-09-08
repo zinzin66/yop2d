@@ -1,12 +1,10 @@
-// haut 1
+// NoeudConditionSiObjetToucheZone.java
 package com.ludexa.moteur;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NoeudConditionSiObjetToucheZone extends NoeudBase {
-    private ObjetBase objetCible;
-    private ObjetBase objetCibleB;
 
     public NoeudConditionSiObjetToucheZone() {
         super(genererId(), "Si objet A touche zone B", "Logique");
@@ -18,6 +16,9 @@ public class NoeudConditionSiObjetToucheZone extends NoeudBase {
     @Override
     public void executer() {
         boolean collision = false;
+        ObjetBase objetCible = getCibleObjet();
+        ObjetBase objetCibleB = getCibleObjetB();
+        
         if (objetCible != null && objetCibleB != null && contexteApplication != null) {
             try {
                 if (contexteApplication instanceof InterfaceEditeur) {
@@ -50,17 +51,8 @@ public class NoeudConditionSiObjetToucheZone extends NoeudBase {
 
     @Override
     public boolean requiertCibleObjet() { return true; }
-    @Override
-    public void setCibleObjet(ObjetBase objet) { this.objetCible = objet; }
-    @Override
-    public ObjetBase getCibleObjet() { return this.objetCible; }
 
     // -- Mécanisme DÉDIÉ Cible Objet B --
     @Override
     public boolean requiertCibleObjetB() { return true; }
-    @Override
-    public void setCibleObjetB(ObjetBase objet) { this.objetCibleB = objet; }
-    @Override
-    public ObjetBase getCibleObjetB() { return this.objetCibleB; }
 }
-// bas 1
