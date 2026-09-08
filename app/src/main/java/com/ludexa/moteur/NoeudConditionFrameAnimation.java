@@ -1,8 +1,7 @@
-// haut 1
+// NoeudConditionFrameAnimation.java
 package com.ludexa.moteur;
 
 public class NoeudConditionFrameAnimation extends NoeudBase {
-    private ObjetBase cibleObj;
 
     public NoeudConditionFrameAnimation() {
         super(genererId(), Traducteur.get("noeud_condition_frame"), Traducteur.get("cat_animations"));
@@ -36,12 +35,4 @@ public class NoeudConditionFrameAnimation extends NoeudBase {
 
     @Override
     public boolean requiertCibleObjet() { return true; }
-    
-    @Override
-    public void setCibleObjet(ObjetBase objet) { this.cibleObj = objet; }
-    
-    @Override
-    public ObjetBase getCibleObjet() { return this.cibleObj; }
 }
-// bas 1
-
