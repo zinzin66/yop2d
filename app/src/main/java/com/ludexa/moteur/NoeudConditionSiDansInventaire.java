@@ -1,11 +1,10 @@
-// haut 1
+// NoeudConditionSiDansInventaire.java
 package com.ludexa.moteur;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NoeudConditionSiDansInventaire extends NoeudBase {
-    private ObjetBase objetCible;
     private transient Variable cible;
     private String nomCibleVariable;
 
@@ -42,10 +41,6 @@ public class NoeudConditionSiDansInventaire extends NoeudBase {
 
     @Override
     public boolean requiertCibleObjet() { return true; }
-    @Override
-    public void setCibleObjet(ObjetBase objet) { this.objetCible = objet; }
-    @Override
-    public ObjetBase getCibleObjet() { return this.objetCible; }
 
     @Override
     public boolean requiertCibleVariable() { return true; }
@@ -73,5 +68,3 @@ public class NoeudConditionSiDansInventaire extends NoeudBase {
         return this.cible;
     }
 }
-// bas 1
-

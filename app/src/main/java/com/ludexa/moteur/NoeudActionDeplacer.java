@@ -1,3 +1,4 @@
+// haut 1
 package com.ludexa.moteur;
 
 import java.util.Arrays;
@@ -5,7 +6,6 @@ import java.util.List;
 
 public class NoeudActionDeplacer extends NoeudBase {
 
-    private ObjetBase cible;
     private float positionX; // Renommé pour plus de clarté
     private float positionY; // Renommé pour plus de clarté
 
@@ -17,16 +17,19 @@ public class NoeudActionDeplacer extends NoeudBase {
 
     public NoeudActionDeplacer(ObjetBase cible, float positionX, float positionY) {
         this(); 
-        this.cible = cible;
+        if (cible != null) {
+            this.nomCibleObjet = cible.nom;
+        }
         this.positionX = positionX;
         this.positionY = positionY;
     }
 
     @Override
     public void executer() {
-        if (cible != null) {
-            cible.x = positionX;
-            cible.y = positionY;
+        ObjetBase cibleCourante = getCibleObjet();
+        if (cibleCourante != null) {
+            cibleCourante.x = positionX;
+            cibleCourante.y = positionY;
         }
         propagerExecution("Suivant");
     }
@@ -58,17 +61,8 @@ public class NoeudActionDeplacer extends NoeudBase {
     }
 
     @Override
-    public void setCibleObjet(ObjetBase objet) {
-        this.cible = objet;
-    }
-
-    @Override
-    public ObjetBase getCibleObjet() {
-        return this.cible;
-    }
-
-    @Override
     public boolean utiliseClavierTexte() {
         return true;
     }
 }
+// bas 1
