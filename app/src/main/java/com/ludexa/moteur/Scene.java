@@ -47,7 +47,10 @@ public class Scene {
         copie.compteurZOrderLocal = this.compteurZOrderLocal;
         
         for (ObjetBase obj : this.objets) {
-            copie.ajouterObjet(obj.clonerProfond());
+        ObjetBase clone = obj.clonerProfond();
+        clone.id = obj.id; // Préserver l'id original : indispensable pour que
+                            // cibleJoystickId/parentId/idCiblePoursuite restent valides
+        copie.ajouterObjet(clone);
         }
         
         for (Variable var : this.variablesLocales) {
