@@ -509,7 +509,34 @@
     "noeud_cooldown": "Limit rate (Cooldown)",
   "noeud_garder_ecran": "Clamp to screen",
   "noeud_traverser_ecran": "Screen wrap",
-  "param_delai_ms": "Delay (ms)"
+  "param_delai_ms": "Delay (ms)",
+    "btn_gerer_styles": "Manage Title Styles",
+  "obj_prefix_titre": "StyledTitle",
+  "texte_titre_defaut": "New Title",
+  "insp_btn_select_style": "Choose Title Style",
+  "insp_btn_style_actuel": "Style: ",
+  "insp_titre_select_style": "Select a Style",
+  "titre_editeur_styles": "Styled Title Editor",
+  "style_apercu": "Real-time Preview",
+  "style_nouveau_defaut": "New Style",
+  "style_btn_nouveau": "Create New Style",
+  "style_label_nom": "Style Name:",
+  "style_hint_nom": "Ex: Level Up Title",
+  "style_sep_remplissage": "1. FILL (INSIDE)",
+  "style_sep_contour": "2. STROKE (BORDER)",
+  "style_label_epaisseur": "Thickness:",
+  "style_btn_couleur_contour": "Stroke Color",
+  "style_sep_degrade": "3. COLOR GRADIENT",
+  "style_cb_degrade": "Enable gradient (overrides solid object color)",
+  "style_btn_deg_haut": "Top Color",
+  "style_btn_deg_bas": "Bottom Color",
+  "style_sep_ombre": "4. DROP SHADOW",
+  "style_cb_ombre": "Enable shadow",
+  "style_label_rayon": "Radius (Blur):",
+  "style_label_dx": "Offset X:",
+  "style_label_dy": "Offset Y:",
+  "style_btn_couleur_ombre": "Shadow Color"
+  
   
   
   
