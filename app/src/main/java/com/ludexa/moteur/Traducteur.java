@@ -132,6 +132,11 @@ public class Traducteur {
         if (cle.equals("noeud_generer_clone_position")) return "Générer clone (Position X/Y)";
         if (cle.equals("noeud_definir_vitesse")) return "Définir la vitesse (X/Y)";
         if (cle.equals("noeud_condition_au_sol")) return "Si objet est au sol";
+        if (cle.equals("noeud_cooldown")) return "Limiter cadence (Cooldown)";
+        if (cle.equals("noeud_garder_ecran")) return "Garder dans l'écran";
+        if (cle.equals("noeud_traverser_ecran")) return "Traverser l'écran";
+        if (cle.equals("param_delai_ms")) return "Délai (ms)";
+        
         
         if (cle.equals("param_vitesse_x")) return "Vitesse X";
         if (cle.equals("param_vitesse_y")) return "Vitesse Y";
