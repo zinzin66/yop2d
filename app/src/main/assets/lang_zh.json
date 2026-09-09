@@ -498,7 +498,16 @@
   "opt_angle_depart": "起点角度",
   "opt_vers_cible": "朝向目标",
   "port_entrer": "进入",
-  "port_suivant": "下一步"
+  "port_suivant": "下一步",
+    "noeud_si_hors_ecran": "如果对象在屏幕外",
+  "param_marge": "离开边距（像素）",
+  "noeud_generer_clone_position": "生成克隆（X/Y位置）",
+  "noeud_definir_vitesse": "设置速度（X/Y）",
+  "param_vitesse_x": "速度 X",
+  "param_vitesse_y": "速度 Y",
+  "noeud_condition_au_sol": "如果对象在地面上",
+  "noeud_si_objet_a_touche_zone_b": "如果对象A接触区域B"
+  
   
   
   
