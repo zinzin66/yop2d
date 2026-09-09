@@ -140,6 +140,7 @@ public class EditeurTexteStyleDialog extends Dialog {
         // 2. NOM DU STYLE
         champNomStyle = new EditText(context);
         champNomStyle.setTextColor(Palette.texteNormal);
+        champNomStyle.setHintTextColor(Palette.bordure);
         champNomStyle.setHint(Traducteur.get("style_hint_nom"));
         champNomStyle.addTextChangedListener(creerWatcher(texte -> { styleCourant.nom = texte; rafraichirSpinnerStylesSansTrigger(); }));
         contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_nom"), champNomStyle));
@@ -148,8 +149,21 @@ public class EditeurTexteStyleDialog extends Dialog {
         ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_remplissage"));
         
         spinnerRemplissage = new Spinner(context);
-        ArrayAdapter<String> adapterRemplissage = new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, 
-            new String[]{"FILL_AND_STROKE", "FILL", "STROKE"});
+        // FIX : Remplacement par un adaptateur custom pour forcer le texte en blanc
+        ArrayAdapter<String> adapterRemplissage = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, new String[]{"FILL_AND_STROKE", "FILL", "STROKE"}) {
+            @Override public View getView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getView(position, convertView, parent);
+                tv.setTextColor(Palette.texteNormal);
+                return tv;
+            }
+            @Override public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getDropDownView(position, convertView, parent);
+                tv.setTextColor(Palette.texteNormal);
+                tv.setBackgroundColor(Palette.fondNormal);
+                tv.setPadding(dp(16), dp(16), dp(16), dp(16));
+                return tv;
+            }
+        };
         spinnerRemplissage.setAdapter(adapterRemplissage);
         spinnerRemplissage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -282,8 +296,23 @@ public class EditeurTexteStyleDialog extends Dialog {
         isUpdatingUI = true;
         List<String> noms = new ArrayList<>();
         for (StyleTitre st : listeStyles) noms.add(st.nom);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, noms);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        
+        // FIX : Remplacement par un adaptateur custom pour le Spinner principal
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, noms) {
+            @Override public View getView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getView(position, convertView, parent);
+                tv.setTextColor(Palette.texteNormal);
+                return tv;
+            }
+            @Override public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                TextView tv = (TextView) super.getDropDownView(position, convertView, parent);
+                tv.setTextColor(Palette.texteNormal);
+                tv.setBackgroundColor(Palette.fondNormal);
+                tv.setPadding(dp(16), dp(16), dp(16), dp(16));
+                return tv;
+            }
+        };
+        
         spinnerStyles.setAdapter(adapter);
         spinnerStyles.setSelection(listeStyles.indexOf(styleCourant));
         isUpdatingUI = false;
@@ -317,9 +346,14 @@ public class EditeurTexteStyleDialog extends Dialog {
         tv.setText(label);
         tv.setTextColor(Palette.texteNormal);
         tv.setLayoutParams(new LinearLayout.LayoutParams(dp(80), ViewGroup.LayoutParams.WRAP_CONTENT));
+        
+        // FIX : On force le texte blanc et le contour approprié sur tous les champs générés
+        champ.setTextColor(Palette.texteNormal);
+        champ.setHintTextColor(Palette.bordure);
         champ.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         champ.setBackground(fond(Palette.canvasFond, Palette.bordure, 8));
         champ.setPadding(dp(8), dp(8), dp(8), dp(8));
+        
         ligne.addView(tv);
         ligne.addView(champ);
         return ligne;
@@ -366,47 +400,170 @@ public class EditeurTexteStyleDialog extends Dialog {
         } catch (Exception e) {}
     }
 
-    // Mini-ColorPicker robuste intégré
+      // Sélecteur de couleur avancé (intégrant HEX + Palette rapide)
     private void afficherColorPicker(Context context, int couleurInitiale, java.util.function.Consumer<Integer> onColorSelected) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(Traducteur.get("insp_titre_select_couleur"));
-        LinearLayout layout = new LinearLayout(context);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(dp(16), dp(16), dp(16), dp(16));
+
+        LinearLayout layoutMain = new LinearLayout(context);
+        layoutMain.setOrientation(LinearLayout.VERTICAL);
+        layoutMain.setPadding(dp(16), dp(16), dp(16), dp(16));
+
+        LinearLayout layoutTop = new LinearLayout(context);
+        layoutTop.setOrientation(LinearLayout.HORIZONTAL);
+        layoutTop.setGravity(Gravity.CENTER_VERTICAL);
+
+        View previewColor = new View(context);
+        LinearLayout.LayoutParams previewParams = new LinearLayout.LayoutParams(dp(44), dp(44));
+        previewParams.setMargins(0, 0, dp(12), 0);
+        previewColor.setLayoutParams(previewParams);
         
-        final float[] hsv = new float[3];
-        Color.colorToHSV(couleurInitiale, hsv);
+        final float[] currentHsv = new float[3];
+        Color.colorToHSV(couleurInitiale, currentHsv);
         
-        View preview = new View(context);
-        preview.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(50)));
-        preview.setBackgroundColor(couleurInitiale);
-        layout.addView(preview);
-        
-        View spectre = new View(context) {
-            Paint pHue = new Paint(), pVal = new Paint();
-            @Override protected void onDraw(Canvas canvas) {
+        android.graphics.drawable.GradientDrawable fondPreview = new android.graphics.drawable.GradientDrawable();
+        fondPreview.setColor(couleurInitiale);
+        fondPreview.setCornerRadius(dp(8));
+        fondPreview.setStroke(dp(1), Palette.bordure);
+        previewColor.setBackground(fondPreview);
+
+        EditText champHex = new EditText(context);
+        champHex.setSingleLine(true);
+        champHex.setText(String.format("#%06X", (0xFFFFFF & couleurInitiale)));
+        champHex.setTextColor(Palette.texteNormal);
+        champHex.setHintTextColor(Palette.bordure);
+        champHex.setBackground(fond(Palette.fondNormal, Palette.bordure, 8));
+        champHex.setPadding(dp(12), dp(10), dp(12), dp(10));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        champHex.setLayoutParams(lp);
+        champHex.setFilters(new android.text.InputFilter[] { new android.text.InputFilter.LengthFilter(7) });
+
+        layoutTop.addView(previewColor);
+        layoutTop.addView(champHex);
+        layoutMain.addView(layoutTop);
+
+        final boolean[] isUpdating = {false};
+
+        View spectreView = new View(context) {
+            private Paint paintHue = new Paint();
+            private Paint paintVal = new Paint();
+            private Paint indicatorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+            @Override
+            protected void onDraw(Canvas canvas) {
                 int[] hueColors = {Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA, Color.RED};
-                pHue.setShader(new LinearGradient(0, 0, getWidth(), 0, hueColors, null, Shader.TileMode.CLAMP));
-                canvas.drawRect(0, 0, getWidth(), getHeight(), pHue);
-                pVal.setShader(new LinearGradient(0, 0, 0, getHeight(), Color.TRANSPARENT, Color.BLACK, Shader.TileMode.CLAMP));
-                canvas.drawRect(0, 0, getWidth(), getHeight(), pVal);
+                paintHue.setShader(new LinearGradient(0, 0, getWidth(), 0, hueColors, null, Shader.TileMode.CLAMP));
+                canvas.drawRect(0, 0, getWidth(), getHeight(), paintHue);
+
+                paintVal.setShader(new LinearGradient(0, 0, 0, getHeight(), Color.TRANSPARENT, Color.BLACK, Shader.TileMode.CLAMP));
+                canvas.drawRect(0, 0, getWidth(), getHeight(), paintVal);
+
+                indicatorPaint.setColor(Color.WHITE);
+                indicatorPaint.setStyle(Paint.Style.STROKE);
+                indicatorPaint.setStrokeWidth(dp(2));
+                
+                float x = (currentHsv[0] / 360f) * getWidth();
+                float y = (1f - currentHsv[2]) * getHeight();
+                
+                canvas.drawCircle(x, y, dp(10), indicatorPaint);
+                indicatorPaint.setColor(Color.BLACK);
+                canvas.drawCircle(x, y, dp(11), indicatorPaint);
             }
-            @Override public boolean onTouchEvent(MotionEvent event) {
+
+            @Override
+            public boolean onTouchEvent(MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
-                    hsv[0] = (Math.max(0, Math.min(event.getX(), getWidth())) / getWidth()) * 360f;
-                    hsv[1] = 1f; 
-                    hsv[2] = 1f - (Math.max(0, Math.min(event.getY(), getHeight())) / getHeight());
-                    preview.setBackgroundColor(Color.HSVToColor(hsv));
+                    float x = Math.max(0, Math.min(event.getX(), getWidth()));
+                    float y = Math.max(0, Math.min(event.getY(), getHeight()));
+                    
+                    currentHsv[0] = (x / getWidth()) * 360f;
+                    currentHsv[1] = 1f; 
+                    currentHsv[2] = 1f - (y / getHeight());
+                    
+                    int newColor = Color.HSVToColor(currentHsv);
+                    
+                    isUpdating[0] = true;
+                    champHex.setText(String.format("#%06X", (0xFFFFFF & newColor)));
+                    isUpdating[0] = false;
+                    
+                    ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(newColor);
+                    invalidate();
                     return true;
                 }
                 return super.onTouchEvent(event);
             }
         };
-        spectre.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(200)));
-        layout.addView(spectre);
         
-        builder.setView(layout);
-        builder.setPositiveButton("OK", (dialog, which) -> onColorSelected.accept(Color.HSVToColor(hsv)));
+        LinearLayout.LayoutParams spectreParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(160));
+        spectreParams.setMargins(0, dp(16), 0, dp(16));
+        spectreView.setLayoutParams(spectreParams);
+        layoutMain.addView(spectreView);
+
+        champHex.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void afterTextChanged(Editable s) {
+                if (isUpdating[0]) return;
+                try {
+                    String hexStr = s.toString();
+                    if (!hexStr.startsWith("#")) hexStr = "#" + hexStr;
+                    if (hexStr.length() == 7) {
+                        int parsedColor = Color.parseColor(hexStr);
+                        Color.colorToHSV(parsedColor, currentHsv);
+                        ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(parsedColor);
+                        spectreView.invalidate();
+                    }
+                } catch (IllegalArgumentException ignored) {}
+            }
+        });
+
+        HorizontalScrollView scrollPalette = new HorizontalScrollView(context);
+        scrollPalette.setHorizontalScrollBarEnabled(false);
+        LinearLayout layoutPalette = new LinearLayout(context);
+        layoutPalette.setOrientation(LinearLayout.HORIZONTAL);
+        
+        int[] couleursRapides = {
+            Color.WHITE, Color.BLACK, 
+            Palette.texteSelectionne, Palette.boutonNormal, 
+            Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, 
+            Color.CYAN, Color.MAGENTA, Color.parseColor("#FFA500"), Color.parseColor("#808080")
+        };
+        
+        for (int c : couleursRapides) {
+            View pastille = new View(context);
+            LinearLayout.LayoutParams pastilleParams = new LinearLayout.LayoutParams(dp(40), dp(40));
+            pastilleParams.setMargins(0, 0, dp(12), 0);
+            pastille.setLayoutParams(pastilleParams);
+            
+            android.graphics.drawable.GradientDrawable bgPastille = new android.graphics.drawable.GradientDrawable();
+            bgPastille.setShape(android.graphics.drawable.GradientDrawable.OVAL);
+            bgPastille.setColor(c);
+            bgPastille.setStroke(dp(1), Palette.bordure);
+            pastille.setBackground(bgPastille);
+            
+            pastille.setOnClickListener(vp -> {
+                Color.colorToHSV(c, currentHsv);
+                isUpdating[0] = true;
+                champHex.setText(String.format("#%06X", (0xFFFFFF & c)));
+                isUpdating[0] = false;
+                ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(c);
+                spectreView.invalidate();
+            });
+            layoutPalette.addView(pastille);
+        }
+        scrollPalette.addView(layoutPalette);
+        layoutMain.addView(scrollPalette);
+
+        builder.setView(layoutMain);
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            try {
+                String finalHex = champHex.getText().toString();
+                if (!finalHex.startsWith("#")) finalHex = "#" + finalHex;
+                onColorSelected.accept(Color.parseColor(finalHex));
+            } catch (Exception e) {
+                onColorSelected.accept(Color.HSVToColor(currentHsv));
+            }
+        });
         builder.setNegativeButton(Traducteur.get("bouton_annuler"), null);
         builder.show();
     }
