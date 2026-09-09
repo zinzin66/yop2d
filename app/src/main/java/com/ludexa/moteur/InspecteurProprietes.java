@@ -184,7 +184,6 @@ public class InspecteurProprietes extends LinearLayout {
         cb.setLayoutParams(lp);
     }
 // bas 1
-                     
     
     // haut 2
     private void initialiserInterface(Context context) {
@@ -906,7 +905,9 @@ public class InspecteurProprietes extends LinearLayout {
         scrollInspecteur.addView(contenuInspecteur);
         this.addView(scrollInspecteur);
 // bas 3
-  // haut 4
+
+
+// haut 4
         boutonMasquer.setOnClickListener(v -> {
             if (scrollInspecteur.getVisibility() == View.VISIBLE) {
                 scrollInspecteur.setVisibility(View.GONE);
@@ -1750,5 +1751,6 @@ public class InspecteurProprietes extends LinearLayout {
     }
 }
 // bas 5
+
 
 
