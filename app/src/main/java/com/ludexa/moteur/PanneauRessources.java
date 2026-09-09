@@ -423,7 +423,7 @@ public class PanneauRessources extends LinearLayout {
         dialog.show();
     }
 // bas 3
- // haut 4
+// haut 4
     private View creerSectionObjets(Context context) {
         LinearLayout section = new LinearLayout(context);
         section.setOrientation(LinearLayout.VERTICAL);
@@ -729,6 +729,7 @@ public class PanneauRessources extends LinearLayout {
         return section;
     }
 // bas 4
+                    
     
 // haut 5 : SECTION ARBORESCENCE (Hierarchie objets)
     private View creerSectionArborescence(Context context) {
@@ -806,7 +807,7 @@ public class PanneauRessources extends LinearLayout {
         }
     }
 // bas 5
-    // haut 6
+// haut 6
     private boolean isRacineIndestructible(File dir) {
         if (dir == null) return false;
         String nom = dir.getName();
@@ -1032,7 +1033,7 @@ public class PanneauRessources extends LinearLayout {
         }
     }
 // bas 6
-
+    
 // haut 7 : SECTION ASSETS LOGIQUE (Popups et import)
     private void rafraichirListeAssets() {
         if (conteneurListeAssets == null || currentFolderSelected == null) return;
