@@ -500,7 +500,16 @@
   "port_entrer": "Entra",
   "port_suivant": "Successivo",
     "noeud_sequence": "Sequenza (Y)",
-    "noeud_sequence": "序列 (Y)"
+    "noeud_sequence": "序列 (Y)",
+    "noeud_si_hors_ecran": "Se l'oggetto è fuori dallo schermo",
+  "param_marge": "Margine di uscita (pixel)",
+  "noeud_generer_clone_position": "Genera clone (Posizione X/Y)",
+  "noeud_definir_vitesse": "Imposta velocità (X/Y)",
+  "param_vitesse_x": "Velocità X",
+  "param_vitesse_y": "Velocità Y",
+  "noeud_condition_au_sol": "Se l'oggetto è a terra",
+  "noeud_si_objet_a_touche_zone_b": "Se l'oggetto A tocca la zona B"
+  
   
   
   
