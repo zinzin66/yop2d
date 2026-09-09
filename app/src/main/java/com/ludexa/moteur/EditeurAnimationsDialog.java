@@ -4,7 +4,11 @@ package com.ludexa.moteur;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -13,6 +17,8 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -36,6 +42,12 @@ public class EditeurAnimationsDialog extends Dialog {
     private LinearLayout conteneurAnimations;
     private LinearLayout conteneurFrames;
     private TextView titreFrames;
+    
+    // Composants pour le lecteur d'aperçu
+    private ImageView apercuAnim;
+    private Handler handlerAnim = new Handler(Looper.getMainLooper());
+    private Runnable runnableAnim;
+    private int frameApercuIndex = 0;
 
     private int dp(Context c, int valeur) {
         return (int) (valeur * c.getResources().getDisplayMetrics().density);
@@ -54,6 +66,9 @@ public class EditeurAnimationsDialog extends Dialog {
         this.cheminProjet = cheminProjet;
         setTitle(Traducteur.get("anim_gestionnaire_titre"));
 
+        // Nettoyage impératif à la fermeture du dialogue pour éviter toute fuite mémoire
+        setOnDismissListener(dialog -> arreterApercu());
+
         chargerFichierAnimations();
 
         LinearLayout root = new LinearLayout(context);
@@ -61,6 +76,7 @@ public class EditeurAnimationsDialog extends Dialog {
         root.setBackgroundColor(Palette.fondPanneaux);
         root.setPadding(dp(context, 8), dp(context, 8), dp(context, 8), dp(context, 8));
 
+        // --- COLONNE GAUCHE ---
         LinearLayout colonneGauche = new LinearLayout(context);
         colonneGauche.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams lpGauche = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
@@ -84,6 +100,7 @@ public class EditeurAnimationsDialog extends Dialog {
         scrollGauche.addView(conteneurAnimations);
         colonneGauche.addView(scrollGauche);
 
+        // --- COLONNE DROITE ---
         LinearLayout colonneDroite = new LinearLayout(context);
         colonneDroite.setOrientation(LinearLayout.VERTICAL);
         colonneDroite.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1.5f));
@@ -96,6 +113,18 @@ public class EditeurAnimationsDialog extends Dialog {
         titreFrames.setTextSize(16f);
         titreFrames.setPadding(0, 0, 0, dp(context, 8));
         colonneDroite.addView(titreFrames);
+
+        // Aperçu animé
+        apercuAnim = new ImageView(context);
+        int tailleApercu = dp(context, 100);
+        LinearLayout.LayoutParams lpApercu = new LinearLayout.LayoutParams(tailleApercu, tailleApercu);
+        lpApercu.gravity = Gravity.CENTER_HORIZONTAL;
+        lpApercu.setMargins(0, 0, 0, dp(context, 8));
+        apercuAnim.setLayoutParams(lpApercu);
+        apercuAnim.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        apercuAnim.setBackground(fond(context, Palette.canvasFond, Palette.bordure, 4));
+        apercuAnim.setVisibility(View.GONE);
+        colonneDroite.addView(apercuAnim);
 
         Button btnAjouterFrame = new Button(context);
         btnAjouterFrame.setText(Traducteur.get("anim_btn_ajouter_frame"));
@@ -146,9 +175,7 @@ public class EditeurAnimationsDialog extends Dialog {
 
         rafraichirListeAnimations(context);
     }
-// bas 1
 
-// haut 2
     private void chargerFichierAnimations() {
         animationsGlobales.clear();
         if (cheminProjet == null) return;
@@ -249,15 +276,56 @@ public class EditeurAnimationsDialog extends Dialog {
         }
         rafraichirListeFrames(context);
     }
+// bas 1
+
+// haut 2
+    private void arreterApercu() {
+        if (handlerAnim != null) {
+            handlerAnim.removeCallbacksAndMessages(null);
+        }
+    }
 
     private void rafraichirListeFrames(Context context) {
         conteneurFrames.removeAllViews();
+        
+        // Stopper le timer précédent à chaque rafraîchissement
+        arreterApercu();
+        
         if (animationSelectionnee == null) {
             titreFrames.setText(Traducteur.get("anim_selectionner"));
+            apercuAnim.setVisibility(View.GONE);
             return;
         }
         titreFrames.setText(Traducteur.get("anim_sequence") + " : " + animationSelectionnee);
         List<String> frames = animationsGlobales.get(animationSelectionnee);
+        
+        if (frames == null || frames.isEmpty()) {
+            apercuAnim.setVisibility(View.GONE);
+        } else {
+            // Relancer l'aperçu si des frames existent
+            apercuAnim.setVisibility(View.VISIBLE);
+            frameApercuIndex = 0;
+            runnableAnim = new Runnable() {
+                @Override
+                public void run() {
+                    if (frames == null || frames.isEmpty()) return;
+                    if (frameApercuIndex >= frames.size()) {
+                        frameApercuIndex = 0;
+                    }
+                    String cheminApercu = frames.get(frameApercuIndex);
+                    try {
+                        String cheminComplet = new File(cheminProjet, cheminApercu).getAbsolutePath();
+                        Bitmap bmp = BitmapFactory.decodeFile(cheminComplet);
+                        if (bmp != null) apercuAnim.setImageBitmap(bmp);
+                    } catch (Exception e) {}
+                    
+                    frameApercuIndex++;
+                    handlerAnim.postDelayed(this, 100); // ~10 FPS
+                }
+            };
+            handlerAnim.post(runnableAnim);
+        }
+
         if (frames != null) {
             for (int i = 0; i < frames.size(); i++) {
                 final int index = i;
@@ -269,6 +337,20 @@ public class EditeurAnimationsDialog extends Dialog {
                 LinearLayout.LayoutParams lpLigne = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 lpLigne.setMargins(0, dp(context, 4), 0, 0);
                 ligneFrame.setLayoutParams(lpLigne);
+
+                ImageView imgThumb = new ImageView(context);
+                int tailleImg = dp(context, 40);
+                LinearLayout.LayoutParams lpImg = new LinearLayout.LayoutParams(tailleImg, tailleImg);
+                lpImg.setMargins(0, 0, dp(context, 8), 0);
+                imgThumb.setLayoutParams(lpImg);
+                imgThumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imgThumb.setBackground(fond(context, Palette.canvasFond, Palette.bordure, 4));
+                
+                try {
+                    String cheminComplet = new File(cheminProjet, chemin).getAbsolutePath();
+                    Bitmap bmp = BitmapFactory.decodeFile(cheminComplet);
+                    if (bmp != null) imgThumb.setImageBitmap(bmp);
+                } catch (Exception e) {}
 
                 TextView txtFrame = new TextView(context);
                 txtFrame.setText("[" + i + "] " + chemin.replace("assets_ludexa/Images/", ""));
@@ -300,6 +382,16 @@ public class EditeurAnimationsDialog extends Dialog {
                         rafraichirListeFrames(context);
                     }
                 });
+                
+                Button btnDupliquer = new Button(context);
+                btnDupliquer.setText("D");
+                btnDupliquer.setTextColor(Palette.texteNormal);
+                btnDupliquer.setBackground(fond(context, Palette.boutonNormal, Palette.bordure, 8));
+                btnDupliquer.setLayoutParams(new LinearLayout.LayoutParams(dp(context, 45), ViewGroup.LayoutParams.WRAP_CONTENT));
+                btnDupliquer.setOnClickListener(v -> {
+                    frames.add(index + 1, frames.get(index));
+                    rafraichirListeFrames(context);
+                });
 
                 Button btnSupprimer = new Button(context);
                 btnSupprimer.setText("X");
@@ -311,9 +403,11 @@ public class EditeurAnimationsDialog extends Dialog {
                     rafraichirListeFrames(context);
                 });
 
+                ligneFrame.addView(imgThumb);
                 ligneFrame.addView(txtFrame);
                 ligneFrame.addView(btnUp);
                 ligneFrame.addView(btnDown);
+                ligneFrame.addView(btnDupliquer);
                 ligneFrame.addView(btnSupprimer);
                 conteneurFrames.addView(ligneFrame);
             }
@@ -361,22 +455,80 @@ public class EditeurAnimationsDialog extends Dialog {
                 }
             }
         }
-        if (images.isEmpty()) images.add(Traducteur.get("anim_aucune_image"));
         
         AlertDialog.Builder builderImage = new AlertDialog.Builder(context);
         builderImage.setTitle(Traducteur.get("anim_choisir_image"));
-        String[] imagesArray = images.toArray(new String[0]);
-        builderImage.setItems(imagesArray, (dialog, which) -> {
-            if (!imagesArray[which].equals(Traducteur.get("anim_aucune_image"))) {
-                animationsGlobales.get(animationSelectionnee).add(imagesArray[which]);
+        
+        ScrollView scroll = new ScrollView(context);
+        if (images.isEmpty()) {
+            TextView txtVide = new TextView(context);
+            txtVide.setText(Traducteur.get("anim_aucune_image"));
+            txtVide.setPadding(dp(context, 16), dp(context, 16), dp(context, 16), dp(context, 16));
+            scroll.addView(txtVide);
+            builderImage.setView(scroll);
+            builderImage.show();
+            return;
+        }
+
+        GridLayout grille = new GridLayout(context);
+        grille.setColumnCount(4);
+        grille.setPadding(dp(context, 8), dp(context, 8), dp(context, 8), dp(context, 8));
+
+        int tailleGridImg = dp(context, 64);
+        int margin = dp(context, 4);
+
+        final AlertDialog[] dialogSelecteur = new AlertDialog[1];
+
+        for (String imgPath : images) {
+            LinearLayout conteneurVignette = new LinearLayout(context);
+            conteneurVignette.setOrientation(LinearLayout.VERTICAL);
+            conteneurVignette.setGravity(Gravity.CENTER);
+            GridLayout.LayoutParams paramsGrid = new GridLayout.LayoutParams();
+            paramsGrid.setMargins(margin, margin, margin, margin);
+            conteneurVignette.setLayoutParams(paramsGrid);
+            
+            ImageView imgView = new ImageView(context);
+            imgView.setLayoutParams(new LinearLayout.LayoutParams(tailleGridImg, tailleGridImg));
+            imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imgView.setBackground(fond(context, Palette.canvasFond, Palette.bordure, 4));
+            
+            try {
+                String cheminComplet = new File(cheminProjet, imgPath).getAbsolutePath();
+                Bitmap bmp = BitmapFactory.decodeFile(cheminComplet);
+                if (bmp != null) imgView.setImageBitmap(bmp);
+            } catch (Exception e) {}
+
+            TextView txtNom = new TextView(context);
+            txtNom.setText(new File(imgPath).getName());
+            txtNom.setTextSize(10f);
+            txtNom.setSingleLine(true);
+            txtNom.setEllipsize(android.text.TextUtils.TruncateAt.END);
+            txtNom.setMaxWidth(tailleGridImg);
+            txtNom.setGravity(Gravity.CENTER);
+            txtNom.setTextColor(Palette.texteNormal);
+            txtNom.setPadding(0, dp(context, 2), 0, 0);
+
+            conteneurVignette.addView(imgView);
+            conteneurVignette.addView(txtNom);
+
+            conteneurVignette.setOnClickListener(v -> {
+                animationsGlobales.get(animationSelectionnee).add(imgPath);
                 rafraichirListeFrames(context);
-            }
-        });
-        builderImage.show();
+                if (dialogSelecteur[0] != null) dialogSelecteur[0].dismiss();
+            });
+
+            grille.addView(conteneurVignette);
+        }
+
+        scroll.addView(grille);
+        builderImage.setView(scroll);
+        
+        dialogSelecteur[0] = builderImage.create();
+        dialogSelecteur[0].show();
     }
 }
 // bas 2
-
+                                                                                                    
 
 
 
