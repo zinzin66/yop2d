@@ -509,7 +509,34 @@
     "noeud_cooldown": "Ограничение темпа (Кулдаун)",
   "noeud_garder_ecran": "Удерживать в экране",
   "noeud_traverser_ecran": "Пройти сквозь экран",
-  "param_delai_ms": "Задержка (мс)"
+  "param_delai_ms": "Задержка (мс)",
+    "btn_gerer_styles": "Управление стилями заголовков",
+  "obj_prefix_titre": "СтильЗаголовка",
+  "texte_titre_defaut": "Новый заголовок",
+  "insp_btn_select_style": "Выбрать стиль заголовка",
+  "insp_btn_style_actuel": "Стиль: ",
+  "insp_titre_select_style": "Выберите стиль",
+  "titre_editeur_styles": "Редактор стилизованных заголовков",
+  "style_apercu": "Предпросмотр в реальном времени",
+  "style_nouveau_defaut": "Новый стиль",
+  "style_btn_nouveau": "Создать новый стиль",
+  "style_label_nom": "Имя стиля:",
+  "style_hint_nom": "Прим.: Заголовок Level Up",
+  "style_sep_remplissage": "1. ЗАЛИВКА (ВНУТРИ)",
+  "style_sep_contour": "2. КОНТУР (ГРАНИЦА)",
+  "style_label_epaisseur": "Толщина:",
+  "style_btn_couleur_contour": "Цвет контура",
+  "style_sep_degrade": "3. ЦВЕТОВОЙ ГРАДИЕНТ",
+  "style_cb_degrade": "Включить градиент (заменяет сплошной цвет)",
+  "style_btn_deg_haut": "Верхний цвет",
+  "style_btn_deg_bas": "Нижний цвет",
+  "style_sep_ombre": "4. ТЕНЬ",
+  "style_cb_ombre": "Включить тень",
+  "style_label_rayon": "Радиус (размытие):",
+  "style_label_dx": "Смещение X:",
+  "style_label_dy": "Смещение Y:",
+  "style_btn_couleur_ombre": "Цвет тени"
+  
   
   
   
