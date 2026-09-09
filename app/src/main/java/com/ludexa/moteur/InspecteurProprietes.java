@@ -13,6 +13,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 public class InspecteurProprietes extends LinearLayout {
 
@@ -44,6 +49,7 @@ public class InspecteurProprietes extends LinearLayout {
     private LinearLayout blocTexte;
     private EditText champContenu, champTaille;
     private Button btnCouleurTexte, btnPolice;
+    private Button btnSelectStyleTitre; // NOUVEAU
 
     private LinearLayout blocImage;
     private Button btnChargerImage, btnSupprimerImage;
@@ -178,6 +184,8 @@ public class InspecteurProprietes extends LinearLayout {
         cb.setLayoutParams(lp);
     }
 // bas 1
+                     
+    
     // haut 2
     private void initialiserInterface(Context context) {
         this.setOrientation(LinearLayout.VERTICAL);
@@ -498,6 +506,14 @@ public class InspecteurProprietes extends LinearLayout {
         sepTexte.setText(Traducteur.get("insp_sep_texte"));
         styliserSousTitre(sepTexte);
         blocTexte.addView(sepTexte);
+        
+        // NOUVEAU: BOUTON CHOIX DU STYLE
+        btnSelectStyleTitre = new Button(context);
+        btnSelectStyleTitre.setText(Traducteur.get("insp_btn_select_style"));
+        btnSelectStyleTitre.setBackground(fond(Color.parseColor("#E65100"), Palette.bordure, 8));
+        btnSelectStyleTitre.setTextColor(Color.WHITE);
+        styliserBouton(btnSelectStyleTitre);
+        blocTexte.addView(btnSelectStyleTitre);
 
         champContenu = new EditText(context);
         champContenu.setHint(Traducteur.get("insp_hint_contenu_texte"));
@@ -825,7 +841,6 @@ public class InspecteurProprietes extends LinearLayout {
                 if (nomVar.isEmpty()) return;
                 
                 String typeChoisi = types[spinType.getSelectedItemPosition()];
-                // CORRECTION BUG A : Ordre des arguments rétabli (nom, scope, type)
                 Variable nouvelleVar = new Variable(nomVar, "LOCALE", typeChoisi);
                 
                 nouvelleVar.nom = nomVar;
@@ -891,8 +906,7 @@ public class InspecteurProprietes extends LinearLayout {
         scrollInspecteur.addView(contenuInspecteur);
         this.addView(scrollInspecteur);
 // bas 3
-
-// haut 4
+  // haut 4
         boutonMasquer.setOnClickListener(v -> {
             if (scrollInspecteur.getVisibility() == View.VISIBLE) {
                 scrollInspecteur.setVisibility(View.GONE);
@@ -905,6 +919,41 @@ public class InspecteurProprietes extends LinearLayout {
                 boutonMasquer.setText(">");
                 this.setLayoutParams(paramsOuvert);
             }
+        });
+        
+        // ACTION LIEE AU NOUVEAU BOUTON STYLE TITRE
+        btnSelectStyleTitre.setOnClickListener(v -> {
+            if (objetCourant == null) return;
+            if (cheminProjet == null) return;
+            
+            File fichier = new File(cheminProjet, "assets_ludexa/Textes/styles_titres.json");
+            List<String> nomsStyles = new ArrayList<>();
+            nomsStyles.add(Traducteur.get("valeur_aucune"));
+            
+            if (fichier.exists()) {
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(fichier));
+                    StringBuilder sb = new StringBuilder();
+                    String ligne;
+                    while ((ligne = br.readLine()) != null) sb.append(ligne);
+                    br.close();
+                    
+                    java.lang.reflect.Type type = new TypeToken<List<StyleTitre>>(){}.getType();
+                    List<StyleTitre> liste = new Gson().fromJson(sb.toString(), type);
+                    if (liste != null) {
+                        for (StyleTitre st : liste) nomsStyles.add(st.nom);
+                    }
+                } catch (Exception e) {}
+            }
+            
+            new AlertDialog.Builder(context)
+                .setTitle(Traducteur.get("insp_titre_select_style"))
+                .setItems(nomsStyles.toArray(new String[0]), (dialog, which) -> {
+                    if (which == 0) objetCourant.nomStyleTitre = null;
+                    else objetCourant.nomStyleTitre = nomsStyles.get(which);
+                    canvasEditeur.invalidate();
+                    afficherObjet(objetCourant);
+                }).show();
         });
 
         champNom.setOnEditorActionListener((v, actionId, event) -> {
@@ -1226,7 +1275,7 @@ public class InspecteurProprietes extends LinearLayout {
                     canvas.drawCircle(x, y, dp(11), indicatorPaint);
                 }
 
-                @Override
+                 @Override
                 public boolean onTouchEvent(android.view.MotionEvent event) {
                     if (event.getAction() == android.view.MotionEvent.ACTION_DOWN || event.getAction() == android.view.MotionEvent.ACTION_MOVE) {
                         float x = Math.max(0, Math.min(event.getX(), getWidth()));
@@ -1325,7 +1374,7 @@ public class InspecteurProprietes extends LinearLayout {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-// bas 4
+// bas 4 
 
 // haut 5
     private void verifierEtConfirmerRenommage(Context context) {
@@ -1420,7 +1469,7 @@ public class InspecteurProprietes extends LinearLayout {
             champRebond.setText(String.valueOf(objet.rebond));
             champGravite.setText(String.valueOf(objet.graviteScale));
 
-            if ("texte".equals(objet.type)) {
+            if ("texte".equals(objet.type) || "titre_stylise".equals(objet.type)) {
                 blocTexte.setVisibility(View.VISIBLE);
                 blocImage.setVisibility(View.GONE);
                 blocBouton.setVisibility(View.GONE);
@@ -1435,6 +1484,14 @@ public class InspecteurProprietes extends LinearLayout {
                 } else {
                     btnPolice.setText(Traducteur.get("insp_btn_police_selecteur"));
                 }
+                
+                if ("titre_stylise".equals(objet.type)) {
+                    btnSelectStyleTitre.setVisibility(View.VISIBLE);
+                    btnSelectStyleTitre.setText(Traducteur.get("insp_btn_style_actuel") + (objet.nomStyleTitre != null ? objet.nomStyleTitre : Traducteur.get("valeur_aucune")));
+                } else {
+                    btnSelectStyleTitre.setVisibility(View.GONE);
+                }
+                
             } else if ("scene_instance".equals(objet.type)) { 
                 blocTexte.setVisibility(View.GONE);
                 blocImage.setVisibility(View.GONE);
@@ -1693,6 +1750,5 @@ public class InspecteurProprietes extends LinearLayout {
     }
 }
 // bas 5
-                    
 
 
