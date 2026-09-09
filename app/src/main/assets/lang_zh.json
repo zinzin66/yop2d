@@ -510,7 +510,34 @@
     "noeud_cooldown": "限制频率 (冷却)",
   "noeud_garder_ecran": "保持在屏幕内",
   "noeud_traverser_ecran": "屏幕穿透",
-  "param_delai_ms": "延迟 (毫秒)"
+  "param_delai_ms": "延迟 (毫秒)",
+    "btn_gerer_styles": "管理标题样式",
+  "obj_prefix_titre": "艺术标题",
+  "texte_titre_defaut": "新标题",
+  "insp_btn_select_style": "选择标题样式",
+  "insp_btn_style_actuel": "样式：",
+  "insp_titre_select_style": "选择一个样式",
+  "titre_editeur_styles": "艺术标题编辑器",
+  "style_apercu": "实时预览",
+  "style_nouveau_defaut": "新样式",
+  "style_btn_nouveau": "创建新样式",
+  "style_label_nom": "样式名称：",
+  "style_hint_nom": "例：升级标题",
+  "style_sep_remplissage": "1. 填充（内部）",
+  "style_sep_contour": "2. 描边（边缘）",
+  "style_label_epaisseur": "厚度：",
+  "style_btn_couleur_contour": "描边颜色",
+  "style_sep_degrade": "3. 颜色渐变",
+  "style_cb_degrade": "启用渐变（替换纯色）",
+  "style_btn_deg_haut": "顶部颜色",
+  "style_btn_deg_bas": "底部颜色",
+  "style_sep_ombre": "4. 投影",
+  "style_cb_ombre": "启用阴影",
+  "style_label_rayon": "半径（模糊）：",
+  "style_label_dx": "X轴偏移：",
+  "style_label_dy": "Y轴偏移：",
+  "style_btn_couleur_ombre": "阴影颜色"
+  
   
   
   
