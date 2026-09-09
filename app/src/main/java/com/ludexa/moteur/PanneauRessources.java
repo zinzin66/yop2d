@@ -481,7 +481,7 @@ public class PanneauRessources extends LinearLayout {
         
         // --- NOUVEAU BOUTON : TITRE STYLISE ---
         ImageButton btnAjouterTitreStylise = new ImageButton(context);
-        btnAjouterTitreStylise.setImageResource(R.drawable.format_paint_24px); // Icone suggérée
+        btnAjouterTitreStylise.setImageResource(R.drawable.brand_family_24px); // Icone suggérée
         styliserBoutonIcone(btnAjouterTitreStylise);
         btnAjouterTitreStylise.setBackground(fond(Color.parseColor("#FFF3E0"), Palette.bordure, 8)); // Fond distinctif
         btnAjouterTitreStylise.setOnClickListener(v -> {
