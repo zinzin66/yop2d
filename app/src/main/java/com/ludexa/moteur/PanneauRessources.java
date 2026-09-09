@@ -479,11 +479,13 @@ public class PanneauRessources extends LinearLayout {
             rafraichirArborescence();
         });
         
-        // --- NOUVEAU BOUTON : TITRE STYLISE ---
+        
+                // --- NOUVEAU BOUTON : TITRE STYLISE ---
         ImageButton btnAjouterTitreStylise = new ImageButton(context);
-        btnAjouterTitreStylise.setImageResource(R.drawable.brand_family_24px); // Icone suggérée
+        btnAjouterTitreStylise.setImageResource(R.drawable.brand_family_24px); 
         styliserBoutonIcone(btnAjouterTitreStylise);
-        btnAjouterTitreStylise.setBackground(fond(Color.parseColor("#FFF3E0"), Palette.bordure, 8)); // Fond distinctif
+        // On NE MET PAS de setBackground personnalisé ici, on laisse le style par défaut !
+        
         btnAjouterTitreStylise.setOnClickListener(v -> {
             InterfaceEditeur editeur = (InterfaceEditeur) getContext();
             String nomUnique = genererNomUnique(Traducteur.get("obj_prefix_titre"), editeur.sceneActive);
@@ -492,12 +494,14 @@ public class PanneauRessources extends LinearLayout {
             nouveau.contenuTexte = Traducteur.get("texte_titre_defaut");
             nouveau.couleur = Color.WHITE;
             nouveau.tailleFonte = 40f;
+            nouveau.afficherFondColore = false; // SECURITE : on masque le fond du rectangle
             nouveau.zOrder = editeur.sceneActive.prochainZOrder();
             editeur.sceneActive.ajouterObjet(nouveau);
             canvasEditeur.invalidate();
             rafraichirArborescence();
-            canvasEditeur.setObjetSelectionne(nouveau); // Sélection immédiate pour ouvrir l'inspecteur
+            canvasEditeur.setObjetSelectionne(nouveau); 
         });
+
 
         ImageButton btnAjouterRond = new ImageButton(context);
         btnAjouterRond.setImageResource(R.drawable.circle_24px);
