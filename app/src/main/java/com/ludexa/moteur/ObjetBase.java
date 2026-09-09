@@ -65,7 +65,7 @@ public class ObjetBase {
     public boolean afficherFondColore = true;
 
     public String contenuTexte = "";
-    public String nomStyleTitre = null; // NOUVEAU : Référence vers le style Canva/WordArt
+    public String nomStyleTitre = null;
     public String cheminPolice = null;
     public float tailleFonte = 24f;
 
@@ -170,7 +170,7 @@ public class ObjetBase {
         copie.afficherFondColore = this.afficherFondColore;
 
         copie.contenuTexte = this.contenuTexte;
-        copie.nomStyleTitre = this.nomStyleTitre; // NOUVEAU
+        copie.nomStyleTitre = this.nomStyleTitre; 
         copie.cheminPolice = this.cheminPolice;
         copie.tailleFonte = this.tailleFonte;
 
