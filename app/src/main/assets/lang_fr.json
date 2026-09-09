@@ -509,7 +509,34 @@
     "noeud_cooldown": "Limiter cadence (Cooldown)",
   "noeud_garder_ecran": "Garder dans l'écran",
   "noeud_traverser_ecran": "Traverser l'écran",
-  "param_delai_ms": "Délai (ms)"
+  "param_delai_ms": "Délai (ms)",
+    "btn_gerer_styles": "Gérer les Styles de Titres",
+  "obj_prefix_titre": "TitreStylise",
+  "texte_titre_defaut": "Nouveau Titre",
+  "insp_btn_select_style": "Choisir le Style du Titre",
+  "insp_btn_style_actuel": "Style : ",
+  "insp_titre_select_style": "Sélectionner un Style",
+  "titre_editeur_styles": "Éditeur de Titres Stylisés",
+  "style_apercu": "Aperçu en temps réel",
+  "style_nouveau_defaut": "Nouveau Style",
+  "style_btn_nouveau": "Créer un nouveau Style",
+  "style_label_nom": "Nom du Style :",
+  "style_hint_nom": "Ex: Titre Level Up",
+  "style_sep_remplissage": "1. REMPLISSAGE (INTÉRIEUR)",
+  "style_sep_contour": "2. CONTOUR (BORDURE)",
+  "style_label_epaisseur": "Épaisseur :",
+  "style_btn_couleur_contour": "Couleur du Contour",
+  "style_sep_degrade": "3. DÉGRADÉ DE COULEURS",
+  "style_cb_degrade": "Activer le dégradé (remplace la couleur unie de l'objet)",
+  "style_btn_deg_haut": "Couleur Haut",
+  "style_btn_deg_bas": "Couleur Bas",
+  "style_sep_ombre": "4. OMBRE PORTÉE",
+  "style_cb_ombre": "Activer l'ombre",
+  "style_label_rayon": "Rayon (Flou) :",
+  "style_label_dx": "Décalage X :",
+  "style_label_dy": "Décalage Y :",
+  "style_btn_couleur_ombre": "Couleur de l'Ombre"
+  
   
   
   
