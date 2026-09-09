@@ -506,7 +506,12 @@
   "param_vitesse_x": "速度 X",
   "param_vitesse_y": "速度 Y",
   "noeud_condition_au_sol": "如果对象在地面上",
-  "noeud_si_objet_a_touche_zone_b": "如果对象A接触区域B"
+  "noeud_si_objet_a_touche_zone_b": "如果对象A接触区域B",
+    "noeud_cooldown": "限制频率 (冷却)",
+  "noeud_garder_ecran": "保持在屏幕内",
+  "noeud_traverser_ecran": "屏幕穿透",
+  "param_delai_ms": "延迟 (毫秒)"
+  
   
   
   
