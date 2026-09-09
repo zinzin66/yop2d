@@ -1320,7 +1320,6 @@ public class VueJeu extends View {
                     float dY = (float)(Math.sin(rad) * obj.vitesseAvanceContinue);
                     deplacerAvecCollision(obj, dX, dY, sceneActive.objets);
                 }
-                // ici
                 
                 if (obj.idCiblePoursuite != null && obj.vitessePoursuite != 0f) {
                     ObjetBase cible = getObjetById(obj.idCiblePoursuite, sceneActive.objets);
