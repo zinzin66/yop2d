@@ -39,9 +39,9 @@ public class EditeurTexteStyleDialog extends Dialog {
     private ScrollView panelDroit;
     private ApercuTexteView vueApercu;
 
-    // Champs de l'interface droite
     private Spinner spinnerStyles;
     private EditText champNomStyle;
+    private EditText champEspacementLettres, champEspacementLignes; // NOUVEAU
     private Spinner spinnerRemplissage;
     private EditText champEpaisseur;
     private Button btnCouleurContour;
@@ -51,7 +51,7 @@ public class EditeurTexteStyleDialog extends Dialog {
     private EditText champOmbreRayon, champOmbreDx, champOmbreDy;
     private Button btnCouleurOmbre;
 
-    private boolean isUpdatingUI = false; // Anti-boucle infinie
+    private boolean isUpdatingUI = false;
 
     private int dp(int valeur) {
         return (int) (valeur * getContext().getResources().getDisplayMetrics().density);
@@ -81,7 +81,6 @@ public class EditeurTexteStyleDialog extends Dialog {
         root.setBackgroundColor(Palette.fondPanneaux);
         root.setPadding(dp(8), dp(8), dp(8), dp(8));
 
-        // --- GAUCHE (70%) : APERÇU ---
         panelGauche = new LinearLayout(context);
         panelGauche.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams lpGauche = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.7f);
@@ -99,7 +98,6 @@ public class EditeurTexteStyleDialog extends Dialog {
         vueApercu.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
         panelGauche.addView(vueApercu);
 
-        // --- DROITE (30%) : RÉGLAGES ---
         panelDroit = new ScrollView(context);
         panelDroit.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.3f));
         panelDroit.setBackground(fond(Palette.fondNormal, Palette.bordure, 12));
@@ -108,7 +106,7 @@ public class EditeurTexteStyleDialog extends Dialog {
         contenuDroit.setOrientation(LinearLayout.VERTICAL);
         contenuDroit.setPadding(dp(12), dp(12), dp(12), dp(12));
 
-        // 1. SÉLECTION DU STYLE
+        // 1. SÉLECTION
         Button btnNouveau = new Button(context);
         btnNouveau.setText(Traducteur.get("style_btn_nouveau"));
         btnNouveau.setBackground(fond(Color.parseColor("#4CAF50"), Palette.bordure, 8));
@@ -137,19 +135,29 @@ public class EditeurTexteStyleDialog extends Dialog {
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        // 2. NOM DU STYLE
+        // 2. NOM
         champNomStyle = new EditText(context);
-        champNomStyle.setTextColor(Palette.texteNormal);
-        champNomStyle.setHintTextColor(Palette.bordure);
         champNomStyle.setHint(Traducteur.get("style_hint_nom"));
         champNomStyle.addTextChangedListener(creerWatcher(texte -> { styleCourant.nom = texte; rafraichirSpinnerStylesSansTrigger(); }));
         contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_nom"), champNomStyle));
 
-        // 3. REMPLISSAGE
+        // 3. ESPACEMENT (NOUVEAU)
+        ajouterSeparateur(context, contenuDroit, "Espacement");
+
+        champEspacementLettres = new EditText(context);
+        champEspacementLettres.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
+        champEspacementLettres.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.espacementLettres = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
+        contenuDroit.addView(genererLigneLabelChamp(context, "Lettres", champEspacementLettres));
+
+        champEspacementLignes = new EditText(context);
+        champEspacementLignes.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        champEspacementLignes.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.multiplicateurLignes = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
+        contenuDroit.addView(genererLigneLabelChamp(context, "Lignes", champEspacementLignes));
+
+        // 4. REMPLISSAGE
         ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_remplissage"));
         
         spinnerRemplissage = new Spinner(context);
-        // FIX : Remplacement par un adaptateur custom pour forcer le texte en blanc
         ArrayAdapter<String> adapterRemplissage = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, new String[]{"FILL_AND_STROKE", "FILL", "STROKE"}) {
             @Override public View getView(int position, View convertView, ViewGroup parent) {
                 TextView tv = (TextView) super.getView(position, convertView, parent);
@@ -173,7 +181,7 @@ public class EditeurTexteStyleDialog extends Dialog {
         });
         contenuDroit.addView(spinnerRemplissage);
 
-        // 4. CONTOUR
+        // 5. CONTOUR
         ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_contour"));
         champEpaisseur = new EditText(context);
         champEpaisseur.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -185,7 +193,7 @@ public class EditeurTexteStyleDialog extends Dialog {
         btnCouleurContour.setOnClickListener(v -> afficherColorPicker(context, styleCourant.couleurContour, couleur -> { styleCourant.couleurContour = couleur; rafraichirUI(); }));
         contenuDroit.addView(btnCouleurContour);
 
-        // 5. DEGRADE
+        // 6. DEGRADE
         ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_degrade"));
         cbDegrade = new CheckBox(context);
         cbDegrade.setText(Traducteur.get("style_cb_degrade"));
@@ -203,7 +211,7 @@ public class EditeurTexteStyleDialog extends Dialog {
         btnCouleurDeg2.setOnClickListener(v -> afficherColorPicker(context, styleCourant.couleurDegrade2, couleur -> { styleCourant.couleurDegrade2 = couleur; rafraichirUI(); }));
         contenuDroit.addView(btnCouleurDeg2);
 
-        // 6. OMBRE
+        // 7. OMBRE
         ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_ombre"));
         cbOmbre = new CheckBox(context);
         cbOmbre.setText(Traducteur.get("style_cb_ombre"));
@@ -269,6 +277,8 @@ public class EditeurTexteStyleDialog extends Dialog {
         isUpdatingUI = true;
         
         champNomStyle.setText(styleCourant.nom);
+        champEspacementLettres.setText(String.valueOf(styleCourant.espacementLettres));
+        champEspacementLignes.setText(String.valueOf(styleCourant.multiplicateurLignes));
         
         int spinnerPos = 0;
         if (styleCourant.modeRemplissage.equals("FILL")) spinnerPos = 1;
@@ -282,7 +292,6 @@ public class EditeurTexteStyleDialog extends Dialog {
         champOmbreDx.setText(String.valueOf(styleCourant.ombreDx));
         champOmbreDy.setText(String.valueOf(styleCourant.ombreDy));
 
-        // Mise à jour visuelle des boutons de couleurs
         btnCouleurContour.setBackgroundColor(styleCourant.couleurContour);
         btnCouleurDeg1.setBackgroundColor(styleCourant.couleurDegrade1);
         btnCouleurDeg2.setBackgroundColor(styleCourant.couleurDegrade2);
@@ -297,7 +306,6 @@ public class EditeurTexteStyleDialog extends Dialog {
         List<String> noms = new ArrayList<>();
         for (StyleTitre st : listeStyles) noms.add(st.nom);
         
-        // FIX : Remplacement par un adaptateur custom pour le Spinner principal
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, noms) {
             @Override public View getView(int position, View convertView, ViewGroup parent) {
                 TextView tv = (TextView) super.getView(position, convertView, parent);
@@ -347,7 +355,6 @@ public class EditeurTexteStyleDialog extends Dialog {
         tv.setTextColor(Palette.texteNormal);
         tv.setLayoutParams(new LinearLayout.LayoutParams(dp(80), ViewGroup.LayoutParams.WRAP_CONTENT));
         
-        // FIX : On force le texte blanc et le contour approprié sur tous les champs générés
         champ.setTextColor(Palette.texteNormal);
         champ.setHintTextColor(Palette.bordure);
         champ.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
@@ -400,7 +407,6 @@ public class EditeurTexteStyleDialog extends Dialog {
         } catch (Exception e) {}
     }
 
-      // Sélecteur de couleur avancé (intégrant HEX + Palette rapide)
     private void afficherColorPicker(Context context, int couleurInitiale, java.util.function.Consumer<Integer> onColorSelected) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(Traducteur.get("insp_titre_select_couleur"));
@@ -568,7 +574,7 @@ public class EditeurTexteStyleDialog extends Dialog {
         builder.show();
     }
 
-    // --- LA VUE D'APERÇU SUR MESURE ---
+    // --- LE RENDU EN 3 PASSES PARFAITES ---
     private class ApercuTexteView extends View {
         private Paint paintTexte;
         private Paint paintQuad;
@@ -588,49 +594,60 @@ public class EditeurTexteStyleDialog extends Dialog {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            canvas.drawColor(Color.parseColor("#1E1E1E")); // Fond grille sombre
+            canvas.drawColor(Color.parseColor("#1E1E1E")); 
             
             int spacing = dp(20);
             for (int i = 0; i < getWidth(); i += spacing) canvas.drawLine(i, 0, i, getHeight(), paintQuad);
             for (int j = 0; j < getHeight(); j += spacing) canvas.drawLine(0, j, getWidth(), j, paintQuad);
 
             if (styleCourant == null) return;
-            String texteTest = "Yop2D";
+            
+            String texteTest = "Yop2D\nMulti-Lignes";
             float cx = getWidth() / 2f;
-            float cy = (getHeight() / 2f) - ((paintTexte.descent() + paintTexte.ascent()) / 2f);
+            float cyStart = (getHeight() / 2f) - ((paintTexte.descent() + paintTexte.ascent()) / 2f) - (paintTexte.getTextSize() / 2f);
 
-            // OMBRE
-            if (styleCourant.ombreActive) {
-                paintTexte.setShadowLayer(styleCourant.ombreRayon, styleCourant.ombreDx, styleCourant.ombreDy, styleCourant.ombreCouleur);
-            } else {
-                paintTexte.clearShadowLayer();
-            }
+            // NOUVEAU : Application de l'espacement
+            paintTexte.setLetterSpacing(styleCourant.espacementLettres);
+            float hauteurLigne = paintTexte.getTextSize() * styleCourant.multiplicateurLignes;
 
-            // CONTOUR
-            if ("STROKE".equals(styleCourant.modeRemplissage) || "FILL_AND_STROKE".equals(styleCourant.modeRemplissage)) {
-                paintTexte.setStyle(Paint.Style.STROKE);
-                paintTexte.setStrokeWidth(styleCourant.epaisseurContour);
-                paintTexte.setStrokeJoin(Paint.Join.ROUND);
-                paintTexte.setColor(styleCourant.couleurContour);
-                canvas.drawText(texteTest, cx, cy, paintTexte);
-            }
+            String[] lignes = texteTest.split("\n");
+            float currentY = cyStart;
 
-            paintTexte.clearShadowLayer();
-
-            // REMPLISSAGE
-            if ("FILL".equals(styleCourant.modeRemplissage) || "FILL_AND_STROKE".equals(styleCourant.modeRemplissage)) {
-                paintTexte.setStyle(Paint.Style.FILL);
-                if (styleCourant.utiliserDegrade) {
-                    Shader textShader = new LinearGradient(cx, cy - paintTexte.getTextSize(), cx, cy,
-                            new int[]{styleCourant.couleurDegrade1, styleCourant.couleurDegrade2},
-                            null, Shader.TileMode.CLAMP);
-                    paintTexte.setShader(textShader);
-                } else {
-                    paintTexte.setShader(null);
-                    paintTexte.setColor(Color.WHITE); // Couleur par défaut dans l'éditeur (car géré par l'objet sur le canvas)
+            for (String ligne : lignes) {
+                
+                // PASSE 1 : OMBRE SEULE (sur le fond)
+                if (styleCourant.ombreActive) {
+                    paintTexte.setStyle(Paint.Style.FILL); // On met le style Fill pour ne pas boursoufler l'ombre !
+                    paintTexte.setShadowLayer(styleCourant.ombreRayon, styleCourant.ombreDx, styleCourant.ombreDy, styleCourant.ombreCouleur);
+                    canvas.drawText(ligne, cx, currentY, paintTexte);
+                    paintTexte.clearShadowLayer(); // On nettoie tout de suite après
                 }
-                canvas.drawText(texteTest, cx, cy, paintTexte);
-                paintTexte.setShader(null);
+
+                // PASSE 2 : CONTOUR NET
+                if ("STROKE".equals(styleCourant.modeRemplissage) || "FILL_AND_STROKE".equals(styleCourant.modeRemplissage)) {
+                    paintTexte.setStyle(Paint.Style.STROKE);
+                    paintTexte.setStrokeWidth(styleCourant.epaisseurContour);
+                    paintTexte.setStrokeJoin(Paint.Join.ROUND);
+                    paintTexte.setColor(styleCourant.couleurContour);
+                    canvas.drawText(ligne, cx, currentY, paintTexte);
+                }
+
+                // PASSE 3 : REMPLISSAGE INTÉRIEUR
+                if ("FILL".equals(styleCourant.modeRemplissage) || "FILL_AND_STROKE".equals(styleCourant.modeRemplissage)) {
+                    paintTexte.setStyle(Paint.Style.FILL);
+                    if (styleCourant.utiliserDegrade) {
+                        Shader textShader = new LinearGradient(cx, currentY - paintTexte.getTextSize(), cx, currentY,
+                                new int[]{styleCourant.couleurDegrade1, styleCourant.couleurDegrade2},
+                                null, Shader.TileMode.CLAMP);
+                        paintTexte.setShader(textShader);
+                    } else {
+                        paintTexte.setColor(Color.WHITE);
+                    }
+                    canvas.drawText(ligne, cx, currentY, paintTexte);
+                    paintTexte.setShader(null);
+                }
+                
+                currentY += hauteurLigne;
             }
         }
     }
