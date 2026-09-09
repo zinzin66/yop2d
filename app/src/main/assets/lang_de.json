@@ -507,7 +507,12 @@
   "param_vitesse_x": "Geschwindigkeit X",
   "param_vitesse_y": "Geschwindigkeit Y",
   "noeud_condition_au_sol": "Wenn Objekt am Boden ist",
-  "noeud_si_objet_a_touche_zone_b": "Wenn Objekt A Zone B berührt"
+  "noeud_si_objet_a_touche_zone_b": "Wenn Objekt A Zone B berührt",
+    "noeud_cooldown": "Feuerrate begrenzen (Cooldown)",
+  "noeud_garder_ecran": "Im Bildschirm behalten",
+  "noeud_traverser_ecran": "Bildschirm durchqueren",
+  "param_delai_ms": "Verzögerung (ms)"
+  
   
   
   
