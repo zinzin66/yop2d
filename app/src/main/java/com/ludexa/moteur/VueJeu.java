@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Shader; // NOUVEAU
+import android.graphics.LinearGradient; // NOUVEAU
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -41,11 +43,13 @@ public class VueJeu extends View {
     private float lastXJeu = 0f;
     private float lastYJeu = 0f;
     
-    // Ajout du chronomètre pour le diagnostic du joystick
     private long dernierLogJoystick = 0;
     
     private java.util.Map<String, android.graphics.Bitmap> cacheImages = new java.util.HashMap<>();
     private java.util.Map<String, android.graphics.Typeface> cachePolices = new java.util.HashMap<>();
+    
+    // NOUVEAU : Cache en mémoire pour les styles de titres
+    private java.util.Map<String, StyleTitre> cacheStylesTitres = new java.util.HashMap<>();
 
     private final Runnable boucleDeRendu = new Runnable() {
         @Override
@@ -72,6 +76,8 @@ public class VueJeu extends View {
 
         if (scene != null) chargerAnimationsGlobales(scene.objets);
         if (sceneHud != null) chargerAnimationsGlobales(sceneHud.objets);
+        
+        chargerStylesTitresGlobales(); // NOUVEAU
 
         peintureObjet = new Paint();
         peintureObjet.setColor(Color.BLUE);
@@ -100,6 +106,27 @@ public class VueJeu extends View {
             this.moteurHud = new MoteurLogique(blueprintHud);
             this.moteurHud.setCheminProjet(this.cheminProjet);
         }
+    }
+
+    // NOUVEAU : Chargement des styles depuis le fichier JSON centralisé
+    private void chargerStylesTitresGlobales() {
+        cacheStylesTitres.clear();
+        if (cheminProjet == null) return;
+        java.io.File fichier = new java.io.File(cheminProjet, "assets_ludexa/Textes/styles_titres.json");
+        if (!fichier.exists()) return;
+        try {
+            java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(fichier));
+            StringBuilder sb = new StringBuilder();
+            String ligne;
+            while ((ligne = br.readLine()) != null) sb.append(ligne);
+            br.close();
+            
+            java.lang.reflect.Type type = new com.google.gson.reflect.TypeToken<List<StyleTitre>>(){}.getType();
+            List<StyleTitre> liste = new com.google.gson.Gson().fromJson(sb.toString(), type);
+            if (liste != null) {
+                for (StyleTitre st : liste) cacheStylesTitres.put(st.nom, st);
+            }
+        } catch (Exception e) {}
     }
 
     private void chargerAnimationsGlobales(List<ObjetBase> objets) {
@@ -187,6 +214,7 @@ public class VueJeu extends View {
         }
     }
 // bas 1
+    
 // haut 2
     public void chargerNouvelleScene(Scene nouvelleScene) {
         if (nouvelleScene == null) return;
