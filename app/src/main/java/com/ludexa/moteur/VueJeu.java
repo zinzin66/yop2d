@@ -214,7 +214,7 @@ public class VueJeu extends View {
         }
     }
 // bas 1
-    
+
 // haut 2
     public void chargerNouvelleScene(Scene nouvelleScene) {
         if (nouvelleScene == null) return;
@@ -961,7 +961,8 @@ public class VueJeu extends View {
         }
         return true;
     }
-// bas 4   
+// bas 4
+
 // haut 5
     private void dessinerImage(Canvas canvas, ObjetBase objet, String cheminAAfficher) {
         if (cheminAAfficher != null && cheminProjet != null) {
