@@ -1,3 +1,4 @@
+// haut 1
 package com.ludexa.moteur;
 
 import android.graphics.Color;
@@ -77,6 +78,8 @@ public class ObjetBase {
 
     public boolean estPhysique = false;
     public boolean estStatique = true;
+    // NOUVEAU : Ajout de la vitesse X pour compléter le moteur physique
+    public float vitesseX = 0f; 
     public float vitesseY = 0f;
     public float rebond = 0.4f;
     public float graviteScale = 1.0f;
@@ -102,7 +105,9 @@ public class ObjetBase {
     public List<Variable> variablesLocales = new ArrayList<>();
 
     public transient String idCloneRacine = null;
+// bas 1
 
+// haut 2
     public ObjetBase() {
         this.id = UUID.randomUUID().toString();
     }
@@ -125,12 +130,6 @@ public class ObjetBase {
     }
 
     public ObjetBase clonerProfond() {
-        /*
-         * CORRECTION IMPORTANTE :
-         * On ne recopie pas this.id.
-         * Le constructeur de ObjetBase() génère déjà un nouvel identifiant
-         * unique pour le clone.
-         */
         ObjetBase copie = new ObjetBase();
 
         copie.nom = this.nom;
@@ -198,6 +197,8 @@ public class ObjetBase {
 
         copie.estPhysique = this.estPhysique;
         copie.estStatique = this.estStatique;
+        // NOUVEAU : Copie de la vitesse X
+        copie.vitesseX = this.vitesseX;
         copie.vitesseY = this.vitesseY;
         copie.rebond = this.rebond;
         copie.graviteScale = this.graviteScale;
@@ -283,3 +284,4 @@ public class ObjetBase {
         return false;
     }
 }
+// bas 2
