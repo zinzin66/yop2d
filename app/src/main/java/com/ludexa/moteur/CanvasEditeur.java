@@ -281,7 +281,8 @@ public class CanvasEditeur extends View {
         return pts;
     }
 // bas 1
-// haut 2
+
+ // haut 2
     private float getHauteurReelle(ObjetBase objet) {
         if (!"texte".equals(objet.type) && !"titre_stylise".equals(objet.type)) return objet.hauteur;
 
