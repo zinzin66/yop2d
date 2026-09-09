@@ -123,6 +123,11 @@ public class Traducteur {
         if (cle.equals("opt_vers_cible")) return "Vers une cible";
         if (cle.equals("port_entrer")) return "Entrer";
         if (cle.equals("port_suivant")) return "Suivant";
+
+                // --- NOUVEAU NOEUD HORS ECRAN ---
+        if (cle.equals("noeud_si_hors_ecran")) return "Si objet hors écran";
+        if (cle.equals("param_marge")) return "Marge de sortie (pixels)";
+        
         
 
         return "[" + cle + "]";
