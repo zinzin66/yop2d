@@ -1,4 +1,4 @@
-// haut 1
+ // haut 1
 package com.ludexa.moteur;
 
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Shader; // NOUVEAU
+import android.graphics.LinearGradient; // NOUVEAU
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -40,6 +42,9 @@ public class CanvasEditeur extends View {
     private java.util.Map<String, android.graphics.Bitmap> cacheImages = new java.util.HashMap<>();
     private java.util.Map<String, android.graphics.Typeface> cachePolices = new java.util.HashMap<>();
     
+    // NOUVEAU : Cache en mémoire pour les styles de titres dans l'éditeur
+    private java.util.Map<String, StyleTitre> cacheStylesTitres = new java.util.HashMap<>();
+
     // NOUVEAU : Sécurité anti-boucle infinie pour les scènes imbriquées
     private java.util.Set<String> pilesRenduEnCours = new java.util.HashSet<>();
 
@@ -50,6 +55,28 @@ public class CanvasEditeur extends View {
 
     public void setCheminProjet(String cheminProjet) {
         this.cheminProjet = cheminProjet;
+        chargerStylesTitresGlobales(); // NOUVEAU : On charge les styles à l'ouverture du projet
+    }
+
+    // NOUVEAU : Fonction de chargement des styles JSON pour le WYSIWYG
+    public void chargerStylesTitresGlobales() {
+        cacheStylesTitres.clear();
+        if (cheminProjet == null) return;
+        java.io.File fichier = new java.io.File(cheminProjet, "assets_ludexa/Textes/styles_titres.json");
+        if (!fichier.exists()) return;
+        try {
+            java.io.BufferedReader br = new java.io.BufferedReader(new java.io.FileReader(fichier));
+            StringBuilder sb = new StringBuilder();
+            String ligne;
+            while ((ligne = br.readLine()) != null) sb.append(ligne);
+            br.close();
+            
+            java.lang.reflect.Type type = new com.google.gson.reflect.TypeToken<List<StyleTitre>>(){}.getType();
+            List<StyleTitre> liste = new com.google.gson.Gson().fromJson(sb.toString(), type);
+            if (liste != null) {
+                for (StyleTitre st : liste) cacheStylesTitres.put(st.nom, st);
+            }
+        } catch (Exception e) {}
     }
 
     public void setInspecteur(InspecteurProprietes inspecteur) {
@@ -257,7 +284,7 @@ public class CanvasEditeur extends View {
 
 // haut 2
     private float getHauteurReelle(ObjetBase objet) {
-        if (!"texte".equals(objet.type)) return objet.hauteur;
+        if (!"texte".equals(objet.type) && !"titre_stylise".equals(objet.type)) return objet.hauteur;
 
         String txt = (objet.contenuTexte != null && !objet.contenuTexte.isEmpty()) ? objet.contenuTexte : objet.nom;
         Paint p = new Paint(paintTexte);
@@ -367,7 +394,9 @@ public class CanvasEditeur extends View {
                 canvas.drawCircle(objet.largeur / 2f, objet.hauteur / 2f, rayon, paintObjet);
             }
             dessinerImage(canvas, objet, cheminAAfficher);
-        } else if ("texte".equals(objet.type)) {
+            
+        // LA FAMEUSE CONDITION QUI INTERCEPTE ENFIN LE TITRE STYLISE DANS L'EDITEUR !
+        } else if ("texte".equals(objet.type) || "titre_stylise".equals(objet.type)) {
             paintTexte.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
             paintTexte.setAlpha(alphaVal);
             String txt = (objet.contenuTexte != null && !objet.contenuTexte.isEmpty()) ? objet.contenuTexte : objet.nom;
@@ -395,6 +424,9 @@ public class CanvasEditeur extends View {
             float currentY = hauteurLigne;
             float largeurMax = objet.largeur > 0 ? objet.largeur : 1f;
             
+            boolean estTitreStylise = "titre_stylise".equals(objet.type) && objet.nomStyleTitre != null && cacheStylesTitres.containsKey(objet.nomStyleTitre);
+            StyleTitre style = estTitreStylise ? cacheStylesTitres.get(objet.nomStyleTitre) : null;
+            
             String[] paragraphes = txt.split("\n", -1);
             for (String paragraphe : paragraphes) {
                 if (paragraphe.isEmpty()) { currentY += hauteurLigne; continue; }
@@ -408,7 +440,50 @@ public class CanvasEditeur extends View {
                         if (dernierEspace > start) end = dernierEspace + 1;
                     }
                     String ligne = paragraphe.substring(start, end);
-                    canvas.drawText(ligne, 0, currentY, paintTexte);
+                    
+                    // RENDU WYSIWYG AVEC STYLE
+                    if (estTitreStylise) {
+                        // A. OMBRE
+                        if (style.ombreActive) {
+                            paintTexte.setShadowLayer(style.ombreRayon, style.ombreDx, style.ombreDy, style.ombreCouleur);
+                        } else {
+                            paintTexte.clearShadowLayer();
+                        }
+
+                        // B. CONTOUR
+                        if ("STROKE".equals(style.modeRemplissage) || "FILL_AND_STROKE".equals(style.modeRemplissage)) {
+                            paintTexte.setStyle(Paint.Style.STROKE);
+                            paintTexte.setStrokeWidth(style.epaisseurContour);
+                            paintTexte.setStrokeJoin(Paint.Join.ROUND);
+                            paintTexte.setStrokeCap(Paint.Cap.ROUND);
+                            paintTexte.setColor(style.couleurContour);
+                            canvas.drawText(ligne, 0, currentY, paintTexte);
+                        }
+                        
+                        paintTexte.clearShadowLayer();
+
+                        // C. REMPLISSAGE
+                        if ("FILL".equals(style.modeRemplissage) || "FILL_AND_STROKE".equals(style.modeRemplissage)) {
+                            paintTexte.setStyle(Paint.Style.FILL);
+                            if (style.utiliserDegrade) {
+                                android.graphics.Shader textShader = new android.graphics.LinearGradient(0, currentY - objet.tailleFonte, 0, currentY,
+                                        new int[]{style.couleurDegrade1, style.couleurDegrade2},
+                                        null, android.graphics.Shader.TileMode.CLAMP);
+                                paintTexte.setShader(textShader);
+                            } else {
+                                paintTexte.setShader(null);
+                                paintTexte.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE); 
+                            }
+                            canvas.drawText(ligne, 0, currentY, paintTexte);
+                            paintTexte.setShader(null);
+                        }
+                        
+                        paintTexte.setStyle(Paint.Style.FILL); 
+                        
+                    } else {
+                        canvas.drawText(ligne, 0, currentY, paintTexte);
+                    }
+                    
                     currentY += hauteurLigne;
                     start = end;
                 }
