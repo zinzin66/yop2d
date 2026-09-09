@@ -281,7 +281,6 @@ public class CanvasEditeur extends View {
         return pts;
     }
 // bas 1
-
 // haut 2
     private float getHauteurReelle(ObjetBase objet) {
         if (!"texte".equals(objet.type) && !"titre_stylise".equals(objet.type)) return objet.hauteur;
@@ -297,7 +296,14 @@ public class CanvasEditeur extends View {
         p.setTextSize(objet.tailleFonte);
         p.setTextScaleX(1.0f);
 
-        float hauteurLigne = objet.tailleFonte * 1.2f;
+        boolean estTitreStylise = "titre_stylise".equals(objet.type) && objet.nomStyleTitre != null && cacheStylesTitres.containsKey(objet.nomStyleTitre);
+        StyleTitre style = estTitreStylise ? cacheStylesTitres.get(objet.nomStyleTitre) : null;
+        
+        if (estTitreStylise && style != null) {
+            p.setLetterSpacing(style.espacementLettres);
+        }
+
+        float hauteurLigne = objet.tailleFonte * (estTitreStylise && style != null ? style.multiplicateurLignes : 1.2f);
         float totalLines = 0;
         float largeurMax = objet.largeur > 0 ? objet.largeur : 1f;
 
@@ -420,12 +426,18 @@ public class CanvasEditeur extends View {
             paintTexte.setTextSize(objet.tailleFonte);
             paintTexte.setTextScaleX(1.0f);
             
-            float hauteurLigne = objet.tailleFonte * 1.2f;
-            float currentY = hauteurLigne;
-            float largeurMax = objet.largeur > 0 ? objet.largeur : 1f;
-            
             boolean estTitreStylise = "titre_stylise".equals(objet.type) && objet.nomStyleTitre != null && cacheStylesTitres.containsKey(objet.nomStyleTitre);
             StyleTitre style = estTitreStylise ? cacheStylesTitres.get(objet.nomStyleTitre) : null;
+            
+            if (estTitreStylise && style != null) {
+                paintTexte.setLetterSpacing(style.espacementLettres);
+            } else {
+                paintTexte.setLetterSpacing(0f);
+            }
+
+            float hauteurLigne = objet.tailleFonte * (estTitreStylise && style != null ? style.multiplicateurLignes : 1.2f);
+            float currentY = hauteurLigne;
+            float largeurMax = objet.largeur > 0 ? objet.largeur : 1f;
             
             String[] paragraphes = txt.split("\n", -1);
             for (String paragraphe : paragraphes) {
@@ -442,33 +454,31 @@ public class CanvasEditeur extends View {
                     String ligne = paragraphe.substring(start, end);
                     
                     // RENDU WYSIWYG AVEC STYLE
-                    if (estTitreStylise) {
-                        // A. OMBRE
+                    if (estTitreStylise && style != null) {
+                        // PASSE 1 : OMBRE
                         if (style.ombreActive) {
+                            paintTexte.setStyle(Paint.Style.FILL);
                             paintTexte.setShadowLayer(style.ombreRayon, style.ombreDx, style.ombreDy, style.ombreCouleur);
-                        } else {
+                            canvas.drawText(ligne, 0, currentY, paintTexte);
                             paintTexte.clearShadowLayer();
                         }
 
-                        // B. CONTOUR
+                        // PASSE 2 : CONTOUR
                         if ("STROKE".equals(style.modeRemplissage) || "FILL_AND_STROKE".equals(style.modeRemplissage)) {
                             paintTexte.setStyle(Paint.Style.STROKE);
                             paintTexte.setStrokeWidth(style.epaisseurContour);
                             paintTexte.setStrokeJoin(Paint.Join.ROUND);
-                            paintTexte.setStrokeCap(Paint.Cap.ROUND);
                             paintTexte.setColor(style.couleurContour);
                             canvas.drawText(ligne, 0, currentY, paintTexte);
                         }
-                        
-                        paintTexte.clearShadowLayer();
 
-                        // C. REMPLISSAGE
+                        // PASSE 3 : REMPLISSAGE
                         if ("FILL".equals(style.modeRemplissage) || "FILL_AND_STROKE".equals(style.modeRemplissage)) {
                             paintTexte.setStyle(Paint.Style.FILL);
                             if (style.utiliserDegrade) {
-                                android.graphics.Shader textShader = new android.graphics.LinearGradient(0, currentY - objet.tailleFonte, 0, currentY,
+                                Shader textShader = new LinearGradient(0, currentY - objet.tailleFonte, 0, currentY,
                                         new int[]{style.couleurDegrade1, style.couleurDegrade2},
-                                        null, android.graphics.Shader.TileMode.CLAMP);
+                                        null, Shader.TileMode.CLAMP);
                                 paintTexte.setShader(textShader);
                             } else {
                                 paintTexte.setShader(null);
@@ -477,10 +487,10 @@ public class CanvasEditeur extends View {
                             canvas.drawText(ligne, 0, currentY, paintTexte);
                             paintTexte.setShader(null);
                         }
-                        
-                        paintTexte.setStyle(Paint.Style.FILL); 
+                        paintTexte.setStyle(Paint.Style.FILL);
                         
                     } else {
+                        paintTexte.setStyle(Paint.Style.FILL);
                         canvas.drawText(ligne, 0, currentY, paintTexte);
                     }
                     
