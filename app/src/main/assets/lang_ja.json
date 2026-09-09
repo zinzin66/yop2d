@@ -499,7 +499,21 @@
   "opt_vers_cible": "ターゲットへ",
   "port_entrer": "入力",
   "port_suivant": "次へ",
-    "noeud_sequence": "シーケンス (Y)"
+    "noeud_sequence": "シーケンス (Y)",
+    "noeud_si_hors_ecran": "オブジェクトが画面外の場合",
+  "param_marge": "画面外マージン（ピクセル）",
+  "noeud_generer_clone_position": "クローンを生成（X/Y座標）",
+  "noeud_definir_vitesse": "速度を設定（X/Y）",
+  "param_vitesse_x": "速度 X",
+  "param_vitesse_y": "速度 Y",
+  "noeud_condition_au_sol": "オブジェクトが接地している場合",
+  "noeud_si_objet_a_touche_zone_b": "オブジェクトAがゾーンBに触れた場合",
+    "noeud_cooldown": "連射制限 (クールダウン)",
+  "noeud_garder_ecran": "画面内に収める",
+  "noeud_traverser_ecran": "画面をループする",
+  "param_delai_ms": "遅延 (ミリ秒)"
+  
+  
   
   
   

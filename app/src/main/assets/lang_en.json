@@ -497,7 +497,21 @@
   "opt_vers_cible": "Towards a target",
   "port_entrer": "Enter",
   "port_suivant": "Next",
-    "noeud_sequence": "Sequence (Splitter)"
+    "noeud_sequence": "Sequence (Splitter)",
+    "noeud_si_hors_ecran": "If object is off-screen",
+  "param_marge": "Exit margin (pixels)",
+  "noeud_generer_clone_position": "Spawn clone (X/Y Position)",
+  "noeud_definir_vitesse": "Set velocity (X/Y)",
+  "param_vitesse_x": "Velocity X",
+  "param_vitesse_y": "Velocity Y",
+  "noeud_condition_au_sol": "If object is grounded",
+  "noeud_si_objet_a_touche_zone_b": "If object A touches zone B",
+    "noeud_cooldown": "Limit rate (Cooldown)",
+  "noeud_garder_ecran": "Clamp to screen",
+  "noeud_traverser_ecran": "Screen wrap",
+  "param_delai_ms": "Delay (ms)"
+  
+  
   
   
   

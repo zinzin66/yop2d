@@ -67,6 +67,8 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_si_mouvement"), Traducteur.get("cat_logique_conditions"), "NoeudConditionMouvement"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_si_bouton_maintenu"), Traducteur.get("cat_logique_conditions"), "NoeudConditionSiBoutonMaintenu"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_sequence"), Traducteur.get("cat_logique_conditions"), "NoeudActionSequence"));
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_si_hors_ecran"), Traducteur.get("cat_logique_conditions"), "NoeudConditionHorsEcran"));
+        
         
 // bas 1
     // haut 2
@@ -113,6 +115,9 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_mode_affichage"), Traducteur.get("cat_apparence_objets"), "NoeudActionModeAffichage")); 
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_parallaxe"), Traducteur.get("cat_apparence_objets"), "NoeudActionParallaxe")); 
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_tirer_nom"), Traducteur.get("cat_apparence_objets"), "NoeudActionTirer"));
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_generer_clone_position"), Traducteur.get("cat_apparence_objets"), "NoeudActionSpawnerPosition"));
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_garder_ecran"), Traducteur.get("cat_apparence_objets"), "NoeudActionGarderDansEcran"));
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_traverser_ecran"), Traducteur.get("cat_apparence_objets"), "NoeudActionTraverserEcran"));
         
         // TEXTES & DIALOGUES
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_modifier_texte"), Traducteur.get("cat_textes_dialogues"), "NoeudActionModifierTexte"));
@@ -135,6 +140,7 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_timer"), Traducteur.get("cat_temps"), "NoeudActionTimer"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_chrono"), Traducteur.get("cat_temps"), "NoeudActionChrono"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_attendre"), Traducteur.get("cat_temps"), "NoeudActionAttendre"));
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_cooldown"), Traducteur.get("cat_logique_conditions"), "NoeudConditionCooldown"));
 
         // AUDIO
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_jouer_son"), Traducteur.get("cat_audio"), "NoeudActionJouerSon"));
@@ -157,6 +163,8 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_changer_rebond"), Traducteur.get("cat_physique"), "NoeudActionChangerRebond"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_si_objet_en_chute"), Traducteur.get("cat_physique"), "NoeudConditionEnMouvement"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_force_angle"), Traducteur.get("cat_physique"), "NoeudActionForceAngle"));
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_definir_vitesse"), Traducteur.get("cat_physique"), "NoeudActionDefinirVitesse"));
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_condition_au_sol"), Traducteur.get("cat_physique"), "NoeudConditionAuSol"));
     }
 
     public static Map<String, List<InfoNoeud>> getNoeudsParCategorie() {

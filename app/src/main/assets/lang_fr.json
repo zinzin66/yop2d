@@ -497,7 +497,21 @@
   "opt_vers_cible": "Vers une cible",
   "port_entrer": "Entrer",
   "port_suivant": "Suivant",
-    "noeud_sequence": "Séquence (Y)"
+    "noeud_sequence": "Séquence (Y)",
+    "noeud_si_hors_ecran": "Si objet hors écran",
+  "param_marge": "Marge de sortie (pixels)",
+  "noeud_generer_clone_position": "Générer clone (Position X/Y)",
+  "noeud_definir_vitesse": "Définir la vitesse (X/Y)",
+  "param_vitesse_x": "Vitesse X",
+  "param_vitesse_y": "Vitesse Y",
+  "noeud_condition_au_sol": "Si objet est au sol",
+  "noeud_si_objet_a_touche_zone_b": "Si objet A touche zone B",
+    "noeud_cooldown": "Limiter cadence (Cooldown)",
+  "noeud_garder_ecran": "Garder dans l'écran",
+  "noeud_traverser_ecran": "Traverser l'écran",
+  "param_delai_ms": "Délai (ms)"
+  
+  
   
   
   

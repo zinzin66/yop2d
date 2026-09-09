@@ -497,7 +497,21 @@
   "opt_vers_cible": "Hacia un objetivo",
   "port_entrer": "Entrar",
   "port_suivant": "Siguiente",
-    "noeud_sequence": "Secuencia (Y)"
+    "noeud_sequence": "Secuencia (Y)",
+    "noeud_si_hors_ecran": "Si el objeto está fuera de la pantalla",
+  "param_marge": "Margen de salida (píxeles)",
+  "noeud_generer_clone_position": "Generar clon (Posición X/Y)",
+  "noeud_definir_vitesse": "Establecer velocidad (X/Y)",
+  "param_vitesse_x": "Velocidad X",
+  "param_vitesse_y": "Velocidad Y",
+  "noeud_condition_au_sol": "Si el objeto está en el suelo",
+  "noeud_si_objet_a_touche_zone_b": "Si el objeto A toca la zona B",
+    "noeud_cooldown": "Limitar cadencia (Cooldown)",
+  "noeud_garder_ecran": "Mantener en pantalla",
+  "noeud_traverser_ecran": "Atravesar pantalla",
+  "param_delai_ms": "Retardo (ms)"
+  
+  
   
   
   
