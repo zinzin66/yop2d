@@ -1418,4 +1418,5 @@ public class VueJeu extends View {
 
         if (sceneHudActive != null && sceneHudActive.objets != null) dessinerListeObjets(canvas, sceneHudActive.objets, false, 0f, 0f);
     }
+}
 // bas 5
