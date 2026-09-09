@@ -507,7 +507,12 @@
   "param_vitesse_x": "速度 X",
   "param_vitesse_y": "速度 Y",
   "noeud_condition_au_sol": "オブジェクトが接地している場合",
-  "noeud_si_objet_a_touche_zone_b": "オブジェクトAがゾーンBに触れた場合"
+  "noeud_si_objet_a_touche_zone_b": "オブジェクトAがゾーンBに触れた場合",
+    "noeud_cooldown": "連射制限 (クールダウン)",
+  "noeud_garder_ecran": "画面内に収める",
+  "noeud_traverser_ecran": "画面をループする",
+  "param_delai_ms": "遅延 (ミリ秒)"
+  
   
   
   
