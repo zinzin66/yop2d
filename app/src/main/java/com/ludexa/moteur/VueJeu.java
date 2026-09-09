@@ -961,9 +961,9 @@ public class VueJeu extends View {
         }
         return true;
     }
-// bas 4
-
-// haut 5
+// bas 4   
+    
+    // haut 5
     private void dessinerImage(Canvas canvas, ObjetBase objet, String cheminAAfficher) {
         if (cheminAAfficher != null && cheminProjet != null) {
             android.graphics.Bitmap bmp = cacheImages.get(cheminAAfficher);
@@ -1162,8 +1162,11 @@ public class VueJeu extends View {
                 }
                 dessinerImage(canvas, objet, cheminAAfficher);
                 
-            } else if ("texte".equals(objet.type)) {
+            // NOUVEAU : C'est ici que la magie opère pour fusionner "texte" standard et "titre_stylise" 
+            } else if ("texte".equals(objet.type) || "titre_stylise".equals(objet.type)) {
                 String texteAAfficher = (objet.contenuTexte != null && !objet.contenuTexte.isEmpty()) ? objet.contenuTexte : objet.nom;
+                
+                // --- 1. Gestion de la Police (Commun aux deux) ---
                 if (objet.cheminPolice != null && cheminProjet != null) {
                     android.graphics.Typeface tf = cachePolices.get(objet.cheminPolice);
                     if (tf == null) {
@@ -1180,10 +1183,17 @@ public class VueJeu extends View {
 
                 peintureTexte.setTextSize(objet.tailleFonte);
                 peintureTexte.setTextScaleX(1.0f);
+                peintureTexte.setAntiAlias(true);
+                
                 float hauteurLigne = objet.tailleFonte * 1.2f;
                 float currentY = hauteurLigne; 
                 float largeurMax = objet.largeur > 0 ? objet.largeur : 1f;
                 String[] paragraphes = texteAAfficher.split("\n", -1);
+                
+                boolean estTitreStylise = "titre_stylise".equals(objet.type) && objet.nomStyleTitre != null && cacheStylesTitres.containsKey(objet.nomStyleTitre);
+                StyleTitre style = estTitreStylise ? cacheStylesTitres.get(objet.nomStyleTitre) : null;
+
+                // --- 2. Découpage en Lignes (Word-Wrap intelligent) ---
                 for (String paragraphe : paragraphes) {
                     if (paragraphe.isEmpty()) { currentY += hauteurLigne; continue; }
                     int start = 0;
@@ -1196,7 +1206,55 @@ public class VueJeu extends View {
                             if (dernierEspace > start) end = dernierEspace + 1;
                         }
                         String ligne = paragraphe.substring(start, end);
-                        canvas.drawText(ligne, 0, currentY, peintureTexte);
+
+                        // --- 3. RENDU DU TEXTE LIGNE PAR LIGNE ---
+                        if (estTitreStylise) {
+                            
+                            // A. L'OMBRE (Sur la couche la plus basse)
+                            if (style.ombreActive) {
+                                peintureTexte.setShadowLayer(style.ombreRayon, style.ombreDx, style.ombreDy, style.ombreCouleur);
+                            } else {
+                                peintureTexte.clearShadowLayer();
+                            }
+
+                            // B. LE CONTOUR (Dessiné par dessus l'ombre)
+                            if ("STROKE".equals(style.modeRemplissage) || "FILL_AND_STROKE".equals(style.modeRemplissage)) {
+                                peintureTexte.setStyle(Paint.Style.STROKE);
+                                peintureTexte.setStrokeWidth(style.epaisseurContour);
+                                peintureTexte.setStrokeJoin(Paint.Join.ROUND); // Coins arrondis (très propre)
+                                peintureTexte.setStrokeCap(Paint.Cap.ROUND);
+                                peintureTexte.setColor(style.couleurContour);
+                                canvas.drawText(ligne, 0, currentY, peintureTexte);
+                            }
+                            
+                            // Nettoyage de l'ombre pour la couche de remplissage (sinon ça bave)
+                            peintureTexte.clearShadowLayer();
+
+                            // C. LE REMPLISSAGE (Dessiné tout au dessus)
+                            if ("FILL".equals(style.modeRemplissage) || "FILL_AND_STROKE".equals(style.modeRemplissage)) {
+                                peintureTexte.setStyle(Paint.Style.FILL);
+                                if (style.utiliserDegrade) {
+                                    // Le dégradé se base sur la hauteur exacte de cette ligne
+                                    Shader textShader = new LinearGradient(0, currentY - objet.tailleFonte, 0, currentY,
+                                            new int[]{style.couleurDegrade1, style.couleurDegrade2},
+                                            null, Shader.TileMode.CLAMP);
+                                    peintureTexte.setShader(textShader);
+                                } else {
+                                    peintureTexte.setShader(null);
+                                    peintureTexte.setColor(objet.couleur); // On utilise la couleur choisie par l'utilisateur
+                                }
+                                canvas.drawText(ligne, 0, currentY, peintureTexte);
+                                peintureTexte.setShader(null); // Nettoyage
+                            }
+                            
+                            // Reset du Paint par sécurité pour la suite du moteur
+                            peintureTexte.setStyle(Paint.Style.FILL); 
+                            
+                        } else {
+                            // Rendu classique (Texte normal sans style)
+                            canvas.drawText(ligne, 0, currentY, peintureTexte);
+                        }
+
                         currentY += hauteurLigne;
                         start = end;
                     }
@@ -1225,7 +1283,6 @@ public class VueJeu extends View {
                 
                 ObjetBase joueurCible = null;
 
-                // --- 1. RECHERCHE PAR TAG ---
                 for (ObjetBase obj : sceneActive.objets) {
                     if (obj.tag != null && (obj.tag.equalsIgnoreCase("Joueur") || obj.tag.equalsIgnoreCase("Player"))) {
                         joueurCible = obj;
@@ -1233,7 +1290,6 @@ public class VueJeu extends View {
                     }
                 }
 
-                // --- 2. RECHERCHE PAR CIBLE ÉDITEUR ---
                 if (joueurCible == null && joystickObj.cibleJoystickId != null) {
                     joueurCible = getObjetById(joystickObj.cibleJoystickId, sceneActive.objets);
                     
@@ -1246,7 +1302,6 @@ public class VueJeu extends View {
                     }
                 }
 
-                // --- 3. DÉPLACEMENT & DIAGNOSTIC ---
                 long tempsActuel = System.currentTimeMillis();
                 if (tempsActuel - dernierLogJoystick > 500) { 
                     logDiag("JOYSTICK cible=" + (joueurCible != null 
