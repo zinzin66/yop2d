@@ -497,7 +497,16 @@
   "opt_vers_cible": "В направлении цели",
   "port_entrer": "Вход",
   "port_suivant": "Дальше",
-    "noeud_sequence": "Последовательность (Y)"
+    "noeud_sequence": "Последовательность (Y)",
+    "noeud_si_hors_ecran": "Если объект вне экрана",
+  "param_marge": "Отступ выхода (пиксели)",
+  "noeud_generer_clone_position": "Создать клон (Позиция X/Y)",
+  "noeud_definir_vitesse": "Установить скорость (X/Y)",
+  "param_vitesse_x": "Скорость X",
+  "param_vitesse_y": "Скорость Y",
+  "noeud_condition_au_sol": "Если объект на земле",
+  "noeud_si_objet_a_touche_zone_b": "Если объект A касается зоны B"
+  
   
   
   
