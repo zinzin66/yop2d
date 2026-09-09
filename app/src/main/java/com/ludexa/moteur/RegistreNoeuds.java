@@ -67,6 +67,8 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_si_mouvement"), Traducteur.get("cat_logique_conditions"), "NoeudConditionMouvement"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_si_bouton_maintenu"), Traducteur.get("cat_logique_conditions"), "NoeudConditionSiBoutonMaintenu"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_sequence"), Traducteur.get("cat_logique_conditions"), "NoeudActionSequence"));
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_si_hors_ecran"), Traducteur.get("cat_logique_conditions"), "NoeudConditionHorsEcran"));
+        
         
 // bas 1
     // haut 2
