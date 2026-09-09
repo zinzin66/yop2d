@@ -423,7 +423,7 @@ public class PanneauRessources extends LinearLayout {
         dialog.show();
     }
 // bas 3
-// haut 4 : SECTION OBJETS
+ // haut 4
     private View creerSectionObjets(Context context) {
         LinearLayout section = new LinearLayout(context);
         section.setOrientation(LinearLayout.VERTICAL);
@@ -447,6 +447,9 @@ public class PanneauRessources extends LinearLayout {
         
         LinearLayout ligne4 = new LinearLayout(context);
         ligne4.setOrientation(LinearLayout.HORIZONTAL);
+        
+        LinearLayout ligne5 = new LinearLayout(context); // NOUVELLE LIGNE
+        ligne5.setOrientation(LinearLayout.HORIZONTAL);
 
         ImageButton btnAjouterCarre = new ImageButton(context);
         btnAjouterCarre.setImageResource(R.drawable.square_24px);
@@ -474,6 +477,26 @@ public class PanneauRessources extends LinearLayout {
             editeur.sceneActive.ajouterObjet(nouveau);
             canvasEditeur.invalidate();
             rafraichirArborescence();
+        });
+        
+        // --- NOUVEAU BOUTON : TITRE STYLISE ---
+        ImageButton btnAjouterTitreStylise = new ImageButton(context);
+        btnAjouterTitreStylise.setImageResource(R.drawable.format_paint_24px); // Icone suggérée
+        styliserBoutonIcone(btnAjouterTitreStylise);
+        btnAjouterTitreStylise.setBackground(fond(Color.parseColor("#FFF3E0"), Palette.bordure, 8)); // Fond distinctif
+        btnAjouterTitreStylise.setOnClickListener(v -> {
+            InterfaceEditeur editeur = (InterfaceEditeur) getContext();
+            String nomUnique = genererNomUnique(Traducteur.get("obj_prefix_titre"), editeur.sceneActive);
+            ObjetBase nouveau = new ObjetBase(nomUnique, 200f, 150f, 300f, 80f);
+            nouveau.type = "titre_stylise"; 
+            nouveau.contenuTexte = Traducteur.get("texte_titre_defaut");
+            nouveau.couleur = Color.WHITE;
+            nouveau.tailleFonte = 40f;
+            nouveau.zOrder = editeur.sceneActive.prochainZOrder();
+            editeur.sceneActive.ajouterObjet(nouveau);
+            canvasEditeur.invalidate();
+            rafraichirArborescence();
+            canvasEditeur.setObjetSelectionne(nouveau); // Sélection immédiate pour ouvrir l'inspecteur
         });
 
         ImageButton btnAjouterRond = new ImageButton(context);
@@ -611,46 +634,32 @@ public class PanneauRessources extends LinearLayout {
         styliserBoutonIcone(btnAjouterPrefab);
         btnAjouterPrefab.setOnClickListener(v -> {
             InterfaceEditeur editeur = (InterfaceEditeur) getContext();
-            
             List<Scene> autresScenes = new ArrayList<>();
             if (editeur.listeScenes != null) {
                 for (Scene s : editeur.listeScenes) {
-                    if (s != editeur.sceneActive) {
-                        autresScenes.add(s);
-                    }
+                    if (s != editeur.sceneActive) autresScenes.add(s);
                 }
             }
-            
-            if (autresScenes.isEmpty()) {
-                Toast.makeText(context, Traducteur.get("erreur_aucune_autre_scene"), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            
+            if (autresScenes.isEmpty()) { Toast.makeText(context, Traducteur.get("erreur_aucune_autre_scene"), Toast.LENGTH_SHORT).show(); return; }
             Dialog dialog = new Dialog(context);
             dialog.setTitle(Traducteur.get("titre_select_scene_liee"));
             LinearLayout layoutDialog = new LinearLayout(context);
             layoutDialog.setOrientation(LinearLayout.VERTICAL);
             styliserDialogue(layoutDialog);
-            
             for (Scene s : autresScenes) {
                 Button btnScene = new Button(context);
                 btnScene.setText(s.nom);
                 btnScene.setTextColor(Palette.texteNormal);
                 btnScene.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
                 btnScene.setPadding(dp(12), dp(12), dp(12), dp(12));
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 lp.setMargins(0, 0, 0, dp(8));
                 btnScene.setLayoutParams(lp);
-                
                 btnScene.setOnClickListener(vScene -> {
                     String nomUnique = genererNomUnique(Traducteur.get("obj_prefix_prefab"), editeur.sceneActive);
-                    
-                    // PARTIE 3 : Calcul unique de la bounding box lors de l'instanciation
                     android.graphics.RectF limites = canvasEditeur.calculerLimitesScene(s);
                     float initLargeur = Math.max(50f, limites.right);
                     float initHauteur = Math.max(50f, limites.bottom);
-                    
                     ObjetBase nouveau = new ObjetBase(nomUnique, 150f, 150f, initLargeur, initHauteur);
                     nouveau.type = "scene_instance";
                     nouveau.sceneLieeId = s.id;
@@ -658,18 +667,13 @@ public class PanneauRessources extends LinearLayout {
                     nouveau.couleur = Color.argb(120, 100, 150, 255); 
                     nouveau.zOrder = editeur.sceneActive.prochainZOrder();
                     editeur.sceneActive.ajouterObjet(nouveau);
-                    
                     canvasEditeur.invalidate();
                     rafraichirArborescence();
-                    
-                    // Force l'éditeur à sélectionner et inspecter le Prefab instantanément
                     canvasEditeur.setObjetSelectionne(nouveau);
-                    
                     dialog.dismiss();
                 });
                 layoutDialog.addView(btnScene);
             }
-            
             Button btnAnnuler = new Button(context);
             btnAnnuler.setText(Traducteur.get("bouton_annuler"));
             btnAnnuler.setTextColor(Palette.texteNormal);
@@ -677,35 +681,34 @@ public class PanneauRessources extends LinearLayout {
             btnAnnuler.setPadding(dp(16), dp(12), dp(16), dp(12));
             btnAnnuler.setOnClickListener(vAnnuler -> dialog.dismiss());
             layoutDialog.addView(btnAnnuler);
-            
             dialog.setContentView(layoutDialog);
             dialog.show();
         });
 
         ligne1.addView(btnAjouterCarre);
         ligne1.addView(btnAjouterTexte);
-        ligne1.addView(btnAjouterRond);
+        ligne1.addView(btnAjouterTitreStylise); // INJECTÉ ICI
         
+        ligne2.addView(btnAjouterRond);
         ligne2.addView(btnAjouterImage);
         ligne2.addView(btnAjouterZone);
-        ligne2.addView(btnAjouterBouton);
         
+        ligne3.addView(btnAjouterBouton);
         ligne3.addView(btnAjouterDialogue);
-        View espace1 = new View(context);
-        espace1.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        ligne3.addView(espace1);
-        View espace2 = new View(context);
-        espace2.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        ligne3.addView(espace2);
+        ligne3.addView(btnAjouterPrefab); 
 
         ligne4.addView(btnAjouterJoystick);
         ligne4.addView(btnAjouterBtnAction);
-        ligne4.addView(btnAjouterPrefab); 
+        
+        View espace1 = new View(context);
+        espace1.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        ligne4.addView(espace1);
 
         contenu.addView(ligne1);
         contenu.addView(ligne2);
         contenu.addView(ligne3);
         contenu.addView(ligne4);
+        contenu.addView(ligne5);
 
         btnTitre.setOnClickListener(v -> {
             if (contenu.getVisibility() == View.VISIBLE) {
@@ -722,6 +725,7 @@ public class PanneauRessources extends LinearLayout {
         return section;
     }
 // bas 4
+    
 // haut 5 : SECTION ARBORESCENCE (Hierarchie objets)
     private View creerSectionArborescence(Context context) {
         LinearLayout section = new LinearLayout(context);
@@ -915,6 +919,21 @@ public class PanneauRessources extends LinearLayout {
             EditeurAnimationsDialog dialog = new EditeurAnimationsDialog(context, editeur.cheminProjet);
             dialog.show();
         });
+        
+        // --- NOUVEAU BOUTON : GERER LES STYLES DE TITRES ---
+        Button btnStylesTitres = new Button(context);
+        btnStylesTitres.setText(Traducteur.get("btn_gerer_styles"));
+        btnStylesTitres.setAllCaps(false);
+        btnStylesTitres.setTextColor(Color.WHITE);
+        btnStylesTitres.setBackground(fond(Color.parseColor("#E65100"), Palette.bordure, 8)); 
+        LinearLayout.LayoutParams lpBtnStyles = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lpBtnStyles.setMargins(0, dp(8), 0, 0);
+        btnStylesTitres.setLayoutParams(lpBtnStyles);
+        btnStylesTitres.setOnClickListener(v -> {
+            InterfaceEditeur editeur = (InterfaceEditeur) getContext();
+            EditeurTexteStyleDialog dialog = new EditeurTexteStyleDialog(context, editeur.cheminProjet);
+            dialog.show();
+        });
 
         contenu.addView(conteneurArborescenceDossiers);
         contenu.addView(boutonsDossiers);
@@ -922,6 +941,7 @@ public class PanneauRessources extends LinearLayout {
         contenu.addView(boutonsAssets);
         contenu.addView(btnEditeurDial);
         contenu.addView(btnAnimations);
+        contenu.addView(btnStylesTitres); // INJECTÉ ICI
 
         rafraichirSectionAssetsTotale();
 
@@ -979,10 +999,9 @@ public class PanneauRessources extends LinearLayout {
             
             TextView tv = new TextView(getContext());
             
-            // TACHE 3 : Traduction dynamique des dossiers
             String cleDossier = "dossier_" + dir.getName().toLowerCase();
             String nomAffiche = Traducteur.get(cleDossier);
-            if (nomAffiche.startsWith("[")) nomAffiche = dir.getName(); // Fallback si non trouvé
+            if (nomAffiche.startsWith("[")) nomAffiche = dir.getName();
             tv.setText(nomAffiche);
             
             tv.setTextColor(dir.equals(currentFolderSelected) ? Palette.texteSelectionne : Palette.texteNormal);
@@ -1009,6 +1028,7 @@ public class PanneauRessources extends LinearLayout {
         }
     }
 // bas 6
+
 // haut 7 : SECTION ASSETS LOGIQUE (Popups et import)
     private void rafraichirListeAssets() {
         if (conteneurListeAssets == null || currentFolderSelected == null) return;
