@@ -17,7 +17,7 @@ public class StyleTitre {
     public int ombreCouleur = Color.BLACK;
     
     // --- NOUVEAUTÉS : ESPACEMENT ---
-    public float espacementLettres = 0.05f; // En EM (0.05 = léger, 0.1 = espacé)
+    public float espacementLettres = 0.05f; // 0.05 = léger espacement
     public float multiplicateurLignes = 1.2f;
 
     public StyleTitre() {}
