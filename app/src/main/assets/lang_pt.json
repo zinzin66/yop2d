@@ -505,7 +505,12 @@
   "param_vitesse_x": "Velocidade X",
   "param_vitesse_y": "Velocidade Y",
   "noeud_condition_au_sol": "Se o objeto estiver no chão",
-  "noeud_si_objet_a_touche_zone_b": "Se o objeto A tocar na zona B"
+  "noeud_si_objet_a_touche_zone_b": "Se o objeto A tocar na zona B",
+    "noeud_cooldown": "Limitar cadência (Cooldown)",
+  "noeud_garder_ecran": "Manter na tela",
+  "noeud_traverser_ecran": "Atravessar tela",
+  "param_delai_ms": "Atraso (ms)"
+  
   
   
   
