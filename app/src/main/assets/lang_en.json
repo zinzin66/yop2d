@@ -496,7 +496,9 @@
   "opt_angle_depart": "Start point angle",
   "opt_vers_cible": "Towards a target",
   "port_entrer": "Enter",
-  "port_suivant": "Next"
+  "port_suivant": "Next",
+    "noeud_sequence": "Sequence (Splitter)"
+  
   
   
   

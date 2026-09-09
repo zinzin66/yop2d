@@ -498,7 +498,9 @@
   "opt_angle_depart": "始点の角度",
   "opt_vers_cible": "ターゲットへ",
   "port_entrer": "入力",
-  "port_suivant": "次へ"
+  "port_suivant": "次へ",
+    "noeud_sequence": "シーケンス (Y)"
+  
   
   
   

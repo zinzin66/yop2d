@@ -80,6 +80,8 @@ public class Traducteur {
         if (cle.equals("noeud_objet_hasard")) return "Choisir un objet au hasard";
         if (cle.equals("cat_logique_spatiale")) return "Logique Spatiale";
         if (cle.equals("noeud_si_bouton_maintenu")) return "Si Bouton Maintenu";
+        if (cle.equals("noeud_sequence")) return "Séquence (Y)";
+        
         
         
         
