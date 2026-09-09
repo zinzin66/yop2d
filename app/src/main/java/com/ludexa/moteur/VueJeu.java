@@ -941,7 +941,7 @@ public class VueJeu extends View {
                 if (sceneHudActive != null && sceneHudActive.objets.contains(objClick) && this.moteurHud != null) {
                     this.moteurHud.executerEvenementSurObjet(NoeudEventClicObjet.class, objClick);
                 } else if (sceneActive != null && sceneActive.objets.contains(objClick) && this.moteur != null) {
-                    this.moteur.executerEvenementSurObjet(NoeudEventClicObjet.class, objClick);
+                this.moteur.executerEvenementSurObjet(NoeudEventClicObjet.class, objClick);
                 }
             }
             if (this.moteur != null) this.moteur.executerEvenement(NoeudEventFinClic.class);
@@ -962,8 +962,7 @@ public class VueJeu extends View {
         return true;
     }
 // bas 4   
-    
-    // haut 5
+// haut 5
     private void dessinerImage(Canvas canvas, ObjetBase objet, String cheminAAfficher) {
         if (cheminAAfficher != null && cheminProjet != null) {
             android.graphics.Bitmap bmp = cacheImages.get(cheminAAfficher);
@@ -1162,11 +1161,11 @@ public class VueJeu extends View {
                 }
                 dessinerImage(canvas, objet, cheminAAfficher);
                 
-            // NOUVEAU : C'est ici que la magie opère pour fusionner "texte" standard et "titre_stylise" 
+            // C'EST CETTE CONDITION QUI MANQUAIT POUR DESSINER LE TITRE STYLISE AU LIEU DU RECTANGLE !
             } else if ("texte".equals(objet.type) || "titre_stylise".equals(objet.type)) {
                 String texteAAfficher = (objet.contenuTexte != null && !objet.contenuTexte.isEmpty()) ? objet.contenuTexte : objet.nom;
                 
-                // --- 1. Gestion de la Police (Commun aux deux) ---
+                // 1. Gestion de la Police
                 if (objet.cheminPolice != null && cheminProjet != null) {
                     android.graphics.Typeface tf = cachePolices.get(objet.cheminPolice);
                     if (tf == null) {
@@ -1193,7 +1192,7 @@ public class VueJeu extends View {
                 boolean estTitreStylise = "titre_stylise".equals(objet.type) && objet.nomStyleTitre != null && cacheStylesTitres.containsKey(objet.nomStyleTitre);
                 StyleTitre style = estTitreStylise ? cacheStylesTitres.get(objet.nomStyleTitre) : null;
 
-                // --- 2. Découpage en Lignes (Word-Wrap intelligent) ---
+                // 2. Découpage en Lignes (Word-Wrap)
                 for (String paragraphe : paragraphes) {
                     if (paragraphe.isEmpty()) { currentY += hauteurLigne; continue; }
                     int start = 0;
@@ -1207,51 +1206,47 @@ public class VueJeu extends View {
                         }
                         String ligne = paragraphe.substring(start, end);
 
-                        // --- 3. RENDU DU TEXTE LIGNE PAR LIGNE ---
+                        // 3. RENDU DU TEXTE AVEC STYLE
                         if (estTitreStylise) {
                             
-                            // A. L'OMBRE (Sur la couche la plus basse)
+                            // A. OMBRE
                             if (style.ombreActive) {
                                 peintureTexte.setShadowLayer(style.ombreRayon, style.ombreDx, style.ombreDy, style.ombreCouleur);
                             } else {
                                 peintureTexte.clearShadowLayer();
                             }
 
-                            // B. LE CONTOUR (Dessiné par dessus l'ombre)
+                            // B. CONTOUR
                             if ("STROKE".equals(style.modeRemplissage) || "FILL_AND_STROKE".equals(style.modeRemplissage)) {
                                 peintureTexte.setStyle(Paint.Style.STROKE);
                                 peintureTexte.setStrokeWidth(style.epaisseurContour);
-                                peintureTexte.setStrokeJoin(Paint.Join.ROUND); // Coins arrondis (très propre)
+                                peintureTexte.setStrokeJoin(Paint.Join.ROUND);
                                 peintureTexte.setStrokeCap(Paint.Cap.ROUND);
                                 peintureTexte.setColor(style.couleurContour);
                                 canvas.drawText(ligne, 0, currentY, peintureTexte);
                             }
                             
-                            // Nettoyage de l'ombre pour la couche de remplissage (sinon ça bave)
                             peintureTexte.clearShadowLayer();
 
-                            // C. LE REMPLISSAGE (Dessiné tout au dessus)
+                            // C. REMPLISSAGE
                             if ("FILL".equals(style.modeRemplissage) || "FILL_AND_STROKE".equals(style.modeRemplissage)) {
                                 peintureTexte.setStyle(Paint.Style.FILL);
                                 if (style.utiliserDegrade) {
-                                    // Le dégradé se base sur la hauteur exacte de cette ligne
-                                    Shader textShader = new LinearGradient(0, currentY - objet.tailleFonte, 0, currentY,
+                                    android.graphics.Shader textShader = new android.graphics.LinearGradient(0, currentY - objet.tailleFonte, 0, currentY,
                                             new int[]{style.couleurDegrade1, style.couleurDegrade2},
-                                            null, Shader.TileMode.CLAMP);
+                                            null, android.graphics.Shader.TileMode.CLAMP);
                                     peintureTexte.setShader(textShader);
                                 } else {
                                     peintureTexte.setShader(null);
-                                    peintureTexte.setColor(objet.couleur); // On utilise la couleur choisie par l'utilisateur
+                                    peintureTexte.setColor(objet.couleur); 
                                 }
                                 canvas.drawText(ligne, 0, currentY, peintureTexte);
-                                peintureTexte.setShader(null); // Nettoyage
+                                peintureTexte.setShader(null);
                             }
                             
-                            // Reset du Paint par sécurité pour la suite du moteur
                             peintureTexte.setStyle(Paint.Style.FILL); 
                             
                         } else {
-                            // Rendu classique (Texte normal sans style)
                             canvas.drawText(ligne, 0, currentY, peintureTexte);
                         }
 
@@ -1423,5 +1418,4 @@ public class VueJeu extends View {
 
         if (sceneHudActive != null && sceneHudActive.objets != null) dessinerListeObjets(canvas, sceneHudActive.objets, false, 0f, 0f);
     }
-}
 // bas 5
