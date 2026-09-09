@@ -505,7 +505,12 @@
   "param_vitesse_x": "Скорость X",
   "param_vitesse_y": "Скорость Y",
   "noeud_condition_au_sol": "Если объект на земле",
-  "noeud_si_objet_a_touche_zone_b": "Если объект A касается зоны B"
+  "noeud_si_objet_a_touche_zone_b": "Если объект A касается зоны B",
+    "noeud_cooldown": "Ограничение темпа (Кулдаун)",
+  "noeud_garder_ecran": "Удерживать в экране",
+  "noeud_traverser_ecran": "Пройти сквозь экран",
+  "param_delai_ms": "Задержка (мс)"
+  
   
   
   
