@@ -127,6 +127,14 @@ public class Traducteur {
                 // --- NOUVEAU NOEUD HORS ECRAN ---
         if (cle.equals("noeud_si_hors_ecran")) return "Si objet hors écran";
         if (cle.equals("param_marge")) return "Marge de sortie (pixels)";
+
+                // --- NOUVEAUX NOEUDS DE LA FEUILLE DE ROUTE ---
+        if (cle.equals("noeud_generer_clone_position")) return "Générer clone (Position X/Y)";
+        if (cle.equals("noeud_definir_vitesse")) return "Définir la vitesse (X/Y)";
+        if (cle.equals("noeud_condition_au_sol")) return "Si objet est au sol";
+        
+        if (cle.equals("param_vitesse_x")) return "Vitesse X";
+        if (cle.equals("param_vitesse_y")) return "Vitesse Y";
         
         
 
