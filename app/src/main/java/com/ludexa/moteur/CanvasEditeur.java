@@ -374,7 +374,30 @@ public class CanvasEditeur extends View {
         return new android.graphics.RectF(minX, minY, maxX, maxY);
     }
 
-    // NOUVEAU : Fonction de dessin modulaire et récursive
+    // haut 2
+    // NOUVEAU : Fonction utilitaire pour dessiner du texte courbe ou normal
+    private void dessinerLigneDeTexte(Canvas canvas, String ligne, float x, float y, float courbure, Paint paint) {
+        if (courbure != 0) {
+            android.graphics.Path path = new android.graphics.Path();
+            float txtLargeur = paint.measureText(ligne);
+            float startX = x;
+            if (paint.getTextAlign() == Paint.Align.CENTER) startX = x - (txtLargeur / 2f);
+            else if (paint.getTextAlign() == Paint.Align.RIGHT) startX = x - txtLargeur;
+            
+            path.moveTo(startX, y);
+            // On courbe vers le bas (positif) ou le haut (négatif)
+            path.quadTo(startX + (txtLargeur / 2f), y + courbure, startX + txtLargeur, y);
+            canvas.drawTextOnPath(ligne, path, 0, 0, paint);
+        } else {
+            canvas.drawText(ligne, x, y, paint);
+        }
+    }
+// bas 2
+ 
+ 
+ // a modifié 
+ // NOUVEAU : Fonction de dessin modulaire et récursive
+  // haut 3
     private void dessinerObjetBase(Canvas canvas, ObjetBase objet, List<ObjetBase> contexteObjets, int baseAlpha, boolean isRoot) {
         int alphaVal = (int) (objet.alpha * baseAlpha);
         if (alphaVal < 0) alphaVal = 0;
@@ -402,7 +425,6 @@ public class CanvasEditeur extends View {
             }
             dessinerImage(canvas, objet, cheminAAfficher);
             
-        // LA FAMEUSE CONDITION QUI INTERCEPTE ENFIN LE TITRE STYLISE DANS L'EDITEUR !
         } else if ("texte".equals(objet.type) || "titre_stylise".equals(objet.type)) {
             paintTexte.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
             paintTexte.setAlpha(alphaVal);
@@ -430,15 +452,42 @@ public class CanvasEditeur extends View {
             boolean estTitreStylise = "titre_stylise".equals(objet.type) && objet.nomStyleTitre != null && cacheStylesTitres.containsKey(objet.nomStyleTitre);
             StyleTitre style = estTitreStylise ? cacheStylesTitres.get(objet.nomStyleTitre) : null;
             
+            float largeurMax = objet.largeur > 0 ? objet.largeur : 1f;
+            float xPos = 0;
+            Paint.Align align = Paint.Align.LEFT;
+            
             if (estTitreStylise && style != null) {
                 paintTexte.setLetterSpacing(style.espacementLettres);
+                paintTexte.setTextSkewX(style.inclinaison);
+                
+                if ("CENTRE".equals(style.alignement)) { align = Paint.Align.CENTER; xPos = largeurMax / 2f; }
+                else if ("DROITE".equals(style.alignement)) { align = Paint.Align.RIGHT; xPos = largeurMax; }
             } else {
                 paintTexte.setLetterSpacing(0f);
+                paintTexte.setTextSkewX(0f);
+            }
+            paintTexte.setTextAlign(align);
+
+            // Préparation de la Texture si besoin
+            Shader textShader = null;
+            if (estTitreStylise && style != null && style.cheminTexture != null && style.modeRemplissage.contains("TEXTURE")) {
+                android.graphics.Bitmap bmp = cacheImages.get(style.cheminTexture);
+                if (bmp == null && cheminProjet != null) {
+                    try {
+                        java.io.File imgFile = new java.io.File(cheminProjet, style.cheminTexture);
+                        if (imgFile.exists()) {
+                            bmp = android.graphics.BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                            if (bmp != null) cacheImages.put(style.cheminTexture, bmp);
+                        }
+                    } catch (Exception e) {}
+                }
+                if (bmp != null) {
+                    textShader = new android.graphics.BitmapShader(bmp, android.graphics.Shader.TileMode.REPEAT, android.graphics.Shader.TileMode.REPEAT);
+                }
             }
 
             float hauteurLigne = objet.tailleFonte * (estTitreStylise && style != null ? style.multiplicateurLignes : 1.2f);
             float currentY = hauteurLigne;
-            float largeurMax = objet.largeur > 0 ? objet.largeur : 1f;
             
             String[] paragraphes = txt.split("\n", -1);
             for (String paragraphe : paragraphes) {
@@ -454,45 +503,67 @@ public class CanvasEditeur extends View {
                     }
                     String ligne = paragraphe.substring(start, end);
                     
-                    // RENDU WYSIWYG AVEC STYLE
                     if (estTitreStylise && style != null) {
+                        float courbure = style.courbure;
+
+                        // PASSE 0 : NÉON (Glow)
+                        if (style.neonActif && style.neonRayon > 0) {
+                            paintTexte.setStyle(Paint.Style.FILL);
+                            paintTexte.setColor(style.neonCouleur);
+                            paintTexte.setMaskFilter(new android.graphics.BlurMaskFilter(style.neonRayon, android.graphics.BlurMaskFilter.Blur.NORMAL));
+                            dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
+                            paintTexte.setMaskFilter(null); // Nettoyage
+                        }
+
                         // PASSE 1 : OMBRE
                         if (style.ombreActive) {
                             paintTexte.setStyle(Paint.Style.FILL);
+                            paintTexte.setColor(Color.TRANSPARENT); // On rend le texte invisible pour ne peindre QUE l'ombre
                             paintTexte.setShadowLayer(style.ombreRayon, style.ombreDx, style.ombreDy, style.ombreCouleur);
-                            canvas.drawText(ligne, 0, currentY, paintTexte);
+                            dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
                             paintTexte.clearShadowLayer();
                         }
 
                         // PASSE 2 : CONTOUR
-                        if ("STROKE".equals(style.modeRemplissage) || "FILL_AND_STROKE".equals(style.modeRemplissage)) {
+                        if (style.modeRemplissage.contains("STROKE")) {
                             paintTexte.setStyle(Paint.Style.STROKE);
                             paintTexte.setStrokeWidth(style.epaisseurContour);
                             paintTexte.setStrokeJoin(Paint.Join.ROUND);
                             paintTexte.setColor(style.couleurContour);
-                            canvas.drawText(ligne, 0, currentY, paintTexte);
+                            dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
                         }
 
-                        // PASSE 3 : REMPLISSAGE
-                        if ("FILL".equals(style.modeRemplissage) || "FILL_AND_STROKE".equals(style.modeRemplissage)) {
+                        // PASSE 3 : REMPLISSAGE (Couleur, Dégradé ou Texture + Relief 3D)
+                        if (style.modeRemplissage.contains("FILL") || style.modeRemplissage.contains("TEXTURE")) {
                             paintTexte.setStyle(Paint.Style.FILL);
-                            if (style.utiliserDegrade) {
-                                Shader textShader = new LinearGradient(0, currentY - objet.tailleFonte, 0, currentY,
+                            
+                            // Appliquer Shader (Texture ou Dégradé)
+                            if (style.modeRemplissage.contains("TEXTURE") && textShader != null) {
+                                paintTexte.setShader(textShader);
+                            } else if (style.utiliserDegrade) {
+                                Shader gradShader = new LinearGradient(0, currentY - objet.tailleFonte, 0, currentY,
                                         new int[]{style.couleurDegrade1, style.couleurDegrade2},
                                         null, Shader.TileMode.CLAMP);
-                                paintTexte.setShader(textShader);
+                                paintTexte.setShader(gradShader);
                             } else {
-                                paintTexte.setShader(null);
-                                paintTexte.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE); 
+                                paintTexte.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
                             }
-                            canvas.drawText(ligne, 0, currentY, paintTexte);
+
+                            // Appliquer Relief 3D
+                            if (style.reliefActif) {
+                                paintTexte.setMaskFilter(new android.graphics.EmbossMaskFilter(new float[]{0f, -1f, 0.5f}, 0.6f, 3f, style.reliefElevation));
+                            }
+
+                            dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
+                            
                             paintTexte.setShader(null);
+                            paintTexte.setMaskFilter(null);
                         }
-                        paintTexte.setStyle(Paint.Style.FILL);
                         
                     } else {
+                        // Rendu classique si pas de style
                         paintTexte.setStyle(Paint.Style.FILL);
-                        canvas.drawText(ligne, 0, currentY, paintTexte);
+                        dessinerLigneDeTexte(canvas, ligne, xPos, currentY, 0f, paintTexte);
                     }
                     
                     currentY += hauteurLigne;
@@ -509,7 +580,6 @@ public class CanvasEditeur extends View {
             
         } else if ("scene_instance".equals(objet.type)) {
             if (pilesRenduEnCours.contains(objet.sceneLieeId)) {
-                // Securité : Boucle infinie interceptée
                 paintObjet.setColor(Color.argb(120, 255, 0, 0));
                 canvas.drawRect(0, 0, objet.largeur, objet.hauteur, paintObjet);
                 paintTexte.setColor(Color.WHITE);
@@ -520,25 +590,20 @@ public class CanvasEditeur extends View {
                 if (sceneLiee != null) {
                     pilesRenduEnCours.add(objet.sceneLieeId);
                     
-                    // PARTIE 1 : Variables visuelles en LECTURE SEULE (Plancher à 50f)
                     float largeurVisuelle = Math.max(50f, objet.largeur);
                     float hauteurVisuelle = Math.max(50f, objet.hauteur);
                     
-                    // Discret fond teinté
                     paintObjet.setColor(Color.argb(30, 50, 150, 255));
                     canvas.drawRect(0, 0, largeurVisuelle, hauteurVisuelle, paintObjet);
                     
-                    // Phase 3 : Rendu WYSIWYG de tous les enfants
                     List<ObjetBase> enfants = new ArrayList<>(sceneLiee.objets);
                     Collections.sort(enfants, (o1, o2) -> Integer.compare(o1.zOrder, o2.zOrder));
                     for (ObjetBase enfant : enfants) {
                         if (estVisibleEffectifGen(enfant, sceneLiee.objets)) {
-                            // On passe isRoot=false car le canvas est déjà ajusté aux coordonnées du Prefab
                             dessinerObjetBase(canvas, enfant, sceneLiee.objets, alphaVal, false);
                         }
                     }
                     
-                    // Bordure stylisée pour bien comprendre que c'est un "bloc"
                     paintSelection.setColor(Color.argb(150, 50, 150, 255));
                     paintSelection.setStrokeWidth(2f);
                     paintSelection.setPathEffect(new android.graphics.DashPathEffect(new float[]{10f, 10f}, 0f));
@@ -564,7 +629,6 @@ public class CanvasEditeur extends View {
             dessinerImage(canvas, objet, cheminAAfficher);
         }
 
-        // --- DESSIN DU CADRE DE SÉLECTION ---
         if (objet == objetSelectionne) {
             float scaleFactorX = Math.max(0.01f, Math.abs(objet.scaleX));
             float scaleFactorY = Math.max(0.01f, Math.abs(objet.scaleY));
@@ -572,7 +636,6 @@ public class CanvasEditeur extends View {
             float maxScale = Math.max(scaleFactorX, scaleFactorY);
             paintSelection.setStrokeWidth(2f / maxScale);
             
-            // Adaptation : intégration du plancher visuel pour le cadre de sélection
             float dimLargeur = ("scene_instance".equals(objet.type)) ? Math.max(50f, objet.largeur) : objet.largeur;
             float dimHauteur = ("scene_instance".equals(objet.type)) ? Math.max(50f, getHauteurReelle(objet)) : getHauteurReelle(objet);
             
@@ -604,7 +667,9 @@ public class CanvasEditeur extends View {
         }
         canvas.restore();
     }
-
+// bas 3
+ 
+// fin a modifié 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
