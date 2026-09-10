@@ -354,7 +354,8 @@ public class CanvasEditeur extends View {
             canvas.drawText(ligne, x, y, paint);
         }
     }
-
+// a modifié haut
+    // haut 4
     private void dessinerObjetBase(Canvas canvas, ObjetBase objet, List<ObjetBase> contexteObjets, int baseAlpha, boolean isRoot) {
         int alphaVal = (int) (objet.alpha * baseAlpha);
         if (alphaVal < 0) alphaVal = 0;
@@ -462,6 +463,7 @@ public class CanvasEditeur extends View {
                     if (estTitreStylise && style != null) {
                         float courbure = style.courbure;
 
+                        // PASSE 0 : NÉON (Glow)
                         if (style.neonActif && style.neonRayon > 0) {
                             paintTexte.setStyle(Paint.Style.FILL);
                             paintTexte.setColor(style.neonCouleur);
@@ -471,6 +473,7 @@ public class CanvasEditeur extends View {
                             paintTexte.setMaskFilter(null); 
                         }
 
+                        // PASSE 1 : OMBRE
                         if (style.ombreActive) {
                             paintTexte.setStyle(Paint.Style.FILL);
                             paintTexte.setColor(couleurBaseTexte); 
@@ -480,6 +483,7 @@ public class CanvasEditeur extends View {
                             paintTexte.clearShadowLayer();
                         }
 
+                        // PASSE 2 : CONTOUR
                         if (style.modeRemplissage.contains("STROKE")) {
                             paintTexte.setStyle(Paint.Style.STROKE);
                             paintTexte.setStrokeWidth(style.epaisseurContour);
@@ -489,7 +493,22 @@ public class CanvasEditeur extends View {
                             dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
                         }
 
+                        // PASSE 3 : REMPLISSAGE (AVEC RELIEF MANUEL 3D)
                         if (style.modeRemplissage.contains("FILL") || style.modeRemplissage.contains("TEXTURE")) {
+                            
+                            if (style.reliefActif) {
+                                // Extrusion/Ombre portée (bas-droite)
+                                paintTexte.setStyle(Paint.Style.FILL);
+                                paintTexte.setColor(Color.BLACK);
+                                paintTexte.setAlpha((int)(200 * (alphaVal / 255f)));
+                                dessinerLigneDeTexte(canvas, ligne, xPos + style.reliefElevation, currentY + style.reliefElevation, courbure, paintTexte);
+                                
+                                // Lumière biseau (haut-gauche)
+                                paintTexte.setColor(Color.WHITE);
+                                paintTexte.setAlpha((int)(200 * (alphaVal / 255f)));
+                                dessinerLigneDeTexte(canvas, ligne, xPos - (style.reliefElevation/2f), currentY - (style.reliefElevation/2f), courbure, paintTexte);
+                            }
+
                             paintTexte.setStyle(Paint.Style.FILL);
                             paintTexte.setColor(couleurBaseTexte);
                             paintTexte.setAlpha(alphaVal); 
@@ -503,13 +522,8 @@ public class CanvasEditeur extends View {
                                 paintTexte.setShader(gradShader);
                             } 
                             
-                            if (style.reliefActif) {
-                                paintTexte.setMaskFilter(new android.graphics.EmbossMaskFilter(new float[]{0f, -1f, 0.5f}, 0.6f, 3f, style.reliefElevation));
-                            }
-                            
                             dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
                             paintTexte.setShader(null);
-                            paintTexte.setMaskFilter(null);
                         }
                     } else {
                         paintTexte.setStyle(Paint.Style.FILL);
@@ -619,6 +633,9 @@ public class CanvasEditeur extends View {
         }
         canvas.restore();
     }
+
+    
+    // a modifier fin 
 // bas 2
 
 // haut 3
