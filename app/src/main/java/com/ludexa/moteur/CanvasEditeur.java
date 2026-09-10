@@ -1,4 +1,4 @@
- // haut 1
+// haut 1
 package com.ludexa.moteur;
 
 import android.content.Context;
@@ -6,8 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Shader; // NOUVEAU
-import android.graphics.LinearGradient; // NOUVEAU
+import android.graphics.Shader;
+import android.graphics.LinearGradient;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -42,10 +42,7 @@ public class CanvasEditeur extends View {
     private java.util.Map<String, android.graphics.Bitmap> cacheImages = new java.util.HashMap<>();
     private java.util.Map<String, android.graphics.Typeface> cachePolices = new java.util.HashMap<>();
     
-    // NOUVEAU : Cache en mémoire pour les styles de titres dans l'éditeur
     private java.util.Map<String, StyleTitre> cacheStylesTitres = new java.util.HashMap<>();
-
-    // NOUVEAU : Sécurité anti-boucle infinie pour les scènes imbriquées
     private java.util.Set<String> pilesRenduEnCours = new java.util.HashSet<>();
 
     public CanvasEditeur(Context context) {
@@ -55,10 +52,9 @@ public class CanvasEditeur extends View {
 
     public void setCheminProjet(String cheminProjet) {
         this.cheminProjet = cheminProjet;
-        chargerStylesTitresGlobales(); // NOUVEAU : On charge les styles à l'ouverture du projet
+        chargerStylesTitresGlobales();
     }
 
-    // NOUVEAU : Fonction de chargement des styles JSON pour le WYSIWYG
     public void chargerStylesTitresGlobales() {
         cacheStylesTitres.clear();
         if (cheminProjet == null) return;
@@ -79,21 +75,10 @@ public class CanvasEditeur extends View {
         } catch (Exception e) {}
     }
 
-    public void setInspecteur(InspecteurProprietes inspecteur) {
-        this.inspecteurLie = inspecteur;
-    }
-
-    public void setEditeur(InterfaceEditeur editeur) {
-        this.editeurLie = editeur;
-    }
-
-    public void deselectionner() {
-        this.objetSelectionne = null;
-    }
-
-    public ObjetBase getObjetSelectionne() {
-        return objetSelectionne;
-    }
+    public void setInspecteur(InspecteurProprietes inspecteur) { this.inspecteurLie = inspecteur; }
+    public void setEditeur(InterfaceEditeur editeur) { this.editeurLie = editeur; }
+    public void deselectionner() { this.objetSelectionne = null; }
+    public ObjetBase getObjetSelectionne() { return objetSelectionne; }
 
     public void setObjetSelectionne(ObjetBase obj) {
         this.objetSelectionne = obj;
@@ -108,9 +93,7 @@ public class CanvasEditeur extends View {
         invalidate();
     }
 
-    public boolean isModeDeplacementObjet() {
-        return isModeDeplacementObjet;
-    }
+    public boolean isModeDeplacementObjet() { return isModeDeplacementObjet; }
 
     private void init() {
         paintGrille = new Paint();
@@ -157,13 +140,8 @@ public class CanvasEditeur extends View {
         invalidate();
     }
 
-    public void setPanMode(boolean enabled) {
-        this.isPanMode = enabled;
-    }
-
-    public boolean isPanMode() {
-        return isPanMode;
-    }
+    public void setPanMode(boolean enabled) { this.isPanMode = enabled; }
+    public boolean isPanMode() { return isPanMode; }
 
     public void zoomPlus() { niveauZoom *= 1.25f; invalidate(); }
     public void zoomMoins() { niveauZoom /= 1.25f; invalidate(); }
@@ -181,7 +159,6 @@ public class CanvasEditeur extends View {
         return null;
     }
 
-    // NOUVEAU : Fonction de visibilité générique pour s'adapter aux Prefabs
     public boolean estVisibleEffectifGen(ObjetBase obj, List<ObjetBase> contexte) {
         ObjetBase cur = obj;
         while (cur != null) {
@@ -201,7 +178,6 @@ public class CanvasEditeur extends View {
         return estVisibleEffectifGen(obj, sceneActive != null ? sceneActive.objets : new ArrayList<>());
     }
 
-    // NOUVEAU : Fonction de calcul de matrice générique pour s'adapter aux sous-scènes (Prefabs)
     public Matrix getAbsoluteMatrixGen(ObjetBase obj, List<ObjetBase> contexte) {
         Matrix m = new Matrix();
         List<ObjetBase> chaine = new ArrayList<>();
@@ -236,9 +212,7 @@ public class CanvasEditeur extends View {
     public Matrix getParentMatrix(ObjetBase obj) {
         if (obj.parentId != null) {
             ObjetBase parent = getObjetById(obj.parentId);
-            if (parent != null) {
-                return getAbsoluteMatrix(parent);
-            }
+            if (parent != null) return getAbsoluteMatrix(parent);
         }
         return new Matrix();
     }
@@ -256,7 +230,6 @@ public class CanvasEditeur extends View {
     public TransformAbsolue getCalculTransformationAbsolue(ObjetBase obj) {
         TransformAbsolue t = new TransformAbsolue();
         t.rotation = getAbsoluteRotation(obj);
-        
         float sx = 1f, sy = 1f;
         ObjetBase cur = obj;
         while(cur != null) {
@@ -281,8 +254,7 @@ public class CanvasEditeur extends View {
         return pts;
     }
 // bas 1
-
- // haut 2
+// haut 2
     private float getHauteurReelle(ObjetBase objet) {
         if (!"texte".equals(objet.type) && !"titre_stylise".equals(objet.type)) return objet.hauteur;
 
@@ -300,9 +272,7 @@ public class CanvasEditeur extends View {
         boolean estTitreStylise = "titre_stylise".equals(objet.type) && objet.nomStyleTitre != null && cacheStylesTitres.containsKey(objet.nomStyleTitre);
         StyleTitre style = estTitreStylise ? cacheStylesTitres.get(objet.nomStyleTitre) : null;
         
-        if (estTitreStylise && style != null) {
-            p.setLetterSpacing(style.espacementLettres);
-        }
+        if (estTitreStylise && style != null) p.setLetterSpacing(style.espacementLettres);
 
         float hauteurLigne = objet.tailleFonte * (estTitreStylise && style != null ? style.multiplicateurLignes : 1.2f);
         float totalLines = 0;
@@ -310,10 +280,7 @@ public class CanvasEditeur extends View {
 
         String[] paragraphes = txt.split("\n", -1);
         for (String paragraphe : paragraphes) {
-            if (paragraphe.isEmpty()) {
-                totalLines++;
-                continue;
-            }
+            if (paragraphe.isEmpty()) { totalLines++; continue; }
             int start = 0;
             while (start < paragraphe.length()) {
                 int count = p.breakText(paragraphe, start, paragraphe.length(), true, largeurMax, null);
@@ -330,7 +297,6 @@ public class CanvasEditeur extends View {
         return totalLines * hauteurLigne;
     }
 
-    // NOUVEAU : Récupération de la scène liée pour la Phase 3
     private Scene getSceneLiee(String sceneLieeId) {
         if (sceneLieeId == null || editeurLie == null || editeurLie.listeScenes == null) return null;
         for (Scene s : editeurLie.listeScenes) {
@@ -339,7 +305,6 @@ public class CanvasEditeur extends View {
         return null;
     }
 
-    // NOUVEAU : Phase 2 - Calcul du redimensionnement dynamique de la Hitbox (rendu PUBLIC)
     public android.graphics.RectF calculerLimitesScene(Scene scene) {
         if (scene == null || scene.objets == null || scene.objets.isEmpty()) {
             return new android.graphics.RectF(0, 0, 150, 150);
@@ -374,8 +339,6 @@ public class CanvasEditeur extends View {
         return new android.graphics.RectF(minX, minY, maxX, maxY);
     }
 
-    // haut 2
-    // NOUVEAU : Fonction utilitaire pour dessiner du texte courbe ou normal
     private void dessinerLigneDeTexte(Canvas canvas, String ligne, float x, float y, float courbure, Paint paint) {
         if (courbure != 0) {
             android.graphics.Path path = new android.graphics.Path();
@@ -385,20 +348,13 @@ public class CanvasEditeur extends View {
             else if (paint.getTextAlign() == Paint.Align.RIGHT) startX = x - txtLargeur;
             
             path.moveTo(startX, y);
-            // On courbe vers le bas (positif) ou le haut (négatif)
             path.quadTo(startX + (txtLargeur / 2f), y + courbure, startX + txtLargeur, y);
             canvas.drawTextOnPath(ligne, path, 0, 0, paint);
         } else {
             canvas.drawText(ligne, x, y, paint);
         }
     }
-// bas 2
- 
- 
- // a modifié 
- // NOUVEAU : Fonction de dessin modulaire et récursive
-  // haut 3
- // haut 1
+
     private void dessinerObjetBase(Canvas canvas, ObjetBase objet, List<ObjetBase> contexteObjets, int baseAlpha, boolean isRoot) {
         int alphaVal = (int) (objet.alpha * baseAlpha);
         if (alphaVal < 0) alphaVal = 0;
@@ -506,7 +462,6 @@ public class CanvasEditeur extends View {
                     if (estTitreStylise && style != null) {
                         float courbure = style.courbure;
 
-                        // PASSE 0 : NÉON (Glow)
                         if (style.neonActif && style.neonRayon > 0) {
                             paintTexte.setStyle(Paint.Style.FILL);
                             paintTexte.setColor(style.neonCouleur);
@@ -516,17 +471,15 @@ public class CanvasEditeur extends View {
                             paintTexte.setMaskFilter(null); 
                         }
 
-                        // PASSE 1 : OMBRE
                         if (style.ombreActive) {
                             paintTexte.setStyle(Paint.Style.FILL);
-                            paintTexte.setColor(couleurBaseTexte); // On utilise la couleur normale
-                            paintTexte.setAlpha(alphaVal); // On restaure l'alpha
+                            paintTexte.setColor(couleurBaseTexte); 
+                            paintTexte.setAlpha(alphaVal); 
                             paintTexte.setShadowLayer(style.ombreRayon, style.ombreDx, style.ombreDy, style.ombreCouleur);
                             dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
                             paintTexte.clearShadowLayer();
                         }
 
-                        // PASSE 2 : CONTOUR
                         if (style.modeRemplissage.contains("STROKE")) {
                             paintTexte.setStyle(Paint.Style.STROKE);
                             paintTexte.setStrokeWidth(style.epaisseurContour);
@@ -536,11 +489,10 @@ public class CanvasEditeur extends View {
                             dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
                         }
 
-                        // PASSE 3 : REMPLISSAGE
                         if (style.modeRemplissage.contains("FILL") || style.modeRemplissage.contains("TEXTURE")) {
                             paintTexte.setStyle(Paint.Style.FILL);
                             paintTexte.setColor(couleurBaseTexte);
-                            paintTexte.setAlpha(alphaVal); // Restauration indispensable pour le Shader
+                            paintTexte.setAlpha(alphaVal); 
                             
                             if (style.modeRemplissage.contains("TEXTURE") && textShader != null) {
                                 paintTexte.setShader(textShader);
@@ -667,10 +619,49 @@ public class CanvasEditeur extends View {
         }
         canvas.restore();
     }
+// bas 2
 
-                 
-                                    
-// fin a modifié 
+// haut 3
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        canvas.save();
+        canvas.scale(niveauZoom, niveauZoom, getWidth() / 2f, getHeight() / 2f);
+
+        int gridSize = 100;
+        int w = getWidth();
+        int h = getHeight();
+        int limiteMax = (int) (Math.max(w, h) * 2 / niveauZoom);
+
+        for (int i = -limiteMax + (int) (cameraX % gridSize); i < limiteMax; i += gridSize) {
+            canvas.drawLine(i, -limiteMax, i, limiteMax, paintGrille);
+        }
+        for (int i = -limiteMax + (int) (cameraY % gridSize); i < limiteMax; i += gridSize) {
+            canvas.drawLine(-limiteMax, i, limiteMax, i, paintGrille);
+        }
+
+        canvas.drawRect(0 + cameraX, 0 + cameraY, ConfigurationJeu.LARGEUR_JEU + cameraX, ConfigurationJeu.HAUTEUR_JEU + cameraY, paintCamera);
+
+        if (sceneActive != null) {
+            List<ObjetBase> objetsTries = new ArrayList<>(sceneActive.objets);
+            Collections.sort(objetsTries, (o1, o2) -> Integer.compare(o1.zOrder, o2.zOrder));
+
+            for (ObjetBase objet : objetsTries) {
+                if (!estVisibleEffectifGen(objet, sceneActive.objets)) continue; 
+                dessinerObjetBase(canvas, objet, sceneActive.objets, 255, true);
+            }
+        }
+        canvas.restore();
+    }
+
+    private void dessinerImage(Canvas canvas, ObjetBase objet, String cheminAAfficher) {
+        if (cheminAAfficher != null && cheminProjet != null) {
+            android.graphics.Bitmap bmp = cacheImages.get(cheminAAfficher);
+            if (bmp == null) {
+                try {
+                    java.io.File imgFile = new java.io.File(cheminProjet, cheminAAfficher);
+                    if (imgFile.exists()) {
                         bmp = android.graphics.BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                         if (bmp != null) {
                             cacheImages.put(cheminAAfficher, bmp);
@@ -679,7 +670,7 @@ public class CanvasEditeur extends View {
                 } catch (Exception e) {}
             }
             if (bmp != null) {
-                if ("rond".equals(objet.type)) {
+                if ("rond".equals(objet.type) || "joystick".equals(objet.type) || "bouton_action".equals(objet.type)) {
                     canvas.save();
                     android.graphics.Path path = new android.graphics.Path();
                     float rayon = Math.min(objet.largeur, objet.hauteur) / 2f;
@@ -718,18 +709,14 @@ public class CanvasEditeur extends View {
             float[] localPos = worldToLocal(objet, sx, sy);
             float lx = localPos[0], ly = localPos[1];
             
-            // PARTIE 2 : Hitbox minimale de 50f
             float objLargeur = ("scene_instance".equals(objet.type)) ? Math.max(50f, objet.largeur) : objet.largeur;
             float objHauteur = ("scene_instance".equals(objet.type)) ? Math.max(50f, getHauteurReelle(objet)) : getHauteurReelle(objet);
             
-            if (lx >= 0 && lx <= objLargeur && ly >= 0 && ly <= objHauteur) {
-                return objet;
-            }
+            if (lx >= 0 && lx <= objLargeur && ly >= 0 && ly <= objHauteur) return objet;
         }
         return null;
     }
-// bas 2
-// haut 3
+
     private int getTouchTarget(float xEcran, float yEcran) {
         float[] scenePos = ecranVersScene(xEcran, yEcran);
         float sx = scenePos[0], sy = scenePos[1];
@@ -745,7 +732,6 @@ public class CanvasEditeur extends View {
             float hitY = (30f / niveauZoom) / scaleY;
             float hitAvg = (hitX + hitY) / 2f;
             
-            // PARTIE 2 : Hitbox de sélection minimale pour les poignées
             float dimLargeur = ("scene_instance".equals(objetSelectionne.type)) ? Math.max(50f, objetSelectionne.largeur) : objetSelectionne.largeur;
             float dimHauteur = ("scene_instance".equals(objetSelectionne.type)) ? Math.max(50f, getHauteurReelle(objetSelectionne)) : getHauteurReelle(objetSelectionne);
 
@@ -788,10 +774,7 @@ public class CanvasEditeur extends View {
                     currentMode = 1;
                 } else {
                     currentMode = getTouchTarget(x, y);
-                    
-                    if (currentMode == 0) {
-                        currentMode = 1;
-                    }
+                    if (currentMode == 0) currentMode = 1;
                     
                     if (objetSelectionne != null) {
                         initX = objetSelectionne.x; initY = objetSelectionne.y;
@@ -809,9 +792,7 @@ public class CanvasEditeur extends View {
 
             case MotionEvent.ACTION_MOVE:
                 if (scaleGestureDetector.isInProgress()) {
-                    lastTouchX = x;
-                    lastTouchY = y;
-                    return true;
+                    lastTouchX = x; lastTouchY = y; return true;
                 }
 
                 float[] scenePos = ecranVersScene(x, y);
@@ -876,7 +857,6 @@ public class CanvasEditeur extends View {
                     if (!objetSelectionne.estVerrouille) {
                         float[] centerWorld = {objetSelectionne.largeur / 2f, objetSelectionne.hauteur / 2f};
                         getAbsoluteMatrix(objetSelectionne).mapPoints(centerWorld);
-                        
                         double angleWorld = Math.toDegrees(Math.atan2(sy - centerWorld[1], sx - centerWorld[0]));
                         float parentRot = getAbsoluteRotation(getObjetById(objetSelectionne.parentId));
                         objetSelectionne.rotation = (float) (angleWorld + 90) - parentRot;
@@ -951,11 +931,11 @@ public class CanvasEditeur extends View {
     }
 }
 // bas 3
-                            
 
 
 
+ 
 
-    
+
 
 
