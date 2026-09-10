@@ -712,7 +712,8 @@ public class EditeurTexteStyleDialog extends Dialog {
             canvas.drawText(ligne, x, y, paint);
         }
     }
-
+// a modifier
+      // haut 2
     private class ApercuTexteView extends View {
         private Paint paintTexte;
         private Paint paintQuad;
@@ -756,7 +757,6 @@ public class EditeurTexteStyleDialog extends Dialog {
             else if ("DROITE".equals(styleCourant.alignement)) { align = Paint.Align.RIGHT; xPos = getWidth() - dp(20); }
             paintTexte.setTextAlign(align);
 
-            // Preparation Texture
             if (styleCourant.cheminTexture != null && styleCourant.modeRemplissage.contains("TEXTURE")) {
                 if (!styleCourant.cheminTexture.equals(derniereTexture) || textShaderTexture == null) {
                     try {
@@ -791,7 +791,7 @@ public class EditeurTexteStyleDialog extends Dialog {
                 // PASSE 1 : OMBRE
                 if (styleCourant.ombreActive) {
                     paintTexte.setStyle(Paint.Style.FILL);
-                    paintTexte.setColor(Color.TRANSPARENT);
+                    paintTexte.setColor(Color.WHITE); // Toujours mettre une base solide, plus de transparent !
                     paintTexte.setShadowLayer(styleCourant.ombreRayon, styleCourant.ombreDx, styleCourant.ombreDy, styleCourant.ombreCouleur);
                     dessinerLigneDeTexte(canvas, ligne, xPos, currentY, styleCourant.courbure, paintTexte);
                     paintTexte.clearShadowLayer();
@@ -806,9 +806,10 @@ public class EditeurTexteStyleDialog extends Dialog {
                     dessinerLigneDeTexte(canvas, ligne, xPos, currentY, styleCourant.courbure, paintTexte);
                 }
 
-                // PASSE 3 : REMPLISSAGE (Couleur, Degrade, Texture, Relief)
+                // PASSE 3 : REMPLISSAGE
                 if (styleCourant.modeRemplissage.contains("FILL") || styleCourant.modeRemplissage.contains("TEXTURE")) {
                     paintTexte.setStyle(Paint.Style.FILL);
+                    paintTexte.setColor(Color.WHITE); // Restaure l'opacité au max pour les shaders
                     
                     if (styleCourant.modeRemplissage.contains("TEXTURE") && textShaderTexture != null) {
                         paintTexte.setShader(textShaderTexture);
@@ -817,8 +818,6 @@ public class EditeurTexteStyleDialog extends Dialog {
                                 new int[]{styleCourant.couleurDegrade1, styleCourant.couleurDegrade2},
                                 null, Shader.TileMode.CLAMP);
                         paintTexte.setShader(textShader);
-                    } else {
-                        paintTexte.setColor(Color.WHITE);
                     }
                     
                     if (styleCourant.reliefActif) {
