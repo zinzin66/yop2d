@@ -714,6 +714,7 @@ public class EditeurTexteStyleDialog extends Dialog {
     }
 // a modifier
       // haut 2
+    // haut 2
     private class ApercuTexteView extends View {
         private Paint paintTexte;
         private Paint paintQuad;
@@ -791,7 +792,7 @@ public class EditeurTexteStyleDialog extends Dialog {
                 // PASSE 1 : OMBRE
                 if (styleCourant.ombreActive) {
                     paintTexte.setStyle(Paint.Style.FILL);
-                    paintTexte.setColor(Color.WHITE); // Toujours mettre une base solide, plus de transparent !
+                    paintTexte.setColor(Color.WHITE); 
                     paintTexte.setShadowLayer(styleCourant.ombreRayon, styleCourant.ombreDx, styleCourant.ombreDy, styleCourant.ombreCouleur);
                     dessinerLigneDeTexte(canvas, ligne, xPos, currentY, styleCourant.courbure, paintTexte);
                     paintTexte.clearShadowLayer();
@@ -806,10 +807,27 @@ public class EditeurTexteStyleDialog extends Dialog {
                     dessinerLigneDeTexte(canvas, ligne, xPos, currentY, styleCourant.courbure, paintTexte);
                 }
 
-                // PASSE 3 : REMPLISSAGE
+                // PASSE 3 : REMPLISSAGE (AVEC RELIEF MANUEL 3D !)
                 if (styleCourant.modeRemplissage.contains("FILL") || styleCourant.modeRemplissage.contains("TEXTURE")) {
+                    
+                    // --- NOUVEAU RELIEF MANUEL ---
+                    if (styleCourant.reliefActif) {
+                        // Extrusion/Ombre portée solide (bas-droite)
+                        paintTexte.setStyle(Paint.Style.FILL);
+                        paintTexte.setColor(Color.BLACK);
+                        paintTexte.setAlpha(200);
+                        dessinerLigneDeTexte(canvas, ligne, xPos + styleCourant.reliefElevation, currentY + styleCourant.reliefElevation, styleCourant.courbure, paintTexte);
+                        
+                        // Lumière biseau (haut-gauche)
+                        paintTexte.setColor(Color.WHITE);
+                        paintTexte.setAlpha(200);
+                        dessinerLigneDeTexte(canvas, ligne, xPos - (styleCourant.reliefElevation/2f), currentY - (styleCourant.reliefElevation/2f), styleCourant.courbure, paintTexte);
+                    }
+
+                    // Couleur normale du texte
                     paintTexte.setStyle(Paint.Style.FILL);
-                    paintTexte.setColor(Color.WHITE); // Restaure l'opacité au max pour les shaders
+                    paintTexte.setColor(Color.WHITE); 
+                    paintTexte.setAlpha(255); 
                     
                     if (styleCourant.modeRemplissage.contains("TEXTURE") && textShaderTexture != null) {
                         paintTexte.setShader(textShaderTexture);
@@ -820,20 +838,15 @@ public class EditeurTexteStyleDialog extends Dialog {
                         paintTexte.setShader(textShader);
                     }
                     
-                    if (styleCourant.reliefActif) {
-                        paintTexte.setMaskFilter(new android.graphics.EmbossMaskFilter(new float[]{0f, -1f, 0.5f}, 0.6f, 3f, styleCourant.reliefElevation));
-                    }
-                    
                     dessinerLigneDeTexte(canvas, ligne, xPos, currentY, styleCourant.courbure, paintTexte);
-                    
                     paintTexte.setShader(null);
-                    paintTexte.setMaskFilter(null);
                 }
                 
                 currentY += hauteurLigne;
             }
         }
     }
+    
 }
 // bas 4
 
