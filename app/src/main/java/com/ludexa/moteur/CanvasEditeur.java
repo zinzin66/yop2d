@@ -354,8 +354,9 @@ public class CanvasEditeur extends View {
             canvas.drawText(ligne, x, y, paint);
         }
     }
-// a modifié haut
-    // haut 4
+// bas 2
+
+// haut 3
     private void dessinerObjetBase(Canvas canvas, ObjetBase objet, List<ObjetBase> contexteObjets, int baseAlpha, boolean isRoot) {
         int alphaVal = (int) (objet.alpha * baseAlpha);
         if (alphaVal < 0) alphaVal = 0;
@@ -497,13 +498,11 @@ public class CanvasEditeur extends View {
                         if (style.modeRemplissage.contains("FILL") || style.modeRemplissage.contains("TEXTURE")) {
                             
                             if (style.reliefActif) {
-                                // Extrusion/Ombre portée (bas-droite)
                                 paintTexte.setStyle(Paint.Style.FILL);
                                 paintTexte.setColor(Color.BLACK);
                                 paintTexte.setAlpha((int)(200 * (alphaVal / 255f)));
                                 dessinerLigneDeTexte(canvas, ligne, xPos + style.reliefElevation, currentY + style.reliefElevation, courbure, paintTexte);
                                 
-                                // Lumière biseau (haut-gauche)
                                 paintTexte.setColor(Color.WHITE);
                                 paintTexte.setAlpha((int)(200 * (alphaVal / 255f)));
                                 dessinerLigneDeTexte(canvas, ligne, xPos - (style.reliefElevation/2f), currentY - (style.reliefElevation/2f), courbure, paintTexte);
@@ -633,12 +632,8 @@ public class CanvasEditeur extends View {
         }
         canvas.restore();
     }
-
-    
-    // a modifier fin 
-// bas 2
-
-// haut 3
+// bas 3
+// haut 4
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -733,7 +728,8 @@ public class CanvasEditeur extends View {
         }
         return null;
     }
-
+// bas 4
+// haut 5
     private int getTouchTarget(float xEcran, float yEcran) {
         float[] scenePos = ecranVersScene(xEcran, yEcran);
         float sx = scenePos[0], sy = scenePos[1];
@@ -947,11 +943,19 @@ public class CanvasEditeur extends View {
         }
     }
 }
-// bas 3
+// bas 5
 
 
 
- 
+
+
+    
+
+
+
+    
+
+    
 
 
 
