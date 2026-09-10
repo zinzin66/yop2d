@@ -398,6 +398,7 @@ public class CanvasEditeur extends View {
  // a modifié 
  // NOUVEAU : Fonction de dessin modulaire et récursive
   // haut 3
+ // haut 1
     private void dessinerObjetBase(Canvas canvas, ObjetBase objet, List<ObjetBase> contexteObjets, int baseAlpha, boolean isRoot) {
         int alphaVal = (int) (objet.alpha * baseAlpha);
         if (alphaVal < 0) alphaVal = 0;
@@ -426,9 +427,9 @@ public class CanvasEditeur extends View {
             dessinerImage(canvas, objet, cheminAAfficher);
             
         } else if ("texte".equals(objet.type) || "titre_stylise".equals(objet.type)) {
-            paintTexte.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
-            paintTexte.setAlpha(alphaVal);
+            
             String txt = (objet.contenuTexte != null && !objet.contenuTexte.isEmpty()) ? objet.contenuTexte : objet.nom;
+            int couleurBaseTexte = objet.couleur != 0 ? objet.couleur : Color.BLUE;
             
             if (objet.cheminPolice != null && cheminProjet != null) {
                 android.graphics.Typeface tf = cachePolices.get(objet.cheminPolice);
@@ -468,7 +469,6 @@ public class CanvasEditeur extends View {
             }
             paintTexte.setTextAlign(align);
 
-            // Préparation de la Texture si besoin
             Shader textShader = null;
             if (estTitreStylise && style != null && style.cheminTexture != null && style.modeRemplissage.contains("TEXTURE")) {
                 android.graphics.Bitmap bmp = cacheImages.get(style.cheminTexture);
@@ -510,15 +510,17 @@ public class CanvasEditeur extends View {
                         if (style.neonActif && style.neonRayon > 0) {
                             paintTexte.setStyle(Paint.Style.FILL);
                             paintTexte.setColor(style.neonCouleur);
+                            paintTexte.setAlpha((int)(Color.alpha(style.neonCouleur) * (alphaVal / 255f)));
                             paintTexte.setMaskFilter(new android.graphics.BlurMaskFilter(style.neonRayon, android.graphics.BlurMaskFilter.Blur.NORMAL));
                             dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
-                            paintTexte.setMaskFilter(null); // Nettoyage
+                            paintTexte.setMaskFilter(null); 
                         }
 
                         // PASSE 1 : OMBRE
                         if (style.ombreActive) {
                             paintTexte.setStyle(Paint.Style.FILL);
-                            paintTexte.setColor(Color.TRANSPARENT); // On rend le texte invisible pour ne peindre QUE l'ombre
+                            paintTexte.setColor(couleurBaseTexte); // On utilise la couleur normale
+                            paintTexte.setAlpha(alphaVal); // On restaure l'alpha
                             paintTexte.setShadowLayer(style.ombreRayon, style.ombreDx, style.ombreDy, style.ombreCouleur);
                             dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
                             paintTexte.clearShadowLayer();
@@ -530,14 +532,16 @@ public class CanvasEditeur extends View {
                             paintTexte.setStrokeWidth(style.epaisseurContour);
                             paintTexte.setStrokeJoin(Paint.Join.ROUND);
                             paintTexte.setColor(style.couleurContour);
+                            paintTexte.setAlpha((int)(Color.alpha(style.couleurContour) * (alphaVal / 255f)));
                             dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
                         }
 
-                        // PASSE 3 : REMPLISSAGE (Couleur, Dégradé ou Texture + Relief 3D)
+                        // PASSE 3 : REMPLISSAGE
                         if (style.modeRemplissage.contains("FILL") || style.modeRemplissage.contains("TEXTURE")) {
                             paintTexte.setStyle(Paint.Style.FILL);
+                            paintTexte.setColor(couleurBaseTexte);
+                            paintTexte.setAlpha(alphaVal); // Restauration indispensable pour le Shader
                             
-                            // Appliquer Shader (Texture ou Dégradé)
                             if (style.modeRemplissage.contains("TEXTURE") && textShader != null) {
                                 paintTexte.setShader(textShader);
                             } else if (style.utiliserDegrade) {
@@ -545,24 +549,20 @@ public class CanvasEditeur extends View {
                                         new int[]{style.couleurDegrade1, style.couleurDegrade2},
                                         null, Shader.TileMode.CLAMP);
                                 paintTexte.setShader(gradShader);
-                            } else {
-                                paintTexte.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
-                            }
-
-                            // Appliquer Relief 3D
+                            } 
+                            
                             if (style.reliefActif) {
                                 paintTexte.setMaskFilter(new android.graphics.EmbossMaskFilter(new float[]{0f, -1f, 0.5f}, 0.6f, 3f, style.reliefElevation));
                             }
-
-                            dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
                             
+                            dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
                             paintTexte.setShader(null);
                             paintTexte.setMaskFilter(null);
                         }
-                        
                     } else {
-                        // Rendu classique si pas de style
                         paintTexte.setStyle(Paint.Style.FILL);
+                        paintTexte.setColor(couleurBaseTexte);
+                        paintTexte.setAlpha(alphaVal);
                         dessinerLigneDeTexte(canvas, ligne, xPos, currentY, 0f, paintTexte);
                     }
                     
@@ -667,49 +667,10 @@ public class CanvasEditeur extends View {
         }
         canvas.restore();
     }
-// bas 3
- 
+
+                 
+                                    
 // fin a modifié 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        canvas.save();
-        canvas.scale(niveauZoom, niveauZoom, getWidth() / 2f, getHeight() / 2f);
-
-        int gridSize = 100;
-        int w = getWidth();
-        int h = getHeight();
-        int limiteMax = (int) (Math.max(w, h) * 2 / niveauZoom);
-
-        for (int i = -limiteMax + (int) (cameraX % gridSize); i < limiteMax; i += gridSize) {
-            canvas.drawLine(i, -limiteMax, i, limiteMax, paintGrille);
-        }
-        for (int i = -limiteMax + (int) (cameraY % gridSize); i < limiteMax; i += gridSize) {
-            canvas.drawLine(-limiteMax, i, limiteMax, i, paintGrille);
-        }
-
-        canvas.drawRect(0 + cameraX, 0 + cameraY, ConfigurationJeu.LARGEUR_JEU + cameraX, ConfigurationJeu.HAUTEUR_JEU + cameraY, paintCamera);
-
-        if (sceneActive != null) {
-            List<ObjetBase> objetsTries = new ArrayList<>(sceneActive.objets);
-            Collections.sort(objetsTries, (o1, o2) -> Integer.compare(o1.zOrder, o2.zOrder));
-
-            for (ObjetBase objet : objetsTries) {
-                if (!estVisibleEffectifGen(objet, sceneActive.objets)) continue; 
-                dessinerObjetBase(canvas, objet, sceneActive.objets, 255, true);
-            }
-        }
-        canvas.restore();
-    }
-
-    private void dessinerImage(Canvas canvas, ObjetBase objet, String cheminAAfficher) {
-        if (cheminAAfficher != null && cheminProjet != null) {
-            android.graphics.Bitmap bmp = cacheImages.get(cheminAAfficher);
-            if (bmp == null) {
-                try {
-                    java.io.File imgFile = new java.io.File(cheminProjet, cheminAAfficher);
-                    if (imgFile.exists()) {
                         bmp = android.graphics.BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                         if (bmp != null) {
                             cacheImages.put(cheminAAfficher, bmp);
