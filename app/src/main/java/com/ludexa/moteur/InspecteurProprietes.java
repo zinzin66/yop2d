@@ -906,7 +906,6 @@ public class InspecteurProprietes extends LinearLayout {
         this.addView(scrollInspecteur);
 // bas 3
 
-
 // haut 4
         boutonMasquer.setOnClickListener(v -> {
             if (scrollInspecteur.getVisibility() == View.VISIBLE) {
@@ -922,10 +921,12 @@ public class InspecteurProprietes extends LinearLayout {
             }
         });
         
-        // ACTION LIEE AU NOUVEAU BOUTON STYLE TITRE
         btnSelectStyleTitre.setOnClickListener(v -> {
             if (objetCourant == null) return;
             if (cheminProjet == null) return;
+            
+            // NOUVEAU : On force le rafraichissement du cache du canvas avant d'afficher la liste
+            canvasEditeur.chargerStylesTitresGlobales();
             
             File fichier = new File(cheminProjet, "assets_ludexa/Textes/styles_titres.json");
             List<String> nomsStyles = new ArrayList<>();
