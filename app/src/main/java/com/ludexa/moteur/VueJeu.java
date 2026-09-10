@@ -1007,7 +1007,9 @@ public class VueJeu extends View {
             canvas.drawText(ligne, x, y, paint);
         }
     }
-
+// a modifier haut
+                                                                    start = end;
+       // haut 5
     private void dessinerListeObjets(Canvas canvas, List<ObjetBase> objets, boolean avecDebugPosition, float camX, float camY) {
         List<ObjetBase> objetsTries = new ArrayList<>(objets);
         Collections.sort(objetsTries, (o1, o2) -> Integer.compare(o1.zOrder, o2.zOrder));
@@ -1087,18 +1089,13 @@ public class VueJeu extends View {
             
             if (objet.sautillementActif) {
                 boolean doitSautiller = false;
-                
                 if (objet.sautillementInfiniMouvement) {
                     doitSautiller = estEnMouvement;
                 } else {
                     long now = System.currentTimeMillis();
-                    if (now - objet.tempsDebutSautillement < objet.sautillementDureeMs) {
-                        doitSautiller = true;
-                    } else {
-                        objet.sautillementActif = false;
-                    }
+                    if (now - objet.tempsDebutSautillement < objet.sautillementDureeMs) doitSautiller = true;
+                    else objet.sautillementActif = false;
                 }
-                
                 if (doitSautiller) {
                     float shakeX = (float) ((Math.random() - 0.5) * 2.0 * objet.sautillementIntensite);
                     float shakeY = (float) ((Math.random() - 0.5) * 2.0 * objet.sautillementIntensite);
@@ -1279,8 +1276,22 @@ public class VueJeu extends View {
                                 dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, peintureTexte);
                             }
 
-                            // PASSE 3 : REMPLISSAGE
+                            // PASSE 3 : REMPLISSAGE (AVEC RELIEF MANUEL 3D)
                             if (style.modeRemplissage.contains("FILL") || style.modeRemplissage.contains("TEXTURE")) {
+                                
+                                if (style.reliefActif) {
+                                    // Extrusion/Ombre portée (bas-droite)
+                                    peintureTexte.setStyle(Paint.Style.FILL);
+                                    peintureTexte.setColor(Color.BLACK);
+                                    peintureTexte.setAlpha((int)(200 * (alphaInt / 255f)));
+                                    dessinerLigneDeTexte(canvas, ligne, xPos + style.reliefElevation, currentY + style.reliefElevation, courbure, peintureTexte);
+                                    
+                                    // Lumière biseau (haut-gauche)
+                                    peintureTexte.setColor(Color.WHITE);
+                                    peintureTexte.setAlpha((int)(200 * (alphaInt / 255f)));
+                                    dessinerLigneDeTexte(canvas, ligne, xPos - (style.reliefElevation/2f), currentY - (style.reliefElevation/2f), courbure, peintureTexte);
+                                }
+
                                 peintureTexte.setStyle(Paint.Style.FILL);
                                 peintureTexte.setColor(couleurBaseTexte);
                                 peintureTexte.setAlpha(alphaInt);
@@ -1288,19 +1299,14 @@ public class VueJeu extends View {
                                 if (style.modeRemplissage.contains("TEXTURE") && textShader != null) {
                                     peintureTexte.setShader(textShader);
                                 } else if (style.utiliserDegrade) {
-                                    android.graphics.Shader gradShader = new android.graphics.LinearGradient(0, currentY - objet.tailleFonte, 0, currentY,
+                                    Shader gradShader = new LinearGradient(0, currentY - objet.tailleFonte, 0, currentY,
                                             new int[]{style.couleurDegrade1, style.couleurDegrade2},
-                                            null, android.graphics.Shader.TileMode.CLAMP);
+                                            null, Shader.TileMode.CLAMP);
                                     peintureTexte.setShader(gradShader);
                                 } 
                                 
-                                if (style.reliefActif) {
-                                    peintureTexte.setMaskFilter(new android.graphics.EmbossMaskFilter(new float[]{0f, -1f, 0.5f}, 0.6f, 3f, style.reliefElevation));
-                                }
-                                
                                 dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, peintureTexte);
                                 peintureTexte.setShader(null);
-                                peintureTexte.setMaskFilter(null);
                             }
                         } else {
                             peintureTexte.setStyle(Paint.Style.FILL);
@@ -1326,156 +1332,5 @@ public class VueJeu extends View {
             }
         }
     }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        
-        if (GestionnaireControles.modeAventureActif && (GestionnaireControles.joyDirX != 0 || GestionnaireControles.joyDirY != 0)) {
-            ObjetBase joystickObj = trouverObjetParType("joystick");
-            if (joystickObj != null && sceneActive != null && sceneActive.objets != null) {
-                
-                ObjetBase joueurCible = null;
-
-                for (ObjetBase obj : sceneActive.objets) {
-                    if (obj.tag != null && (obj.tag.equalsIgnoreCase("Joueur") || obj.tag.equalsIgnoreCase("Player"))) {
-                        joueurCible = obj;
-                        break;
-                    }
-                }
-
-                if (joueurCible == null && joystickObj.cibleJoystickId != null) {
-                    joueurCible = getObjetById(joystickObj.cibleJoystickId, sceneActive.objets);
-                    
-                    if (joueurCible != null && "scene_instance".equals(joueurCible.type)) {
-                        if (joueurCible.idCloneRacine != null) {
-                            joueurCible = getObjetById(joueurCible.idCloneRacine, sceneActive.objets);
-                        } else {
-                            joueurCible = null; 
-                        }
-                    }
-                }
-
-                long tempsActuel = System.currentTimeMillis();
-                if (tempsActuel - dernierLogJoystick > 500) { 
-                    logDiag("JOYSTICK cible=" + (joueurCible != null 
-                        ? joueurCible.nom + " id=" + joueurCible.id + " tag=" + joueurCible.tag + " parentId=" + joueurCible.parentId + " phys=" + joueurCible.estPhysique + " stat=" + joueurCible.estStatique + " x=" + joueurCible.x + " y=" + joueurCible.y
-                        : "NULL"));
-                    dernierLogJoystick = tempsActuel;
-                }
-
-                if (joueurCible != null) {
-                    float vitesseDefaut = 5f; 
-                    float moveX = GestionnaireControles.joyDirX * vitesseDefaut;
-                    float moveY = GestionnaireControles.joyDirY * vitesseDefaut;
-                    deplacerAvecCollision(joueurCible, moveX, moveY, sceneActive.objets);
-                }
-            }
-        }
-
-        if (sceneActive != null && sceneActive.objets != null) {
-            for (ObjetBase obj : sceneActive.objets) {
-                
-                if (obj.intentionDeplacementX != 0f || obj.intentionDeplacementY != 0f) {
-                    deplacerAvecCollision(obj, obj.intentionDeplacementX, obj.intentionDeplacementY, sceneActive.objets);
-                    obj.intentionDeplacementX = 0f;
-                    obj.intentionDeplacementY = 0f;
-                }
-                
-                if (obj.vitesseAvanceContinue != 0f) {
-                    double rad = Math.toRadians(obj.rotation);
-                    float dX = (float)(Math.cos(rad) * obj.vitesseAvanceContinue);
-                    float dY = (float)(Math.sin(rad) * obj.vitesseAvanceContinue);
-                    deplacerAvecCollision(obj, dX, dY, sceneActive.objets);
-                }
-                
-                if (obj.idCiblePoursuite != null && obj.vitessePoursuite != 0f) {
-                    ObjetBase cible = getObjetById(obj.idCiblePoursuite, sceneActive.objets);
-                    if (cible != null) {
-                        float centreAX = obj.x + (obj.largeur / 2f);
-                        float centreAY = obj.y + (obj.hauteur / 2f);
-                        float centreBX = cible.x + (cible.largeur / 2f);
-                        float centreBY = cible.y + (cible.hauteur / 2f);
-                        
-                        float dx = centreBX - centreAX;
-                        float dy = centreBY - centreAY;
-                        double dist = Math.hypot(dx, dy);
-                        
-                        if (dist > 0) {
-                            float moveX = (float) ((dx / dist) * obj.vitessePoursuite);
-                            float moveY = (float) ((dy / dist) * obj.vitessePoursuite);
-                            
-                            if (obj.fuiteActive) {
-                                deplacerAvecCollision(obj, -moveX, -moveY, sceneActive.objets);
-                                obj.rotation = (float) Math.toDegrees(Math.atan2(-dy, -dx));
-                            } else {
-                                deplacerAvecCollision(obj, moveX, moveY, sceneActive.objets);
-                                obj.rotation = (float) Math.toDegrees(Math.atan2(dy, dx));
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (this.moteurPhysique != null && sceneActive != null && sceneActive.objets != null) {
-            List<ObjetBase> chocs = this.moteurPhysique.mettreAJour(sceneActive.objets);
-            if (this.moteur != null && !chocs.isEmpty()) {
-                for (ObjetBase objChoque : chocs) this.moteur.executerEvenementSurObjet(NoeudEventChoc.class, objChoque);
-            }
-        }
-
-        if (this.moteur != null && sceneActive != null && sceneActive.objets != null) {
-            this.moteur.executerEvenement(NoeudEventChaqueImage.class); 
-            this.moteur.verifierCollisions(this, sceneActive.objets);
-            this.moteur.verifierVariablesChangees(); 
-        }
-        if (this.moteurHud != null && sceneHudActive != null && sceneHudActive.objets != null) {
-            this.moteurHud.executerEvenement(NoeudEventChaqueImage.class); 
-            this.moteurHud.verifierCollisions(this, sceneHudActive.objets);
-            this.moteurHud.verifierVariablesChangees(); 
-        }
-        
-        echelle = Math.min((float) getWidth() / ConfigurationJeu.LARGEUR_JEU, (float) getHeight() / ConfigurationJeu.HAUTEUR_JEU);
-        decalageX = (getWidth() - ConfigurationJeu.LARGEUR_JEU * echelle) / 2f;
-        decalageY = (getHeight() - ConfigurationJeu.HAUTEUR_JEU * echelle) / 2f;
-        
-        canvas.drawColor(Color.BLACK);
-        canvas.translate(decalageX, decalageY);
-        canvas.scale(echelle, echelle);
-        canvas.drawRect(0, 0, ConfigurationJeu.LARGEUR_JEU, ConfigurationJeu.HAUTEUR_JEU, peintureFondBlanc);
-
-        if (GestionnaireControles.cameraCibleId != null && sceneActive != null) {
-            ObjetBase cible = getObjetById(GestionnaireControles.cameraCibleId, sceneActive.objets);
-            if (cible != null) {
-                float cibleCamX = cible.x + (cible.largeur / 2f) - (ConfigurationJeu.LARGEUR_JEU / 2f);
-                float cibleCamY = cible.y + (cible.hauteur / 2f) - (ConfigurationJeu.HAUTEUR_JEU / 2f);
-                
-                if (GestionnaireControles.cameraSuitAxeX) {
-                    GestionnaireControles.cameraX += (cibleCamX - GestionnaireControles.cameraX) * vitesseSuiviCamera; 
-                }
-                if (GestionnaireControles.cameraSuitAxeY) {
-                    GestionnaireControles.cameraY += (cibleCamY - GestionnaireControles.cameraY) * vitesseSuiviCamera; 
-                }
-                
-                GestionnaireControles.cameraX = Math.max(GestionnaireControles.limiteMinX, Math.min(GestionnaireControles.cameraX, GestionnaireControles.limiteMaxX - ConfigurationJeu.LARGEUR_JEU));
-                GestionnaireControles.cameraY = Math.max(GestionnaireControles.limiteMinY, Math.min(GestionnaireControles.cameraY, GestionnaireControles.limiteMaxY - ConfigurationJeu.HAUTEUR_JEU));
-            }
-        }
-
-        float shakeX = 0f;
-        float shakeY = 0f;
-        if (System.currentTimeMillis() < tremblementFin) {
-            shakeX = (float) ((Math.random() - 0.5) * 2.0 * tremblementIntensite);
-            shakeY = (float) ((Math.random() - 0.5) * 2.0 * tremblementIntensite);
-        }
-
-        canvas.save();
-        canvas.translate(-GestionnaireControles.cameraX + shakeX, -GestionnaireControles.cameraY + shakeY);
-        if (sceneActive != null && sceneActive.objets != null) dessinerListeObjets(canvas, sceneActive.objets, false, GestionnaireControles.cameraX, GestionnaireControles.cameraY);
-        canvas.restore(); 
-
-        if (sceneHudActive != null && sceneHudActive.objets != null) dessinerListeObjets(canvas, sceneHudActive.objets, false, 0f, 0f);
-    }
-}
 // bas 5
+    
