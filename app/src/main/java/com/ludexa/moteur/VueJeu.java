@@ -962,6 +962,7 @@ public class VueJeu extends View {
         return true;
     }
 // bas 4
+
 // haut 5
     private void dessinerImage(Canvas canvas, ObjetBase objet, String cheminAAfficher) {
         if (cheminAAfficher != null && cheminProjet != null) {
@@ -988,6 +989,22 @@ public class VueJeu extends View {
                     canvas.drawBitmap(bmp, null, new android.graphics.RectF(0, 0, objet.largeur, objet.hauteur), peintureObjet);
                 }
             }
+        }
+    }
+
+    private void dessinerLigneDeTexte(Canvas canvas, String ligne, float x, float y, float courbure, Paint paint) {
+        if (courbure != 0) {
+            android.graphics.Path path = new android.graphics.Path();
+            float txtLargeur = paint.measureText(ligne);
+            float startX = x;
+            if (paint.getTextAlign() == Paint.Align.CENTER) startX = x - (txtLargeur / 2f);
+            else if (paint.getTextAlign() == Paint.Align.RIGHT) startX = x - txtLargeur;
+            
+            path.moveTo(startX, y);
+            path.quadTo(startX + (txtLargeur / 2f), y + courbure, startX + txtLargeur, y);
+            canvas.drawTextOnPath(ligne, path, 0, 0, paint);
+        } else {
+            canvas.drawText(ligne, x, y, paint);
         }
     }
 
@@ -1156,6 +1173,7 @@ public class VueJeu extends View {
                 
             } else if ("texte".equals(objet.type) || "titre_stylise".equals(objet.type)) {
                 String texteAAfficher = (objet.contenuTexte != null && !objet.contenuTexte.isEmpty()) ? objet.contenuTexte : objet.nom;
+                int couleurBaseTexte = objet.couleur != 0 ? objet.couleur : Color.BLUE;
                 
                 if (objet.cheminPolice != null && cheminProjet != null) {
                     android.graphics.Typeface tf = cachePolices.get(objet.cheminPolice);
@@ -1178,17 +1196,43 @@ public class VueJeu extends View {
                 boolean estTitreStylise = "titre_stylise".equals(objet.type) && objet.nomStyleTitre != null && cacheStylesTitres.containsKey(objet.nomStyleTitre);
                 StyleTitre style = estTitreStylise ? cacheStylesTitres.get(objet.nomStyleTitre) : null;
                 
+                float largeurMax = objet.largeur > 0 ? objet.largeur : 1f;
+                float xPos = 0;
+                Paint.Align align = Paint.Align.LEFT;
+
                 if (estTitreStylise && style != null) {
                     peintureTexte.setLetterSpacing(style.espacementLettres);
+                    peintureTexte.setTextSkewX(style.inclinaison);
+                    
+                    if ("CENTRE".equals(style.alignement)) { align = Paint.Align.CENTER; xPos = largeurMax / 2f; }
+                    else if ("DROITE".equals(style.alignement)) { align = Paint.Align.RIGHT; xPos = largeurMax; }
                 } else {
                     peintureTexte.setLetterSpacing(0f);
+                    peintureTexte.setTextSkewX(0f);
+                }
+                peintureTexte.setTextAlign(align);
+
+                Shader textShader = null;
+                if (estTitreStylise && style != null && style.cheminTexture != null && style.modeRemplissage.contains("TEXTURE")) {
+                    android.graphics.Bitmap bmp = cacheImages.get(style.cheminTexture);
+                    if (bmp == null && cheminProjet != null) {
+                        try {
+                            java.io.File imgFile = new java.io.File(cheminProjet, style.cheminTexture);
+                            if (imgFile.exists()) {
+                                bmp = android.graphics.BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                                if (bmp != null) cacheImages.put(style.cheminTexture, bmp);
+                            }
+                        } catch (Exception e) {}
+                    }
+                    if (bmp != null) {
+                        textShader = new android.graphics.BitmapShader(bmp, android.graphics.Shader.TileMode.REPEAT, android.graphics.Shader.TileMode.REPEAT);
+                    }
                 }
 
                 float hauteurLigne = objet.tailleFonte * (estTitreStylise && style != null ? style.multiplicateurLignes : 1.2f);
                 float currentY = hauteurLigne; 
-                float largeurMax = objet.largeur > 0 ? objet.largeur : 1f;
-                String[] paragraphes = texteAAfficher.split("\n", -1);
                 
+                String[] paragraphes = texteAAfficher.split("\n", -1);
                 for (String paragraphe : paragraphes) {
                     if (paragraphe.isEmpty()) { currentY += hauteurLigne; continue; }
                     int start = 0;
@@ -1203,42 +1247,66 @@ public class VueJeu extends View {
                         String ligne = paragraphe.substring(start, end);
 
                         if (estTitreStylise && style != null) {
-                            // PASSE 1 : OMBRE SEULE
+                            float courbure = style.courbure;
+
+                            // PASSE 0 : NÉON (Glow)
+                            if (style.neonActif && style.neonRayon > 0) {
+                                peintureTexte.setStyle(Paint.Style.FILL);
+                                peintureTexte.setColor(style.neonCouleur);
+                                peintureTexte.setAlpha((int)(Color.alpha(style.neonCouleur) * (alphaInt / 255f)));
+                                peintureTexte.setMaskFilter(new android.graphics.BlurMaskFilter(style.neonRayon, android.graphics.BlurMaskFilter.Blur.NORMAL));
+                                dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, peintureTexte);
+                                peintureTexte.setMaskFilter(null);
+                            }
+
+                            // PASSE 1 : OMBRE
                             if (style.ombreActive) {
                                 peintureTexte.setStyle(Paint.Style.FILL);
+                                peintureTexte.setColor(couleurBaseTexte);
+                                peintureTexte.setAlpha(alphaInt);
                                 peintureTexte.setShadowLayer(style.ombreRayon, style.ombreDx, style.ombreDy, style.ombreCouleur);
-                                canvas.drawText(ligne, 0, currentY, peintureTexte);
+                                dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, peintureTexte);
                                 peintureTexte.clearShadowLayer();
                             }
 
-                            // PASSE 2 : CONTOUR NET
-                            if ("STROKE".equals(style.modeRemplissage) || "FILL_AND_STROKE".equals(style.modeRemplissage)) {
+                            // PASSE 2 : CONTOUR
+                            if (style.modeRemplissage.contains("STROKE")) {
                                 peintureTexte.setStyle(Paint.Style.STROKE);
                                 peintureTexte.setStrokeWidth(style.epaisseurContour);
                                 peintureTexte.setStrokeJoin(Paint.Join.ROUND);
                                 peintureTexte.setColor(style.couleurContour);
-                                canvas.drawText(ligne, 0, currentY, peintureTexte);
+                                peintureTexte.setAlpha((int)(Color.alpha(style.couleurContour) * (alphaInt / 255f)));
+                                dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, peintureTexte);
                             }
 
-                            // PASSE 3 : REMPLISSAGE INTÉRIEUR
-                            if ("FILL".equals(style.modeRemplissage) || "FILL_AND_STROKE".equals(style.modeRemplissage)) {
+                            // PASSE 3 : REMPLISSAGE
+                            if (style.modeRemplissage.contains("FILL") || style.modeRemplissage.contains("TEXTURE")) {
                                 peintureTexte.setStyle(Paint.Style.FILL);
-                                if (style.utiliserDegrade) {
-                                    android.graphics.Shader textShader = new android.graphics.LinearGradient(0, currentY - objet.tailleFonte, 0, currentY,
+                                peintureTexte.setColor(couleurBaseTexte);
+                                peintureTexte.setAlpha(alphaInt);
+                                
+                                if (style.modeRemplissage.contains("TEXTURE") && textShader != null) {
+                                    peintureTexte.setShader(textShader);
+                                } else if (style.utiliserDegrade) {
+                                    android.graphics.Shader gradShader = new android.graphics.LinearGradient(0, currentY - objet.tailleFonte, 0, currentY,
                                             new int[]{style.couleurDegrade1, style.couleurDegrade2},
                                             null, android.graphics.Shader.TileMode.CLAMP);
-                                    peintureTexte.setShader(textShader);
-                                } else {
-                                    peintureTexte.setShader(null);
-                                    peintureTexte.setColor(objet.couleur); 
+                                    peintureTexte.setShader(gradShader);
+                                } 
+                                
+                                if (style.reliefActif) {
+                                    peintureTexte.setMaskFilter(new android.graphics.EmbossMaskFilter(new float[]{0f, -1f, 0.5f}, 0.6f, 3f, style.reliefElevation));
                                 }
-                                canvas.drawText(ligne, 0, currentY, peintureTexte);
+                                
+                                dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, peintureTexte);
                                 peintureTexte.setShader(null);
+                                peintureTexte.setMaskFilter(null);
                             }
-                            peintureTexte.setStyle(Paint.Style.FILL); 
                         } else {
                             peintureTexte.setStyle(Paint.Style.FILL);
-                            canvas.drawText(ligne, 0, currentY, peintureTexte);
+                            peintureTexte.setColor(couleurBaseTexte);
+                            peintureTexte.setAlpha(alphaInt);
+                            dessinerLigneDeTexte(canvas, ligne, xPos, currentY, 0f, peintureTexte);
                         }
 
                         currentY += hauteurLigne;
