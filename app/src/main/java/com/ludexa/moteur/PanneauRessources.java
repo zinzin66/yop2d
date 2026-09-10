@@ -925,7 +925,6 @@ public class PanneauRessources extends LinearLayout {
             dialog.show();
         });
         
-        // --- NOUVEAU BOUTON : GERER LES STYLES DE TITRES ---
         Button btnStylesTitres = new Button(context);
         btnStylesTitres.setText(Traducteur.get("btn_gerer_styles"));
         btnStylesTitres.setAllCaps(false);
@@ -937,6 +936,11 @@ public class PanneauRessources extends LinearLayout {
         btnStylesTitres.setOnClickListener(v -> {
             InterfaceEditeur editeur = (InterfaceEditeur) getContext();
             EditeurTexteStyleDialog dialog = new EditeurTexteStyleDialog(context, editeur.cheminProjet);
+            // NOUVEAU : On met à jour le canvas dès que la fenêtre se ferme !
+            dialog.setOnDismissListener(d -> {
+                canvasEditeur.chargerStylesTitresGlobales();
+                canvasEditeur.invalidate();
+            });
             dialog.show();
         });
 
@@ -946,7 +950,7 @@ public class PanneauRessources extends LinearLayout {
         contenu.addView(boutonsAssets);
         contenu.addView(btnEditeurDial);
         contenu.addView(btnAnimations);
-        contenu.addView(btnStylesTitres); // INJECTÉ ICI
+        contenu.addView(btnStylesTitres); 
 
         rafraichirSectionAssetsTotale();
 
@@ -1033,6 +1037,7 @@ public class PanneauRessources extends LinearLayout {
         }
     }
 // bas 6
+    
     
 // haut 7 : SECTION ASSETS LOGIQUE (Popups et import)
     private void rafraichirListeAssets() {
