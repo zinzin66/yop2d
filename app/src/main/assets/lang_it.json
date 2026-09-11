@@ -512,7 +512,34 @@
     "noeud_cooldown": "Limita cadenza (Cooldown)",
   "noeud_garder_ecran": "Mantieni nello schermo",
   "noeud_traverser_ecran": "Attraversa schermo",
-  "param_delai_ms": "Ritardo (ms)"
+  "param_delai_ms": "Ritardo (ms)",
+    "btn_gerer_styles": "Gestisci Stili Titolo",
+  "obj_prefix_titre": "TitoloStilizzato",
+  "texte_titre_defaut": "Nuovo Titolo",
+  "insp_btn_select_style": "Scegli Stile Titolo",
+  "insp_btn_style_actuel": "Stile: ",
+  "insp_titre_select_style": "Seleziona uno Stile",
+  "titre_editeur_styles": "Editor Titoli Stilizzati",
+  "style_apercu": "Anteprima in tempo reale",
+  "style_nouveau_defaut": "Nuovo Stile",
+  "style_btn_nouveau": "Crea Nuovo Stile",
+  "style_label_nom": "Nome dello Stile:",
+  "style_hint_nom": "Es: Titolo Level Up",
+  "style_sep_remplissage": "1. RIEMPIMENTO (INTERNO)",
+  "style_sep_contour": "2. CONTORNO (BORDO)",
+  "style_label_epaisseur": "Spessore:",
+  "style_btn_couleur_contour": "Colore Contorno",
+  "style_sep_degrade": "3. SFUMATURA COLORE",
+  "style_cb_degrade": "Attiva sfumatura (sostituisce colore solido)",
+  "style_btn_deg_haut": "Colore Superiore",
+  "style_btn_deg_bas": "Colore Inferior",
+  "style_sep_ombre": "4. OMBRA ESTERNA",
+  "style_cb_ombre": "Attiva ombra",
+  "style_label_rayon": "Raggio (Sfocatura):",
+  "style_label_dx": "Offset X:",
+  "style_label_dy": "Offset Y:",
+  "style_btn_couleur_ombre": "Colore Ombra"
+  
   
   
   

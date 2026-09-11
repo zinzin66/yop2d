@@ -509,7 +509,34 @@
     "noeud_cooldown": "Limitar cadência (Cooldown)",
   "noeud_garder_ecran": "Manter na tela",
   "noeud_traverser_ecran": "Atravessar tela",
-  "param_delai_ms": "Atraso (ms)"
+  "param_delai_ms": "Atraso (ms)",
+    "btn_gerer_styles": "Gerenciar Estilos de Título",
+  "obj_prefix_titre": "TituloEstilizado",
+  "texte_titre_defaut": "Novo Título",
+  "insp_btn_select_style": "Escolher Estilo do Título",
+  "insp_btn_style_actuel": "Estilo: ",
+  "insp_titre_select_style": "Selecionar um Estilo",
+  "titre_editeur_styles": "Editor de Títulos Estilizados",
+  "style_apercu": "Pré-visualização em tempo real",
+  "style_nouveau_defaut": "Novo Estilo",
+  "style_btn_nouveau": "Criar Novo Estilo",
+  "style_label_nom": "Nome do Estilo:",
+  "style_hint_nom": "Ex: Título Level Up",
+  "style_sep_remplissage": "1. PREENCHIMENTO (DENTRO)",
+  "style_sep_contour": "2. CONTORNO (BORDA)",
+  "style_label_epaisseur": "Espessura:",
+  "style_btn_couleur_contour": "Cor do Contorno",
+  "style_sep_degrade": "3. DEGRADÊ DE CORES",
+  "style_cb_degrade": "Ativar degradê (substitui a cor sólida)",
+  "style_btn_deg_haut": "Cor Superior",
+  "style_btn_deg_bas": "Cor Inferior",
+  "style_sep_ombre": "4. SOMBRA PROJETADA",
+  "style_cb_ombre": "Ativar sombra",
+  "style_label_rayon": "Raio (Desfoque):",
+  "style_label_dx": "Deslocamento X:",
+  "style_label_dy": "Deslocamento Y:",
+  "style_btn_couleur_ombre": "Cor da Sombra"
+  
   
   
   

@@ -511,7 +511,34 @@
     "noeud_cooldown": "Feuerrate begrenzen (Cooldown)",
   "noeud_garder_ecran": "Im Bildschirm behalten",
   "noeud_traverser_ecran": "Bildschirm durchqueren",
-  "param_delai_ms": "Verzögerung (ms)"
+  "param_delai_ms": "Verzögerung (ms)",
+    "btn_gerer_styles": "Titelstile verwalten",
+  "obj_prefix_titre": "StilisierterTitel",
+  "texte_titre_defaut": "Neuer Titel",
+  "insp_btn_select_style": "Titelstil auswählen",
+  "insp_btn_style_actuel": "Stil: ",
+  "insp_titre_select_style": "Einen Stil auswählen",
+  "titre_editeur_styles": "Editor für stilisierte Titel",
+  "style_apercu": "Echtzeit-Vorschau",
+  "style_nouveau_defaut": "Neuer Stil",
+  "style_btn_nouveau": "Neuen Stil erstellen",
+  "style_label_nom": "Stilname:",
+  "style_hint_nom": "Bsp: Level Up Titel",
+  "style_sep_remplissage": "1. FÜLLUNG (INNEN)",
+  "style_sep_contour": "2. KONTUR (RAND)",
+  "style_label_epaisseur": "Dicke:",
+  "style_btn_couleur_contour": "Konturfarbe",
+  "style_sep_degrade": "3. FARBVERLAUF",
+  "style_cb_degrade": "Verlauf aktivieren (ersetzt einfarbig)",
+  "style_btn_deg_haut": "Farbe oben",
+  "style_btn_deg_bas": "Farbe unten",
+  "style_sep_ombre": "4. SCHLAGSCHATTEN",
+  "style_cb_ombre": "Schatten aktivieren",
+  "style_label_rayon": "Radius (Weichzeichner):",
+  "style_label_dx": "Versatz X:",
+  "style_label_dy": "Versatz Y:",
+  "style_btn_couleur_ombre": "Schattenfarbe"
+  
   
   
   

@@ -511,7 +511,34 @@
     "noeud_cooldown": "連射制限 (クールダウン)",
   "noeud_garder_ecran": "画面内に収める",
   "noeud_traverser_ecran": "画面をループする",
-  "param_delai_ms": "遅延 (ミリ秒)"
+  "param_delai_ms": "遅延 (ミリ秒)",
+    "btn_gerer_styles": "タイトルスタイルを管理",
+  "obj_prefix_titre": "装飾タイトル",
+  "texte_titre_defaut": "新しいタイトル",
+  "insp_btn_select_style": "タイトルスタイルを選択",
+  "insp_btn_style_actuel": "スタイル：",
+  "insp_titre_select_style": "スタイルを選択",
+  "titre_editeur_styles": "装飾タイトルエディター",
+  "style_apercu": "リアルタイムプレビュー",
+  "style_nouveau_defaut": "新しいスタイル",
+  "style_btn_nouveau": "新しいスタイルを作成",
+  "style_label_nom": "スタイル名：",
+  "style_hint_nom": "例：レベルアップタイトル",
+  "style_sep_remplissage": "1. 塗りつぶし（内側）",
+  "style_sep_contour": "2. アウトライン（境界線）",
+  "style_label_epaisseur": "太さ：",
+  "style_btn_couleur_contour": "アウトラインの色",
+  "style_sep_degrade": "3. カラーグラデーション",
+  "style_cb_degrade": "グラデーションを有効にする（単色を置換）",
+  "style_btn_deg_haut": "上部の色",
+  "style_btn_deg_bas": "下部の色",
+  "style_sep_ombre": "4. ドロップシャドウ",
+  "style_cb_ombre": "シャドウを有効にする",
+  "style_label_rayon": "半径（ぼかし）：",
+  "style_label_dx": "X軸のオフセット：",
+  "style_label_dy": "Y軸のオフセット：",
+  "style_btn_couleur_ombre": "シャドウの色"
+  
   
   
   

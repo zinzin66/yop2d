@@ -34,7 +34,6 @@ public class ObjetBase {
     public boolean estDesactive = false;
 
     public String cibleJoystickId = null;
-
     public String sceneLieeId = null;
 
     public HashMap<String, String> surchargesVariables = new HashMap<>();
@@ -66,6 +65,7 @@ public class ObjetBase {
     public boolean afficherFondColore = true;
 
     public String contenuTexte = "";
+    public String nomStyleTitre = null;
     public String cheminPolice = null;
     public float tailleFonte = 24f;
 
@@ -78,7 +78,6 @@ public class ObjetBase {
 
     public boolean estPhysique = false;
     public boolean estStatique = true;
-    // NOUVEAU : Ajout de la vitesse X pour compléter le moteur physique
     public float vitesseX = 0f; 
     public float vitesseY = 0f;
     public float rebond = 0.4f;
@@ -101,24 +100,14 @@ public class ObjetBase {
     public transient float ancienneX = 0f;
     public transient float ancienneY = 0f;
 
-    // Variables locales de l'instance
     public List<Variable> variablesLocales = new ArrayList<>();
-
     public transient String idCloneRacine = null;
-// bas 1
 
-// haut 2
     public ObjetBase() {
         this.id = UUID.randomUUID().toString();
     }
 
-    public ObjetBase(
-            String nom,
-            float x,
-            float y,
-            float largeur,
-            float hauteur
-    ) {
+    public ObjetBase(String nom, float x, float y, float largeur, float hauteur) {
         this.id = UUID.randomUUID().toString();
         this.nom = nom;
         this.x = x;
@@ -147,7 +136,6 @@ public class ObjetBase {
 
         copie.couleur = this.couleur;
         copie.cheminImage = this.cheminImage;
-
         copie.cheminImagePresse = this.cheminImagePresse;
         copie.cheminImageDesactive = this.cheminImageDesactive;
         copie.estDesactive = this.estDesactive;
@@ -155,12 +143,9 @@ public class ObjetBase {
         copie.cibleJoystickId = this.cibleJoystickId;
         copie.sceneLieeId = this.sceneLieeId;
 
-        copie.surchargesVariables = new HashMap<>(
-                this.surchargesVariables
-        );
+        copie.surchargesVariables = new HashMap<>(this.surchargesVariables);
 
         copie.filtreCouleur = this.filtreCouleur;
-
         copie.clignotementActif = this.clignotementActif;
         copie.clignotementVitesseMs = this.clignotementVitesseMs;
         copie.clignotementDureeTotalMs = this.clignotementDureeTotalMs;
@@ -185,6 +170,7 @@ public class ObjetBase {
         copie.afficherFondColore = this.afficherFondColore;
 
         copie.contenuTexte = this.contenuTexte;
+        copie.nomStyleTitre = this.nomStyleTitre; 
         copie.cheminPolice = this.cheminPolice;
         copie.tailleFonte = this.tailleFonte;
 
@@ -197,7 +183,6 @@ public class ObjetBase {
 
         copie.estPhysique = this.estPhysique;
         copie.estStatique = this.estStatique;
-        // NOUVEAU : Copie de la vitesse X
         copie.vitesseX = this.vitesseX;
         copie.vitesseY = this.vitesseY;
         copie.rebond = this.rebond;
@@ -207,15 +192,12 @@ public class ObjetBase {
         copie.sautillementIntensite = this.sautillementIntensite;
         copie.sautillementDureeMs = this.sautillementDureeMs;
         copie.tempsDebutSautillement = this.tempsDebutSautillement;
-
-        copie.sautillementInfiniMouvement =
-                this.sautillementInfiniMouvement;
+        copie.sautillementInfiniMouvement = this.sautillementInfiniMouvement;
 
         copie.ancienneX = this.x;
         copie.ancienneY = this.y;
 
         copie.variablesLocales = new ArrayList<>();
-
         if (this.variablesLocales != null) {
             for (Variable v : this.variablesLocales) {
                 copie.variablesLocales.add(v.clonerProfond());
@@ -223,15 +205,9 @@ public class ObjetBase {
         }
 
         copie.animations = new HashMap<>();
-
         if (this.animations != null) {
-            for (Map.Entry<String, List<String>> entry
-                    : this.animations.entrySet()) {
-
-                copie.animations.put(
-                        entry.getKey(),
-                        new ArrayList<>(entry.getValue())
-                );
+            for (Map.Entry<String, List<String>> entry : this.animations.entrySet()) {
+                copie.animations.put(entry.getKey(), new ArrayList<>(entry.getValue()));
             }
         }
 
@@ -245,43 +221,27 @@ public class ObjetBase {
         return copie;
     }
 
-    public static boolean verifierBoucleParent(
-            String idEnfant,
-            String idParentPropose,
-            List<ObjetBase> objets
-    ) {
-        if (idParentPropose == null) {
-            return false;
-        }
-
-        if (idEnfant.equals(idParentPropose)) {
-            return true;
-        }
+    public static boolean verifierBoucleParent(String idEnfant, String idParentPropose, List<ObjetBase> objets) {
+        if (idParentPropose == null) return false;
+        if (idEnfant.equals(idParentPropose)) return true;
 
         String curParentId = idParentPropose;
-
         while (curParentId != null) {
             ObjetBase parentObj = null;
-
             for (ObjetBase o : objets) {
                 if (o.id.equals(curParentId)) {
                     parentObj = o;
                     break;
                 }
             }
-
             if (parentObj != null) {
-                if (idEnfant.equals(parentObj.parentId)) {
-                    return true;
-                }
-
+                if (idEnfant.equals(parentObj.parentId)) return true;
                 curParentId = parentObj.parentId;
             } else {
                 break;
             }
         }
-
         return false;
     }
 }
-// bas 2
+// bas 1
