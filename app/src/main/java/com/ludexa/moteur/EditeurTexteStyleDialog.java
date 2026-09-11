@@ -1,4 +1,4 @@
-// haut 1 11 sept 26
+// haut 1
 package com.ludexa.moteur;
 
 import android.app.AlertDialog;
@@ -43,27 +43,26 @@ public class EditeurTexteStyleDialog extends Dialog {
 
     private Spinner spinnerStyles;
     private EditText champNomStyle;
-    private Spinner spinnerAlignement;
-    private EditText champEspacementLettres, champEspacementLignes;
-    private EditText champInclinaison, champCourbure;
     
-    private Spinner spinnerRemplissage;
-    private Button btnTexture;
-    private EditText champEpaisseur;
-    private Button btnCouleurContour;
+    // Nouveaux contrôles visuels (Boutons segmentés)
+    private ImageButton btnAlignGauche, btnAlignCenter, btnAlignDroite;
+    private ImageButton btnFill, btnStroke, btnFillStroke, btnTextureOnly, btnTextureStroke;
+    
+    // Nouveaux contrôles visuels (Curseurs)
+    private SeekBar sbEspacementLettres, sbEspacementLignes, sbInclinaison, sbCourbure, sbEpaisseur;
+    private TextView tvValLettres, tvValLignes, tvValInclinaison, tvValCourbure, tvValEpaisseur;
+    
+    private Button btnTexture, btnCouleurContour;
     private CheckBox cbDegrade;
     private Button btnCouleurDeg1, btnCouleurDeg2;
     
-    private CheckBox cbOmbre;
-    private EditText champOmbreRayon, champOmbreDx, champOmbreDy;
-    private Button btnCouleurOmbre;
+    // Conteneurs dynamiques pour masquer/afficher
+    private LinearLayout containerNeon, containerOmbre, containerRelief;
+    private CheckBox cbOmbre, cbNeon, cbRelief;
     
-    private CheckBox cbNeon;
-    private EditText champNeonRayon;
-    private Button btnCouleurNeon;
-    
-    private CheckBox cbRelief;
-    private EditText champReliefElevation;
+    private SeekBar sbNeonRayon, sbOmbreRayon, sbOmbreDx, sbOmbreDy, sbReliefElevation;
+    private TextView tvValNeonRayon, tvValOmbreRayon, tvValOmbreDx, tvValOmbreDy, tvValReliefElevation;
+    private Button btnCouleurNeon, btnCouleurOmbre;
 
     private boolean isUpdatingUI = false;
 
@@ -146,7 +145,8 @@ public class EditeurTexteStyleDialog extends Dialog {
         LinearLayout.LayoutParams lpBtnPol = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lpBtnPol.setMargins(dp(8), dp(8), dp(8), dp(8));
         panelGauche.addView(btnPoliceApercu, lpBtnPol);
-
+// bas 1
+// haut 2
         // --- PANEL DROIT (Contrôles) ---
         panelDroit = new ScrollView(context);
         panelDroit.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.35f));
@@ -159,7 +159,7 @@ public class EditeurTexteStyleDialog extends Dialog {
         // 1. SÉLECTION
         Button btnNouveau = new Button(context);
         btnNouveau.setText(Traducteur.get("style_btn_nouveau"));
-        btnNouveau.setBackground(fond(Color.parseColor("#2E7D46"), Palette.bordure, 10));
+        btnNouveau.setBackground(fond(Palette.boutonNormal, Palette.bordure, 10)); // Correction couleur verte
         btnNouveau.setTextColor(Palette.texteNormal);
         btnNouveau.setTextSize(14f);
         btnNouveau.setAllCaps(false);
@@ -190,72 +190,55 @@ public class EditeurTexteStyleDialog extends Dialog {
         champNomStyle.addTextChangedListener(creerWatcher(texte -> { styleCourant.nom = texte; rafraichirSpinnerStylesSansTrigger(); }));
         contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_nom"), champNomStyle));
 
-        spinnerAlignement = new Spinner(context);
-        ArrayAdapter<String> adapterAlign = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, new String[]{"GAUCHE", "CENTRE", "DROITE"}) {
-            @Override public View getView(int position, View convertView, ViewGroup parent) {
-                TextView tv = (TextView) super.getView(position, convertView, parent); tv.setTextColor(Palette.texteNormal); return tv;
-            }
-            @Override public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                TextView tv = (TextView) super.getDropDownView(position, convertView, parent); tv.setTextColor(Palette.texteNormal); tv.setBackgroundColor(Palette.fondNormal); tv.setPadding(dp(16), dp(16), dp(16), dp(16)); return tv;
-            }
-        };
-        spinnerAlignement.setBackground(fond(Palette.fondListe, Palette.bordure, 10));
-        spinnerAlignement.setPadding(dp(10), dp(10), dp(10), dp(10));
-        spinnerAlignement.setAdapter(adapterAlign);
-        spinnerAlignement.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!isUpdatingUI) { styleCourant.alignement = (String) parent.getItemAtPosition(position); vueApercu.invalidate(); }
-            }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
-        contenuDroit.addView(spinnerAlignement);
-        // 3. ESPACEMENT & DEFORMATION
+        // Boutons Alignement
+        LinearLayout ligneAlign = genererLigneLabel(context, Traducteur.get("style_label_alignement"));
+        btnAlignGauche = creerBoutonIcone(context, "format_align_left_24px");
+        btnAlignCenter = creerBoutonIcone(context, "format_align_center_24px");
+        btnAlignDroite = creerBoutonIcone(context, "format_align_right_24px");
+        
+        btnAlignGauche.setOnClickListener(v -> { if(!isUpdatingUI) { styleCourant.alignement = "GAUCHE"; rafraichirUI(); }});
+        btnAlignCenter.setOnClickListener(v -> { if(!isUpdatingUI) { styleCourant.alignement = "CENTRE"; rafraichirUI(); }});
+        btnAlignDroite.setOnClickListener(v -> { if(!isUpdatingUI) { styleCourant.alignement = "DROITE"; rafraichirUI(); }});
+        
+        ligneAlign.addView(btnAlignGauche); ligneAlign.addView(btnAlignCenter); ligneAlign.addView(btnAlignDroite);
+        contenuDroit.addView(ligneAlign);
+
+        // 3. ESPACEMENT & DEFORMATION (SeekBars)
         ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_espacement"));
 
-        champEspacementLettres = new EditText(context);
-        champEspacementLettres.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
-        champEspacementLettres.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.espacementLettres = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
-        contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_lettres"), champEspacementLettres));
-
-        champEspacementLignes = new EditText(context);
-        champEspacementLignes.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        champEspacementLignes.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.multiplicateurLignes = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
-        contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_lignes"), champEspacementLignes));
-// bas 1
-// haut 2
+        SeekBar[] sbTmp = new SeekBar[1]; TextView[] tvTmp = new TextView[1];
         
-        champInclinaison = new EditText(context);
-        champInclinaison.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
-        champInclinaison.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.inclinaison = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
-        contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_inclinaison"), champInclinaison));
+        contenuDroit.addView(genererLigneCurseur(context, "style_label_lettres", -1f, 3f, 0.1f, sbTmp, tvTmp, val -> { styleCourant.espacementLettres = val; vueApercu.invalidate(); }));
+        sbEspacementLettres = sbTmp[0]; tvValLettres = tvTmp[0];
 
-        champCourbure = new EditText(context);
-        champCourbure.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
-        champCourbure.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.courbure = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
-        contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_courbure"), champCourbure));
+        contenuDroit.addView(genererLigneCurseur(context, "style_label_lignes", 0.5f, 3f, 0.1f, sbTmp, tvTmp, val -> { styleCourant.multiplicateurLignes = val; vueApercu.invalidate(); }));
+        sbEspacementLignes = sbTmp[0]; tvValLignes = tvTmp[0];
 
-        // 4. REMPLISSAGE (Texture & Couleur)
+        contenuDroit.addView(genererLigneCurseur(context, "style_label_inclinaison", -1.5f, 1.5f, 0.1f, sbTmp, tvTmp, val -> { styleCourant.inclinaison = val; vueApercu.invalidate(); }));
+        sbInclinaison = sbTmp[0]; tvValInclinaison = tvTmp[0];
+
+        contenuDroit.addView(genererLigneCurseur(context, "style_label_courbure", -500f, 500f, 10f, sbTmp, tvTmp, val -> { styleCourant.courbure = val; vueApercu.invalidate(); }));
+        sbCourbure = sbTmp[0]; tvValCourbure = tvTmp[0];
+
+        // 4. REMPLISSAGE
         ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_remplissage"));
         
-        spinnerRemplissage = new Spinner(context);
-        ArrayAdapter<String> adapterRemplissage = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, new String[]{"FILL_AND_STROKE", "FILL", "STROKE", "TEXTURE_AND_STROKE", "TEXTURE"}) {
-            @Override public View getView(int position, View convertView, ViewGroup parent) {
-                TextView tv = (TextView) super.getView(position, convertView, parent); tv.setTextColor(Palette.texteNormal); return tv;
-            }
-            @Override public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                TextView tv = (TextView) super.getDropDownView(position, convertView, parent); tv.setTextColor(Palette.texteNormal); tv.setBackgroundColor(Palette.fondNormal); tv.setPadding(dp(16), dp(16), dp(16), dp(16)); return tv;
-            }
-        };
-        spinnerRemplissage.setBackground(fond(Palette.fondListe, Palette.bordure, 10));
-        spinnerRemplissage.setPadding(dp(10), dp(10), dp(10), dp(10));
-        spinnerRemplissage.setAdapter(adapterRemplissage);
-        spinnerRemplissage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (!isUpdatingUI) { styleCourant.modeRemplissage = (String) parent.getItemAtPosition(position); vueApercu.invalidate(); }
-            }
-            @Override public void onNothingSelected(AdapterView<?> parent) {}
-        });
-        contenuDroit.addView(spinnerRemplissage);
+        LinearLayout ligneRemp = genererLigneLabel(context, Traducteur.get("style_label_mode"));
+        btnFill = creerBoutonIcone(context, "format_color_fill_24px");
+        btnStroke = creerBoutonIcone(context, "border_color_24px");
+        btnFillStroke = creerBoutonIcone(context, "format_shapes_24px");
+        btnTextureOnly = creerBoutonIcone(context, "texture_24px");
+        btnTextureStroke = creerBoutonIcone(context, "layers_24px");
+        
+        btnFill.setOnClickListener(v -> { if(!isUpdatingUI) { styleCourant.modeRemplissage = "FILL"; rafraichirUI(); }});
+        btnStroke.setOnClickListener(v -> { if(!isUpdatingUI) { styleCourant.modeRemplissage = "STROKE"; rafraichirUI(); }});
+        btnFillStroke.setOnClickListener(v -> { if(!isUpdatingUI) { styleCourant.modeRemplissage = "FILL_AND_STROKE"; rafraichirUI(); }});
+        btnTextureOnly.setOnClickListener(v -> { if(!isUpdatingUI) { styleCourant.modeRemplissage = "TEXTURE"; rafraichirUI(); }});
+        btnTextureStroke.setOnClickListener(v -> { if(!isUpdatingUI) { styleCourant.modeRemplissage = "TEXTURE_AND_STROKE"; rafraichirUI(); }});
+        
+        ligneRemp.addView(btnFill); ligneRemp.addView(btnStroke); ligneRemp.addView(btnFillStroke); 
+        ligneRemp.addView(btnTextureOnly); ligneRemp.addView(btnTextureStroke);
+        contenuDroit.addView(ligneRemp);
 
         btnTexture = new Button(context);
         btnTexture.setText(Traducteur.get("style_btn_texture"));
@@ -280,12 +263,11 @@ public class EditeurTexteStyleDialog extends Dialog {
         });
         contenuDroit.addView(btnTexture);
 
-        // 5. CONTOUR
+        // 5. CONTOUR & DÉGRADÉ
         ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_contour"));
-        champEpaisseur = new EditText(context);
-        champEpaisseur.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        champEpaisseur.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.epaisseurContour = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
-        contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_epaisseur"), champEpaisseur));
+        
+        contenuDroit.addView(genererLigneCurseur(context, "style_label_epaisseur", 0f, 20f, 1f, sbTmp, tvTmp, val -> { styleCourant.epaisseurContour = val; vueApercu.invalidate(); }));
+        sbEpaisseur = sbTmp[0]; tvValEpaisseur = tvTmp[0];
 
         btnCouleurContour = new Button(context);
         btnCouleurContour.setText(Traducteur.get("style_btn_couleur_contour"));
@@ -295,8 +277,6 @@ public class EditeurTexteStyleDialog extends Dialog {
         btnCouleurContour.setOnClickListener(v -> afficherColorPicker(context, styleCourant.couleurContour, couleur -> { styleCourant.couleurContour = couleur; rafraichirUI(); }));
         contenuDroit.addView(btnCouleurContour);
 
-        // 6. DEGRADE
-        ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_degrade"));
         cbDegrade = new CheckBox(context);
         cbDegrade.setText(Traducteur.get("style_cb_degrade"));
         cbDegrade.setTextColor(Palette.texteNormal);
@@ -321,20 +301,21 @@ public class EditeurTexteStyleDialog extends Dialog {
         btnCouleurDeg2.setOnClickListener(v -> afficherColorPicker(context, styleCourant.couleurDegrade2, couleur -> { styleCourant.couleurDegrade2 = couleur; rafraichirUI(); }));
         contenuDroit.addView(btnCouleurDeg2);
 
-        // 7. NEON (NOUVEAU)
+        // 6. NEON (Dynamique)
         ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_neon"));
         cbNeon = new CheckBox(context);
         cbNeon.setText(Traducteur.get("style_cb_neon"));
         cbNeon.setTextColor(Palette.texteNormal);
         cbNeon.setTextSize(14f);
         cbNeon.setPadding(dp(8), dp(10), dp(8), dp(10));
-        cbNeon.setOnCheckedChangeListener((btn, isChecked) -> { if(!isUpdatingUI){ styleCourant.neonActif = isChecked; vueApercu.invalidate(); }});
+        cbNeon.setOnCheckedChangeListener((btn, isChecked) -> { if(!isUpdatingUI){ styleCourant.neonActif = isChecked; containerNeon.setVisibility(isChecked ? View.VISIBLE : View.GONE); vueApercu.invalidate(); }});
         contenuDroit.addView(cbNeon);
 
-        champNeonRayon = new EditText(context);
-        champNeonRayon.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        champNeonRayon.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.neonRayon = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
-        contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_rayon"), champNeonRayon));
+        containerNeon = new LinearLayout(context);
+        containerNeon.setOrientation(LinearLayout.VERTICAL);
+        
+        containerNeon.addView(genererLigneCurseur(context, "style_label_rayon", 0f, 50f, 1f, sbTmp, tvTmp, val -> { styleCourant.neonRayon = val; vueApercu.invalidate(); }));
+        sbNeonRayon = sbTmp[0]; tvValNeonRayon = tvTmp[0];
 
         btnCouleurNeon = new Button(context);
         btnCouleurNeon.setText(Traducteur.get("style_btn_couleur_neon"));
@@ -342,32 +323,30 @@ public class EditeurTexteStyleDialog extends Dialog {
         btnCouleurNeon.setTextSize(13f);
         btnCouleurNeon.setAllCaps(false);
         btnCouleurNeon.setOnClickListener(v -> afficherColorPicker(context, styleCourant.neonCouleur, couleur -> { styleCourant.neonCouleur = couleur; rafraichirUI(); }));
-        contenuDroit.addView(btnCouleurNeon);
+        containerNeon.addView(btnCouleurNeon);
+        contenuDroit.addView(containerNeon);
 
-        // 8. OMBRE
+        // 7. OMBRE (Dynamique)
         ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_ombre"));
         cbOmbre = new CheckBox(context);
         cbOmbre.setText(Traducteur.get("style_cb_ombre"));
         cbOmbre.setTextColor(Palette.texteNormal);
         cbOmbre.setTextSize(14f);
         cbOmbre.setPadding(dp(8), dp(10), dp(8), dp(10));
-        cbOmbre.setOnCheckedChangeListener((btn, isChecked) -> { if(!isUpdatingUI){ styleCourant.ombreActive = isChecked; vueApercu.invalidate(); }});
+        cbOmbre.setOnCheckedChangeListener((btn, isChecked) -> { if(!isUpdatingUI){ styleCourant.ombreActive = isChecked; containerOmbre.setVisibility(isChecked ? View.VISIBLE : View.GONE); vueApercu.invalidate(); }});
         contenuDroit.addView(cbOmbre);
 
-        champOmbreRayon = new EditText(context);
-        champOmbreRayon.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        champOmbreRayon.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.ombreRayon = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
-        contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_rayon"), champOmbreRayon));
+        containerOmbre = new LinearLayout(context);
+        containerOmbre.setOrientation(LinearLayout.VERTICAL);
+        
+        containerOmbre.addView(genererLigneCurseur(context, "style_label_rayon", 0f, 30f, 1f, sbTmp, tvTmp, val -> { styleCourant.ombreRayon = val; vueApercu.invalidate(); }));
+        sbOmbreRayon = sbTmp[0]; tvValOmbreRayon = tvTmp[0];
 
-        champOmbreDx = new EditText(context);
-        champOmbreDx.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
-        champOmbreDx.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.ombreDx = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
-        contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_dx"), champOmbreDx));
+        containerOmbre.addView(genererLigneCurseur(context, "style_label_dx", -50f, 50f, 1f, sbTmp, tvTmp, val -> { styleCourant.ombreDx = val; vueApercu.invalidate(); }));
+        sbOmbreDx = sbTmp[0]; tvValOmbreDx = tvTmp[0];
 
-        champOmbreDy = new EditText(context);
-        champOmbreDy.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
-        champOmbreDy.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.ombreDy = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
-        contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_dy"), champOmbreDy));
+        containerOmbre.addView(genererLigneCurseur(context, "style_label_dy", -50f, 50f, 1f, sbTmp, tvTmp, val -> { styleCourant.ombreDy = val; vueApercu.invalidate(); }));
+        sbOmbreDy = sbTmp[0]; tvValOmbreDy = tvTmp[0];
 
         btnCouleurOmbre = new Button(context);
         btnCouleurOmbre.setText(Traducteur.get("style_btn_couleur_ombre"));
@@ -375,22 +354,25 @@ public class EditeurTexteStyleDialog extends Dialog {
         btnCouleurOmbre.setTextSize(13f);
         btnCouleurOmbre.setAllCaps(false);
         btnCouleurOmbre.setOnClickListener(v -> afficherColorPicker(context, styleCourant.ombreCouleur, couleur -> { styleCourant.ombreCouleur = couleur; rafraichirUI(); }));
-        contenuDroit.addView(btnCouleurOmbre);
+        containerOmbre.addView(btnCouleurOmbre);
+        contenuDroit.addView(containerOmbre);
         
-        // 9. RELIEF (NOUVEAU)
+        // 8. RELIEF (Dynamique)
         ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_relief"));
         cbRelief = new CheckBox(context);
         cbRelief.setText(Traducteur.get("style_cb_relief"));
         cbRelief.setTextColor(Palette.texteNormal);
         cbRelief.setTextSize(14f);
         cbRelief.setPadding(dp(8), dp(10), dp(8), dp(10));
-        cbRelief.setOnCheckedChangeListener((btn, isChecked) -> { if(!isUpdatingUI){ styleCourant.reliefActif = isChecked; vueApercu.invalidate(); }});
+        cbRelief.setOnCheckedChangeListener((btn, isChecked) -> { if(!isUpdatingUI){ styleCourant.reliefActif = isChecked; containerRelief.setVisibility(isChecked ? View.VISIBLE : View.GONE); vueApercu.invalidate(); }});
         contenuDroit.addView(cbRelief);
         
-        champReliefElevation = new EditText(context);
-        champReliefElevation.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        champReliefElevation.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.reliefElevation = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
-        contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_elevation"), champReliefElevation));
+        containerRelief = new LinearLayout(context);
+        containerRelief.setOrientation(LinearLayout.VERTICAL);
+        
+        containerRelief.addView(genererLigneCurseur(context, "style_label_elevation", 0f, 20f, 1f, sbTmp, tvTmp, val -> { styleCourant.reliefElevation = val; vueApercu.invalidate(); }));
+        sbReliefElevation = sbTmp[0]; tvValReliefElevation = tvTmp[0];
+        contenuDroit.addView(containerRelief);
 
         panelDroit.addView(contenuDroit);
         root.addView(panelGauche);
@@ -425,42 +407,48 @@ public class EditeurTexteStyleDialog extends Dialog {
         rafraichirSpinnerStyles();
         rafraichirUI();
     }
+// bas 2
+  // haut 3
     private void rafraichirUI() {
         isUpdatingUI = true;
-        
         champNomStyle.setText(styleCourant.nom);
-        champEspacementLettres.setText(String.valueOf(styleCourant.espacementLettres));
-        champEspacementLignes.setText(String.valueOf(styleCourant.multiplicateurLignes));
-        champInclinaison.setText(String.valueOf(styleCourant.inclinaison));
-        champCourbure.setText(String.valueOf(styleCourant.courbure));
         
-        int spinnerAlignPos = 1; // CENTRE par defaut
-        if ("GAUCHE".equals(styleCourant.alignement)) spinnerAlignPos = 0;
-        if ("DROITE".equals(styleCourant.alignement)) spinnerAlignPos = 2;
-        spinnerAlignement.setSelection(spinnerAlignPos);
+        // Mise à jour visuelle des boutons Alignement
+        ImageButton[] btnsAlign = {btnAlignGauche, btnAlignCenter, btnAlignDroite};
+        int idxAlign = "GAUCHE".equals(styleCourant.alignement) ? 0 : ("DROITE".equals(styleCourant.alignement) ? 2 : 1);
+        updateBoutonsIcones(btnsAlign, idxAlign);
         
-        int spinnerPos = 0;
-        if (styleCourant.modeRemplissage.equals("FILL")) spinnerPos = 1;
-        if (styleCourant.modeRemplissage.equals("STROKE")) spinnerPos = 2;
-        if (styleCourant.modeRemplissage.equals("TEXTURE_AND_STROKE")) spinnerPos = 3;
-        if (styleCourant.modeRemplissage.equals("TEXTURE")) spinnerPos = 4;
-        spinnerRemplissage.setSelection(spinnerPos);
-// bas 2
-// haut 3
+        // Mise à jour visuelle des boutons Remplissage
+        ImageButton[] btnsRemp = {btnFill, btnStroke, btnFillStroke, btnTextureOnly, btnTextureStroke};
+        int idxRemp = 0;
+        if ("STROKE".equals(styleCourant.modeRemplissage)) idxRemp = 1;
+        if ("FILL_AND_STROKE".equals(styleCourant.modeRemplissage)) idxRemp = 2;
+        if ("TEXTURE".equals(styleCourant.modeRemplissage)) idxRemp = 3;
+        if ("TEXTURE_AND_STROKE".equals(styleCourant.modeRemplissage)) idxRemp = 4;
+        updateBoutonsIcones(btnsRemp, idxRemp);
+
+        // Mise à jour des SeekBars
+        setCurseurValeur(sbEspacementLettres, tvValLettres, styleCourant.espacementLettres, -1f, 0.1f);
+        setCurseurValeur(sbEspacementLignes, tvValLignes, styleCourant.multiplicateurLignes, 0.5f, 0.1f);
+        setCurseurValeur(sbInclinaison, tvValInclinaison, styleCourant.inclinaison, -1.5f, 0.1f);
+        setCurseurValeur(sbCourbure, tvValCourbure, styleCourant.courbure, -500f, 10f);
+        setCurseurValeur(sbEpaisseur, tvValEpaisseur, styleCourant.epaisseurContour, 0f, 1f);
         
-        champEpaisseur.setText(String.valueOf(styleCourant.epaisseurContour));
         cbDegrade.setChecked(styleCourant.utiliserDegrade);
         
         cbNeon.setChecked(styleCourant.neonActif);
-        champNeonRayon.setText(String.valueOf(styleCourant.neonRayon));
+        containerNeon.setVisibility(styleCourant.neonActif ? View.VISIBLE : View.GONE);
+        setCurseurValeur(sbNeonRayon, tvValNeonRayon, styleCourant.neonRayon, 0f, 1f);
         
         cbOmbre.setChecked(styleCourant.ombreActive);
-        champOmbreRayon.setText(String.valueOf(styleCourant.ombreRayon));
-        champOmbreDx.setText(String.valueOf(styleCourant.ombreDx));
-        champOmbreDy.setText(String.valueOf(styleCourant.ombreDy));
+        containerOmbre.setVisibility(styleCourant.ombreActive ? View.VISIBLE : View.GONE);
+        setCurseurValeur(sbOmbreRayon, tvValOmbreRayon, styleCourant.ombreRayon, 0f, 1f);
+        setCurseurValeur(sbOmbreDx, tvValOmbreDx, styleCourant.ombreDx, -50f, 1f);
+        setCurseurValeur(sbOmbreDy, tvValOmbreDy, styleCourant.ombreDy, -50f, 1f);
         
         cbRelief.setChecked(styleCourant.reliefActif);
-        champReliefElevation.setText(String.valueOf(styleCourant.reliefElevation));
+        containerRelief.setVisibility(styleCourant.reliefActif ? View.VISIBLE : View.GONE);
+        setCurseurValeur(sbReliefElevation, tvValReliefElevation, styleCourant.reliefElevation, 0f, 1f);
 
         btnCouleurContour.setBackground(fond(styleCourant.couleurContour, Palette.bordure, 10));
         btnCouleurDeg1.setBackground(fond(styleCourant.couleurDegrade1, Palette.bordure, 10));
@@ -499,18 +487,35 @@ public class EditeurTexteStyleDialog extends Dialog {
         spinnerStyles.setSelection(currentIndex, false);
     }
 
+    // Séparateur épuré, sans boite (juste texte + ligne)
     private void ajouterSeparateur(Context ctx, LinearLayout parent, String texte) {
         TextView sep = new TextView(ctx);
-        sep.setText(texte);
+        sep.setText(texte.toUpperCase());
         sep.setTextColor(Palette.texteSelectionne);
         sep.setTypeface(null, android.graphics.Typeface.BOLD);
-        sep.setTextSize(15f);
-        sep.setBackground(fond(Palette.enTeteDialogues, Palette.bordure, 8));
-        sep.setPadding(dp(10), dp(8), dp(10), dp(8));
+        sep.setTextSize(14f);
+        sep.setPadding(dp(4), dp(16), dp(4), dp(4));
         parent.addView(sep);
+        
+        View ligne = new View(ctx);
+        ligne.setBackgroundColor(Palette.bordure);
+        ligne.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(1)));
+        parent.addView(ligne);
     }
 
     private LinearLayout genererLigneLabelChamp(Context ctx, String label, EditText champ) {
+        LinearLayout ligne = genererLigneLabel(ctx, label);
+        champ.setTextColor(Palette.texteNormal);
+        champ.setHintTextColor(Palette.bordure);
+        champ.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        champ.setTextSize(14f);
+        champ.setBackground(fond(Palette.canvasFond, Palette.bordure, 10));
+        champ.setPadding(dp(10), dp(10), dp(10), dp(10));
+        ligne.addView(champ);
+        return ligne;
+    }
+
+    private LinearLayout genererLigneLabel(Context ctx, String label) {
         LinearLayout ligne = new LinearLayout(ctx);
         ligne.setOrientation(LinearLayout.HORIZONTAL);
         ligne.setGravity(Gravity.CENTER_VERTICAL);
@@ -520,16 +525,69 @@ public class EditeurTexteStyleDialog extends Dialog {
         tv.setTextColor(Palette.texteNormal);
         tv.setTextSize(13f);
         tv.setLayoutParams(new LinearLayout.LayoutParams(dp(80), ViewGroup.LayoutParams.WRAP_CONTENT));
-        
-        champ.setTextColor(Palette.texteNormal);
-        champ.setHintTextColor(Palette.bordure);
-        champ.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        champ.setTextSize(14f);
-        champ.setBackground(fond(Palette.canvasFond, Palette.bordure, 10));
-        champ.setPadding(dp(10), dp(10), dp(10), dp(10));
-        
-        ligne.addView(tv); ligne.addView(champ);
+        ligne.addView(tv);
         return ligne;
+    }
+
+    private LinearLayout genererLigneCurseur(Context ctx, String labelKey, float min, float max, float pas, SeekBar[] sbOut, TextView[] tvOut, java.util.function.Consumer<Float> action) {
+        LinearLayout ligne = genererLigneLabel(ctx, Traducteur.get(labelKey));
+        
+        SeekBar sb = new SeekBar(ctx);
+        sb.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        int maxProgress = Math.max(1, (int)((max - min) / pas));
+        sb.setMax(maxProgress);
+        
+        TextView tvVal = new TextView(ctx);
+        tvVal.setTextColor(Palette.texteNormal);
+        tvVal.setTextSize(12f);
+        tvVal.setGravity(Gravity.RIGHT);
+        tvVal.setLayoutParams(new LinearLayout.LayoutParams(dp(40), ViewGroup.LayoutParams.WRAP_CONTENT));
+        
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float val = min + (progress * pas);
+                val = Math.round(val * 100f) / 100f; // Eviter la précision flottante 0.3000004
+                tvVal.setText(String.format(java.util.Locale.US, "%.1f", val));
+                if (!isUpdatingUI) action.accept(val);
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override public void onStopTrackingTouch(SeekBar seekBar) { vueApercu.invalidate(); }
+        });
+        
+        sbOut[0] = sb;
+        tvOut[0] = tvVal;
+        
+        ligne.addView(sb);
+        ligne.addView(tvVal);
+        return ligne;
+    }
+
+    private void setCurseurValeur(SeekBar sb, TextView tv, float val, float min, float pas) {
+        if (sb == null) return;
+        int progress = (int)((val - min) / pas);
+        if (progress < 0) progress = 0;
+        if (progress > sb.getMax()) progress = sb.getMax();
+        sb.setProgress(progress);
+        tv.setText(String.format(java.util.Locale.US, "%.1f", val));
+    }
+
+    private ImageButton creerBoutonIcone(Context ctx, String iconName) {
+        ImageButton btn = new ImageButton(ctx);
+        int resId = ctx.getResources().getIdentifier(iconName, "drawable", ctx.getPackageName());
+        if (resId != 0) btn.setImageResource(resId);
+        btn.setColorFilter(Palette.texteNormal);
+        btn.setPadding(dp(8), dp(8), dp(8), dp(8));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(40), 1f);
+        lp.setMargins(dp(2), 0, dp(2), 0);
+        btn.setLayoutParams(lp);
+        btn.setBackground(fond(Palette.fondNormal, Palette.bordure, 8));
+        return btn;
+    }
+    
+    private void updateBoutonsIcones(ImageButton[] boutons, int activeIndex) {
+        for (int i = 0; i < boutons.length; i++) {
+            boutons[i].setBackground(fond(i == activeIndex ? Palette.boutonNormal : Palette.fondNormal, Palette.bordure, 8));
+        }
     }
 
     private TextWatcher creerWatcher(java.util.function.Consumer<String> action) {
@@ -588,6 +646,8 @@ public class EditeurTexteStyleDialog extends Dialog {
         }
         return resultats;
     }
+// bas 3
+// haut 4
     private void afficherColorPicker(Context context, int couleurInitiale, java.util.function.Consumer<Integer> onColorSelected) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(Traducteur.get("insp_titre_select_couleur"));
@@ -669,9 +729,6 @@ public class EditeurTexteStyleDialog extends Dialog {
                     champHex.setText(String.format("#%06X", (0xFFFFFF & newColor)));
                     isUpdating[0] = false;
                     ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(newColor);
-// bas 3
-
-  // haut 4
                     invalidate(); return true;
                 }
                 return super.onTouchEvent(event);
@@ -759,7 +816,7 @@ public class EditeurTexteStyleDialog extends Dialog {
             canvas.drawText(ligne, x, y, paint);
         }
     }
-// a modifier
+
     private class ApercuTexteView extends View {
         private Paint paintTexte;
         private Paint paintQuad;
@@ -852,24 +909,20 @@ public class EditeurTexteStyleDialog extends Dialog {
                     dessinerLigneDeTexte(canvas, ligne, xPos, currentY, styleCourant.courbure, paintTexte);
                 }
 
-                // PASSE 3 : REMPLISSAGE (AVEC RELIEF MANUEL 3D !)
+                // PASSE 3 : REMPLISSAGE
                 if (styleCourant.modeRemplissage.contains("FILL") || styleCourant.modeRemplissage.contains("TEXTURE")) {
                     
-                    // --- NOUVEAU RELIEF MANUEL ---
                     if (styleCourant.reliefActif) {
-                        // Extrusion/Ombre portée solide (bas-droite)
                         paintTexte.setStyle(Paint.Style.FILL);
                         paintTexte.setColor(Color.BLACK);
                         paintTexte.setAlpha(200);
                         dessinerLigneDeTexte(canvas, ligne, xPos + styleCourant.reliefElevation, currentY + styleCourant.reliefElevation, styleCourant.courbure, paintTexte);
                         
-                        // Lumière biseau (haut-gauche)
                         paintTexte.setColor(Color.WHITE);
                         paintTexte.setAlpha(200);
                         dessinerLigneDeTexte(canvas, ligne, xPos - (styleCourant.reliefElevation/2f), currentY - (styleCourant.reliefElevation/2f), styleCourant.courbure, paintTexte);
                     }
 
-                    // Couleur normale du texte
                     paintTexte.setStyle(Paint.Style.FILL);
                     paintTexte.setColor(Color.WHITE); 
                     paintTexte.setAlpha(255); 
@@ -891,11 +944,11 @@ public class EditeurTexteStyleDialog extends Dialog {
             }
         }
     }
-    
 }
-// bas 4                  
+// bas 4
 
 
-        
 
-    
+
+
+
