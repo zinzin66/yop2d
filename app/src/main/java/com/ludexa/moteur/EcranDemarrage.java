@@ -57,10 +57,8 @@ public class EcranDemarrage extends Activity {
     
     private File projetAExporter = null;
     
-    // NOUVEAU : On garde en mémoire le nom final choisi par l'utilisateur
     public static String nomJeuAExporter = ""; 
 
-    // Structure pour unifier l'affichage des deux listes
     private class ItemProjet {
         String nom;
         String sousTitre;
@@ -141,19 +139,14 @@ public class EcranDemarrage extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // --- NOUVEAU : LE SYSTÈME D'AIGUILLAGE (ROUTING) ---
         try {
             InputStream is = getAssets().open("jeu_exporte.zip");
             is.close();
-            // Si on arrive ici, c'est un jeu exporté ! On lance le jeu et on ferme l'éditeur.
             Intent intent = new Intent(this, RunnerActivity.class);
             startActivity(intent);
             finish();
             return; 
-        } catch (Exception e) {
-            // Le fichier n'existe pas, c'est le moteur Yop2D normal. On continue l'initialisation !
-        }
-        // ---------------------------------------------------
+        } catch (Exception e) {}
 
         NoeudBase.contexteApplication = this;
         Traducteur.initialiser(this, langueCourante); 
@@ -186,9 +179,7 @@ public class EcranDemarrage extends Activity {
         
         if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             
-            // EXPORTS (nécessitent un projet source défini)
             if (projetAExporter != null) {
-                // CAS 1 : EXPORT DU PROJET BRUT (.ZIP)
                 if (requestCode == REQUEST_CODE_EXPORT_PROJET) {
                     try {
                         OutputStream out = getContentResolver().openOutputStream(data.getData());
@@ -209,7 +200,6 @@ public class EcranDemarrage extends Activity {
                     projetAExporter = null;
                 }
                 
-                // CAS 2 : BUILD DE L'APK FINAL (.APK)
                 else if (requestCode == REQUEST_CODE_EXPORT_APK) {
                     AlertDialog dialogueProgression = new AlertDialog.Builder(this)
                             .setTitle(Traducteur.get("export_apk_titre"))
@@ -264,7 +254,6 @@ public class EcranDemarrage extends Activity {
                 }
             }
             
-            // CAS 3 : IMPORT D'UN PROJET (.ZIP)
             if (requestCode == REQUEST_CODE_IMPORT_PROJET) {
                 File dossierCible = null;
                 
@@ -352,10 +341,6 @@ public class EcranDemarrage extends Activity {
             }
         }
     }
-// bas 1
-
-// haut 2
-    // ---------------------------------------------------------------- colonne gauche
 
     private View construireColonneGauche() {
         LinearLayout colonneGauche = new LinearLayout(this);
@@ -405,9 +390,6 @@ public class EcranDemarrage extends Activity {
 
         colonneGauche.addView(rangeeLangue);
 
-        // --- NOUVEAUX BOUTONS (Mise à jour et Réseaux) ---
-        
-        // 1. Bouton de mise à jour
         TextView btnMaj = new TextView(this);
         btnMaj.setText(Traducteur.get("demarrage_maj_verifier"));
         btnMaj.setTextSize(13f);
@@ -422,7 +404,6 @@ public class EcranDemarrage extends Activity {
         lpMaj.setMargins(0, dp(30), 0, dp(10));
         colonneGauche.addView(btnMaj, lpMaj);
 
-        // 2. Ligne pour Discord et Telegram
         LinearLayout rangeeReseaux = new LinearLayout(this);
         rangeeReseaux.setOrientation(LinearLayout.HORIZONTAL);
         
@@ -496,44 +477,84 @@ public class EcranDemarrage extends Activity {
             e.printStackTrace();
         }
     }
+// bas 1
 
-    // ---------------------------------------------------------------- colonne droite
+// haut 2
+    // ---------------------------------------------------------------- colonne droite (Onglets)
 
     private View construireColonneDroite() {
         LinearLayout colonneDroite = new LinearLayout(this);
         colonneDroite.setOrientation(LinearLayout.VERTICAL);
         colonneDroite.setBackground(fond(couleurSurface(), 10, couleurBordure(), 1));
         colonneDroite.setPadding(dp(10), dp(8), dp(10), dp(10));
+        
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.MATCH_PARENT, 1.4f);
         lp.setMargins(dp(10), 0, 0, 0);
         colonneDroite.setLayoutParams(lp);
 
-        LinearLayout blocHaut = new LinearLayout(this);
-        blocHaut.setOrientation(LinearLayout.VERTICAL);
-        blocHaut.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
+        LinearLayout barreOnglets = new LinearLayout(this);
+        barreOnglets.setOrientation(LinearLayout.HORIZONTAL);
+        barreOnglets.setPadding(0, 0, 0, dp(10));
 
-        blocHaut.addView(construireBandeauOutils());
-        blocHaut.addView(construireEnteteListe(Traducteur.get("demarrage_titre_projets")));
-        blocHaut.addView(construireListeProjets());
-        blocHaut.addView(construireBarreActions());
+        TextView btnProjets = new TextView(this);
+        btnProjets.setText(Traducteur.get("demarrage_titre_projets"));
+        btnProjets.setTextSize(14f);
+        btnProjets.setGravity(Gravity.CENTER);
+        btnProjets.setPadding(dp(16), dp(10), dp(16), dp(10));
+        btnProjets.setTextColor(Palette.texteSelectionne);
+        btnProjets.setBackground(fond(Palette.boutonSurvol, 6, couleurBordure(), 1));
 
-        View separateurH = new View(this);
-        separateurH.setBackgroundColor(couleurBordure());
-        LinearLayout.LayoutParams lpH = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(1));
-        lpH.setMargins(0, dp(6), 0, dp(6));
-        separateurH.setLayoutParams(lpH);
+        TextView btnExemples = new TextView(this);
+        btnExemples.setText(Traducteur.get("demarrage_modeles_exemples"));
+        btnExemples.setTextSize(14f);
+        btnExemples.setGravity(Gravity.CENTER);
+        btnExemples.setPadding(dp(16), dp(10), dp(16), dp(10));
+        btnExemples.setTextColor(couleurTexteSecondaire());
 
-        LinearLayout blocBas = new LinearLayout(this);
-        blocBas.setOrientation(LinearLayout.VERTICAL);
-        blocBas.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
+        barreOnglets.addView(btnProjets);
+        barreOnglets.addView(btnExemples);
+        colonneDroite.addView(barreOnglets);
 
-        blocBas.addView(construireEnteteListe(Traducteur.get("demarrage_modeles_exemples")));
-        blocBas.addView(construireListeExemples());
+        LinearLayout vueProjets = new LinearLayout(this);
+        vueProjets.setOrientation(LinearLayout.VERTICAL);
+        vueProjets.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        
+        vueProjets.addView(construireBandeauOutils());
+        vueProjets.addView(construireListeProjets());
+        vueProjets.addView(construireBarreActions());
 
-        colonneDroite.addView(blocHaut);
-        colonneDroite.addView(separateurH);
-        colonneDroite.addView(blocBas);
+        LinearLayout vueExemples = new LinearLayout(this);
+        vueExemples.setOrientation(LinearLayout.VERTICAL);
+        vueExemples.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        vueExemples.setVisibility(View.GONE);
+        
+        vueExemples.addView(construireListeExemples());
+
+        btnProjets.setOnClickListener(v -> {
+            vueProjets.setVisibility(View.VISIBLE);
+            vueExemples.setVisibility(View.GONE);
+            btnProjets.setTextColor(Palette.texteSelectionne);
+            btnProjets.setBackground(fond(Palette.boutonSurvol, 6, couleurBordure(), 1));
+            btnExemples.setTextColor(couleurTexteSecondaire());
+            btnExemples.setBackgroundColor(Color.TRANSPARENT);
+        });
+
+        btnExemples.setOnClickListener(v -> {
+            vueProjets.setVisibility(View.GONE);
+            vueExemples.setVisibility(View.VISIBLE);
+            btnExemples.setTextColor(Palette.texteSelectionne);
+            btnExemples.setBackground(fond(Palette.boutonSurvol, 6, couleurBordure(), 1));
+            btnProjets.setTextColor(couleurTexteSecondaire());
+            btnProjets.setBackgroundColor(Color.TRANSPARENT);
+        });
+
+        FrameLayout conteneurListes = new FrameLayout(this);
+        conteneurListes.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
+        conteneurListes.addView(vueProjets);
+        conteneurListes.addView(vueExemples);
+
+        colonneDroite.addView(conteneurListes);
 
         return colonneDroite;
     }
@@ -568,18 +589,6 @@ public class EcranDemarrage extends Activity {
         bandeau.addView(etiquetteSelection);
 
         return bandeau;
-    }
-// bas 2
-
-// haut 3
-    private View construireEnteteListe(String titre) {
-        TextView titreListe = new TextView(this);
-        titreListe.setText(titre);
-        titreListe.setTextSize(11f);
-        titreListe.setLetterSpacing(0.18f);
-        titreListe.setPadding(dp(4), dp(10), 0, dp(6));
-        titreListe.setTextColor(couleurTexteSecondaire());
-        return titreListe;
     }
 
     private View construireListeProjets() {
@@ -757,7 +766,9 @@ public class EcranDemarrage extends Activity {
             return ligne;
         }
     }
+// bas 2
 
+// haut 3
     // ---------------------------------------------------------------- chargement des données
 
     private void chargerListeProjets() {
@@ -912,9 +923,7 @@ public class EcranDemarrage extends Activity {
         }
         return false;
     }
-// bas 3
 
-// haut 4
     // ---------------------------------------------------------------- actions
 
     private void actionEditer() {
@@ -1428,4 +1437,4 @@ public class EcranDemarrage extends Activity {
         }
     }
 }
-// bas 4
+// bas 3
