@@ -1,4 +1,4 @@
-// haut 1
+// haut 1 11 sept 26
 package com.ludexa.moteur;
 
 import android.app.AlertDialog;
@@ -93,7 +93,7 @@ public class EditeurTexteStyleDialog extends Dialog {
         LinearLayout root = new LinearLayout(context);
         root.setOrientation(LinearLayout.HORIZONTAL);
         root.setBackgroundColor(Palette.fondPanneaux);
-        root.setPadding(dp(8), dp(8), dp(8), dp(8));
+        root.setPadding(dp(10), dp(10), dp(10), dp(10));
 
         // --- PANEL GAUCHE (Aperçu) ---
         panelGauche = new LinearLayout(context);
@@ -106,17 +106,24 @@ public class EditeurTexteStyleDialog extends Dialog {
         TextView titreApercu = new TextView(context);
         titreApercu.setText(Traducteur.get("style_apercu"));
         titreApercu.setTextColor(Palette.texteSelectionne);
-        titreApercu.setPadding(dp(12), dp(12), dp(12), dp(12));
+        titreApercu.setTextSize(16f);
+        titreApercu.setTypeface(null, android.graphics.Typeface.BOLD);
+        titreApercu.setGravity(Gravity.CENTER_VERTICAL);
+        titreApercu.setBackground(fond(Palette.enTeteDialogues, Palette.bordure, 10));
+        titreApercu.setPadding(dp(14), dp(10), dp(14), dp(10));
         panelGauche.addView(titreApercu);
 
         vueApercu = new ApercuTexteView(context);
         vueApercu.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
+        vueApercu.setBackground(fond(Palette.canvasFond, Palette.bordure, 10));
         panelGauche.addView(vueApercu);
 
         btnPoliceApercu = new Button(context);
         btnPoliceApercu.setText(Traducteur.get("style_btn_police_apercu"));
-        btnPoliceApercu.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
+        btnPoliceApercu.setBackground(fond(Palette.boutonNormal, Palette.bordure, 10));
         btnPoliceApercu.setTextColor(Palette.texteNormal);
+        btnPoliceApercu.setTextSize(14f);
+        btnPoliceApercu.setAllCaps(false);
         btnPoliceApercu.setOnClickListener(v -> {
             File dossierPolices = new File(cheminProjet, "assets_ludexa/Fonts");
             List<String> polices = listerFichiersLocales(dossierPolices, "assets_ludexa/Fonts/", ".ttf", ".otf");
@@ -147,13 +154,15 @@ public class EditeurTexteStyleDialog extends Dialog {
 
         LinearLayout contenuDroit = new LinearLayout(context);
         contenuDroit.setOrientation(LinearLayout.VERTICAL);
-        contenuDroit.setPadding(dp(12), dp(12), dp(12), dp(12));
+        contenuDroit.setPadding(dp(14), dp(12), dp(14), dp(16));
 
         // 1. SÉLECTION
         Button btnNouveau = new Button(context);
         btnNouveau.setText(Traducteur.get("style_btn_nouveau"));
-        btnNouveau.setBackground(fond(Color.parseColor("#4CAF50"), Palette.bordure, 8));
-        btnNouveau.setTextColor(Color.WHITE);
+        btnNouveau.setBackground(fond(Color.parseColor("#2E7D46"), Palette.bordure, 10));
+        btnNouveau.setTextColor(Palette.texteNormal);
+        btnNouveau.setTextSize(14f);
+        btnNouveau.setAllCaps(false);
         btnNouveau.setOnClickListener(v -> {
             StyleTitre nv = new StyleTitre(Traducteur.get("style_nouveau_defaut") + " " + (listeStyles.size() + 1));
             listeStyles.add(nv);
@@ -164,8 +173,8 @@ public class EditeurTexteStyleDialog extends Dialog {
         contenuDroit.addView(btnNouveau);
 
         spinnerStyles = new Spinner(context);
-        spinnerStyles.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
-        spinnerStyles.setPadding(0, dp(8), 0, dp(8));
+        spinnerStyles.setBackground(fond(Palette.fondListe, Palette.bordure, 10));
+        spinnerStyles.setPadding(dp(10), dp(10), dp(10), dp(10));
         contenuDroit.addView(spinnerStyles);
         
         spinnerStyles.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -190,6 +199,8 @@ public class EditeurTexteStyleDialog extends Dialog {
                 TextView tv = (TextView) super.getDropDownView(position, convertView, parent); tv.setTextColor(Palette.texteNormal); tv.setBackgroundColor(Palette.fondNormal); tv.setPadding(dp(16), dp(16), dp(16), dp(16)); return tv;
             }
         };
+        spinnerAlignement.setBackground(fond(Palette.fondListe, Palette.bordure, 10));
+        spinnerAlignement.setPadding(dp(10), dp(10), dp(10), dp(10));
         spinnerAlignement.setAdapter(adapterAlign);
         spinnerAlignement.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -198,9 +209,6 @@ public class EditeurTexteStyleDialog extends Dialog {
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
         contenuDroit.addView(spinnerAlignement);
-// bas 1
-
-// haut 2
         // 3. ESPACEMENT & DEFORMATION
         ajouterSeparateur(context, contenuDroit, Traducteur.get("style_sep_espacement"));
 
@@ -213,6 +221,8 @@ public class EditeurTexteStyleDialog extends Dialog {
         champEspacementLignes.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
         champEspacementLignes.addTextChangedListener(creerWatcher(texte -> { try { styleCourant.multiplicateurLignes = Float.parseFloat(texte); vueApercu.invalidate(); } catch(Exception e){} }));
         contenuDroit.addView(genererLigneLabelChamp(context, Traducteur.get("style_label_lignes"), champEspacementLignes));
+// bas 1
+// haut 2
         
         champInclinaison = new EditText(context);
         champInclinaison.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
@@ -236,6 +246,8 @@ public class EditeurTexteStyleDialog extends Dialog {
                 TextView tv = (TextView) super.getDropDownView(position, convertView, parent); tv.setTextColor(Palette.texteNormal); tv.setBackgroundColor(Palette.fondNormal); tv.setPadding(dp(16), dp(16), dp(16), dp(16)); return tv;
             }
         };
+        spinnerRemplissage.setBackground(fond(Palette.fondListe, Palette.bordure, 10));
+        spinnerRemplissage.setPadding(dp(10), dp(10), dp(10), dp(10));
         spinnerRemplissage.setAdapter(adapterRemplissage);
         spinnerRemplissage.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -247,8 +259,10 @@ public class EditeurTexteStyleDialog extends Dialog {
 
         btnTexture = new Button(context);
         btnTexture.setText(Traducteur.get("style_btn_texture"));
-        btnTexture.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
+        btnTexture.setBackground(fond(Palette.boutonNormal, Palette.bordure, 10));
         btnTexture.setTextColor(Palette.texteNormal);
+        btnTexture.setTextSize(14f);
+        btnTexture.setAllCaps(false);
         btnTexture.setOnClickListener(v -> {
             File dossierImages = new File(cheminProjet, "assets_ludexa/Images");
             List<String> images = listerFichiersLocales(dossierImages, "assets_ludexa/Images/", ".png", ".jpg", ".webp");
@@ -275,6 +289,9 @@ public class EditeurTexteStyleDialog extends Dialog {
 
         btnCouleurContour = new Button(context);
         btnCouleurContour.setText(Traducteur.get("style_btn_couleur_contour"));
+        btnCouleurContour.setTextColor(Palette.texteNormal);
+        btnCouleurContour.setTextSize(13f);
+        btnCouleurContour.setAllCaps(false);
         btnCouleurContour.setOnClickListener(v -> afficherColorPicker(context, styleCourant.couleurContour, couleur -> { styleCourant.couleurContour = couleur; rafraichirUI(); }));
         contenuDroit.addView(btnCouleurContour);
 
@@ -283,16 +300,24 @@ public class EditeurTexteStyleDialog extends Dialog {
         cbDegrade = new CheckBox(context);
         cbDegrade.setText(Traducteur.get("style_cb_degrade"));
         cbDegrade.setTextColor(Palette.texteNormal);
+        cbDegrade.setTextSize(14f);
+        cbDegrade.setPadding(dp(8), dp(10), dp(8), dp(10));
         cbDegrade.setOnCheckedChangeListener((btn, isChecked) -> { if(!isUpdatingUI){ styleCourant.utiliserDegrade = isChecked; vueApercu.invalidate(); }});
         contenuDroit.addView(cbDegrade);
 
         btnCouleurDeg1 = new Button(context);
         btnCouleurDeg1.setText(Traducteur.get("style_btn_deg_haut"));
+        btnCouleurDeg1.setTextColor(Palette.texteNormal);
+        btnCouleurDeg1.setTextSize(13f);
+        btnCouleurDeg1.setAllCaps(false);
         btnCouleurDeg1.setOnClickListener(v -> afficherColorPicker(context, styleCourant.couleurDegrade1, couleur -> { styleCourant.couleurDegrade1 = couleur; rafraichirUI(); }));
         contenuDroit.addView(btnCouleurDeg1);
 
         btnCouleurDeg2 = new Button(context);
         btnCouleurDeg2.setText(Traducteur.get("style_btn_deg_bas"));
+        btnCouleurDeg2.setTextColor(Palette.texteNormal);
+        btnCouleurDeg2.setTextSize(13f);
+        btnCouleurDeg2.setAllCaps(false);
         btnCouleurDeg2.setOnClickListener(v -> afficherColorPicker(context, styleCourant.couleurDegrade2, couleur -> { styleCourant.couleurDegrade2 = couleur; rafraichirUI(); }));
         contenuDroit.addView(btnCouleurDeg2);
 
@@ -301,6 +326,8 @@ public class EditeurTexteStyleDialog extends Dialog {
         cbNeon = new CheckBox(context);
         cbNeon.setText(Traducteur.get("style_cb_neon"));
         cbNeon.setTextColor(Palette.texteNormal);
+        cbNeon.setTextSize(14f);
+        cbNeon.setPadding(dp(8), dp(10), dp(8), dp(10));
         cbNeon.setOnCheckedChangeListener((btn, isChecked) -> { if(!isUpdatingUI){ styleCourant.neonActif = isChecked; vueApercu.invalidate(); }});
         contenuDroit.addView(cbNeon);
 
@@ -311,6 +338,9 @@ public class EditeurTexteStyleDialog extends Dialog {
 
         btnCouleurNeon = new Button(context);
         btnCouleurNeon.setText(Traducteur.get("style_btn_couleur_neon"));
+        btnCouleurNeon.setTextColor(Palette.texteNormal);
+        btnCouleurNeon.setTextSize(13f);
+        btnCouleurNeon.setAllCaps(false);
         btnCouleurNeon.setOnClickListener(v -> afficherColorPicker(context, styleCourant.neonCouleur, couleur -> { styleCourant.neonCouleur = couleur; rafraichirUI(); }));
         contenuDroit.addView(btnCouleurNeon);
 
@@ -319,6 +349,8 @@ public class EditeurTexteStyleDialog extends Dialog {
         cbOmbre = new CheckBox(context);
         cbOmbre.setText(Traducteur.get("style_cb_ombre"));
         cbOmbre.setTextColor(Palette.texteNormal);
+        cbOmbre.setTextSize(14f);
+        cbOmbre.setPadding(dp(8), dp(10), dp(8), dp(10));
         cbOmbre.setOnCheckedChangeListener((btn, isChecked) -> { if(!isUpdatingUI){ styleCourant.ombreActive = isChecked; vueApercu.invalidate(); }});
         contenuDroit.addView(cbOmbre);
 
@@ -339,6 +371,9 @@ public class EditeurTexteStyleDialog extends Dialog {
 
         btnCouleurOmbre = new Button(context);
         btnCouleurOmbre.setText(Traducteur.get("style_btn_couleur_ombre"));
+        btnCouleurOmbre.setTextColor(Palette.texteNormal);
+        btnCouleurOmbre.setTextSize(13f);
+        btnCouleurOmbre.setAllCaps(false);
         btnCouleurOmbre.setOnClickListener(v -> afficherColorPicker(context, styleCourant.ombreCouleur, couleur -> { styleCourant.ombreCouleur = couleur; rafraichirUI(); }));
         contenuDroit.addView(btnCouleurOmbre);
         
@@ -347,6 +382,8 @@ public class EditeurTexteStyleDialog extends Dialog {
         cbRelief = new CheckBox(context);
         cbRelief.setText(Traducteur.get("style_cb_relief"));
         cbRelief.setTextColor(Palette.texteNormal);
+        cbRelief.setTextSize(14f);
+        cbRelief.setPadding(dp(8), dp(10), dp(8), dp(10));
         cbRelief.setOnCheckedChangeListener((btn, isChecked) -> { if(!isUpdatingUI){ styleCourant.reliefActif = isChecked; vueApercu.invalidate(); }});
         contenuDroit.addView(cbRelief);
         
@@ -366,8 +403,11 @@ public class EditeurTexteStyleDialog extends Dialog {
 
         Button btnFermer = new Button(context);
         btnFermer.setText(Traducteur.get("bouton_fermer_sauvegarder"));
-        btnFermer.setBackground(fond(Color.parseColor("#3F51B5"), Palette.bordure, 8));
-        btnFermer.setTextColor(Color.WHITE);
+        btnFermer.setBackground(fond(Palette.boutonNormal, Palette.texteSelectionne, 12));
+        btnFermer.setTextColor(Palette.texteNormal);
+        btnFermer.setTextSize(15f);
+        btnFermer.setAllCaps(false);
+        btnFermer.setPadding(dp(12), dp(12), dp(12), dp(12));
         btnFermer.setOnClickListener(v -> {
             sauvegarderStyles();
             dismiss();
@@ -385,8 +425,6 @@ public class EditeurTexteStyleDialog extends Dialog {
         rafraichirSpinnerStyles();
         rafraichirUI();
     }
-// bas 2
-    // haut 3
     private void rafraichirUI() {
         isUpdatingUI = true;
         
@@ -407,6 +445,8 @@ public class EditeurTexteStyleDialog extends Dialog {
         if (styleCourant.modeRemplissage.equals("TEXTURE_AND_STROKE")) spinnerPos = 3;
         if (styleCourant.modeRemplissage.equals("TEXTURE")) spinnerPos = 4;
         spinnerRemplissage.setSelection(spinnerPos);
+// bas 2
+// haut 3
         
         champEpaisseur.setText(String.valueOf(styleCourant.epaisseurContour));
         cbDegrade.setChecked(styleCourant.utiliserDegrade);
@@ -422,11 +462,11 @@ public class EditeurTexteStyleDialog extends Dialog {
         cbRelief.setChecked(styleCourant.reliefActif);
         champReliefElevation.setText(String.valueOf(styleCourant.reliefElevation));
 
-        btnCouleurContour.setBackgroundColor(styleCourant.couleurContour);
-        btnCouleurDeg1.setBackgroundColor(styleCourant.couleurDegrade1);
-        btnCouleurDeg2.setBackgroundColor(styleCourant.couleurDegrade2);
-        btnCouleurNeon.setBackgroundColor(styleCourant.neonCouleur);
-        btnCouleurOmbre.setBackgroundColor(styleCourant.ombreCouleur);
+        btnCouleurContour.setBackground(fond(styleCourant.couleurContour, Palette.bordure, 10));
+        btnCouleurDeg1.setBackground(fond(styleCourant.couleurDegrade1, Palette.bordure, 10));
+        btnCouleurDeg2.setBackground(fond(styleCourant.couleurDegrade2, Palette.bordure, 10));
+        btnCouleurNeon.setBackground(fond(styleCourant.neonCouleur, Palette.bordure, 10));
+        btnCouleurOmbre.setBackground(fond(styleCourant.ombreCouleur, Palette.bordure, 10));
 
         isUpdatingUI = false;
         vueApercu.invalidate();
@@ -464,7 +504,9 @@ public class EditeurTexteStyleDialog extends Dialog {
         sep.setText(texte);
         sep.setTextColor(Palette.texteSelectionne);
         sep.setTypeface(null, android.graphics.Typeface.BOLD);
-        sep.setPadding(0, dp(16), 0, dp(8));
+        sep.setTextSize(15f);
+        sep.setBackground(fond(Palette.enTeteDialogues, Palette.bordure, 8));
+        sep.setPadding(dp(10), dp(8), dp(10), dp(8));
         parent.addView(sep);
     }
 
@@ -472,16 +514,19 @@ public class EditeurTexteStyleDialog extends Dialog {
         LinearLayout ligne = new LinearLayout(ctx);
         ligne.setOrientation(LinearLayout.HORIZONTAL);
         ligne.setGravity(Gravity.CENTER_VERTICAL);
+        ligne.setPadding(0, dp(6), 0, dp(6));
         TextView tv = new TextView(ctx);
         tv.setText(label);
         tv.setTextColor(Palette.texteNormal);
+        tv.setTextSize(13f);
         tv.setLayoutParams(new LinearLayout.LayoutParams(dp(80), ViewGroup.LayoutParams.WRAP_CONTENT));
         
         champ.setTextColor(Palette.texteNormal);
         champ.setHintTextColor(Palette.bordure);
         champ.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        champ.setBackground(fond(Palette.canvasFond, Palette.bordure, 8));
-        champ.setPadding(dp(8), dp(8), dp(8), dp(8));
+        champ.setTextSize(14f);
+        champ.setBackground(fond(Palette.canvasFond, Palette.bordure, 10));
+        champ.setPadding(dp(10), dp(10), dp(10), dp(10));
         
         ligne.addView(tv); ligne.addView(champ);
         return ligne;
@@ -543,9 +588,6 @@ public class EditeurTexteStyleDialog extends Dialog {
         }
         return resultats;
     }
-// bas 3
-
-// haut 4
     private void afficherColorPicker(Context context, int couleurInitiale, java.util.function.Consumer<Integer> onColorSelected) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(Traducteur.get("insp_titre_select_couleur"));
@@ -553,6 +595,7 @@ public class EditeurTexteStyleDialog extends Dialog {
         LinearLayout layoutMain = new LinearLayout(context);
         layoutMain.setOrientation(LinearLayout.VERTICAL);
         layoutMain.setPadding(dp(16), dp(16), dp(16), dp(16));
+        layoutMain.setBackground(fond(Palette.fondPanneaux, Palette.bordure, 12));
 
         LinearLayout layoutTop = new LinearLayout(context);
         layoutTop.setOrientation(LinearLayout.HORIZONTAL);
@@ -568,7 +611,7 @@ public class EditeurTexteStyleDialog extends Dialog {
         
         android.graphics.drawable.GradientDrawable fondPreview = new android.graphics.drawable.GradientDrawable();
         fondPreview.setColor(couleurInitiale);
-        fondPreview.setCornerRadius(dp(8));
+        fondPreview.setCornerRadius(dp(10));
         fondPreview.setStroke(dp(1), Palette.bordure);
         previewColor.setBackground(fondPreview);
 
@@ -577,7 +620,8 @@ public class EditeurTexteStyleDialog extends Dialog {
         champHex.setText(String.format("#%06X", (0xFFFFFF & couleurInitiale)));
         champHex.setTextColor(Palette.texteNormal);
         champHex.setHintTextColor(Palette.bordure);
-        champHex.setBackground(fond(Palette.fondNormal, Palette.bordure, 8));
+        champHex.setBackground(fond(Palette.fondNormal, Palette.bordure, 10));
+        champHex.setTextSize(14f);
         champHex.setPadding(dp(12), dp(10), dp(12), dp(10));
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
         champHex.setLayoutParams(lp);
@@ -625,6 +669,9 @@ public class EditeurTexteStyleDialog extends Dialog {
                     champHex.setText(String.format("#%06X", (0xFFFFFF & newColor)));
                     isUpdating[0] = false;
                     ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(newColor);
+// bas 3
+
+  // haut 4
                     invalidate(); return true;
                 }
                 return super.onTouchEvent(event);
@@ -713,8 +760,6 @@ public class EditeurTexteStyleDialog extends Dialog {
         }
     }
 // a modifier
-      // haut 2
-    // haut 2
     private class ApercuTexteView extends View {
         private Paint paintTexte;
         private Paint paintQuad;
@@ -727,7 +772,7 @@ public class EditeurTexteStyleDialog extends Dialog {
             paintTexte.setTextSize(dp(50));
             
             paintQuad = new Paint();
-            paintQuad.setColor(Color.parseColor("#333333"));
+            paintQuad.setColor(Palette.canvasGrille);
             paintQuad.setStyle(Paint.Style.STROKE);
             paintQuad.setStrokeWidth(1f);
         }
@@ -735,7 +780,7 @@ public class EditeurTexteStyleDialog extends Dialog {
         @Override
         protected void onDraw(Canvas canvas) {
             super.onDraw(canvas);
-            canvas.drawColor(Color.parseColor("#1E1E1E")); 
+            canvas.drawColor(Palette.canvasFond);
             
             int spacing = dp(20);
             for (int i = 0; i < getWidth(); i += spacing) canvas.drawLine(i, 0, i, getHeight(), paintQuad);
@@ -848,12 +893,9 @@ public class EditeurTexteStyleDialog extends Dialog {
     }
     
 }
-// bas 4
+// bas 4                  
 
 
-
+        
 
     
-
-
-
