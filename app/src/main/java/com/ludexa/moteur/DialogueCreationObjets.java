@@ -72,7 +72,11 @@ public class DialogueCreationObjets extends Dialog {
         ImageButton btnAction = creerBouton(R.drawable.center_focus_weak_24px);
         btnAction.setOnClickListener(v -> creerObjet("bouton_action", Traducteur.get("obj_prefix_btnaction")));
 
-        conteneurCategories.addView(creerSection(Traducteur.get("cat_ui_hud"), btnTexte, btnTitreStylise, btnBouton, btnDialogue, btnJoystick, btnAction));
+        // NOUVEAU BOUTON : BARRE DE PROGRESSION (Icône temporaire square_24px pour sécurité de compilation)
+        ImageButton btnBarreProg = creerBouton(R.drawable.square_24px);
+        btnBarreProg.setOnClickListener(v -> creerObjet("barre_progression", Traducteur.get("obj_prefix_barre_progression")));
+
+        conteneurCategories.addView(creerSection(Traducteur.get("cat_ui_hud"), btnTexte, btnTitreStylise, btnBouton, btnDialogue, btnJoystick, btnAction, btnBarreProg));
 
         // --- CATEGORIE 3 : PREFABS ---
         ImageButton btnPrefab = creerBouton(R.drawable.display_add_24px);
@@ -97,9 +101,7 @@ public class DialogueCreationObjets extends Dialog {
 
         setContentView(mainLayout);
     }
-// bas 1
 
-// haut 2
     private View creerSection(String titre, ImageButton... boutons) {
         LinearLayout section = new LinearLayout(getContext());
         section.setOrientation(LinearLayout.VERTICAL);
@@ -145,7 +147,7 @@ public class DialogueCreationObjets extends Dialog {
         editeur.sceneActive.ajouterObjet(nouveau);
         canvas.invalidate();
         panneau.rafraichirArborescence();
-        if ("scene_instance".equals(nouveau.type) || "titre_stylise".equals(nouveau.type)) {
+        if ("scene_instance".equals(nouveau.type) || "titre_stylise".equals(nouveau.type) || "barre_progression".equals(nouveau.type)) {
             canvas.setObjetSelectionne(nouveau);
         }
         this.dismiss();
@@ -203,15 +205,18 @@ public class DialogueCreationObjets extends Dialog {
                 nouveau.afficherFondColore = false;
                 nouveau.couleur = Color.argb(150, 255, 100, 100);
                 break;
+            case "barre_progression":
+                nouveau = new ObjetBase(nomUnique, 100f, 100f, 200f, 30f);
+                nouveau.type = "barre_progression";
+                nouveau.couleur = Color.GREEN; 
+                break;
         }
 
         if (nouveau != null) {
             finaliserCreationObjet(nouveau);
         }
     }
-// bas 2
 
-// haut 3
     private void creerGroupeDialogue() {
         String nomFond = genererNomUnique(Traducteur.get("obj_prefix_boitedialogue"), editeur.sceneActive);
         ObjetBase fond = new ObjetBase(nomFond, 50f, 300f, 700f, 150f);
@@ -305,7 +310,6 @@ public class DialogueCreationObjets extends Dialog {
         dialogScene.show();
     }
 
-    // --- Utilitaires dupliqués localement pour isoler le composant ---
     private int dp(int valeur) {
         return (int) (valeur * getContext().getResources().getDisplayMetrics().density);
     }
@@ -342,5 +346,4 @@ public class DialogueCreationObjets extends Dialog {
         return nom;
     }
 }
-// bas 3
-                                          
+// bas 1
