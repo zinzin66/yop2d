@@ -1625,6 +1625,8 @@ public class InspecteurProprietes extends LinearLayout {
         };
 
         btnCouleurFondProg.setOnClickListener(selecteurCouleurFondProgListener);
+    }
+        
 // bas 4 
                 
     // haut 5
