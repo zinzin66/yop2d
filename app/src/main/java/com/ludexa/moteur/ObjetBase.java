@@ -36,6 +36,13 @@ public class ObjetBase {
     public String cibleJoystickId = null;
     public String sceneLieeId = null;
 
+    // --- NOUVEAUTE : BARRE DE PROGRESSION ---
+    public float progressionMin = 0f;
+    public float progressionMax = 100f;
+    public float progressionActuelle = 100f;
+    public int couleurFondBarre = Color.DKGRAY;
+    // ----------------------------------------
+
     public HashMap<String, String> surchargesVariables = new HashMap<>();
 
     public String filtreCouleur = "Aucun";
@@ -142,6 +149,13 @@ public class ObjetBase {
 
         copie.cibleJoystickId = this.cibleJoystickId;
         copie.sceneLieeId = this.sceneLieeId;
+
+        // --- NOUVEAUTE : BARRE DE PROGRESSION ---
+        copie.progressionMin = this.progressionMin;
+        copie.progressionMax = this.progressionMax;
+        copie.progressionActuelle = this.progressionActuelle;
+        copie.couleurFondBarre = this.couleurFondBarre;
+        // ----------------------------------------
 
         copie.surchargesVariables = new HashMap<>(this.surchargesVariables);
 
