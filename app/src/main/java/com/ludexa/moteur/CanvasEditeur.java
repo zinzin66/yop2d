@@ -355,7 +355,6 @@ public class CanvasEditeur extends View {
         }
     }
 // bas 2
-
 // haut 3
     private void dessinerObjetBase(Canvas canvas, ObjetBase objet, List<ObjetBase> contexteObjets, int baseAlpha, boolean isRoot) {
         int alphaVal = (int) (objet.alpha * baseAlpha);
@@ -464,7 +463,6 @@ public class CanvasEditeur extends View {
                     if (estTitreStylise && style != null) {
                         float courbure = style.courbure;
 
-                        // PASSE 0 : NÉON (Glow)
                         if (style.neonActif && style.neonRayon > 0) {
                             paintTexte.setStyle(Paint.Style.FILL);
                             paintTexte.setColor(style.neonCouleur);
@@ -474,7 +472,6 @@ public class CanvasEditeur extends View {
                             paintTexte.setMaskFilter(null); 
                         }
 
-                        // PASSE 1 : OMBRE
                         if (style.ombreActive) {
                             paintTexte.setStyle(Paint.Style.FILL);
                             paintTexte.setColor(couleurBaseTexte); 
@@ -484,7 +481,6 @@ public class CanvasEditeur extends View {
                             paintTexte.clearShadowLayer();
                         }
 
-                        // PASSE 2 : CONTOUR
                         if (style.modeRemplissage.contains("STROKE")) {
                             paintTexte.setStyle(Paint.Style.STROKE);
                             paintTexte.setStrokeWidth(style.epaisseurContour);
@@ -494,7 +490,6 @@ public class CanvasEditeur extends View {
                             dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, paintTexte);
                         }
 
-                        // PASSE 3 : REMPLISSAGE (AVEC RELIEF MANUEL 3D)
                         if (style.modeRemplissage.contains("FILL") || style.modeRemplissage.contains("TEXTURE")) {
                             
                             if (style.reliefActif) {
@@ -585,6 +580,20 @@ public class CanvasEditeur extends View {
                     canvas.drawText("SCÈNE INTROUVABLE", 10f, objet.hauteur / 2f, paintTexte);
                 }
             }
+        } else if ("barre_progression".equals(objet.type)) {
+            float plage = objet.progressionMax - objet.progressionMin;
+            float ratio = (plage > 0) ? (objet.progressionActuelle - objet.progressionMin) / plage : 0f;
+            ratio = Math.max(0f, Math.min(1f, ratio));
+            
+            paintObjet.setColor(objet.couleurFondProgression);
+            paintObjet.setAlpha(alphaVal);
+            canvas.drawRect(0, 0, objet.largeur, objet.hauteur, paintObjet);
+            
+            paintObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
+            paintObjet.setAlpha(alphaVal);
+            canvas.drawRect(0, 0, objet.largeur * ratio, objet.hauteur, paintObjet);
+            
+            dessinerImage(canvas, objet, cheminAAfficher);
         } else {
             if (objet.afficherFondColore || cheminAAfficher == null) {
                 paintObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
@@ -633,6 +642,8 @@ public class CanvasEditeur extends View {
         canvas.restore();
     }
 // bas 3
+                
+
 // haut 4
     @Override
     protected void onDraw(Canvas canvas) {

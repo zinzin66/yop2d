@@ -99,6 +99,12 @@ public class ObjetBase {
     public boolean sautillementInfiniMouvement = false;
     public transient float ancienneX = 0f;
     public transient float ancienneY = 0f;
+    
+    // --- NOUVEAUX CHAMPS : BARRE DE PROGRESSION ---
+    public float progressionMin = 0f;
+    public float progressionMax = 100f;
+    public float progressionActuelle = 100f;
+    public int couleurFondProgression = Color.DKGRAY;
 
     public List<Variable> variablesLocales = new ArrayList<>();
     public transient String idCloneRacine = null;
@@ -196,6 +202,12 @@ public class ObjetBase {
 
         copie.ancienneX = this.x;
         copie.ancienneY = this.y;
+        
+        // --- COPIE DES CHAMPS BARRE DE PROGRESSION ---
+        copie.progressionMin = this.progressionMin;
+        copie.progressionMax = this.progressionMax;
+        copie.progressionActuelle = this.progressionActuelle;
+        copie.couleurFondProgression = this.couleurFondProgression;
 
         copie.variablesLocales = new ArrayList<>();
         if (this.variablesLocales != null) {
