@@ -917,7 +917,6 @@ public class VueJeu extends View {
         return true;
     }
 // bas 4
-
 // haut 5
     private void dessinerImage(Canvas canvas, ObjetBase objet, String cheminAAfficher) {
         if (cheminAAfficher != null && cheminProjet != null) {
@@ -1266,8 +1265,26 @@ public class VueJeu extends View {
                         start = end;
                     }
                 }
+            } else if ("barre_progression".equals(objet.type)) {
+                float plage = objet.progressionMax - objet.progressionMin;
+                float ratio = (plage > 0) ? (objet.progressionActuelle - objet.progressionMin) / plage : 0f;
+                ratio = Math.max(0f, Math.min(1f, ratio));
+                
+                peintureObjet.setColor(objet.couleurFondProgression);
+                peintureObjet.setAlpha(alphaInt);
+                canvas.drawRect(0, 0, objet.largeur, objet.hauteur, peintureObjet);
+                
+                peintureObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
+                peintureObjet.setAlpha(alphaInt);
+                canvas.drawRect(0, 0, objet.largeur * ratio, objet.hauteur, peintureObjet);
+                
+                dessinerImage(canvas, objet, cheminAAfficher);
             } else {
-                if (objet.afficherFondColore || cheminAAfficher == null) canvas.drawRect(0, 0, objet.largeur, objet.hauteur, peintureObjet);
+                if (objet.afficherFondColore || cheminAAfficher == null) {
+                    peintureObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
+                    peintureObjet.setAlpha(alphaInt);
+                    canvas.drawRect(0, 0, objet.largeur, objet.hauteur, peintureObjet);
+                }
                 dessinerImage(canvas, objet, cheminAAfficher);
             }
             canvas.restore();
@@ -1280,6 +1297,7 @@ public class VueJeu extends View {
         }
     }
 // bas 5
+
     // haut 6
     @Override
     protected void onDraw(Canvas canvas) {
