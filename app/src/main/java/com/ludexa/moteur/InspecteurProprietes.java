@@ -49,7 +49,7 @@ public class InspecteurProprietes extends LinearLayout {
     private LinearLayout blocTexte;
     private EditText champContenu, champTaille;
     private Button btnCouleurTexte, btnPolice;
-    private Button btnSelectStyleTitre; // NOUVEAU
+    private Button btnSelectStyleTitre;
 
     private LinearLayout blocImage;
     private Button btnChargerImage, btnSupprimerImage;
@@ -79,6 +79,11 @@ public class InspecteurProprietes extends LinearLayout {
     private LinearLayout blocVariables;
     private LinearLayout conteneurListeVariables;
     private Button btnAjouterVariable;
+    
+    // --- NOUVEAUX CHAMPS : BARRE DE PROGRESSION ---
+    private LinearLayout blocProgression;
+    private EditText champProgMin, champProgMax, champProgActuelle;
+    private Button btnCouleurFondProg;
 
     private Scene sceneActive;
     private CanvasEditeur canvasEditeur;
@@ -184,8 +189,8 @@ public class InspecteurProprietes extends LinearLayout {
         cb.setLayoutParams(lp);
     }
 // bas 1
-    
-    // haut 2
+
+// haut 2
     private void initialiserInterface(Context context) {
         this.setOrientation(LinearLayout.VERTICAL);
         this.setBackgroundColor(Palette.fondPanneaux);
@@ -506,7 +511,6 @@ public class InspecteurProprietes extends LinearLayout {
         styliserSousTitre(sepTexte);
         blocTexte.addView(sepTexte);
         
-        // NOUVEAU: BOUTON CHOIX DU STYLE
         btnSelectStyleTitre = new Button(context);
         btnSelectStyleTitre.setText(Traducteur.get("insp_btn_select_style"));
         btnSelectStyleTitre.setBackground(fond(Color.parseColor("#E65100"), Palette.bordure, 8));
@@ -806,6 +810,54 @@ public class InspecteurProprietes extends LinearLayout {
         blocVariables.addView(conteneurListeVariables);
 
         blocProprietes.addView(blocVariables);
+        
+        // --- NOUVEAU BLOC : BARRE DE PROGRESSION ---
+        blocProgression = new LinearLayout(context);
+        blocProgression.setOrientation(LinearLayout.VERTICAL);
+        styliserSection(blocProgression);
+
+        TextView sepProgression = new TextView(context);
+        sepProgression.setText(Traducteur.get("insp_sep_progression"));
+        styliserSousTitre(sepProgression);
+        blocProgression.addView(sepProgression);
+
+        TextView labelMin = new TextView(context);
+        labelMin.setText(Traducteur.get("insp_label_prog_min"));
+        styliserLabel(labelMin);
+        blocProgression.addView(labelMin);
+
+        champProgMin = new EditText(context);
+        champProgMin.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
+        styliserChamp(champProgMin);
+        blocProgression.addView(champProgMin);
+
+        TextView labelMax = new TextView(context);
+        labelMax.setText(Traducteur.get("insp_label_prog_max"));
+        styliserLabel(labelMax);
+        blocProgression.addView(labelMax);
+
+        champProgMax = new EditText(context);
+        champProgMax.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
+        styliserChamp(champProgMax);
+        blocProgression.addView(champProgMax);
+
+        TextView labelActuelle = new TextView(context);
+        labelActuelle.setText(Traducteur.get("insp_label_prog_actuelle"));
+        styliserLabel(labelActuelle);
+        blocProgression.addView(labelActuelle);
+
+        champProgActuelle = new EditText(context);
+        champProgActuelle.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
+        styliserChamp(champProgActuelle);
+        blocProgression.addView(champProgActuelle);
+
+        btnCouleurFondProg = new Button(context);
+        btnCouleurFondProg.setText(Traducteur.get("insp_btn_couleur_fond_prog"));
+        styliserBouton(btnCouleurFondProg);
+        blocProgression.addView(btnCouleurFondProg);
+
+        blocProprietes.addView(blocProgression);
+        // -------------------------------------------
 
         btnAjouterVariable.setOnClickListener(v -> {
             if (objetCourant == null) return;
@@ -925,7 +977,6 @@ public class InspecteurProprietes extends LinearLayout {
             if (objetCourant == null) return;
             if (cheminProjet == null) return;
             
-            // NOUVEAU : On force le rafraichissement du cache du canvas avant d'afficher la liste
             canvasEditeur.chargerStylesTitresGlobales();
             
             File fichier = new File(cheminProjet, "assets_ludexa/Textes/styles_titres.json");
@@ -1207,6 +1258,16 @@ public class InspecteurProprietes extends LinearLayout {
         champZOrder.addTextChangedListener(creerWatcherSimple(texte -> {
             if (objetCourant != null) { try { objetCourant.zOrder = Integer.parseInt(texte); canvasEditeur.invalidate(); } catch (NumberFormatException ignored) {} }
         }));
+        
+        champProgMin.addTextChangedListener(creerWatcherSimple(texte -> {
+            if (objetCourant != null) { try { objetCourant.progressionMin = Float.parseFloat(texte); canvasEditeur.invalidate(); } catch (NumberFormatException ignored) {} }
+        }));
+        champProgMax.addTextChangedListener(creerWatcherSimple(texte -> {
+            if (objetCourant != null) { try { objetCourant.progressionMax = Float.parseFloat(texte); canvasEditeur.invalidate(); } catch (NumberFormatException ignored) {} }
+        }));
+        champProgActuelle.addTextChangedListener(creerWatcherSimple(texte -> {
+            if (objetCourant != null) { try { objetCourant.progressionActuelle = Float.parseFloat(texte); canvasEditeur.invalidate(); } catch (NumberFormatException ignored) {} }
+        }));
 
         cbVisible.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (objetCourant != null && !miseAJourEnCours) { objetCourant.visible = isChecked; canvasEditeur.invalidate(); }
@@ -1277,7 +1338,7 @@ public class InspecteurProprietes extends LinearLayout {
                     canvas.drawCircle(x, y, dp(11), indicatorPaint);
                 }
 
-                 @Override
+                     @Override
                 public boolean onTouchEvent(android.view.MotionEvent event) {
                     if (event.getAction() == android.view.MotionEvent.ACTION_DOWN || event.getAction() == android.view.MotionEvent.ACTION_MOVE) {
                         float x = Math.max(0, Math.min(event.getX(), getWidth()));
@@ -1329,7 +1390,7 @@ public class InspecteurProprietes extends LinearLayout {
             LinearLayout layoutPalette = new LinearLayout(context);
             layoutPalette.setOrientation(LinearLayout.HORIZONTAL);
             
-          int[] couleursRapides = {Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA, Color.parseColor("#FFA500"), Color.parseColor("#808080")};
+            int[] couleursRapides = {Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA, Color.parseColor("#FFA500"), Color.parseColor("#808080")};
             for (int c : couleursRapides) {
                 View pastille = new View(context);
                 LinearLayout.LayoutParams pastilleParams = new LinearLayout.LayoutParams(dp(40), dp(40));
@@ -1360,7 +1421,7 @@ public class InspecteurProprietes extends LinearLayout {
                 try {
                     String finalHex = champHex.getText().toString();
                     if (!finalHex.startsWith("#")) finalHex = "#" + finalHex;
-                    objetCourant.couleur = Color.parseColor(finalHex);
+                    objetCourant.couleurFondProgression = Color.parseColor(finalHex);
                     canvasEditeur.invalidate();
                 } catch (Exception e) {}
             });
@@ -1368,8 +1429,7 @@ public class InspecteurProprietes extends LinearLayout {
             builder.show();
         };
 
-        btnCouleur.setOnClickListener(selecteurCouleurListener);
-        btnCouleurTexte.setOnClickListener(selecteurCouleurListener);
+        btnCouleurFondProg.setOnClickListener(selecteurCouleurFondProgListener);
     }
 
     private void cacherClavier(Context context, View view) {
@@ -1377,8 +1437,7 @@ public class InspecteurProprietes extends LinearLayout {
         if (imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 // bas 4 
-
-// haut 5
+    // haut 5
     private void verifierEtConfirmerRenommage(Context context) {
         if (objetCourant == null) return;
         String nouveauNom = champNom.getText().toString().trim();
@@ -1471,7 +1530,20 @@ public class InspecteurProprietes extends LinearLayout {
             champRebond.setText(String.valueOf(objet.rebond));
             champGravite.setText(String.valueOf(objet.graviteScale));
 
-            if ("texte".equals(objet.type) || "titre_stylise".equals(objet.type)) {
+            if ("barre_progression".equals(objet.type)) {
+                blocProgression.setVisibility(View.VISIBLE);
+                blocTexte.setVisibility(View.GONE);
+                blocSceneInstance.setVisibility(View.GONE); 
+                blocImage.setVisibility(View.GONE);
+                blocBouton.setVisibility(View.GONE);
+                blocJoystick.setVisibility(View.GONE);
+
+                champProgMin.setText(String.valueOf(objet.progressionMin));
+                champProgMax.setText(String.valueOf(objet.progressionMax));
+                champProgActuelle.setText(String.valueOf(objet.progressionActuelle));
+
+            } else if ("texte".equals(objet.type) || "titre_stylise".equals(objet.type)) {
+                blocProgression.setVisibility(View.GONE);
                 blocTexte.setVisibility(View.VISIBLE);
                 blocImage.setVisibility(View.GONE);
                 blocBouton.setVisibility(View.GONE);
@@ -1495,6 +1567,7 @@ public class InspecteurProprietes extends LinearLayout {
                 }
                 
             } else if ("scene_instance".equals(objet.type)) { 
+                blocProgression.setVisibility(View.GONE);
                 blocTexte.setVisibility(View.GONE);
                 blocImage.setVisibility(View.GONE);
                 blocBouton.setVisibility(View.GONE);
@@ -1583,6 +1656,7 @@ public class InspecteurProprietes extends LinearLayout {
                 }
 
             } else {
+                blocProgression.setVisibility(View.GONE);
                 blocTexte.setVisibility(View.GONE);
                 blocSceneInstance.setVisibility(View.GONE); 
                 blocImage.setVisibility(View.VISIBLE);
@@ -1752,6 +1826,3 @@ public class InspecteurProprietes extends LinearLayout {
     }
 }
 // bas 5
-
-
-
