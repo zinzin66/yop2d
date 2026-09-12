@@ -1005,10 +1005,13 @@ public class VueJeu extends View {
             }
 
             int alphaInt = Math.max(0, Math.min(255, (int)(objet.alpha * 255)));
+            int objAlpha = Color.alpha(objet.couleur);
+            int finalAlpha = (int)(objAlpha * (alphaInt / 255f));
+            
             peintureObjet.setColor(objet.couleur);
-            peintureObjet.setAlpha(alphaInt);
+            peintureObjet.setAlpha(finalAlpha);
             peintureTexte.setColor(objet.couleur);
-            peintureTexte.setAlpha(alphaInt);
+            peintureTexte.setAlpha(finalAlpha);
 
             if (!"Aucun".equals(objet.filtreCouleur)) {
                 android.graphics.ColorMatrix cm = new android.graphics.ColorMatrix();
@@ -1106,7 +1109,7 @@ public class VueJeu extends View {
             } else if ("bouton_action".equals(objet.type)) {
                 float rayonBase = Math.min(objet.largeur, objet.hauteur) / 2f;
                 if (GestionnaireControles.isActionPressed) {
-                    peintureObjet.setAlpha(Math.min(255, alphaInt + 50));
+                    peintureObjet.setAlpha(Math.min(255, finalAlpha + 50));
                 }
                 canvas.drawCircle(objet.largeur / 2f, objet.hauteur / 2f, rayonBase, peintureObjet);
                 dessinerImage(canvas, objet, cheminAAfficher);
@@ -1207,7 +1210,7 @@ public class VueJeu extends View {
                             if (style.ombreActive) {
                                 peintureTexte.setStyle(Paint.Style.FILL);
                                 peintureTexte.setColor(couleurBaseTexte);
-                                peintureTexte.setAlpha(alphaInt);
+                                peintureTexte.setAlpha(finalAlpha);
                                 peintureTexte.setShadowLayer(style.ombreRayon, style.ombreDx, style.ombreDy, style.ombreCouleur);
                                 dessinerLigneDeTexte(canvas, ligne, xPos, currentY, courbure, peintureTexte);
                                 peintureTexte.clearShadowLayer();
@@ -1237,7 +1240,7 @@ public class VueJeu extends View {
 
                                 peintureTexte.setStyle(Paint.Style.FILL);
                                 peintureTexte.setColor(couleurBaseTexte);
-                                peintureTexte.setAlpha(alphaInt);
+                                peintureTexte.setAlpha(finalAlpha);
                                 
                                 if (style.modeRemplissage.contains("TEXTURE") && textShader != null) {
                                     peintureTexte.setShader(textShader);
@@ -1254,7 +1257,7 @@ public class VueJeu extends View {
                         } else {
                             peintureTexte.setStyle(Paint.Style.FILL);
                             peintureTexte.setColor(couleurBaseTexte);
-                            peintureTexte.setAlpha(alphaInt);
+                            peintureTexte.setAlpha(finalAlpha);
                             dessinerLigneDeTexte(canvas, ligne, xPos, currentY, 0f, peintureTexte);
                         }
 
@@ -1267,27 +1270,34 @@ public class VueJeu extends View {
                 float ratio = (plage > 0) ? (objet.progressionActuelle - objet.progressionMin) / plage : 0f;
                 ratio = Math.max(0f, Math.min(1f, ratio));
                 
+                int cFondAlpha = Color.alpha(objet.couleurFondProgression);
                 peintureObjet.setColor(objet.couleurFondProgression);
-                peintureObjet.setAlpha(alphaInt);
+                peintureObjet.setAlpha((int)(cFondAlpha * (alphaInt / 255f)));
                 canvas.drawRect(0, 0, objet.largeur, objet.hauteur, peintureObjet);
                 
-                peintureObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
-                peintureObjet.setAlpha(alphaInt);
+                int cBarre = objet.couleur != 0 ? objet.couleur : Color.BLUE;
+                int cBarreAlpha = Color.alpha(cBarre);
+                peintureObjet.setColor(cBarre);
+                peintureObjet.setAlpha((int)(cBarreAlpha * (alphaInt / 255f)));
                 canvas.drawRect(0, 0, objet.largeur * ratio, objet.hauteur, peintureObjet);
                 
                 dessinerImage(canvas, objet, cheminAAfficher);
             } else if ("rond".equals(objet.type)) {
                 if (objet.afficherFondColore || cheminAAfficher == null) {
-                    peintureObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
-                    peintureObjet.setAlpha(alphaInt);
+                    int cFond = objet.couleur != 0 ? objet.couleur : Color.BLUE;
+                    int cAlpha = Color.alpha(cFond);
+                    peintureObjet.setColor(cFond);
+                    peintureObjet.setAlpha((int)(cAlpha * (alphaInt / 255f)));
                     float rayon = Math.min(objet.largeur, objet.hauteur) / 2f;
                     canvas.drawCircle(objet.largeur / 2f, objet.hauteur / 2f, rayon, peintureObjet);
                 }
                 dessinerImage(canvas, objet, cheminAAfficher);
             } else {
                 if (objet.afficherFondColore || cheminAAfficher == null) {
-                    peintureObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
-                    peintureObjet.setAlpha(alphaInt);
+                    int cFond = objet.couleur != 0 ? objet.couleur : Color.BLUE;
+                    int cAlpha = Color.alpha(cFond);
+                    peintureObjet.setColor(cFond);
+                    peintureObjet.setAlpha((int)(cAlpha * (alphaInt / 255f)));
                     canvas.drawRect(0, 0, objet.largeur, objet.hauteur, peintureObjet);
                 }
                 dessinerImage(canvas, objet, cheminAAfficher);
