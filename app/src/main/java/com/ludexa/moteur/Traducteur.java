@@ -82,9 +82,6 @@ public class Traducteur {
         if (cle.equals("noeud_si_bouton_maintenu")) return "Si Bouton Maintenu";
         if (cle.equals("noeud_sequence")) return "Séquence (Y)";
         
-        
-        
-        
         // --- NOUVEAUX NOEUDS ANIMATION ---
         if (cle.equals("noeud_pause_anim")) return "Mettre en pause l'animation";
         if (cle.equals("noeud_reprendre_anim")) return "Reprendre l'animation";
@@ -113,8 +110,7 @@ public class Traducteur {
         if (cle.equals("insp_btn_editer_scene_liee")) return "Éditer la scène source ➔";
         if (cle.equals("insp_erreur_scene_introuvable")) return "Erreur : Scène introuvable";
 
-
-                // --- NOUVEAU NOEUD TIRER ---
+        // --- NOUVEAU NOEUD TIRER ---
         if (cle.equals("noeud_tirer_nom")) return "Tirer un objet";
         if (cle.equals("param_nom_modele")) return "Nom Objet à cloner";
         if (cle.equals("param_mode_direction")) return "Mode de direction";
@@ -124,11 +120,11 @@ public class Traducteur {
         if (cle.equals("port_entrer")) return "Entrer";
         if (cle.equals("port_suivant")) return "Suivant";
 
-                // --- NOUVEAU NOEUD HORS ECRAN ---
+        // --- NOUVEAU NOEUD HORS ECRAN ---
         if (cle.equals("noeud_si_hors_ecran")) return "Si objet hors écran";
         if (cle.equals("param_marge")) return "Marge de sortie (pixels)";
 
-                // --- NOUVEAUX NOEUDS DE LA FEUILLE DE ROUTE ---
+        // --- NOUVEAUX NOEUDS DE LA FEUILLE DE ROUTE ---
         if (cle.equals("noeud_generer_clone_position")) return "Générer clone (Position X/Y)";
         if (cle.equals("noeud_definir_vitesse")) return "Définir la vitesse (X/Y)";
         if (cle.equals("noeud_condition_au_sol")) return "Si objet est au sol";
@@ -137,11 +133,14 @@ public class Traducteur {
         if (cle.equals("noeud_traverser_ecran")) return "Traverser l'écran";
         if (cle.equals("param_delai_ms")) return "Délai (ms)";
         
-        
         if (cle.equals("param_vitesse_x")) return "Vitesse X";
         if (cle.equals("param_vitesse_y")) return "Vitesse Y";
         
-        
+        // --- NOUVELLES CLES : CREATION OBJETS ---
+        if (cle.equals("titre_dialogue_objets")) return "Ajouter un objet";
+        if (cle.equals("cat_formes_base")) return "Formes de base & Visuels";
+        if (cle.equals("cat_ui_hud")) return "Interface, Textes & HUD";
+        if (cle.equals("cat_prefabs")) return "Scènes Imbriquées & Prefabs";
 
         return "[" + cle + "]";
     }
