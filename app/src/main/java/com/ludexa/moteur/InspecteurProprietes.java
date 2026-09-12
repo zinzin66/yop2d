@@ -1625,9 +1625,14 @@ public class InspecteurProprietes extends LinearLayout {
         };
 
         btnCouleurFondProg.setOnClickListener(selecteurCouleurFondProgListener);
+    } 
+
+    private void cacherClavier(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-        
-// bas 4 
+
+// bas 4
                 
     // haut 5
     private void verifierEtConfirmerRenommage(Context context) {
