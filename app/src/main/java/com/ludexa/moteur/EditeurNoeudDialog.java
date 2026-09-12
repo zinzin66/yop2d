@@ -319,6 +319,7 @@ public class EditeurNoeudDialog extends Dialog {
             }
         });
 // bas 1
+
 // haut 2
         LinearLayout wrapperDroite = new LinearLayout(context);
         wrapperDroite.setOrientation(LinearLayout.VERTICAL);
@@ -347,18 +348,23 @@ public class EditeurNoeudDialog extends Dialog {
             
             btnCible.setOnClickListener(v -> {
                 if (scene != null && scene.objets != null) {
-                    String[] noms = new String[scene.objets.size() + 1];
-                    noms[0] = Traducteur.get("noeud_objet_implique_long");
-                    for (int i = 0; i < scene.objets.size(); i++) noms[i + 1] = scene.objets.get(i).nom;
+                    String[] noms = new String[scene.objets.size() + 2];
+                    noms[0] = Traducteur.get("valeur_aucune");
+                    noms[1] = Traducteur.get("noeud_objet_implique_long");
+                    for (int i = 0; i < scene.objets.size(); i++) noms[i + 2] = scene.objets.get(i).nom;
                     
                     new android.app.AlertDialog.Builder(context).setTitle(Traducteur.get("noeud_choisir_cible_objet_a"))
                         .setItems(noms, (d, which) -> {
                             if (which == 0) {
                                 noeud.setCibleObjet(null);
+                                noeud.nomCibleObjet = null;
+                                mettreAJourAfficheurCible(txtAfficheur, null);
+                            } else if (which == 1) {
+                                noeud.setCibleObjet(null);
                                 noeud.nomCibleObjet = "__OBJET_IMPLIQUE__";
                                 mettreAJourAfficheurCible(txtAfficheur, Traducteur.get("noeud_objet_implique_long"));
                             } else {
-                                ObjetBase obj = scene.objets.get(which - 1);
+                                ObjetBase obj = scene.objets.get(which - 2);
                                 noeud.setCibleObjet(obj);
                                 noeud.nomCibleObjet = obj.nom;
                                 mettreAJourAfficheurCible(txtAfficheur, obj.nom);
@@ -379,18 +385,23 @@ public class EditeurNoeudDialog extends Dialog {
             
             btnCible.setOnClickListener(v -> {
                 if (scene != null && scene.objets != null) {
-                    String[] noms = new String[scene.objets.size() + 1];
-                    noms[0] = Traducteur.get("noeud_objet_implique_long");
-                    for (int i = 0; i < scene.objets.size(); i++) noms[i + 1] = scene.objets.get(i).nom;
+                    String[] noms = new String[scene.objets.size() + 2];
+                    noms[0] = Traducteur.get("valeur_aucune");
+                    noms[1] = Traducteur.get("noeud_objet_implique_long");
+                    for (int i = 0; i < scene.objets.size(); i++) noms[i + 2] = scene.objets.get(i).nom;
                     
                     new android.app.AlertDialog.Builder(context).setTitle(Traducteur.get("noeud_choisir_cible_objet_b"))
                         .setItems(noms, (d, which) -> {
                             if (which == 0) {
                                 noeud.setCibleObjetB(null);
+                                noeud.nomCibleObjetB = null;
+                                mettreAJourAfficheurCible(txtAfficheur, null);
+                            } else if (which == 1) {
+                                noeud.setCibleObjetB(null);
                                 noeud.nomCibleObjetB = "__OBJET_IMPLIQUE__";
                                 mettreAJourAfficheurCible(txtAfficheur, Traducteur.get("noeud_objet_implique_long"));
                             } else {
-                                ObjetBase obj = scene.objets.get(which - 1);
+                                ObjetBase obj = scene.objets.get(which - 2);
                                 noeud.setCibleObjetB(obj);
                                 noeud.nomCibleObjetB = obj.nom;
                                 mettreAJourAfficheurCible(txtAfficheur, obj.nom);
@@ -458,15 +469,17 @@ public class EditeurNoeudDialog extends Dialog {
                     }
                 }
                 
-                if (!nomsVars.isEmpty()) {
-                    new android.app.AlertDialog.Builder(context).setTitle(Traducteur.get("noeud_choisir_cible_variable"))
-                        .setItems(nomsVars.toArray(new String[0]), (d, which) -> {
-                            Variable var = refsVars.get(which);
-                            noeud.setCibleVariable(var);
-                            mettreAJourAfficheurCible(txtAfficheur, var.nom);
-                            mettreAJourResumeExpression(noeud, txtResumeExpression);
-                        }).show();
-                }
+                // CORRECTIF : ajout d'une option "Aucune" en tête de liste pour pouvoir vider la cible
+                nomsVars.add(0, Traducteur.get("valeur_aucune"));
+                refsVars.add(0, null);
+
+                new android.app.AlertDialog.Builder(context).setTitle(Traducteur.get("noeud_choisir_cible_variable"))
+                    .setItems(nomsVars.toArray(new String[0]), (d, which) -> {
+                        Variable var = refsVars.get(which);
+                        noeud.setCibleVariable(var);
+                        mettreAJourAfficheurCible(txtAfficheur, var != null ? var.nom : null);
+                        mettreAJourResumeExpression(noeud, txtResumeExpression);
+                    }).show();
             });
             ajouterCoupleALaRangee(context, rangeeCibles, btnCible, txtAfficheur);
         }
@@ -669,7 +682,6 @@ public class EditeurNoeudDialog extends Dialog {
         conteneurBooleen.addView(btnFaux);
         colonneDroite.addView(conteneurBooleen);
 // bas 2
-
 // haut 3
         scrollDroit.addView(colonneDroite);
         wrapperDroite.addView(scrollDroit);
@@ -1088,12 +1100,21 @@ public class EditeurNoeudDialog extends Dialog {
             champSaisie.setClickable(true);
 
             // CORRECTIF 2 : Le clavier natif est déclenché par le nouveau type ou la méthode spécifique du nœud
-            if (NoeudBase.TYPE_TEXTE_ALPHABETIQUE.equals(type) || noeud.utiliseClavierTexte()) {
+            if (NoeudBase.TYPE_TEXTE_ALPHABETIQUE.equals(type)) {
                 champSaisie.setShowSoftInputOnFocus(true);
                 champSaisie.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 if (conteneurClavier != null) conteneurClavier.setVisibility(View.GONE);
                 if (conteneurBooleen != null) conteneurBooleen.setVisibility(View.GONE);
                 champSaisie.requestFocus();
+            } else if (noeud.utiliseClavierTexte()) {
+                // CORRECTIF (2026-09-12) : conserver le clavier natif MAIS aussi afficher
+                // le pavé code et le panneau vrai/faux, au lieu de tout masquer -
+                // corrige la perte d'accès au clavier code/booléen sur les nœuds
+                // comme "Condition" et "Visibilité" qui utilisent le clavier texte.
+                champSaisie.setShowSoftInputOnFocus(true);
+                champSaisie.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                if (conteneurClavier != null) conteneurClavier.setVisibility(View.VISIBLE);
+                if (conteneurBooleen != null) conteneurBooleen.setVisibility(View.VISIBLE);
             } else {
                 champSaisie.setShowSoftInputOnFocus(false);
                 champSaisie.setInputType(InputType.TYPE_NULL);
