@@ -1448,7 +1448,7 @@ public class InspecteurProprietes extends LinearLayout {
             builder.show();
         };
 
-        btnCouleurFondProg.setOnClickListener(selecteurCouleurFondProgListener);
+        btnCouleurFondProg.setOnClickListener(selecteurCouleurListener);
     } 
 
     private void cacherClavier(Context context, View view) {
