@@ -1,8 +1,7 @@
-// haut 1
+// NoeudActionVitesseAnimation.java
 package com.ludexa.moteur;
 
 public class NoeudActionVitesseAnimation extends NoeudBase {
-    private ObjetBase cibleObj;
 
     public NoeudActionVitesseAnimation() {
         super(genererId(), Traducteur.get("noeud_vitesse_anim"), Traducteur.get("cat_animations"));
@@ -25,12 +24,4 @@ public class NoeudActionVitesseAnimation extends NoeudBase {
 
     @Override
     public boolean requiertCibleObjet() { return true; }
-    
-    @Override
-    public void setCibleObjet(ObjetBase objet) { this.cibleObj = objet; }
-    
-    @Override
-    public ObjetBase getCibleObjet() { return this.cibleObj; }
 }
-// bas 1
-

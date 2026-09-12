@@ -328,7 +328,6 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         canvasEditeur.setScene(sceneActive);
         canvasEditeur.setEditeur(this);
 
-        // --- DEBUT AJOUT : CORRECTION RÉTROACTIVE DES PREFABS ---
         if (listeScenes != null) {
             for (Scene s : listeScenes) {
                 if (s.objets != null) {
@@ -352,7 +351,6 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
                 }
             }
         }
-        // --- FIN AJOUT ---
 
         LinearLayout.LayoutParams paramsCentre = new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
@@ -435,6 +433,16 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         bandeauHaut.addView(separateurVertical());
 
+        // --- NOUVEAU BOUTON : AJOUTER OBJET ---
+        ImageButton boutonAjouterObjet = new ImageButton(this);
+        boutonAjouterObjet.setImageResource(R.drawable.add_24px);
+        styliserBoutonBandeau(boutonAjouterObjet);
+        boutonAjouterObjet.setOnClickListener(v -> {
+            DialogueCreationObjets dialog = new DialogueCreationObjets(InterfaceEditeur.this, InterfaceEditeur.this, canvasEditeur, panneauRessources);
+            dialog.show();
+        });
+        bandeauHaut.addView(boutonAjouterObjet);
+
         ImageButton boutonBasculeBlueprint = new ImageButton(this);
         boutonBasculeBlueprint.setImageResource(R.drawable.account_tree_24px);
         styliserBoutonBandeau(boutonBasculeBlueprint);
@@ -506,8 +514,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         }
     }
 // bas 2
-
-// haut 3
+    // haut 3
     private void basculerVersJeu() {
         listeScenesBackup = new ArrayList<>(listeScenes);
         sceneActiveBackup = sceneActive;
@@ -745,6 +752,21 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         DiagLogger.log(cheminProjet, "TAGS EXTRAITS : " + listeFinale.size() + " tags uniques trouves parmi " + objetsScannes + " objets tagues dans l'editeur.");
         return listeFinale;
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
+            );
+        }
+    }
 }
 // bas 3
 
@@ -752,18 +774,3 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
 
 
-
-
-
-    
-
-        
-
-
-        
-
-
-
-
-
-    

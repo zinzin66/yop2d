@@ -1,10 +1,9 @@
-// haut 1
+// NoeudConditionMouvement.java
 package com.ludexa.moteur;
 
 import java.util.List;
 
 public class NoeudConditionMouvement extends NoeudBase {
-    private ObjetBase cibleObj;
 
     public NoeudConditionMouvement() {
         super(genererId(), Traducteur.get("noeud_si_mouvement"), Traducteur.get("cat_logique_conditions"));
@@ -45,12 +44,5 @@ public class NoeudConditionMouvement extends NoeudBase {
     public boolean requiertCibleObjet() { return true; }
 
     @Override
-    public void setCibleObjet(ObjetBase objet) { cibleObj = objet; }
-
-    @Override
-    public ObjetBase getCibleObjet() { return cibleObj; }
-    
-    @Override
     public boolean utiliseClavierTexte() { return false; }
 }
-// bas 1

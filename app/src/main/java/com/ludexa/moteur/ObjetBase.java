@@ -1,3 +1,4 @@
+// haut 1
 package com.ludexa.moteur;
 
 import android.graphics.Color;
@@ -33,7 +34,6 @@ public class ObjetBase {
     public boolean estDesactive = false;
 
     public String cibleJoystickId = null;
-
     public String sceneLieeId = null;
 
     public HashMap<String, String> surchargesVariables = new HashMap<>();
@@ -65,6 +65,7 @@ public class ObjetBase {
     public boolean afficherFondColore = true;
 
     public String contenuTexte = "";
+    public String nomStyleTitre = null;
     public String cheminPolice = null;
     public float tailleFonte = 24f;
 
@@ -77,6 +78,7 @@ public class ObjetBase {
 
     public boolean estPhysique = false;
     public boolean estStatique = true;
+    public float vitesseX = 0f; 
     public float vitesseY = 0f;
     public float rebond = 0.4f;
     public float graviteScale = 1.0f;
@@ -97,23 +99,21 @@ public class ObjetBase {
     public boolean sautillementInfiniMouvement = false;
     public transient float ancienneX = 0f;
     public transient float ancienneY = 0f;
+    
+    // --- NOUVEAUX CHAMPS : BARRE DE PROGRESSION ---
+    public float progressionMin = 0f;
+    public float progressionMax = 100f;
+    public float progressionActuelle = 100f;
+    public int couleurFondProgression = Color.DKGRAY;
 
-    // Variables locales de l'instance
     public List<Variable> variablesLocales = new ArrayList<>();
-
     public transient String idCloneRacine = null;
 
     public ObjetBase() {
         this.id = UUID.randomUUID().toString();
     }
 
-    public ObjetBase(
-            String nom,
-            float x,
-            float y,
-            float largeur,
-            float hauteur
-    ) {
+    public ObjetBase(String nom, float x, float y, float largeur, float hauteur) {
         this.id = UUID.randomUUID().toString();
         this.nom = nom;
         this.x = x;
@@ -125,12 +125,6 @@ public class ObjetBase {
     }
 
     public ObjetBase clonerProfond() {
-        /*
-         * CORRECTION IMPORTANTE :
-         * On ne recopie pas this.id.
-         * Le constructeur de ObjetBase() génère déjà un nouvel identifiant
-         * unique pour le clone.
-         */
         ObjetBase copie = new ObjetBase();
 
         copie.nom = this.nom;
@@ -148,7 +142,6 @@ public class ObjetBase {
 
         copie.couleur = this.couleur;
         copie.cheminImage = this.cheminImage;
-
         copie.cheminImagePresse = this.cheminImagePresse;
         copie.cheminImageDesactive = this.cheminImageDesactive;
         copie.estDesactive = this.estDesactive;
@@ -156,12 +149,9 @@ public class ObjetBase {
         copie.cibleJoystickId = this.cibleJoystickId;
         copie.sceneLieeId = this.sceneLieeId;
 
-        copie.surchargesVariables = new HashMap<>(
-                this.surchargesVariables
-        );
+        copie.surchargesVariables = new HashMap<>(this.surchargesVariables);
 
         copie.filtreCouleur = this.filtreCouleur;
-
         copie.clignotementActif = this.clignotementActif;
         copie.clignotementVitesseMs = this.clignotementVitesseMs;
         copie.clignotementDureeTotalMs = this.clignotementDureeTotalMs;
@@ -186,6 +176,7 @@ public class ObjetBase {
         copie.afficherFondColore = this.afficherFondColore;
 
         copie.contenuTexte = this.contenuTexte;
+        copie.nomStyleTitre = this.nomStyleTitre; 
         copie.cheminPolice = this.cheminPolice;
         copie.tailleFonte = this.tailleFonte;
 
@@ -198,6 +189,7 @@ public class ObjetBase {
 
         copie.estPhysique = this.estPhysique;
         copie.estStatique = this.estStatique;
+        copie.vitesseX = this.vitesseX;
         copie.vitesseY = this.vitesseY;
         copie.rebond = this.rebond;
         copie.graviteScale = this.graviteScale;
@@ -206,15 +198,18 @@ public class ObjetBase {
         copie.sautillementIntensite = this.sautillementIntensite;
         copie.sautillementDureeMs = this.sautillementDureeMs;
         copie.tempsDebutSautillement = this.tempsDebutSautillement;
-
-        copie.sautillementInfiniMouvement =
-                this.sautillementInfiniMouvement;
+        copie.sautillementInfiniMouvement = this.sautillementInfiniMouvement;
 
         copie.ancienneX = this.x;
         copie.ancienneY = this.y;
+        
+        // --- COPIE DES CHAMPS BARRE DE PROGRESSION ---
+        copie.progressionMin = this.progressionMin;
+        copie.progressionMax = this.progressionMax;
+        copie.progressionActuelle = this.progressionActuelle;
+        copie.couleurFondProgression = this.couleurFondProgression;
 
         copie.variablesLocales = new ArrayList<>();
-
         if (this.variablesLocales != null) {
             for (Variable v : this.variablesLocales) {
                 copie.variablesLocales.add(v.clonerProfond());
@@ -222,15 +217,9 @@ public class ObjetBase {
         }
 
         copie.animations = new HashMap<>();
-
         if (this.animations != null) {
-            for (Map.Entry<String, List<String>> entry
-                    : this.animations.entrySet()) {
-
-                copie.animations.put(
-                        entry.getKey(),
-                        new ArrayList<>(entry.getValue())
-                );
+            for (Map.Entry<String, List<String>> entry : this.animations.entrySet()) {
+                copie.animations.put(entry.getKey(), new ArrayList<>(entry.getValue()));
             }
         }
 
@@ -244,42 +233,27 @@ public class ObjetBase {
         return copie;
     }
 
-    public static boolean verifierBoucleParent(
-            String idEnfant,
-            String idParentPropose,
-            List<ObjetBase> objets
-    ) {
-        if (idParentPropose == null) {
-            return false;
-        }
-
-        if (idEnfant.equals(idParentPropose)) {
-            return true;
-        }
+    public static boolean verifierBoucleParent(String idEnfant, String idParentPropose, List<ObjetBase> objets) {
+        if (idParentPropose == null) return false;
+        if (idEnfant.equals(idParentPropose)) return true;
 
         String curParentId = idParentPropose;
-
         while (curParentId != null) {
             ObjetBase parentObj = null;
-
             for (ObjetBase o : objets) {
                 if (o.id.equals(curParentId)) {
                     parentObj = o;
                     break;
                 }
             }
-
             if (parentObj != null) {
-                if (idEnfant.equals(parentObj.parentId)) {
-                    return true;
-                }
-
+                if (idEnfant.equals(parentObj.parentId)) return true;
                 curParentId = parentObj.parentId;
             } else {
                 break;
             }
         }
-
         return false;
     }
 }
+// bas 1

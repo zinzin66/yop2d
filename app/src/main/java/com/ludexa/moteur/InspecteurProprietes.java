@@ -13,6 +13,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 public class InspecteurProprietes extends LinearLayout {
 
@@ -44,6 +49,7 @@ public class InspecteurProprietes extends LinearLayout {
     private LinearLayout blocTexte;
     private EditText champContenu, champTaille;
     private Button btnCouleurTexte, btnPolice;
+    private Button btnSelectStyleTitre;
 
     private LinearLayout blocImage;
     private Button btnChargerImage, btnSupprimerImage;
@@ -73,6 +79,10 @@ public class InspecteurProprietes extends LinearLayout {
     private LinearLayout blocVariables;
     private LinearLayout conteneurListeVariables;
     private Button btnAjouterVariable;
+
+    private LinearLayout blocProgression;
+    private EditText champProgMin, champProgMax, champProgActuelle;
+    private Button btnCouleurFondProg;
 
     private Scene sceneActive;
     private CanvasEditeur canvasEditeur;
@@ -178,7 +188,8 @@ public class InspecteurProprietes extends LinearLayout {
         cb.setLayoutParams(lp);
     }
 // bas 1
-    // haut 2
+
+// haut 2
     private void initialiserInterface(Context context) {
         this.setOrientation(LinearLayout.VERTICAL);
         this.setBackgroundColor(Palette.fondPanneaux);
@@ -498,6 +509,13 @@ public class InspecteurProprietes extends LinearLayout {
         sepTexte.setText(Traducteur.get("insp_sep_texte"));
         styliserSousTitre(sepTexte);
         blocTexte.addView(sepTexte);
+        
+        btnSelectStyleTitre = new Button(context);
+        btnSelectStyleTitre.setText(Traducteur.get("insp_btn_select_style"));
+        btnSelectStyleTitre.setBackground(fond(Color.parseColor("#E65100"), Palette.bordure, 8));
+        btnSelectStyleTitre.setTextColor(Color.WHITE);
+        styliserBouton(btnSelectStyleTitre);
+        blocTexte.addView(btnSelectStyleTitre);
 
         champContenu = new EditText(context);
         champContenu.setHint(Traducteur.get("insp_hint_contenu_texte"));
@@ -792,6 +810,50 @@ public class InspecteurProprietes extends LinearLayout {
 
         blocProprietes.addView(blocVariables);
 
+        blocProgression = new LinearLayout(context);
+        blocProgression.setOrientation(LinearLayout.VERTICAL);
+        styliserSection(blocProgression);
+
+        TextView sepProgression = new TextView(context);
+        sepProgression.setText("Barre de Progression");
+        styliserSousTitre(sepProgression);
+        blocProgression.addView(sepProgression);
+
+        champProgMin = new EditText(context);
+        champProgMin.setHint("Minimum");
+        champProgMin.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
+        styliserChamp(champProgMin);
+        champProgMin.addTextChangedListener(creerWatcherSimple(texte -> {
+            if (objetCourant != null) { try { objetCourant.progressionMin = Float.parseFloat(texte); canvasEditeur.invalidate(); } catch(Exception ignored){} }
+        }));
+        blocProgression.addView(champProgMin);
+
+        champProgMax = new EditText(context);
+        champProgMax.setHint("Maximum");
+        champProgMax.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
+        styliserChamp(champProgMax);
+        champProgMax.addTextChangedListener(creerWatcherSimple(texte -> {
+            if (objetCourant != null) { try { objetCourant.progressionMax = Float.parseFloat(texte); canvasEditeur.invalidate(); } catch(Exception ignored){} }
+        }));
+        blocProgression.addView(champProgMax);
+
+        champProgActuelle = new EditText(context);
+        champProgActuelle.setHint("Valeur Actuelle");
+        champProgActuelle.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
+        styliserChamp(champProgActuelle);
+        champProgActuelle.addTextChangedListener(creerWatcherSimple(texte -> {
+            if (objetCourant != null) { try { objetCourant.progressionActuelle = Float.parseFloat(texte); canvasEditeur.invalidate(); } catch(Exception ignored){} }
+        }));
+        blocProgression.addView(champProgActuelle);
+
+        btnCouleurFondProg = new Button(context);
+        btnCouleurFondProg.setText("Couleur de fond (Progression)");
+        styliserBouton(btnCouleurFondProg);
+        blocProgression.addView(btnCouleurFondProg);
+
+        blocProprietes.addView(blocProgression);
+// bas 3
+// haut 4
         btnAjouterVariable.setOnClickListener(v -> {
             if (objetCourant == null) return;
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -825,7 +887,6 @@ public class InspecteurProprietes extends LinearLayout {
                 if (nomVar.isEmpty()) return;
                 
                 String typeChoisi = types[spinType.getSelectedItemPosition()];
-                // CORRECTION BUG A : Ordre des arguments rétabli (nom, scope, type)
                 Variable nouvelleVar = new Variable(nomVar, "LOCALE", typeChoisi);
                 
                 nouvelleVar.nom = nomVar;
@@ -890,9 +951,7 @@ public class InspecteurProprietes extends LinearLayout {
         contenuInspecteur.addView(boutonSupprimer);
         scrollInspecteur.addView(contenuInspecteur);
         this.addView(scrollInspecteur);
-// bas 3
 
-// haut 4
         boutonMasquer.setOnClickListener(v -> {
             if (scrollInspecteur.getVisibility() == View.VISIBLE) {
                 scrollInspecteur.setVisibility(View.GONE);
@@ -905,6 +964,42 @@ public class InspecteurProprietes extends LinearLayout {
                 boutonMasquer.setText(">");
                 this.setLayoutParams(paramsOuvert);
             }
+        });
+        
+        btnSelectStyleTitre.setOnClickListener(v -> {
+            if (objetCourant == null) return;
+            if (cheminProjet == null) return;
+            
+            canvasEditeur.chargerStylesTitresGlobales();
+            
+            File fichier = new File(cheminProjet, "assets_ludexa/Textes/styles_titres.json");
+            List<String> nomsStyles = new ArrayList<>();
+            nomsStyles.add(Traducteur.get("valeur_aucune"));
+            
+            if (fichier.exists()) {
+                try {
+                    BufferedReader br = new BufferedReader(new FileReader(fichier));
+                    StringBuilder sb = new StringBuilder();
+                    String ligne;
+                    while ((ligne = br.readLine()) != null) sb.append(ligne);
+                    br.close();
+                    
+                    java.lang.reflect.Type type = new TypeToken<List<StyleTitre>>(){}.getType();
+                    List<StyleTitre> liste = new Gson().fromJson(sb.toString(), type);
+                    if (liste != null) {
+                        for (StyleTitre st : liste) nomsStyles.add(st.nom);
+                    }
+                } catch (Exception e) {}
+            }
+            
+            new AlertDialog.Builder(context)
+                .setTitle(Traducteur.get("insp_titre_select_style"))
+                .setItems(nomsStyles.toArray(new String[0]), (dialog, which) -> {
+                    if (which == 0) objetCourant.nomStyleTitre = null;
+                    else objetCourant.nomStyleTitre = nomsStyles.get(which);
+                    canvasEditeur.invalidate();
+                    afficherObjet(objetCourant);
+                }).show();
         });
 
         champNom.setOnEditorActionListener((v, actionId, event) -> {
@@ -991,7 +1086,9 @@ public class InspecteurProprietes extends LinearLayout {
             }
             Toast.makeText(context, Traducteur.get("insp_erreur_scene_introuvable"), Toast.LENGTH_SHORT).show();
         });
+// bas 4
 
+// haut 5
         btnChargerImage.setOnClickListener(v -> {
             if (objetCourant == null) return;
             if (cheminProjet == null) { Toast.makeText(context, Traducteur.get("erreur_chemin_projet"), Toast.LENGTH_SHORT).show(); return; }
@@ -1160,7 +1257,9 @@ public class InspecteurProprietes extends LinearLayout {
         cbVisible.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (objetCourant != null && !miseAJourEnCours) { objetCourant.visible = isChecked; canvasEditeur.invalidate(); }
         });
-
+// bas 5
+        
+// haut 6
         View.OnClickListener selecteurCouleurListener = v -> {
             if (objetCourant == null) return;
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -1169,6 +1268,11 @@ public class InspecteurProprietes extends LinearLayout {
             LinearLayout layoutMain = new LinearLayout(context);
             layoutMain.setOrientation(LinearLayout.VERTICAL);
             layoutMain.setPadding(dp(16), dp(16), dp(16), dp(16));
+            
+            Button btnAucune = new Button(context);
+            btnAucune.setText("Aucune (Transparent)");
+            styliserBouton(btnAucune);
+            layoutMain.addView(btnAucune);
 
             LinearLayout layoutTop = new LinearLayout(context);
             layoutTop.setOrientation(LinearLayout.HORIZONTAL);
@@ -1176,7 +1280,7 @@ public class InspecteurProprietes extends LinearLayout {
 
             View previewColor = new View(context);
             LinearLayout.LayoutParams previewParams = new LinearLayout.LayoutParams(dp(44), dp(44));
-            previewParams.setMargins(0, 0, dp(12), 0);
+            previewParams.setMargins(0, dp(12), dp(12), dp(12));
             previewColor.setLayoutParams(previewParams);
             
             final float[] currentHsv = new float[3];
@@ -1190,9 +1294,9 @@ public class InspecteurProprietes extends LinearLayout {
 
             EditText champHex = new EditText(context);
             champHex.setSingleLine(true);
-            champHex.setText(String.format("#%06X", (0xFFFFFF & objetCourant.couleur)));
+            champHex.setText(String.format("#%08X", objetCourant.couleur));
             styliserChampFlexible(champHex);
-            champHex.setFilters(new android.text.InputFilter[] { new android.text.InputFilter.LengthFilter(7) });
+            champHex.setFilters(new android.text.InputFilter[] { new android.text.InputFilter.LengthFilter(9) });
 
             layoutTop.addView(previewColor);
             layoutTop.addView(champHex);
@@ -1226,7 +1330,7 @@ public class InspecteurProprietes extends LinearLayout {
                     canvas.drawCircle(x, y, dp(11), indicatorPaint);
                 }
 
-                @Override
+                 @Override
                 public boolean onTouchEvent(android.view.MotionEvent event) {
                     if (event.getAction() == android.view.MotionEvent.ACTION_DOWN || event.getAction() == android.view.MotionEvent.ACTION_MOVE) {
                         float x = Math.max(0, Math.min(event.getX(), getWidth()));
@@ -1239,7 +1343,7 @@ public class InspecteurProprietes extends LinearLayout {
                         int newColor = Color.HSVToColor(currentHsv);
                         
                         isUpdating[0] = true;
-                        champHex.setText(String.format("#%06X", (0xFFFFFF & newColor)));
+                        champHex.setText(String.format("#%08X", newColor));
                         isUpdating[0] = false;
                         
                         ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(newColor);
@@ -1249,6 +1353,14 @@ public class InspecteurProprietes extends LinearLayout {
                     return super.onTouchEvent(event);
                 }
             };
+            
+            btnAucune.setOnClickListener(vAucun -> {
+                isUpdating[0] = true;
+                champHex.setText("#00000000");
+                isUpdating[0] = false;
+                ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(Color.TRANSPARENT);
+                spectreView.invalidate();
+            });
             
             LinearLayout.LayoutParams spectreParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(160));
             spectreParams.setMargins(0, dp(16), 0, dp(16));
@@ -1263,7 +1375,7 @@ public class InspecteurProprietes extends LinearLayout {
                     try {
                         String hexStr = s.toString();
                         if (!hexStr.startsWith("#")) hexStr = "#" + hexStr;
-                        if (hexStr.length() == 7) {
+                        if (hexStr.length() == 9) {
                             int parsedColor = Color.parseColor(hexStr);
                             Color.colorToHSV(parsedColor, currentHsv);
                             ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(parsedColor);
@@ -1278,7 +1390,7 @@ public class InspecteurProprietes extends LinearLayout {
             LinearLayout layoutPalette = new LinearLayout(context);
             layoutPalette.setOrientation(LinearLayout.HORIZONTAL);
             
-          int[] couleursRapides = {Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA, Color.parseColor("#FFA500"), Color.parseColor("#808080")};
+            int[] couleursRapides = {Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA, Color.parseColor("#FFA500"), Color.parseColor("#808080")};
             for (int c : couleursRapides) {
                 View pastille = new View(context);
                 LinearLayout.LayoutParams pastilleParams = new LinearLayout.LayoutParams(dp(40), dp(40));
@@ -1294,7 +1406,7 @@ public class InspecteurProprietes extends LinearLayout {
                 pastille.setOnClickListener(vp -> {
                     Color.colorToHSV(c, currentHsv);
                     isUpdating[0] = true;
-                    champHex.setText(String.format("#%06X", (0xFFFFFF & c)));
+                    champHex.setText(String.format("#%08X", c));
                     isUpdating[0] = false;
                     ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(c);
                     spectreView.invalidate();
@@ -1319,15 +1431,187 @@ public class InspecteurProprietes extends LinearLayout {
 
         btnCouleur.setOnClickListener(selecteurCouleurListener);
         btnCouleurTexte.setOnClickListener(selecteurCouleurListener);
+// bas 6
+
+// haut 7
+        View.OnClickListener selecteurCouleurFondProgListener = v -> {
+            if (objetCourant == null) return;
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(Traducteur.get("insp_titre_select_couleur"));
+
+            LinearLayout layoutMain = new LinearLayout(context);
+            layoutMain.setOrientation(LinearLayout.VERTICAL);
+            layoutMain.setPadding(dp(16), dp(16), dp(16), dp(16));
+            
+            Button btnAucune = new Button(context);
+            btnAucune.setText("Aucune (Transparent)");
+            styliserBouton(btnAucune);
+            layoutMain.addView(btnAucune);
+
+            LinearLayout layoutTop = new LinearLayout(context);
+            layoutTop.setOrientation(LinearLayout.HORIZONTAL);
+            layoutTop.setGravity(Gravity.CENTER_VERTICAL);
+
+            View previewColor = new View(context);
+            LinearLayout.LayoutParams previewParams = new LinearLayout.LayoutParams(dp(44), dp(44));
+            previewParams.setMargins(0, dp(12), dp(12), dp(12));
+            previewColor.setLayoutParams(previewParams);
+            
+            final float[] currentHsv = new float[3];
+            Color.colorToHSV(objetCourant.couleurFondProgression, currentHsv);
+            
+            android.graphics.drawable.GradientDrawable fondPreview = new android.graphics.drawable.GradientDrawable();
+            fondPreview.setColor(objetCourant.couleurFondProgression);
+            fondPreview.setCornerRadius(dp(8));
+            fondPreview.setStroke(dp(1), Palette.bordure);
+            previewColor.setBackground(fondPreview);
+
+            EditText champHex = new EditText(context);
+            champHex.setSingleLine(true);
+            champHex.setText(String.format("#%08X", objetCourant.couleurFondProgression));
+            styliserChampFlexible(champHex);
+            champHex.setFilters(new android.text.InputFilter[] { new android.text.InputFilter.LengthFilter(9) });
+
+            layoutTop.addView(previewColor);
+            layoutTop.addView(champHex);
+            layoutMain.addView(layoutTop);
+
+            final boolean[] isUpdating = {false};
+
+            View spectreView = new View(context) {
+                private android.graphics.Paint paintHue = new android.graphics.Paint();
+                private android.graphics.Paint paintVal = new android.graphics.Paint();
+                private android.graphics.Paint indicatorPaint = new android.graphics.Paint(android.graphics.Paint.ANTI_ALIAS_FLAG);
+
+                @Override
+                protected void onDraw(android.graphics.Canvas canvas) {
+                    int[] hueColors = {Color.RED, Color.YELLOW, Color.GREEN, Color.CYAN, Color.BLUE, Color.MAGENTA, Color.RED};
+                    paintHue.setShader(new android.graphics.LinearGradient(0, 0, getWidth(), 0, hueColors, null, android.graphics.Shader.TileMode.CLAMP));
+                    canvas.drawRect(0, 0, getWidth(), getHeight(), paintHue);
+
+                    paintVal.setShader(new android.graphics.LinearGradient(0, 0, 0, getHeight(), Color.TRANSPARENT, Color.BLACK, android.graphics.Shader.TileMode.CLAMP));
+                    canvas.drawRect(0, 0, getWidth(), getHeight(), paintVal);
+
+                    indicatorPaint.setColor(Color.WHITE);
+                    indicatorPaint.setStyle(android.graphics.Paint.Style.STROKE);
+                    indicatorPaint.setStrokeWidth(dp(2));
+                    
+                    float x = (currentHsv[0] / 360f) * getWidth();
+                    float y = (1f - currentHsv[2]) * getHeight();
+                    
+                    canvas.drawCircle(x, y, dp(10), indicatorPaint);
+                    indicatorPaint.setColor(Color.BLACK);
+                    canvas.drawCircle(x, y, dp(11), indicatorPaint);
+                }
+
+                 @Override
+                public boolean onTouchEvent(android.view.MotionEvent event) {
+                    if (event.getAction() == android.view.MotionEvent.ACTION_DOWN || event.getAction() == android.view.MotionEvent.ACTION_MOVE) {
+                        float x = Math.max(0, Math.min(event.getX(), getWidth()));
+                        float y = Math.max(0, Math.min(event.getY(), getHeight()));
+                        
+                        currentHsv[0] = (x / getWidth()) * 360f;
+                        currentHsv[1] = 1f; 
+                        currentHsv[2] = 1f - (y / getHeight());
+                        
+                        int newColor = Color.HSVToColor(currentHsv);
+                        
+                        isUpdating[0] = true;
+                        champHex.setText(String.format("#%08X", newColor));
+                        isUpdating[0] = false;
+                        
+                        ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(newColor);
+                        invalidate();
+                        return true;
+                    }
+                    return super.onTouchEvent(event);
+                }
+            };
+            
+            btnAucune.setOnClickListener(vAucun -> {
+                isUpdating[0] = true;
+                champHex.setText("#00000000");
+                isUpdating[0] = false;
+                ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(Color.TRANSPARENT);
+                spectreView.invalidate();
+            });
+            
+            LinearLayout.LayoutParams spectreParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(160));
+            spectreParams.setMargins(0, dp(16), 0, dp(16));
+            spectreView.setLayoutParams(spectreParams);
+            layoutMain.addView(spectreView);
+
+            champHex.addTextChangedListener(new android.text.TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+                @Override public void afterTextChanged(android.text.Editable s) {
+                    if (isUpdating[0]) return;
+                    try {
+                        String hexStr = s.toString();
+                        if (!hexStr.startsWith("#")) hexStr = "#" + hexStr;
+                        if (hexStr.length() == 9) {
+                            int parsedColor = Color.parseColor(hexStr);
+                            Color.colorToHSV(parsedColor, currentHsv);
+                            ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(parsedColor);
+                            spectreView.invalidate();
+                        }
+                    } catch (IllegalArgumentException ignored) {}
+                }
+            });
+
+            HorizontalScrollView scrollPalette = new HorizontalScrollView(context);
+            scrollPalette.setHorizontalScrollBarEnabled(false);
+            LinearLayout layoutPalette = new LinearLayout(context);
+            layoutPalette.setOrientation(LinearLayout.HORIZONTAL);
+            
+            int[] couleursRapides = {Color.WHITE, Color.BLACK, Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.CYAN, Color.MAGENTA, Color.parseColor("#FFA500"), Color.parseColor("#808080")};
+            for (int c : couleursRapides) {
+                View pastille = new View(context);
+                LinearLayout.LayoutParams pastilleParams = new LinearLayout.LayoutParams(dp(40), dp(40));
+                pastilleParams.setMargins(0, 0, dp(12), 0);
+                pastille.setLayoutParams(pastilleParams);
+                
+                android.graphics.drawable.GradientDrawable bgPastille = new android.graphics.drawable.GradientDrawable();
+                bgPastille.setShape(android.graphics.drawable.GradientDrawable.OVAL);
+                bgPastille.setColor(c);
+                bgPastille.setStroke(dp(1), Palette.bordure);
+                pastille.setBackground(bgPastille);
+                
+                pastille.setOnClickListener(vp -> {
+                    Color.colorToHSV(c, currentHsv);
+                    isUpdating[0] = true;
+                    champHex.setText(String.format("#%08X", c));
+                    isUpdating[0] = false;
+                    ((android.graphics.drawable.GradientDrawable)previewColor.getBackground()).setColor(c);
+                    spectreView.invalidate();
+                });
+                layoutPalette.addView(pastille);
+            }
+            scrollPalette.addView(layoutPalette);
+            layoutMain.addView(scrollPalette);
+
+            builder.setView(layoutMain);
+            builder.setPositiveButton(Traducteur.get("bouton_valider"), (dialog, which) -> {
+                try {
+                    String finalHex = champHex.getText().toString();
+                    if (!finalHex.startsWith("#")) finalHex = "#" + finalHex;
+                    objetCourant.couleurFondProgression = Color.parseColor(finalHex);
+                    canvasEditeur.invalidate();
+                } catch (Exception e) {}
+            });
+            builder.setNegativeButton(Traducteur.get("bouton_annuler"), null);
+            builder.show();
+        };
+
+        btnCouleurFondProg.setOnClickListener(selecteurCouleurFondProgListener);
     }
 
     private void cacherClavier(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-// bas 4
-
-// haut 5
+// bas 7
+// haut 8
     private void verifierEtConfirmerRenommage(Context context) {
         if (objetCourant == null) return;
         String nouveauNom = champNom.getText().toString().trim();
@@ -1420,12 +1704,13 @@ public class InspecteurProprietes extends LinearLayout {
             champRebond.setText(String.valueOf(objet.rebond));
             champGravite.setText(String.valueOf(objet.graviteScale));
 
-            if ("texte".equals(objet.type)) {
+            if ("texte".equals(objet.type) || "titre_stylise".equals(objet.type)) {
                 blocTexte.setVisibility(View.VISIBLE);
                 blocImage.setVisibility(View.GONE);
                 blocBouton.setVisibility(View.GONE);
                 blocJoystick.setVisibility(View.GONE);
                 blocSceneInstance.setVisibility(View.GONE); 
+                blocProgression.setVisibility(View.GONE);
                 
                 champContenu.setText(objet.contenuTexte);
                 champTaille.setText(String.valueOf(objet.tailleFonte));
@@ -1435,12 +1720,21 @@ public class InspecteurProprietes extends LinearLayout {
                 } else {
                     btnPolice.setText(Traducteur.get("insp_btn_police_selecteur"));
                 }
+                
+                if ("titre_stylise".equals(objet.type)) {
+                    btnSelectStyleTitre.setVisibility(View.VISIBLE);
+                    btnSelectStyleTitre.setText(Traducteur.get("insp_btn_style_actuel") + (objet.nomStyleTitre != null ? objet.nomStyleTitre : Traducteur.get("valeur_aucune")));
+                } else {
+                    btnSelectStyleTitre.setVisibility(View.GONE);
+                }
+                
             } else if ("scene_instance".equals(objet.type)) { 
                 blocTexte.setVisibility(View.GONE);
                 blocImage.setVisibility(View.GONE);
                 blocBouton.setVisibility(View.GONE);
                 blocJoystick.setVisibility(View.GONE);
                 blocSceneInstance.setVisibility(View.VISIBLE);
+                blocProgression.setVisibility(View.GONE);
                 
                 String nomScene = Traducteur.get("valeur_aucune");
                 boolean aUneScene = false;
@@ -1523,9 +1817,22 @@ public class InspecteurProprietes extends LinearLayout {
                     }
                 }
 
+            } else if ("barre_progression".equals(objet.type)) {
+                blocTexte.setVisibility(View.GONE);
+                blocSceneInstance.setVisibility(View.GONE); 
+                blocImage.setVisibility(View.GONE);
+                blocBouton.setVisibility(View.GONE);
+                blocJoystick.setVisibility(View.GONE);
+                blocProgression.setVisibility(View.VISIBLE);
+                
+                champProgMin.setText(String.valueOf(objet.progressionMin));
+                champProgMax.setText(String.valueOf(objet.progressionMax));
+                champProgActuelle.setText(String.valueOf(objet.progressionActuelle));
+                
             } else {
                 blocTexte.setVisibility(View.GONE);
                 blocSceneInstance.setVisibility(View.GONE); 
+                blocProgression.setVisibility(View.GONE);
                 blocImage.setVisibility(View.VISIBLE);
 
                 if (objet.cheminImage != null) {
@@ -1574,7 +1881,9 @@ public class InspecteurProprietes extends LinearLayout {
 
         miseAJourEnCours = false;
     }
+// bas 8
 
+// haut 9
     private void rafraichirVariablesObjet(Context context) {
         conteneurListeVariables.removeAllViews();
         if (objetCourant == null || objetCourant.variablesLocales == null) return;
@@ -1692,7 +2001,31 @@ public class InspecteurProprietes extends LinearLayout {
         };
     }
 }
-// bas 5
-                    
+// bas 9
+
+
+
+
+
+
+
+    
+
+
+
+    
+
+        
+
+        
+
+
+
+
+        
+
+
+
+        
 
 

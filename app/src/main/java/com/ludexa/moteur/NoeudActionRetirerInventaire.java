@@ -1,11 +1,10 @@
-// haut 1
+// NoeudActionRetirerInventaire.java
 package com.ludexa.moteur;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NoeudActionRetirerInventaire extends NoeudBase {
-    private ObjetBase objetCible;
     private transient Variable cible;
     private String nomCibleVariable;
 
@@ -36,10 +35,6 @@ public class NoeudActionRetirerInventaire extends NoeudBase {
 
     @Override
     public boolean requiertCibleObjet() { return true; }
-    @Override
-    public void setCibleObjet(ObjetBase objet) { this.objetCible = objet; }
-    @Override
-    public ObjetBase getCibleObjet() { return this.objetCible; }
 
     @Override
     public boolean requiertCibleVariable() { return true; }
@@ -67,4 +62,3 @@ public class NoeudActionRetirerInventaire extends NoeudBase {
         return this.cible;
     }
 }
-// bas 1
