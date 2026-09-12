@@ -1088,12 +1088,21 @@ public class EditeurNoeudDialog extends Dialog {
             champSaisie.setClickable(true);
 
             // CORRECTIF 2 : Le clavier natif est déclenché par le nouveau type ou la méthode spécifique du nœud
-            if (NoeudBase.TYPE_TEXTE_ALPHABETIQUE.equals(type) || noeud.utiliseClavierTexte()) {
+            if (NoeudBase.TYPE_TEXTE_ALPHABETIQUE.equals(type)) {
                 champSaisie.setShowSoftInputOnFocus(true);
                 champSaisie.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
                 if (conteneurClavier != null) conteneurClavier.setVisibility(View.GONE);
                 if (conteneurBooleen != null) conteneurBooleen.setVisibility(View.GONE);
                 champSaisie.requestFocus();
+            } else if (noeud.utiliseClavierTexte()) {
+                // CORRECTIF (2026-09-12) : conserver le clavier natif MAIS aussi afficher
+                // le pavé code et le panneau vrai/faux, au lieu de tout masquer -
+                // corrige la perte d'accès au clavier code/booléen sur les nœuds
+                // comme "Condition" et "Visibilité" qui utilisent le clavier texte.
+                champSaisie.setShowSoftInputOnFocus(true);
+                champSaisie.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+                if (conteneurClavier != null) conteneurClavier.setVisibility(View.VISIBLE);
+                if (conteneurBooleen != null) conteneurBooleen.setVisibility(View.VISIBLE);
             } else {
                 champSaisie.setShowSoftInputOnFocus(false);
                 champSaisie.setInputType(InputType.TYPE_NULL);
