@@ -1444,17 +1444,18 @@ public class InspecteurProprietes extends LinearLayout {
                     canvasEditeur.invalidate();
                 } catch (Exception e) {}
             });
-            builder.setNegativeButton(Traducteur.get("bouton_annuler"), null);
+                        builder.setNegativeButton(Traducteur.get("bouton_annuler"), null);
             builder.show();
         };
 
         btnCouleurFondProg.setOnClickListener(selecteurCouleurFondProgListener);
-    }
+    } 
 
     private void cacherClavier(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
+
 // bas 4 
                 
     // haut 5
