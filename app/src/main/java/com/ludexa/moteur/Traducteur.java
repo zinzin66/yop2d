@@ -96,7 +96,9 @@ public class Traducteur {
         if (cle.equals("param_y")) return "Position Y";
         
         if (cle.equals("port_entree")) return "Entrée";
+        if (cle.equals("port_entrer")) return "Entrer";
         if (cle.equals("port_sortie")) return "Sortie";
+        if (cle.equals("port_suivant")) return "Suivant";
         if (cle.equals("port_vrai")) return "Vrai";
         if (cle.equals("port_faux")) return "Faux";
         
@@ -117,8 +119,6 @@ public class Traducteur {
         if (cle.equals("param_vitesse")) return "Vitesse du projectile";
         if (cle.equals("opt_angle_depart")) return "Angle du point de départ";
         if (cle.equals("opt_vers_cible")) return "Vers une cible";
-        if (cle.equals("port_entrer")) return "Entrer";
-        if (cle.equals("port_suivant")) return "Suivant";
 
         // --- NOUVEAU NOEUD HORS ECRAN ---
         if (cle.equals("noeud_si_hors_ecran")) return "Si objet hors écran";
@@ -141,6 +141,16 @@ public class Traducteur {
         if (cle.equals("cat_formes_base")) return "Formes de base & Visuels";
         if (cle.equals("cat_ui_hud")) return "Interface, Textes & HUD";
         if (cle.equals("cat_prefabs")) return "Scènes Imbriquées & Prefabs";
+
+        // --- NOUVELLES CLES : BARRE DE PROGRESSION ---
+        if (cle.equals("obj_prefix_barre_progression")) return "Barre de progression";
+        if (cle.equals("insp_sep_barre_prog")) return "BARRE DE PROGRESSION";
+        if (cle.equals("insp_label_prog_min")) return "Valeur Minimale";
+        if (cle.equals("insp_label_prog_max")) return "Valeur Maximale";
+        if (cle.equals("insp_label_prog_actuelle")) return "Valeur Actuelle";
+        if (cle.equals("insp_btn_couleur_fond_barre")) return "Couleur du Fond";
+        if (cle.equals("noeud_modifier_progression")) return "Définir la progression";
+        if (cle.equals("param_nouvelle_progression")) return "Nouvelle valeur";
 
         return "[" + cle + "]";
     }
