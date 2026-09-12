@@ -1468,9 +1468,116 @@ public void rafraichirArborescence() {
         dialog.show();
     }
 // bas 8
-                
-            
 // haut 9
+    private View creerSectionFonctions(Context context) {
+        LinearLayout section = new LinearLayout(context);
+        section.setOrientation(LinearLayout.VERTICAL);
+
+        Button btnTitre = new Button(context);
+        btnTitre.setText(Traducteur.get("panneau_ress_fonctions") + " ▼");
+        styliserTitreSection(btnTitre);
+
+        LinearLayout contenu = new LinearLayout(context);
+        contenu.setOrientation(LinearLayout.VERTICAL);
+        styliserContenuSection(contenu);
+
+        conteneurFonctions = new LinearLayout(context);
+        conteneurFonctions.setOrientation(LinearLayout.VERTICAL);
+        conteneurFonctions.setPadding(0, 0, 0, dp(8));
+        contenu.addView(conteneurFonctions);
+
+        LinearLayout zoneBoutons = new LinearLayout(context);
+        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
+
+        ImageButton btnCreer = new ImageButton(context);
+        btnCreer.setImageResource(R.drawable.add_24px);
+        styliserBoutonIcone(btnCreer);
+        btnCreer.setOnClickListener(v -> afficherPopupCreerFonction(context));
+
+        ImageButton btnEditer = new ImageButton(context);
+        btnEditer.setImageResource(R.drawable.account_tree_24px); 
+        styliserBoutonIcone(btnEditer);
+        btnEditer.setOnClickListener(v -> {
+            if (fonctionSelectionnee != null) {
+                android.content.Intent intent = new android.content.Intent(context, InterfaceBlueprint.class);
+                intent.putExtra("cheminProjet", cheminProjet);
+                intent.putExtra("modeFonction", true);
+                intent.putExtra("nomFonction", fonctionSelectionnee);
+                InterfaceBlueprint.sceneACharger = null; 
+                context.startActivity(intent);
+            }
+        });
+
+        ImageButton btnRenommer = new ImageButton(context);
+        btnRenommer.setImageResource(R.drawable.edit_square_24px);
+        styliserBoutonIcone(btnRenommer);
+        btnRenommer.setOnClickListener(v -> {
+            if (fonctionSelectionnee != null) afficherPopupRenommerFonction(context, fonctionSelectionnee);
+        });
+
+        ImageButton btnSupprimer = new ImageButton(context);
+        btnSupprimer.setImageResource(R.drawable.delete_24px);
+        styliserBoutonIcone(btnSupprimer);
+        btnSupprimer.setOnClickListener(v -> {
+            if (fonctionSelectionnee != null) afficherPopupSupprimerFonction(context, fonctionSelectionnee);
+        });
+
+        zoneBoutons.addView(btnCreer);
+        zoneBoutons.addView(btnEditer);
+        zoneBoutons.addView(btnRenommer);
+        zoneBoutons.addView(btnSupprimer);
+
+        contenu.addView(zoneBoutons);
+        rafraichirFonctions();
+
+        btnTitre.setOnClickListener(v -> {
+            if (contenu.getVisibility() == View.VISIBLE) {
+                contenu.setVisibility(View.GONE);
+                btnTitre.setText(Traducteur.get("panneau_ress_fonctions") + " ▶");
+            } else {
+                contenu.setVisibility(View.VISIBLE);
+                btnTitre.setText(Traducteur.get("panneau_ress_fonctions") + " ▼");
+            }
+        });
+
+        section.addView(btnTitre);
+        section.addView(contenu);
+        return section;
+    }
+
+    public void rafraichirFonctions() {
+        if (conteneurFonctions == null || rootFonctionsDir == null) return;
+        conteneurFonctions.removeAllViews();
+
+        File[] fichiers = rootFonctionsDir.listFiles((dir, name) -> name.endsWith(".json"));
+        if (fichiers != null) {
+            java.util.Arrays.sort(fichiers, (f1, f2) -> f1.getName().compareToIgnoreCase(f2.getName()));
+            for (File f : fichiers) {
+                String nomFonc = f.getName().replace(".json", "");
+                
+                TextView nomView = new TextView(getContext());
+                nomView.setText("ƒ " + nomFonc);
+                if (nomFonc.equals(fonctionSelectionnee)) {
+                    nomView.setTextColor(Palette.texteSelectionne);
+                    nomView.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
+                } else {
+                    nomView.setTextColor(Color.parseColor("#E040FB")); 
+                }
+                nomView.setPadding(dp(10), dp(8), dp(10), dp(8));
+                nomView.setTextSize(14f);
+
+                nomView.setOnClickListener(v -> {
+                    fonctionSelectionnee = nomFonc;
+                    rafraichirFonctions();
+                });
+
+                conteneurFonctions.addView(nomView);
+            }
+        }
+    }
+// bas 9
+
+// haut 10
     private void afficherPopupCreerFonction(Context context) {
         Dialog dialog = new Dialog(context);
         dialog.setTitle(Traducteur.get("popup_creer_fonction"));
@@ -1611,13 +1718,8 @@ public void rafraichirArborescence() {
         dialog.show();
     }
 }
-// bas 9
+// bas 10
 
     
-
-    
-
-    
-
     
 
