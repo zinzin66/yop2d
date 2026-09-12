@@ -265,7 +265,6 @@ public class VueJeu extends View {
         }
     }
 // bas 1
-
 // haut 2
     private void instancierSceneInterne(Scene sceneAInstancier, ObjetBase prefab) {
         float offsetX = prefab.x;
@@ -469,7 +468,6 @@ public class VueJeu extends View {
         }
     }
 // bas 2
-
 // haut 3
     private List<Scene> cacheListeScenesDisque = null;
 
@@ -632,7 +630,6 @@ public class VueJeu extends View {
         return m;
     }
 // bas 3
-
 // haut 4
     private boolean pointDansObjet(float xVue, float yVue, float xMonde, float yMonde, ObjetBase obj) {
         boolean isHud = (sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(obj));
@@ -1279,6 +1276,14 @@ public class VueJeu extends View {
                 canvas.drawRect(0, 0, objet.largeur * ratio, objet.hauteur, peintureObjet);
                 
                 dessinerImage(canvas, objet, cheminAAfficher);
+            } else if ("rond".equals(objet.type)) {
+                if (objet.afficherFondColore || cheminAAfficher == null) {
+                    peintureObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
+                    peintureObjet.setAlpha(alphaInt);
+                    float rayon = Math.min(objet.largeur, objet.hauteur) / 2f;
+                    canvas.drawCircle(objet.largeur / 2f, objet.hauteur / 2f, rayon, peintureObjet);
+                }
+                dessinerImage(canvas, objet, cheminAAfficher);
             } else {
                 if (objet.afficherFondColore || cheminAAfficher == null) {
                     peintureObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
@@ -1297,8 +1302,7 @@ public class VueJeu extends View {
         }
     }
 // bas 5
-
-    // haut 6
+// haut 6
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -1451,5 +1455,6 @@ public class VueJeu extends View {
     }
 }
 // bas 6
+
 
 
