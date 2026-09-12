@@ -1450,8 +1450,9 @@ public class InspecteurProprietes extends LinearLayout {
 
         btnCouleur.setOnClickListener(selecteurCouleurListener);
 
-        View.OnClickListener selecteurCouleurFondProgListener = v -> {
-            if (objetCourant == null) return;
+        View.OnClickListener selecteurCouleurListener = v -> {
+    DiagLogger.log(cheminProjet, "CLIC_BTN_COULEUR objet=" + (objetCourant != null ? objetCourant.nom : "NULL"));
+    if (objetCourant == null) return;
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(Traducteur.get("insp_titre_select_couleur"));
 
