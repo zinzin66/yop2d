@@ -53,12 +53,12 @@ public class EcranDemarrage extends Activity {
     
     private static final int REQUEST_CODE_EXPORT_PROJET = 2001;
     private static final int REQUEST_CODE_EXPORT_APK = 2002;
+    private static final int REQUEST_CODE_IMPORT_PROJET = 2003;
+    
     private File projetAExporter = null;
     
-    // NOUVEAU : On garde en mémoire le nom final choisi par l'utilisateur
     public static String nomJeuAExporter = ""; 
 
-    // Structure pour unifier l'affichage des deux listes
     private class ItemProjet {
         String nom;
         String sousTitre;
@@ -139,19 +139,14 @@ public class EcranDemarrage extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // --- NOUVEAU : LE SYSTÈME D'AIGUILLAGE (ROUTING) ---
         try {
             InputStream is = getAssets().open("jeu_exporte.zip");
             is.close();
-            // Si on arrive ici, c'est un jeu exporté ! On lance le jeu et on ferme l'éditeur.
             Intent intent = new Intent(this, RunnerActivity.class);
             startActivity(intent);
             finish();
             return; 
-        } catch (Exception e) {
-            // Le fichier n'existe pas, c'est le moteur Yop2D normal. On continue l'initialisation !
-        }
-        // ---------------------------------------------------
+        } catch (Exception e) {}
 
         NoeudBase.contexteApplication = this;
         Traducteur.initialiser(this, langueCourante); 
@@ -182,86 +177,170 @@ public class EcranDemarrage extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         
-        if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null && projetAExporter != null) {
+        if (resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             
-            // CAS 1 : EXPORT DU PROJET BRUT (.ZIP)
-            if (requestCode == REQUEST_CODE_EXPORT_PROJET) {
-                try {
-                    OutputStream out = getContentResolver().openOutputStream(data.getData());
-                    ZipOutputStream zip = new ZipOutputStream(out);
-                    zipperRecursif(projetAExporter, "", zip);
-                    zip.close();
-                    if (out != null) out.close();
+            if (projetAExporter != null) {
+                if (requestCode == REQUEST_CODE_EXPORT_PROJET) {
+                    try {
+                        OutputStream out = getContentResolver().openOutputStream(data.getData());
+                        ZipOutputStream zip = new ZipOutputStream(out);
+                        zipperRecursif(projetAExporter, "", zip);
+                        zip.close();
+                        if (out != null) out.close();
 
-                    new AlertDialog.Builder(this)
-                            .setTitle(Traducteur.get("export_termine"))
-                            .setMessage(Traducteur.get("archive_creee"))
-                            .setPositiveButton(Traducteur.get("bouton_ok"), null)
-                            .show();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(this, Traducteur.get("erreur_export"), Toast.LENGTH_SHORT).show();
-                }
-                projetAExporter = null;
-            }
-            
-            // CAS 2 : BUILD DE L'APK FINAL (.APK)
-            else if (requestCode == REQUEST_CODE_EXPORT_APK) {
-                AlertDialog dialogueProgression = new AlertDialog.Builder(this)
-                        .setTitle(Traducteur.get("export_apk_titre"))
-                        .setMessage(Traducteur.get("export_apk_init"))
-                        .setCancelable(false)
-                        .show();
-
-                ExportateurAPK.exporterJeu(this, projetAExporter, new ExportateurAPK.InterfaceExport() {
-                    @Override
-                    public void surProgression(String message) {
-                        dialogueProgression.setMessage(message);
-                    }
-
-                    @Override
-                    public void surSucces(File apkFinal) {
-                        try {
-                            InputStream in = new FileInputStream(apkFinal);
-                            OutputStream out = getContentResolver().openOutputStream(data.getData());
-                            byte[] buffer = new byte[8192];
-                            int lus;
-                            while ((lus = in.read(buffer)) > 0) {
-                                out.write(buffer, 0, lus);
-                            }
-                            in.close();
-                            if (out != null) out.close();
-
-                            dialogueProgression.dismiss();
-                            projetAExporter = null;
-
-                            new AlertDialog.Builder(EcranDemarrage.this)
-                                    .setTitle(Traducteur.get("export_termine"))
-                                    .setMessage(Traducteur.get("export_apk_succes"))
-                                    .setPositiveButton(Traducteur.get("bouton_ok"), null)
-                                    .show();
-
-                        } catch (Exception e) {
-                            surErreur(Traducteur.get("erreur_sauvegarde") + " : " + e.getMessage());
-                        }
-                    }
-
-                    @Override
-                    public void surErreur(String erreur) {
-                        dialogueProgression.dismiss();
-                        projetAExporter = null;
-                        new AlertDialog.Builder(EcranDemarrage.this)
-                                .setTitle(Traducteur.get("erreur_export"))
-                                .setMessage(erreur)
+                        new AlertDialog.Builder(this)
+                                .setTitle(Traducteur.get("export_termine"))
+                                .setMessage(Traducteur.get("archive_creee"))
                                 .setPositiveButton(Traducteur.get("bouton_ok"), null)
                                 .show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(this, Traducteur.get("erreur_export"), Toast.LENGTH_SHORT).show();
                     }
-                });
+                    projetAExporter = null;
+                }
+                
+                else if (requestCode == REQUEST_CODE_EXPORT_APK) {
+                    AlertDialog dialogueProgression = new AlertDialog.Builder(this)
+                            .setTitle(Traducteur.get("export_apk_titre"))
+                            .setMessage(Traducteur.get("export_apk_init"))
+                            .setCancelable(false)
+                            .show();
+
+                    ExportateurAPK.exporterJeu(this, projetAExporter, new ExportateurAPK.InterfaceExport() {
+                        @Override
+                        public void surProgression(String message) {
+                            dialogueProgression.setMessage(message);
+                        }
+
+                        @Override
+                        public void surSucces(File apkFinal) {
+                            try {
+                                InputStream in = new FileInputStream(apkFinal);
+                                OutputStream out = getContentResolver().openOutputStream(data.getData());
+                                byte[] buffer = new byte[8192];
+                                int lus;
+                                while ((lus = in.read(buffer)) > 0) {
+                                    out.write(buffer, 0, lus);
+                                }
+                                in.close();
+                                if (out != null) out.close();
+
+                                dialogueProgression.dismiss();
+                                projetAExporter = null;
+
+                                new AlertDialog.Builder(EcranDemarrage.this)
+                                        .setTitle(Traducteur.get("export_termine"))
+                                        .setMessage(Traducteur.get("export_apk_succes"))
+                                        .setPositiveButton(Traducteur.get("bouton_ok"), null)
+                                        .show();
+
+                            } catch (Exception e) {
+                                surErreur(Traducteur.get("erreur_sauvegarde") + " : " + e.getMessage());
+                            }
+                        }
+
+                        @Override
+                        public void surErreur(String erreur) {
+                            dialogueProgression.dismiss();
+                            projetAExporter = null;
+                            new AlertDialog.Builder(EcranDemarrage.this)
+                                    .setTitle(Traducteur.get("erreur_export"))
+                                    .setMessage(erreur)
+                                    .setPositiveButton(Traducteur.get("bouton_ok"), null)
+                                    .show();
+                        }
+                    });
+                }
+            }
+            
+            if (requestCode == REQUEST_CODE_IMPORT_PROJET) {
+                File dossierCible = null;
+                
+                try (InputStream is = getContentResolver().openInputStream(data.getData())) {
+                    if (is == null) throw new Exception("Flux de données inaccessible");
+
+                    String uuid = UUID.randomUUID().toString();
+                    dossierCible = new File(new File(getFilesDir(), "projets"), uuid);
+                    dossierCible.mkdirs();
+
+                    boolean contientMeta = false;
+                    boolean contientSauvegarde = false;
+                    String cheminCanoniqueCible = dossierCible.getCanonicalPath();
+
+                    try (java.util.zip.ZipInputStream zis = new java.util.zip.ZipInputStream(is)) {
+                        java.util.zip.ZipEntry entry;
+                        
+                        while ((entry = zis.getNextEntry()) != null) {
+                            File outFile = new File(dossierCible, entry.getName());
+                            
+                            if (!outFile.getCanonicalPath().startsWith(cheminCanoniqueCible + File.separator)) {
+                                zis.closeEntry();
+                                continue; 
+                            }
+
+                            if (entry.isDirectory()) {
+                                outFile.mkdirs();
+                            } else {
+                                outFile.getParentFile().mkdirs();
+                                try (FileOutputStream fos = new FileOutputStream(outFile)) {
+                                    byte[] buffer = new byte[8192];
+                                    int len;
+                                    while ((len = zis.read(buffer)) > 0) {
+                                        fos.write(buffer, 0, len);
+                                    }
+                                }
+                                
+                                if (entry.getName().equals("meta.json")) contientMeta = true;
+                                if (entry.getName().equals("projet_sauvegarde.json")) contientSauvegarde = true;
+                            }
+                            zis.closeEntry();
+                        }
+                    } 
+
+                    if (!contientMeta || !contientSauvegarde) {
+                        supprimerDossierRecursif(dossierCible); 
+                        new AlertDialog.Builder(this)
+                                .setTitle(Traducteur.get("erreur_import_exemple")) 
+                                .setMessage("Ce fichier ZIP ne contient pas un projet Yop2D valide (meta.json ou projet_sauvegarde.json manquant).")
+                                .setPositiveButton(Traducteur.get("bouton_ok"), null)
+                                .show();
+                        return;
+                    }
+
+                    File metaFile = new File(dossierCible, "meta.json");
+                    JSONObject metaJson = lireJson(metaFile);
+                    String nomImport = metaJson.optString("nom", Traducteur.get("projet_sans_nom"));
+                    String nomUnique = nomImport;
+                    
+                    int index = 2;
+                    while (nomDejaUtilise(nomUnique, null)) {
+                        nomUnique = nomImport + " " + index;
+                        index++;
+                    }
+
+                    metaJson.put("nom", nomUnique);
+                    metaJson.put("dateModif", dateMaintenant());
+                    try (FileWriter fw = new FileWriter(metaFile)) {
+                        fw.write(metaJson.toString(4));
+                    }
+
+                    chargerListeProjets();
+                    
+                    String msgSucces = nomUnique.equals(nomImport) ? 
+                            "Projet importé avec succès" : "Projet importé et renommé en : " + nomUnique;
+                    Toast.makeText(this, msgSucces, Toast.LENGTH_SHORT).show();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (dossierCible != null && dossierCible.exists()) {
+                        supprimerDossierRecursif(dossierCible);
+                    }
+                    Toast.makeText(this, "Erreur lors de l'importation : " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         }
     }
-
-    // ---------------------------------------------------------------- colonne gauche
 
     private View construireColonneGauche() {
         LinearLayout colonneGauche = new LinearLayout(this);
@@ -311,9 +390,6 @@ public class EcranDemarrage extends Activity {
 
         colonneGauche.addView(rangeeLangue);
 
-        // --- NOUVEAUX BOUTONS (Mise à jour et Réseaux) ---
-        
-        // 1. Bouton de mise à jour
         TextView btnMaj = new TextView(this);
         btnMaj.setText(Traducteur.get("demarrage_maj_verifier"));
         btnMaj.setTextSize(13f);
@@ -328,7 +404,6 @@ public class EcranDemarrage extends Activity {
         lpMaj.setMargins(0, dp(30), 0, dp(10));
         colonneGauche.addView(btnMaj, lpMaj);
 
-        // 2. Ligne pour Discord et Telegram
         LinearLayout rangeeReseaux = new LinearLayout(this);
         rangeeReseaux.setOrientation(LinearLayout.HORIZONTAL);
         
@@ -372,14 +447,11 @@ public class EcranDemarrage extends Activity {
 
             if (fichiersAssets != null) {
                 for (String fichier : fichiersAssets) {
-                    // On cherche les fichiers comme "lang_fr.json"
                     if (fichier.startsWith("lang_") && fichier.endsWith(".json")) {
                         String code = fichier.substring(5, fichier.lastIndexOf('.'));
                         codesLangues.add(code);
                         
-                        // On récupère le nom traduit pour l'affichage (ex: "Français" pour la clé "langue_fr")
                         String nomAffiche = Traducteur.get("langue_" + code);
-                        // Sécurité : si la clé n'existe pas encore dans le dictionnaire actuel, on affiche le code en majuscule
                         if (nomAffiche.startsWith("[")) nomAffiche = code.toUpperCase();
                         
                         nomsLangues.add(nomAffiche);
@@ -406,46 +478,83 @@ public class EcranDemarrage extends Activity {
         }
     }
 // bas 1
-                        
 
 // haut 2
-    // ---------------------------------------------------------------- colonne droite (DIVISÉE EN DEUX)
+    // ---------------------------------------------------------------- colonne droite (Onglets)
 
     private View construireColonneDroite() {
         LinearLayout colonneDroite = new LinearLayout(this);
         colonneDroite.setOrientation(LinearLayout.VERTICAL);
         colonneDroite.setBackground(fond(couleurSurface(), 10, couleurBordure(), 1));
         colonneDroite.setPadding(dp(10), dp(8), dp(10), dp(10));
+        
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 0, LinearLayout.LayoutParams.MATCH_PARENT, 1.4f);
         lp.setMargins(dp(10), 0, 0, 0);
         colonneDroite.setLayoutParams(lp);
 
-        LinearLayout blocHaut = new LinearLayout(this);
-        blocHaut.setOrientation(LinearLayout.VERTICAL);
-        blocHaut.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
+        LinearLayout barreOnglets = new LinearLayout(this);
+        barreOnglets.setOrientation(LinearLayout.HORIZONTAL);
+        barreOnglets.setPadding(0, 0, 0, dp(10));
 
-        blocHaut.addView(construireBandeauOutils());
-        blocHaut.addView(construireEnteteListe(Traducteur.get("demarrage_titre_projets")));
-        blocHaut.addView(construireListeProjets());
-        blocHaut.addView(construireBarreActions());
+        TextView btnProjets = new TextView(this);
+        btnProjets.setText(Traducteur.get("demarrage_titre_projets"));
+        btnProjets.setTextSize(14f);
+        btnProjets.setGravity(Gravity.CENTER);
+        btnProjets.setPadding(dp(16), dp(10), dp(16), dp(10));
+        btnProjets.setTextColor(Palette.texteSelectionne);
+        btnProjets.setBackground(fond(Palette.boutonSurvol, 6, couleurBordure(), 1));
 
-        View separateurH = new View(this);
-        separateurH.setBackgroundColor(couleurBordure());
-        LinearLayout.LayoutParams lpH = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(1));
-        lpH.setMargins(0, dp(6), 0, dp(6));
-        separateurH.setLayoutParams(lpH);
+        TextView btnExemples = new TextView(this);
+        btnExemples.setText(Traducteur.get("demarrage_modeles_exemples"));
+        btnExemples.setTextSize(14f);
+        btnExemples.setGravity(Gravity.CENTER);
+        btnExemples.setPadding(dp(16), dp(10), dp(16), dp(10));
+        btnExemples.setTextColor(couleurTexteSecondaire());
 
-        LinearLayout blocBas = new LinearLayout(this);
-        blocBas.setOrientation(LinearLayout.VERTICAL);
-        blocBas.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f));
+        barreOnglets.addView(btnProjets);
+        barreOnglets.addView(btnExemples);
+        colonneDroite.addView(barreOnglets);
 
-        blocBas.addView(construireEnteteListe(Traducteur.get("demarrage_modeles_exemples")));
-        blocBas.addView(construireListeExemples());
+        LinearLayout vueProjets = new LinearLayout(this);
+        vueProjets.setOrientation(LinearLayout.VERTICAL);
+        vueProjets.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        
+        vueProjets.addView(construireBandeauOutils());
+        vueProjets.addView(construireListeProjets());
+        vueProjets.addView(construireBarreActions());
 
-        colonneDroite.addView(blocHaut);
-        colonneDroite.addView(separateurH);
-        colonneDroite.addView(blocBas);
+        LinearLayout vueExemples = new LinearLayout(this);
+        vueExemples.setOrientation(LinearLayout.VERTICAL);
+        vueExemples.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        vueExemples.setVisibility(View.GONE);
+        
+        vueExemples.addView(construireListeExemples());
+
+        btnProjets.setOnClickListener(v -> {
+            vueProjets.setVisibility(View.VISIBLE);
+            vueExemples.setVisibility(View.GONE);
+            btnProjets.setTextColor(Palette.texteSelectionne);
+            btnProjets.setBackground(fond(Palette.boutonSurvol, 6, couleurBordure(), 1));
+            btnExemples.setTextColor(couleurTexteSecondaire());
+            btnExemples.setBackgroundColor(Color.TRANSPARENT);
+        });
+
+        btnExemples.setOnClickListener(v -> {
+            vueProjets.setVisibility(View.GONE);
+            vueExemples.setVisibility(View.VISIBLE);
+            btnExemples.setTextColor(Palette.texteSelectionne);
+            btnExemples.setBackground(fond(Palette.boutonSurvol, 6, couleurBordure(), 1));
+            btnProjets.setTextColor(couleurTexteSecondaire());
+            btnProjets.setBackgroundColor(Color.TRANSPARENT);
+        });
+
+        FrameLayout conteneurListes = new FrameLayout(this);
+        conteneurListes.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
+        conteneurListes.addView(vueProjets);
+        conteneurListes.addView(vueExemples);
+
+        colonneDroite.addView(conteneurListes);
 
         return colonneDroite;
     }
@@ -460,12 +569,10 @@ public class EcranDemarrage extends Activity {
         bandeau.addView(boutonBandeau(R.drawable.add_24px, Traducteur.get("demarrage_creer_projet"),
                 v -> afficherDialogueCreationProjet()));
         bandeau.addView(boutonBandeau(R.drawable.folder_open_24px, Traducteur.get("demarrage_ouvrir_projet"),
-                v -> Toast.makeText(this, Traducteur.get("toast_import_a_venir"), Toast.LENGTH_SHORT).show()));
+                v -> actionImporterProjetZip()));
 
         bandeau.addView(separateurVertical());
 
-        // MODIFIÉ : le bouton "bug" ouvre désormais le journal de debug du projet sélectionné
-        // (diag_ludexa.txt), au lieu de l'ancien diagnostic de dossier.
         bandeau.addView(boutonBandeau(R.drawable.bug_report_24px, Traducteur.get("demarrage_diagnostic"),
                 v -> afficherLogProjet()));
         bandeau.addView(boutonBandeau(R.drawable.build_24px, Traducteur.get("demarrage_test_mkdirs"),
@@ -482,16 +589,6 @@ public class EcranDemarrage extends Activity {
         bandeau.addView(etiquetteSelection);
 
         return bandeau;
-    }
-
-    private View construireEnteteListe(String titre) {
-        TextView titreListe = new TextView(this);
-        titreListe.setText(titre);
-        titreListe.setTextSize(11f);
-        titreListe.setLetterSpacing(0.18f);
-        titreListe.setPadding(dp(4), dp(10), 0, dp(6));
-        titreListe.setTextColor(couleurTexteSecondaire());
-        return titreListe;
     }
 
     private View construireListeProjets() {
@@ -742,7 +839,6 @@ public class EcranDemarrage extends Activity {
                         ItemProjet item = new ItemProjet();
                         item.estExemple = true;
                         item.nomZipExemple = fichier;
-                        // On formate le nom proprement (ex: escape_game -> Escape Game)
                         item.nom = nomSansExt.replace("_", " ");
                         if (item.nom.length() > 0) {
                             item.nom = item.nom.substring(0, 1).toUpperCase() + item.nom.substring(1);
@@ -827,8 +923,7 @@ public class EcranDemarrage extends Activity {
         }
         return false;
     }
-// bas 3
-// haut 4
+
     // ---------------------------------------------------------------- actions
 
     private void actionEditer() {
@@ -1063,6 +1158,13 @@ public class EcranDemarrage extends Activity {
             Toast.makeText(this, Traducteur.get("erreur_import_exemple"), Toast.LENGTH_SHORT).show();
         }
     }
+    
+    private void actionImporterProjetZip() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("application/zip");
+        startActivityForResult(intent, REQUEST_CODE_IMPORT_PROJET);
+    }
 
     // ---------------------------------------------------------------- création projet
 
@@ -1192,9 +1294,6 @@ public class EcranDemarrage extends Activity {
 
     // ---------------------------------------------------------------- debug
 
-    // REMPLACÉ : ancien afficherDiagnosticDossier() -> nouveau visualiseur du journal
-    // de debug permanent (diag_ludexa.txt) du projet actuellement sélectionné dans la liste.
-    // Alimenté par DiagLogger / VueJeu.logDiag() pendant les sessions de test en jeu.
     private void afficherLogProjet() {
         File dossier = dossierSelectionne();
         if (dossier == null) return;
@@ -1320,7 +1419,7 @@ public class EcranDemarrage extends Activity {
             .show();
     }
 
-    private void telechargerMiseAJour(String url) {
+        private void telechargerMiseAJour(String url) {
         try {
             android.app.DownloadManager.Request requete = new android.app.DownloadManager.Request(Uri.parse(url));
             requete.setTitle(Traducteur.get("maj_titre_dl"));
@@ -1337,5 +1436,20 @@ public class EcranDemarrage extends Activity {
             ouvrirLien(url);
         }
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                android.view.View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                | android.view.View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | android.view.View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | android.view.View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
+            );
+        }
+    }
 }
-// bas 4
+// bas 3

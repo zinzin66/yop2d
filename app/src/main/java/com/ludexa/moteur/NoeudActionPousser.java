@@ -1,3 +1,4 @@
+// NoeudActionPousser.java
 package com.ludexa.moteur;
 
 import java.util.Arrays;
@@ -5,7 +6,6 @@ import java.util.List;
 
 public class NoeudActionPousser extends NoeudBase {
 
-    private ObjetBase cible;
     private float ajoutX;
     private float ajoutY;
 
@@ -17,13 +17,14 @@ public class NoeudActionPousser extends NoeudBase {
 
     public NoeudActionPousser(ObjetBase cible, float ajoutX, float ajoutY) {
         this(); 
-        this.cible = cible;
+        this.setCibleObjet(cible);
         this.ajoutX = ajoutX;
         this.ajoutY = ajoutY;
     }
 
     @Override
     public void executer() {
+        ObjetBase cible = getCibleObjet();
         if (cible != null) {
             // On ajoute la valeur à l'intention au lieu de forcer la position
             cible.intentionDeplacementX += ajoutX;
@@ -57,16 +58,6 @@ public class NoeudActionPousser extends NoeudBase {
     @Override
     public boolean requiertCibleObjet() {
         return true; 
-    }
-
-    @Override
-    public void setCibleObjet(ObjetBase objet) {
-        this.cible = objet;
-    }
-
-    @Override
-    public ObjetBase getCibleObjet() {
-        return this.cible;
     }
 
     @Override

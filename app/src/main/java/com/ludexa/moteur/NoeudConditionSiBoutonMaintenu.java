@@ -1,11 +1,9 @@
-// haut 1
+// NoeudConditionSiBoutonMaintenu.java
 package com.ludexa.moteur;
 
 import java.util.List;
 
 public class NoeudConditionSiBoutonMaintenu extends NoeudBase {
-
-    private ObjetBase cibleBouton; // L'Objet A (Le bouton de l'interface)
 
     public NoeudConditionSiBoutonMaintenu() {
         super(genererId(), Traducteur.get("noeud_si_bouton_maintenu"), "Condition");
@@ -17,6 +15,7 @@ public class NoeudConditionSiBoutonMaintenu extends NoeudBase {
 
     @Override
     public void executer() {
+        ObjetBase cibleBouton = getCibleObjet();
         // On vérifie simplement l'état du bouton
         boolean boutonAppuye = (cibleBouton != null && cibleBouton.estTouche);
 
@@ -45,12 +44,5 @@ public class NoeudConditionSiBoutonMaintenu extends NoeudBase {
     public boolean requiertCibleObjet() { return true; }
     
     @Override
-    public void setCibleObjet(ObjetBase objet) { this.cibleBouton = objet; }
-    
-    @Override
-    public ObjetBase getCibleObjet() { return this.cibleBouton; }
-    
-    @Override
     public boolean utiliseClavierTexte() { return false; }
 }
-// bas 1
