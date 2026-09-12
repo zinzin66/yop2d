@@ -959,7 +959,7 @@ public class InspecteurProprietes extends LinearLayout {
         this.addView(scrollInspecteur);
 // bas 3
 
-        // haut 4
+    // haut 4
         boutonMasquer.setOnClickListener(v -> {
             if (scrollInspecteur.getVisibility() == View.VISIBLE) {
                 scrollInspecteur.setVisibility(View.GONE);
@@ -1313,7 +1313,7 @@ public class InspecteurProprietes extends LinearLayout {
             btnAucune.setTextColor(Palette.texteNormal);
             btnAucune.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
             btnAucune.setPadding(dp(12), dp(8), dp(12), dp(8));
-            LinearLayout.LayoutParams paramsBtnAucune = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams paramsBtnAucune = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             paramsBtnAucune.setMargins(dp(8), 0, 0, 0);
             btnAucune.setLayoutParams(paramsBtnAucune);
 
@@ -1330,7 +1330,7 @@ public class InspecteurProprietes extends LinearLayout {
             layoutTop.addView(champHex);
             layoutTop.addView(btnAucune);
             layoutMain.addView(layoutTop);
-            // ici
+
             View spectreView = new View(context) {
                 private android.graphics.Paint paintHue = new android.graphics.Paint();
                 private android.graphics.Paint paintVal = new android.graphics.Paint();
@@ -1456,6 +1456,7 @@ public class InspecteurProprietes extends LinearLayout {
         if (imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 // bas 4 
+                
     // haut 5
     private void verifierEtConfirmerRenommage(Context context) {
         if (objetCourant == null) return;
