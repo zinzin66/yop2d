@@ -63,7 +63,7 @@ public class DialogueCreationObjets extends Dialog {
         conteneurCategories.addView(creerSection(Traducteur.get("cat_textes"), btnTexte, btnTitreStylise));
 
         // --- CATEGORIE 3 : INTERACTIFS ---
-        ImageButton btnBouton = creerBouton(R.drawable.hand_gesture_24px);
+        ImageButton btnBouton = creerBouton(R.drawable.buttons_alt_24px);
         btnBouton.setOnClickListener(v -> creerObjet("bouton", Traducteur.get("obj_prefix_bouton")));
 
         ImageButton btnJoystick = creerBouton(R.drawable.gamepad_24px);
