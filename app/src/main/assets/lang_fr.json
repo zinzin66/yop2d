@@ -582,13 +582,7 @@
   "titre_dialogue_assets": "Gestion des Assets",
 "titre_dossiers": "Dossiers",
 "hint_rechercher_asset": "Rechercher un fichier...",
-"erreur_lecture_son": "Impossible de lire ce fichier audio",
-  
-  
-  
-  
-  
-  
+"erreur_lecture_son": "Impossible de lire ce fichier audio"
   
   
   
