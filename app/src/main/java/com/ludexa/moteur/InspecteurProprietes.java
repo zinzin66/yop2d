@@ -196,7 +196,7 @@ public class InspecteurProprietes extends LinearLayout {
         this.setBackgroundColor(Palette.fondPanneaux);
 
         paramsOuvert = new LinearLayout.LayoutParams(500, LinearLayout.LayoutParams.MATCH_PARENT);
-        paramsFerme = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        paramsFerme = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(paramsOuvert);
         // haut
         enteteInspecteur = new LinearLayout(context);
