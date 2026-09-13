@@ -38,7 +38,7 @@ public class DialogueCreationObjets extends Dialog {
         LinearLayout conteneurCategories = new LinearLayout(getContext());
         conteneurCategories.setOrientation(LinearLayout.VERTICAL);
 
-        // --- CATEGORIE 1 : FORMES DE BASE ---
+        // --- CATEGORIE 1 : FORMES & VISUELS ---
         ImageButton btnCarre = creerBouton(R.drawable.square_24px);
         btnCarre.setOnClickListener(v -> creerObjet("carre", Traducteur.get("obj_prefix_carre")));
 
@@ -53,32 +53,37 @@ public class DialogueCreationObjets extends Dialog {
 
         conteneurCategories.addView(creerSection(Traducteur.get("cat_formes_base"), btnCarre, btnRond, btnImage, btnZone));
 
-        // --- CATEGORIE 2 : INTERFACE & HUD ---
+        // --- CATEGORIE 2 : TEXTES ---
         ImageButton btnTexte = creerBouton(R.drawable.title_24px);
         btnTexte.setOnClickListener(v -> creerObjet("texte", Traducteur.get("obj_prefix_texte")));
 
         ImageButton btnTitreStylise = creerBouton(R.drawable.brand_family_24px);
         btnTitreStylise.setOnClickListener(v -> creerObjet("titre_stylise", Traducteur.get("obj_prefix_titre")));
 
-        ImageButton btnBouton = creerBouton(R.drawable.buttons_alt_24px);
+        conteneurCategories.addView(creerSection(Traducteur.get("cat_textes"), btnTexte, btnTitreStylise));
+
+        // --- CATEGORIE 3 : INTERACTIFS ---
+        ImageButton btnBouton = creerBouton(R.drawable.hand_gesture_24px);
         btnBouton.setOnClickListener(v -> creerObjet("bouton", Traducteur.get("obj_prefix_bouton")));
 
-        ImageButton btnDialogue = creerBouton(R.drawable.chat_24px);
-        btnDialogue.setOnClickListener(v -> creerGroupeDialogue());
-
-        ImageButton btnJoystick = creerBouton(R.drawable.trackpad_input_24px);
+        ImageButton btnJoystick = creerBouton(R.drawable.gamepad_24px);
         btnJoystick.setOnClickListener(v -> creerObjet("joystick", Traducteur.get("obj_prefix_joystick")));
 
         ImageButton btnAction = creerBouton(R.drawable.center_focus_weak_24px);
         btnAction.setOnClickListener(v -> creerObjet("bouton_action", Traducteur.get("obj_prefix_btnaction")));
 
-        // NOUVEAU BOUTON : BARRE DE PROGRESSION (Icône temporaire square_24px pour sécurité de compilation)
-        ImageButton btnBarreProg = creerBouton(R.drawable.square_24px);
+        ImageButton btnDialogue = creerBouton(R.drawable.chat_24px);
+        btnDialogue.setOnClickListener(v -> creerGroupeDialogue());
+
+        conteneurCategories.addView(creerSection(Traducteur.get("cat_interactifs"), btnBouton, btnJoystick, btnAction, btnDialogue));
+
+        // --- CATEGORIE 4 : INTERFACE & HUD ---
+        ImageButton btnBarreProg = creerBouton(R.drawable.discover_tune_24px);
         btnBarreProg.setOnClickListener(v -> creerObjet("barre_progression", Traducteur.get("obj_prefix_barre_progression")));
 
-        conteneurCategories.addView(creerSection(Traducteur.get("cat_ui_hud"), btnTexte, btnTitreStylise, btnBouton, btnDialogue, btnJoystick, btnAction, btnBarreProg));
+        conteneurCategories.addView(creerSection(Traducteur.get("cat_ui_hud"), btnBarreProg));
 
-        // --- CATEGORIE 3 : PREFABS ---
+        // --- CATEGORIE 5 : PREFABS ---
         ImageButton btnPrefab = creerBouton(R.drawable.display_add_24px);
         btnPrefab.setOnClickListener(v -> lancerCreationPrefab());
 
