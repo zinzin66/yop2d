@@ -204,38 +204,8 @@ public class PanneauRessources extends LinearLayout {
 
         conteneurScenes = new LinearLayout(context);
         conteneurScenes.setOrientation(LinearLayout.VERTICAL);
-        conteneurScenes.setPadding(0, 0, 0, dp(8));
         contenu.addView(conteneurScenes);
 
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-
-        ImageButton btnCreer = new ImageButton(context);
-        btnCreer.setImageResource(R.drawable.add_24px);
-        styliserBoutonIcone(btnCreer);
-        btnCreer.setOnClickListener(v -> afficherPopupCreerScene(context));
-
-        ImageButton btnRenommer = new ImageButton(context);
-        btnRenommer.setImageResource(R.drawable.edit_square_24px);
-        styliserBoutonIcone(btnRenommer);
-        btnRenommer.setOnClickListener(v -> {
-            InterfaceEditeur editeur = (InterfaceEditeur) context;
-            afficherPopupRenommerScene(context, editeur.sceneActive);
-        });
-
-        ImageButton btnSupprimer = new ImageButton(context);
-        btnSupprimer.setImageResource(R.drawable.delete_24px);
-        styliserBoutonIcone(btnSupprimer);
-        btnSupprimer.setOnClickListener(v -> {
-            InterfaceEditeur editeur = (InterfaceEditeur) context;
-            afficherPopupSupprimerScene(context, editeur.sceneActive);
-        });
-
-        zoneBoutons.addView(btnCreer);
-        zoneBoutons.addView(btnRenommer);
-        zoneBoutons.addView(btnSupprimer);
-
-        contenu.addView(zoneBoutons);
         rafraichirScenes();
 
         btnTitre.setOnClickListener(v -> {
@@ -270,7 +240,7 @@ public class PanneauRessources extends LinearLayout {
                 }
                 nomScene.setPadding(dp(10), dp(10), dp(10), dp(10));
                 nomScene.setTextSize(15f);
-                
+
                 nomScene.setOnClickListener(v -> {
                     editeur.changerScene(s);
                     rafraichirArborescence();
@@ -279,131 +249,6 @@ public class PanneauRessources extends LinearLayout {
                 conteneurScenes.addView(nomScene);
             }
         }
-    }
-
-    private void afficherPopupCreerScene(Context context) {
-        Dialog dialog = new Dialog(context);
-        dialog.setTitle(Traducteur.get("popup_creer_scene_titre"));
-        LinearLayout layoutDialog = new LinearLayout(context);
-        layoutDialog.setOrientation(LinearLayout.VERTICAL);
-        styliserDialogue(layoutDialog);
-        EditText champTexte = new EditText(context);
-        champTexte.setHint(Traducteur.get("hint_entrez_nom"));
-        styliserChampDialogue(champTexte);
-        layoutDialog.addView(champTexte);
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-        ImageButton btnValider = new ImageButton(context);
-        btnValider.setImageResource(R.drawable.save_24px);
-        styliserBoutonIcone(btnValider);
-        btnValider.setOnClickListener(v -> {
-            String nom = champTexte.getText().toString().trim();
-            if(!nom.isEmpty()) {
-                InterfaceEditeur editeur = (InterfaceEditeur) context;
-                if (editeur.listeScenes != null) {
-                    for (Scene s : editeur.listeScenes) {
-                        if (s.nom != null && s.nom.trim().equalsIgnoreCase(nom)) {
-                            new AlertDialog.Builder(context).setTitle(Traducteur.get("insp_titre_impossible")).setMessage(Traducteur.get("erreur_scene_existe")).setPositiveButton(Traducteur.get("bouton_ok"), null).show();
-                            return;
-                        }
-                    }
-                }
-                editeur.creerScene(nom);
-                Toast.makeText(context, Traducteur.get("toast_scene_creee") + nom, Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
-        });
-        ImageButton btnAnnuler = new ImageButton(context);
-        btnAnnuler.setImageResource(R.drawable.undo_24px);
-        styliserBoutonIcone(btnAnnuler);
-        btnAnnuler.setOnClickListener(v -> dialog.dismiss());
-        zoneBoutons.addView(btnValider);
-        zoneBoutons.addView(btnAnnuler);
-        layoutDialog.addView(zoneBoutons);
-        dialog.setContentView(layoutDialog);
-        dialog.show();
-    }
-
-    private void afficherPopupRenommerScene(Context context, Scene scene) {
-        Dialog dialog = new Dialog(context);
-        dialog.setTitle(Traducteur.get("popup_renommer_scene_titre"));
-        LinearLayout layoutDialog = new LinearLayout(context);
-        layoutDialog.setOrientation(LinearLayout.VERTICAL);
-        styliserDialogue(layoutDialog);
-        EditText champTexte = new EditText(context);
-        champTexte.setText(scene.nom);
-        styliserChampDialogue(champTexte);
-        layoutDialog.addView(champTexte);
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-        ImageButton btnValider = new ImageButton(context);
-        btnValider.setImageResource(R.drawable.save_24px);
-        styliserBoutonIcone(btnValider);
-        btnValider.setOnClickListener(v -> {
-            String nouveauNom = champTexte.getText().toString().trim();
-            if(nouveauNom.isEmpty()) return;
-            InterfaceEditeur editeur = (InterfaceEditeur) context;
-            if (editeur.listeScenes != null) {
-                for (Scene s : editeur.listeScenes) {
-                    if (s != scene && s.nom != null && s.nom.trim().equalsIgnoreCase(nouveauNom)) {
-                        new AlertDialog.Builder(context).setTitle(Traducteur.get("insp_titre_impossible")).setMessage(Traducteur.get("erreur_scene_existe")).setPositiveButton(Traducteur.get("bouton_ok"), null).show();
-                        return;
-                    }
-                }
-            }
-            scene.nom = nouveauNom;
-            rafraichirScenes();
-            dialog.dismiss();
-        });
-        ImageButton btnAnnuler = new ImageButton(context);
-        btnAnnuler.setImageResource(R.drawable.undo_24px);
-        styliserBoutonIcone(btnAnnuler);
-        btnAnnuler.setOnClickListener(v -> dialog.dismiss());
-        zoneBoutons.addView(btnValider);
-        zoneBoutons.addView(btnAnnuler);
-        layoutDialog.addView(zoneBoutons);
-        dialog.setContentView(layoutDialog);
-        dialog.show();
-    }
-
-    private void afficherPopupSupprimerScene(Context context, Scene scene) {
-        Dialog dialog = new Dialog(context);
-        dialog.setTitle(Traducteur.get("popup_supprimer_scene_titre"));
-        LinearLayout layoutDialog = new LinearLayout(context);
-        layoutDialog.setOrientation(LinearLayout.VERTICAL);
-        styliserDialogue(layoutDialog);
-        TextView txtMessage = new TextView(context);
-        txtMessage.setText(Traducteur.get("msg_supprimer_scene_1") + scene.nom + Traducteur.get("msg_supprimer_scene_2"));
-        txtMessage.setTextColor(Palette.texteNormal);
-        txtMessage.setTextSize(15f);
-        txtMessage.setPadding(0, 0, 0, dp(14));
-        layoutDialog.addView(txtMessage);
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-        ImageButton btnOui = new ImageButton(context);
-        btnOui.setImageResource(R.drawable.save_24px);
-        styliserBoutonIcone(btnOui);
-        btnOui.setOnClickListener(v -> {
-            InterfaceEditeur editeur = (InterfaceEditeur) context;
-            if (editeur.listeScenes.size() <= 1) {
-                Toast.makeText(context, Traducteur.get("erreur_supprimer_seule_scene"), Toast.LENGTH_SHORT).show();
-            } else {
-                editeur.listeScenes.remove(scene);
-                if (editeur.sceneActive == scene) editeur.changerScene(editeur.listeScenes.get(0));
-                else rafraichirScenes();
-                rafraichirArborescence();
-            }
-            dialog.dismiss();
-        });
-        ImageButton btnNon = new ImageButton(context);
-        btnNon.setImageResource(R.drawable.undo_24px);
-        styliserBoutonIcone(btnNon);
-        btnNon.setOnClickListener(v -> dialog.dismiss());
-        zoneBoutons.addView(btnOui);
-        zoneBoutons.addView(btnNon);
-        layoutDialog.addView(zoneBoutons);
-        dialog.setContentView(layoutDialog);
-        dialog.show();
     }
 // bas 3
 // haut 4
