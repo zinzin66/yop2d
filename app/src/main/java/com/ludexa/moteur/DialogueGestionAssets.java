@@ -35,7 +35,6 @@ public class DialogueGestionAssets extends Dialog {
     private LinearLayout conteneurArborescenceDossiers;
     private GridLayout grilleAssets;
     private EditText champRecherche;
-    private TextView titreDossierCourant;
 
     private MediaPlayer mediaPlayer;
     private File fichierSonEnLecture;
@@ -114,14 +113,6 @@ public class DialogueGestionAssets extends Dialog {
         layoutPrincipal.setBackgroundColor(Palette.fondPanneaux);
         layoutPrincipal.setPadding(dp(12), dp(12), dp(12), dp(12));
 
-        TextView titre = new TextView(ctx);
-        titre.setText(Traducteur.get("titre_dialogue_assets"));
-        titre.setTextColor(Palette.texteSelectionne);
-        titre.setTextSize(18f);
-        titre.setTypeface(null, android.graphics.Typeface.BOLD);
-        titre.setPadding(0, 0, 0, dp(10));
-        layoutPrincipal.addView(titre);
-
         LinearLayout zoneCentrale = new LinearLayout(ctx);
         zoneCentrale.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams lpZoneCentrale = new LinearLayout.LayoutParams(
@@ -194,13 +185,6 @@ public class DialogueGestionAssets extends Dialog {
         colonneDroite.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams lpColDroite = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
         colonneDroite.setLayoutParams(lpColDroite);
-
-        titreDossierCourant = new TextView(ctx);
-        titreDossierCourant.setTextColor(Palette.texteSelectionne);
-        titreDossierCourant.setTextSize(15f);
-        titreDossierCourant.setTypeface(null, android.graphics.Typeface.BOLD);
-        titreDossierCourant.setPadding(dp(4), 0, dp(4), dp(6));
-        colonneDroite.addView(titreDossierCourant);
 
         champRecherche = new EditText(ctx);
         champRecherche.setHint(Traducteur.get("hint_rechercher_asset"));
@@ -329,6 +313,7 @@ public class DialogueGestionAssets extends Dialog {
         rafraichirListeAssets();
     }
 // bas 2
+
 // haut 3
     private void rafraichirArborescenceDossiers() {
         if (conteneurArborescenceDossiers == null) return;
@@ -404,11 +389,6 @@ public class DialogueGestionAssets extends Dialog {
         if (grilleAssets == null || currentFolderSelected == null) return;
         grilleAssets.removeAllViews();
 
-        String cleDossier = "dossier_" + currentFolderSelected.getName().toLowerCase();
-        String nomAffiche = Traducteur.get(cleDossier);
-        if (nomAffiche.startsWith("[")) nomAffiche = currentFolderSelected.getName();
-        titreDossierCourant.setText(nomAffiche);
-
         File[] fichiers = currentFolderSelected.listFiles();
         if (fichiers != null) {
             java.util.Arrays.sort(fichiers, (f1, f2) -> f1.getName().compareToIgnoreCase(f2.getName()));
@@ -420,6 +400,7 @@ public class DialogueGestionAssets extends Dialog {
         }
     }
 // bas 3
+
 
 // haut 4
     private void ajouterVigneteAsset(File f) {
@@ -907,11 +888,25 @@ public class DialogueGestionAssets extends Dialog {
 }
 // bas 6
 
-  
-  
 
 
-  
 
-  
+
+    
+
+
+
+    
+
+
+
+
+    
+
+
+
+
+    
+
+
 
