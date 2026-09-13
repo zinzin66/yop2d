@@ -482,14 +482,24 @@ public class PanneauRessources extends LinearLayout {
             conteneurArborescence.addView(txtVide);
         }
     }
-
+    // ici 
     private View creerSectionAssets(Context context) {
         LinearLayout section = new LinearLayout(context);
         section.setOrientation(LinearLayout.VERTICAL);
+        section.setPadding(0, dp(4), 0, dp(4));
 
         Button btnTitre = new Button(context);
         btnTitre.setText(Traducteur.get("panneau_ress_assets"));
-        styliserTitreSection(btnTitre);
+        btnTitre.setAllCaps(false);
+        btnTitre.setTextColor(Palette.texteSelectionne);
+        btnTitre.setTextSize(15f);
+        btnTitre.setTypeface(null, android.graphics.Typeface.BOLD);
+        btnTitre.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
+        btnTitre.setPadding(dp(12), dp(12), dp(12), dp(12));
+        LinearLayout.LayoutParams lpBtnTitre = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lpBtnTitre.setMargins(0, dp(8), 0, dp(4));
+        btnTitre.setLayoutParams(lpBtnTitre);
         btnTitre.setOnClickListener(v -> {
             DialogueGestionAssets dialog = new DialogueGestionAssets(context, canvasEditeur, cheminProjet);
             dialog.show();
@@ -498,6 +508,7 @@ public class PanneauRessources extends LinearLayout {
         section.addView(btnTitre);
         return section;
     }
+    // ici 
 // bas 4
 
 // haut 5
