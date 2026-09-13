@@ -525,61 +525,91 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 // haut 3
     // ici
     private void afficherMenuScene(View ancre) {
-        PopupMenu popup = new PopupMenu(this, ancre);
-        popup.getMenu().add(0, 1, 0, Traducteur.get("popup_renommer_scene_titre"));
-        popup.getMenu().add(0, 2, 1, Traducteur.get("popup_creer_scene_titre"));
-        popup.getMenu().add(0, 3, 2, Traducteur.get("popup_supprimer_scene_titre"));
+        LinearLayout layoutMenu = new LinearLayout(this);
+        layoutMenu.setOrientation(LinearLayout.VERTICAL);
+        layoutMenu.setBackgroundColor(Palette.fondPanneaux);
+        layoutMenu.setPadding(dp(8), dp(8), dp(8), dp(8));
+
+        android.app.AlertDialog dialogMenu = new android.app.AlertDialog.Builder(this)
+                .setView(layoutMenu)
+                .create();
+
+        Button btnRenommer = new Button(this);
+        btnRenommer.setText(Traducteur.get("popup_renommer_scene_titre"));
+        btnRenommer.setTextColor(Palette.texteNormal);
+        btnRenommer.setBackground(fond(Palette.boutonNormal, 8, Palette.bordure, 1));
+        btnRenommer.setAllCaps(false);
+        LinearLayout.LayoutParams lpBtn = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lpBtn.setMargins(0, 0, 0, dp(6));
+        btnRenommer.setLayoutParams(lpBtn);
+        btnRenommer.setOnClickListener(v -> {
+            dialogMenu.dismiss();
+            if (sceneActive != null) afficherPopupRenommerScene(sceneActive);
+        });
+        layoutMenu.addView(btnRenommer);
+
+        Button btnCreer = new Button(this);
+        btnCreer.setText(Traducteur.get("popup_creer_scene_titre"));
+        btnCreer.setTextColor(Palette.texteNormal);
+        btnCreer.setBackground(fond(Palette.boutonNormal, 8, Palette.bordure, 1));
+        btnCreer.setAllCaps(false);
+        btnCreer.setLayoutParams(lpBtn);
+        btnCreer.setOnClickListener(v -> {
+            dialogMenu.dismiss();
+            afficherPopupCreerScene();
+        });
+        layoutMenu.addView(btnCreer);
+
+        Button btnSupprimer = new Button(this);
+        btnSupprimer.setText(Traducteur.get("popup_supprimer_scene_titre"));
+        btnSupprimer.setTextColor(Color.parseColor("#E57373"));
+        btnSupprimer.setBackground(fond(Palette.boutonNormal, 8, Palette.bordure, 1));
+        btnSupprimer.setAllCaps(false);
+        LinearLayout.LayoutParams lpBtnSuppr = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lpBtnSuppr.setMargins(0, 0, 0, dp(10));
+        btnSupprimer.setLayoutParams(lpBtnSuppr);
+        btnSupprimer.setOnClickListener(v -> {
+            dialogMenu.dismiss();
+            if (sceneActive != null) afficherPopupSupprimerScene(sceneActive);
+        });
+        layoutMenu.addView(btnSupprimer);
+
         if (listeScenes != null && listeScenes.size() > 1) {
-            for (int i = 0; i < listeScenes.size(); i++) {
-                Scene s = listeScenes.get(i);
-                if (s != sceneActive) {
-                    popup.getMenu().add(1, 100 + i, i + 3, s.nom);
-                }
+            View separateur = new View(this);
+            separateur.setBackgroundColor(Palette.bordure);
+            LinearLayout.LayoutParams lpSep = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(1));
+            lpSep.setMargins(0, 0, 0, dp(8));
+            separateur.setLayoutParams(lpSep);
+            layoutMenu.addView(separateur);
+
+            TextView titreListe = new TextView(this);
+            titreListe.setText(Traducteur.get("panneau_ress_scenes"));
+            titreListe.setTextColor(Palette.texteSelectionne);
+            titreListe.setTextSize(12f);
+            titreListe.setPadding(dp(4), 0, dp(4), dp(6));
+            layoutMenu.addView(titreListe);
+
+            for (Scene s : listeScenes) {
+                if (s == sceneActive) continue;
+                Button btnScene = new Button(this);
+                btnScene.setText(s.nom);
+                btnScene.setTextColor(Palette.texteNormal);
+                btnScene.setBackground(fond(Palette.fondListe, 8, Palette.bordure, 1));
+                btnScene.setAllCaps(false);
+                LinearLayout.LayoutParams lpScene = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                lpScene.setMargins(0, 0, 0, dp(4));
+                btnScene.setLayoutParams(lpScene);
+                btnScene.setOnClickListener(v -> {
+                    dialogMenu.dismiss();
+                    changerScene(s);
+                });
+                layoutMenu.addView(btnScene);
             }
         }
-        popup.setOnMenuItemClickListener(item -> {
-            int id = item.getItemId();
-            if (id == 1) {
-                if (sceneActive != null) afficherPopupRenommerScene(sceneActive);
-                return true;
-            } else if (id == 2) {
-                afficherPopupCreerScene();
-                return true;
-            } else if (id == 3) {
-                if (sceneActive != null) afficherPopupSupprimerScene(sceneActive);
-                return true;
-            } else if (id >= 100) {
-                int index = id - 100;
-                if (index >= 0 && index < listeScenes.size()) {
-                    changerScene(listeScenes.get(index));
-                }
-                return true;
-            }
-            return false;
-        });
-        popup.show();
+
+        dialogMenu.show();
     }
 
-    private void afficherPopupSupprimerScene(Scene scene) {
-        if (listeScenes.size() <= 1) {
-            Toast.makeText(this, Traducteur.get("erreur_supprimer_seule_scene"), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        new android.app.AlertDialog.Builder(this)
-                .setTitle(Traducteur.get("popup_supprimer_scene_titre"))
-                .setMessage(Traducteur.get("msg_supprimer_scene_1") + scene.nom + Traducteur.get("msg_supprimer_scene_2"))
-                .setPositiveButton(Traducteur.get("bouton_supprimer"), (d, w) -> {
-                    listeScenes.remove(scene);
-                    if (scene == sceneActive) {
-                        changerScene(listeScenes.get(0));
-                    } else {
-                        panneauRessources.rafraichirScenes();
-                    }
-                })
-                .setNegativeButton(Traducteur.get("bouton_annuler"), null)
-                .show();
-    }
- // ici bas 
     private void afficherPopupRenommerScene(Scene scene) {
         LinearLayout layoutDialog = new LinearLayout(this);
         layoutDialog.setOrientation(LinearLayout.VERTICAL);
@@ -648,6 +678,27 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         dialog.show();
     }
 
+    private void afficherPopupSupprimerScene(Scene scene) {
+        if (listeScenes.size() <= 1) {
+            Toast.makeText(this, Traducteur.get("erreur_supprimer_seule_scene"), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        new android.app.AlertDialog.Builder(this)
+                .setTitle(Traducteur.get("popup_supprimer_scene_titre"))
+                .setMessage(Traducteur.get("msg_supprimer_scene_1") + scene.nom + Traducteur.get("msg_supprimer_scene_2"))
+                .setPositiveButton(Traducteur.get("bouton_supprimer"), (d, w) -> {
+                    listeScenes.remove(scene);
+                    if (scene == sceneActive) {
+                        changerScene(listeScenes.get(0));
+                    } else {
+                        panneauRessources.rafraichirScenes();
+                    }
+                })
+                .setNegativeButton(Traducteur.get("bouton_annuler"), null)
+                .show();
+    }
+                    
+   // fin supprimer scène 
     private void basculerVersJeu() {
         listeScenesBackup = new ArrayList<>(listeScenes);
         sceneActiveBackup = sceneActive;
