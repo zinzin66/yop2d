@@ -1,4 +1,4 @@
-// haut 1
+  // haut 1
 package com.ludexa.moteur;
 
 import android.app.Activity;
@@ -56,6 +56,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
     private LinearLayout layoutPrincipal;
     private boolean enModeJeu = false;
     private TextView texteNomSceneBandeau;
+    private DialogueGestionAssets dialogueAssetsActif;
 
     public static final int REQUEST_CODE_IMPORT_ASSET = 1001;
 
@@ -503,6 +504,10 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         setContentView(layoutPrincipal);
     }
 
+    public void setDialogueAssetsActif(DialogueGestionAssets dialogue) {
+        this.dialogueAssetsActif = dialogue;
+    }
+
     public void lancerImportAsset(String mimeType) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -515,13 +520,17 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_IMPORT_ASSET && resultCode == Activity.RESULT_OK) {
             if (data != null && data.getData() != null) {
-                if (panneauRessources != null) {
-                    panneauRessources.traiterImportAsset(data.getData());
+                if (dialogueAssetsActif != null) {
+                    dialogueAssetsActif.traiterImportAsset(data.getData());
                 }
             }
         }
     }
 // bas 2
+
+
+
+        
 // haut 3
     // ici
     private void afficherMenuScene(View ancre) {
