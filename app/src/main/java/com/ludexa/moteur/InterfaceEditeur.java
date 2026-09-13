@@ -224,10 +224,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         bandeauHaut.addView(separateurVertical());
 // bas 1
-
-
-
-// haut 2
+   // haut 2
         listeScenes = new ArrayList<>();
         if (cheminProjet != null) {
             try {
@@ -342,9 +339,8 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
             }
         }
 
-        LinearLayout.LayoutParams paramsCentre = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
-        paramsCentre.setMargins(dp(8), 0, dp(8), 0);
+        FrameLayout.LayoutParams paramsCentre = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         canvasEditeur.setLayoutParams(paramsCentre);
 
         ImageButton boutonZoomMoins = new ImageButton(this);
@@ -461,8 +457,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         boutonPlay.setOnClickListener(v -> basculerVersJeu());
         bandeauHaut.addView(boutonPlay);
 
-        LinearLayout zoneMilieu = new LinearLayout(this);
-        zoneMilieu.setOrientation(LinearLayout.HORIZONTAL);
+        FrameLayout zoneMilieu = new FrameLayout(this);
         LinearLayout.LayoutParams paramsMilieu = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f);
         paramsMilieu.setMargins(0, dp(8), 0, 0);
@@ -473,8 +468,8 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         menuInspecteur.setCheminProjet(cheminProjet); 
         canvasEditeur.setInspecteur(menuInspecteur);
         
-        zoneMilieu.addView(panneauRessources);
         zoneMilieu.addView(canvasEditeur);
+        zoneMilieu.addView(panneauRessources);
         zoneMilieu.addView(menuInspecteur);
 
         layoutPrincipal.addView(bandeauHaut);
@@ -505,11 +500,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
             }
         }
     }
-// bas 2
-
-
-
-        
+// bas 2     
 // haut 3
     // ici
     private void afficherMenuScene(View ancre) {
