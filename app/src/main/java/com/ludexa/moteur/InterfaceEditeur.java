@@ -523,15 +523,17 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
     }
 // bas 2
 // haut 3
+    // ici
     private void afficherMenuScene(View ancre) {
         PopupMenu popup = new PopupMenu(this, ancre);
         popup.getMenu().add(0, 1, 0, Traducteur.get("popup_renommer_scene_titre"));
         popup.getMenu().add(0, 2, 1, Traducteur.get("popup_creer_scene_titre"));
+        popup.getMenu().add(0, 3, 2, Traducteur.get("popup_supprimer_scene_titre"));
         if (listeScenes != null && listeScenes.size() > 1) {
             for (int i = 0; i < listeScenes.size(); i++) {
                 Scene s = listeScenes.get(i);
                 if (s != sceneActive) {
-                    popup.getMenu().add(1, 100 + i, i + 2, s.nom);
+                    popup.getMenu().add(1, 100 + i, i + 3, s.nom);
                 }
             }
         }
@@ -542,6 +544,9 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
                 return true;
             } else if (id == 2) {
                 afficherPopupCreerScene();
+                return true;
+            } else if (id == 3) {
+                if (sceneActive != null) afficherPopupSupprimerScene(sceneActive);
                 return true;
             } else if (id >= 100) {
                 int index = id - 100;
@@ -555,6 +560,26 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         popup.show();
     }
 
+    private void afficherPopupSupprimerScene(Scene scene) {
+        if (listeScenes.size() <= 1) {
+            Toast.makeText(this, Traducteur.get("erreur_supprimer_seule_scene"), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        new android.app.AlertDialog.Builder(this)
+                .setTitle(Traducteur.get("popup_supprimer_scene_titre"))
+                .setMessage(Traducteur.get("msg_supprimer_scene_1") + scene.nom + Traducteur.get("msg_supprimer_scene_2"))
+                .setPositiveButton(Traducteur.get("bouton_supprimer"), (d, w) -> {
+                    listeScenes.remove(scene);
+                    if (scene == sceneActive) {
+                        changerScene(listeScenes.get(0));
+                    } else {
+                        panneauRessources.rafraichirScenes();
+                    }
+                })
+                .setNegativeButton(Traducteur.get("bouton_annuler"), null)
+                .show();
+    }
+ // ici bas 
     private void afficherPopupRenommerScene(Scene scene) {
         LinearLayout layoutDialog = new LinearLayout(this);
         layoutDialog.setOrientation(LinearLayout.VERTICAL);
