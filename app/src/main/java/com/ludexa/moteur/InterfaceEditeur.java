@@ -55,6 +55,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
     private LinearLayout layoutPrincipal;
     private boolean enModeJeu = false;
+    private TextView texteNomSceneBandeau;
 
     public static final int REQUEST_CODE_IMPORT_ASSET = 1001;
 
@@ -158,39 +159,49 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         bandeauHaut.setPadding(dp(6), dp(6), dp(6), dp(6));
         bandeauHaut.setBackground(fond(Palette.fondPanneaux, 8, Palette.bordure, 1));
 
-        ImageButton boutonQuitter = new ImageButton(this);
-        boutonQuitter.setImageResource(R.drawable.exit_to_app_24px);
-        styliserBoutonBandeau(boutonQuitter);
-        boutonQuitter.setOnClickListener(v -> finish());
-        bandeauHaut.addView(boutonQuitter);
+        ImageButton boutonAjouterObjetGauche = new ImageButton(this);
+        boutonAjouterObjetGauche.setImageResource(R.drawable.add_24px);
+        styliserBoutonBandeau(boutonAjouterObjetGauche);
+        boutonAjouterObjetGauche.setOnClickListener(v -> {
+            DialogueCreationObjets dialog = new DialogueCreationObjets(InterfaceEditeur.this, InterfaceEditeur.this, canvasEditeur, panneauRessources);
+            dialog.show();
+        });
+        bandeauHaut.addView(boutonAjouterObjetGauche);
 
-        TextView nomProjet = new TextView(this);
-        
-        String texteNomProjet = Traducteur.get("projet_sans_nom");
-        if (cheminProjet != null) {
-            try {
-                File metaFile = new File(cheminProjet, "meta.json");
-                if (metaFile.exists()) {
-                    BufferedReader br = new BufferedReader(new FileReader(metaFile));
-                    Type type = new TypeToken<Map<String, String>>(){}.getType();
-                    Map<String, String> meta = new Gson().fromJson(br, type);
-                    br.close();
-                    if (meta != null && meta.containsKey("nom")) {
-                        texteNomProjet = meta.get("nom");
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        nomProjet.setText(texteNomProjet);
+        bandeauHaut.addView(separateurVertical());
 
-        nomProjet.setTextSize(15f);
-        nomProjet.setLetterSpacing(0.06f);
-        nomProjet.setPadding(dp(6), 0, dp(14), 0);
-        nomProjet.setGravity(Gravity.CENTER_VERTICAL);
-        nomProjet.setTextColor(Palette.texteSelectionne);
-        bandeauHaut.addView(nomProjet);
+        LinearLayout blocNomScene = new LinearLayout(this);
+        blocNomScene.setOrientation(LinearLayout.HORIZONTAL);
+        blocNomScene.setGravity(Gravity.CENTER_VERTICAL);
+        blocNomScene.setBackground(fond(Palette.boutonNormal, 6, Palette.bordure, 1));
+        blocNomScene.setPadding(dp(10), dp(6), dp(8), dp(6));
+        LinearLayout.LayoutParams lpBlocNomScene = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, dp(38));
+        lpBlocNomScene.setMargins(0, 0, dp(6), 0);
+        lpBlocNomScene.gravity = Gravity.CENTER_VERTICAL;
+        blocNomScene.setLayoutParams(lpBlocNomScene);
+
+        TextView texteNomSceneActive = new TextView(this);
+        texteNomSceneActive.setText(sceneActive != null ? sceneActive.nom : Traducteur.get("valeur_aucune"));
+        texteNomSceneActive.setTextSize(14f);
+        texteNomSceneActive.setTextColor(Palette.texteSelectionne);
+        texteNomSceneActive.setPadding(0, 0, dp(4), 0);
+        this.texteNomSceneBandeau = texteNomSceneActive;
+        blocNomScene.addView(texteNomSceneActive);
+
+        ImageView chevronNomScene = new ImageView(this);
+        chevronNomScene.setImageResource(R.drawable.unfold_more_24px);
+        Palette.appliquerCouleurIcone(chevronNomScene, Palette.iconeNormal);
+        chevronNomScene.setLayoutParams(new LinearLayout.LayoutParams(dp(18), dp(18)));
+        blocNomScene.addView(chevronNomScene);
+
+        blocNomScene.setOnClickListener(v -> afficherMenuScene(v));
+        blocNomScene.setOnLongClickListener(v -> {
+            if (sceneActive != null) afficherPopupRenommerScene(sceneActive);
+            return true;
+        });
+
+        bandeauHaut.addView(blocNomScene);
 
         bandeauHaut.addView(separateurVertical());
 
@@ -236,7 +247,6 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         bandeauHaut.addView(separateurVertical());
 // bas 1
-
 // haut 2
         listeScenes = new ArrayList<>();
         if (cheminProjet != null) {
@@ -433,16 +443,6 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         bandeauHaut.addView(separateurVertical());
 
-        // --- NOUVEAU BOUTON : AJOUTER OBJET ---
-        ImageButton boutonAjouterObjet = new ImageButton(this);
-        boutonAjouterObjet.setImageResource(R.drawable.add_24px);
-        styliserBoutonBandeau(boutonAjouterObjet);
-        boutonAjouterObjet.setOnClickListener(v -> {
-            DialogueCreationObjets dialog = new DialogueCreationObjets(InterfaceEditeur.this, InterfaceEditeur.this, canvasEditeur, panneauRessources);
-            dialog.show();
-        });
-        bandeauHaut.addView(boutonAjouterObjet);
-
         ImageButton boutonBasculeBlueprint = new ImageButton(this);
         boutonBasculeBlueprint.setImageResource(R.drawable.account_tree_24px);
         styliserBoutonBandeau(boutonBasculeBlueprint);
@@ -460,6 +460,14 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         View espaceBandeau = new View(this);
         espaceBandeau.setLayoutParams(new LinearLayout.LayoutParams(0, dp(1), 1f));
         bandeauHaut.addView(espaceBandeau);
+
+        ImageButton boutonQuitter = new ImageButton(this);
+        boutonQuitter.setImageResource(R.drawable.exit_to_app_24px);
+        styliserBoutonBandeau(boutonQuitter);
+        boutonQuitter.setOnClickListener(v -> finish());
+        bandeauHaut.addView(boutonQuitter);
+
+        bandeauHaut.addView(separateurVertical());
 
         ImageButton boutonBuild = new ImageButton(this);
         boutonBuild.setImageResource(R.drawable.build_24px);
@@ -514,7 +522,107 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         }
     }
 // bas 2
-    // haut 3
+// haut 3
+    private void afficherMenuScene(View ancre) {
+        PopupMenu popup = new PopupMenu(this, ancre);
+        popup.getMenu().add(0, 1, 0, Traducteur.get("popup_renommer_scene_titre"));
+        popup.getMenu().add(0, 2, 1, Traducteur.get("popup_creer_scene_titre"));
+        if (listeScenes != null && listeScenes.size() > 1) {
+            for (int i = 0; i < listeScenes.size(); i++) {
+                Scene s = listeScenes.get(i);
+                if (s != sceneActive) {
+                    popup.getMenu().add(1, 100 + i, i + 2, s.nom);
+                }
+            }
+        }
+        popup.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == 1) {
+                if (sceneActive != null) afficherPopupRenommerScene(sceneActive);
+                return true;
+            } else if (id == 2) {
+                afficherPopupCreerScene();
+                return true;
+            } else if (id >= 100) {
+                int index = id - 100;
+                if (index >= 0 && index < listeScenes.size()) {
+                    changerScene(listeScenes.get(index));
+                }
+                return true;
+            }
+            return false;
+        });
+        popup.show();
+    }
+
+    private void afficherPopupRenommerScene(Scene scene) {
+        LinearLayout layoutDialog = new LinearLayout(this);
+        layoutDialog.setOrientation(LinearLayout.VERTICAL);
+        layoutDialog.setPadding(dp(16), dp(16), dp(16), dp(16));
+        layoutDialog.setBackgroundColor(Palette.fondPanneaux);
+
+        EditText champTexte = new EditText(this);
+        champTexte.setText(scene.nom);
+        champTexte.setTextColor(Palette.texteNormal);
+        champTexte.setBackground(fond(Palette.fondNormal, 8, Palette.bordure, 1));
+        champTexte.setPadding(dp(12), dp(10), dp(12), dp(10));
+        layoutDialog.addView(champTexte);
+
+        android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this)
+                .setTitle(Traducteur.get("popup_renommer_scene_titre"))
+                .setView(layoutDialog)
+                .setPositiveButton(Traducteur.get("bouton_valider"), (d, w) -> {
+                    String nouveauNom = champTexte.getText().toString().trim();
+                    if (nouveauNom.isEmpty()) return;
+                    for (Scene s : listeScenes) {
+                        if (s != scene && s.nom != null && s.nom.trim().equalsIgnoreCase(nouveauNom)) {
+                            Toast.makeText(this, Traducteur.get("erreur_scene_existe"), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                    scene.nom = nouveauNom;
+                    if (texteNomSceneBandeau != null && scene == sceneActive) {
+                        texteNomSceneBandeau.setText(nouveauNom);
+                    }
+                    panneauRessources.rafraichirScenes();
+                })
+                .setNegativeButton(Traducteur.get("bouton_annuler"), null)
+                .create();
+        dialog.show();
+    }
+
+    private void afficherPopupCreerScene() {
+        LinearLayout layoutDialog = new LinearLayout(this);
+        layoutDialog.setOrientation(LinearLayout.VERTICAL);
+        layoutDialog.setPadding(dp(16), dp(16), dp(16), dp(16));
+        layoutDialog.setBackgroundColor(Palette.fondPanneaux);
+
+        EditText champTexte = new EditText(this);
+        champTexte.setHint(Traducteur.get("hint_entrez_nom"));
+        champTexte.setTextColor(Palette.texteNormal);
+        champTexte.setBackground(fond(Palette.fondNormal, 8, Palette.bordure, 1));
+        champTexte.setPadding(dp(12), dp(10), dp(12), dp(10));
+        layoutDialog.addView(champTexte);
+
+        android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this)
+                .setTitle(Traducteur.get("popup_creer_scene_titre"))
+                .setView(layoutDialog)
+                .setPositiveButton(Traducteur.get("bouton_valider"), (d, w) -> {
+                    String nom = champTexte.getText().toString().trim();
+                    if (nom.isEmpty()) return;
+                    for (Scene s : listeScenes) {
+                        if (s.nom != null && s.nom.trim().equalsIgnoreCase(nom)) {
+                            Toast.makeText(this, Traducteur.get("erreur_scene_existe"), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                    creerScene(nom);
+                })
+                .setNegativeButton(Traducteur.get("bouton_annuler"), null)
+                .create();
+        dialog.show();
+    }
+
     private void basculerVersJeu() {
         listeScenesBackup = new ArrayList<>(listeScenes);
         sceneActiveBackup = sceneActive;
@@ -666,6 +774,9 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
     public void changerScene(Scene scene) {
         this.sceneActive = scene;
+        if (texteNomSceneBandeau != null) {
+            texteNomSceneBandeau.setText(scene.nom);
+        }
         canvasEditeur.setScene(scene);
         canvasEditeur.deselectionner();
         if (menuInspecteur != null) {
@@ -770,7 +881,4 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 }
 // bas 3
 
-
-
-
-
+        
