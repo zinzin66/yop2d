@@ -34,7 +34,6 @@ public class DialogueGestionAssets extends Dialog {
 
     private LinearLayout conteneurArborescenceDossiers;
     private GridLayout grilleAssets;
-    private EditText champRecherche;
 
     private MediaPlayer mediaPlayer;
     private File fichierSonEnLecture;
@@ -180,24 +179,11 @@ public class DialogueGestionAssets extends Dialog {
 
         zoneCentrale.addView(colonneGauche);
 
-        // --- COLONNE DROITE : RECHERCHE + GRILLE + ACTIONS ---
+        // --- COLONNE DROITE : GRILLE + ACTIONS ---
         LinearLayout colonneDroite = new LinearLayout(ctx);
         colonneDroite.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams lpColDroite = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f);
         colonneDroite.setLayoutParams(lpColDroite);
-
-        champRecherche = new EditText(ctx);
-        champRecherche.setHint(Traducteur.get("hint_rechercher_asset"));
-        styliserChampDialogue(champRecherche);
-        champRecherche.addTextChangedListener(new android.text.TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filtreTexte = s.toString().trim().toLowerCase();
-                rafraichirListeAssets();
-            }
-            @Override public void afterTextChanged(android.text.Editable s) {}
-        });
-        colonneDroite.addView(champRecherche);
 
         ScrollView scrollGrille = new ScrollView(ctx);
         scrollGrille.setLayoutParams(new LinearLayout.LayoutParams(
@@ -314,6 +300,7 @@ public class DialogueGestionAssets extends Dialog {
     }
 // bas 2
 
+    
 // haut 3
     private void rafraichirArborescenceDossiers() {
         if (conteneurArborescenceDossiers == null) return;
