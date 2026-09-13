@@ -152,8 +152,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         layoutPrincipal = new LinearLayout(this);
         layoutPrincipal.setOrientation(LinearLayout.VERTICAL);
         layoutPrincipal.setBackgroundColor(Palette.fondNormal);
-        layoutPrincipal.setPadding(dp(8), dp(8), dp(8), dp(8));
-
+        layoutPrincipal.setPadding(0, dp(8), 0, dp(8));
         LinearLayout bandeauHaut = new LinearLayout(this);
         bandeauHaut.setOrientation(LinearLayout.HORIZONTAL);
         bandeauHaut.setGravity(Gravity.CENTER_VERTICAL);
