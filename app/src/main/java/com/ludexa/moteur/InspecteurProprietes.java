@@ -25,9 +25,8 @@ public class InspecteurProprietes extends LinearLayout {
     private TextView titreInspecteur;
     private Button boutonMasquer;
     private LinearLayout enteteInspecteur;
-    private LinearLayout.LayoutParams paramsOuvert;
-    private LinearLayout.LayoutParams paramsFerme;
-
+    private FrameLayout.LayoutParams paramsOuvert;
+    private FrameLayout.LayoutParams paramsFerme;
     private TextView texteInfo;
     private LinearLayout blocProprietes;
     private EditText champNom;
