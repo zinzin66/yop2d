@@ -1,4 +1,4 @@
-  // haut 1
+// haut 1
 package com.ludexa.moteur;
 
 import android.app.Activity;
@@ -171,38 +171,15 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         bandeauHaut.addView(separateurVertical());
 
-        LinearLayout blocNomScene = new LinearLayout(this);
-        blocNomScene.setOrientation(LinearLayout.HORIZONTAL);
-        blocNomScene.setGravity(Gravity.CENTER_VERTICAL);
-        blocNomScene.setBackground(fond(Palette.boutonNormal, 6, Palette.bordure, 1));
-        blocNomScene.setPadding(dp(10), dp(6), dp(8), dp(6));
-        LinearLayout.LayoutParams lpBlocNomScene = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, dp(38));
-        lpBlocNomScene.setMargins(0, 0, dp(6), 0);
-        lpBlocNomScene.gravity = Gravity.CENTER_VERTICAL;
-        blocNomScene.setLayoutParams(lpBlocNomScene);
-
-        TextView texteNomSceneActive = new TextView(this);
-        texteNomSceneActive.setText(sceneActive != null ? sceneActive.nom : Traducteur.get("valeur_aucune"));
-        texteNomSceneActive.setTextSize(14f);
-        texteNomSceneActive.setTextColor(Palette.texteSelectionne);
-        texteNomSceneActive.setPadding(0, 0, dp(4), 0);
-        this.texteNomSceneBandeau = texteNomSceneActive;
-        blocNomScene.addView(texteNomSceneActive);
-
-        ImageView chevronNomScene = new ImageView(this);
-        chevronNomScene.setImageResource(R.drawable.unfold_more_24px);
-        Palette.appliquerCouleurIcone(chevronNomScene, Palette.iconeNormal);
-        chevronNomScene.setLayoutParams(new LinearLayout.LayoutParams(dp(18), dp(18)));
-        blocNomScene.addView(chevronNomScene);
-
-        blocNomScene.setOnClickListener(v -> afficherMenuScene(v));
-        blocNomScene.setOnLongClickListener(v -> {
+        ImageButton boutonMenuScene = new ImageButton(this);
+        boutonMenuScene.setImageResource(R.drawable.movie_24px);
+        styliserBoutonBandeau(boutonMenuScene);
+        boutonMenuScene.setOnClickListener(v -> afficherMenuScene(v));
+        boutonMenuScene.setOnLongClickListener(v -> {
             if (sceneActive != null) afficherPopupRenommerScene(sceneActive);
             return true;
         });
-
-        bandeauHaut.addView(blocNomScene);
+        bandeauHaut.addView(boutonMenuScene);
 
         bandeauHaut.addView(separateurVertical());
 
@@ -248,6 +225,9 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         bandeauHaut.addView(separateurVertical());
 // bas 1
+
+
+
 // haut 2
         listeScenes = new ArrayList<>();
         if (cheminProjet != null) {
