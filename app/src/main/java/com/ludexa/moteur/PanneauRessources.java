@@ -299,7 +299,7 @@ public class PanneauRessources extends LinearLayout {
             case "texte":
             case "titre_stylise": return R.drawable.title_24px;
             case "bouton": return R.drawable.buttons_alt_24px;
-            case "joystick": return R.drawable.trackpad_input_24px;
+            case "joystick": return R.drawable.gamepad_24px;
             case "bouton_action": return R.drawable.center_focus_weak_24px;
             case "barre_progression": return R.drawable.square_24px;
             case "scene_instance": return R.drawable.display_add_24px;
