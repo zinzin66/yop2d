@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import android.widget.FrameLayout;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -43,9 +44,10 @@ public class PanneauRessources extends LinearLayout {
     private String cheminProjet;
 
     private ScrollView scrollPanneau;
-    private LinearLayout.LayoutParams paramsOuvert;
-    private LinearLayout.LayoutParams paramsFerme;
+    private FrameLayout.LayoutParams paramsOuvert;
+    private FrameLayout.LayoutParams paramsFerme;
     private Button boutonMasquer;
+    private LinearLayout entetePanneau;
 
     public PanneauRessources(Context context, CanvasEditeur canvasEditeur, String cheminProjet) {
         super(context);
@@ -66,14 +68,15 @@ public class PanneauRessources extends LinearLayout {
             if (!rootFonctionsDir.exists()) rootFonctionsDir.mkdirs(); 
         }
 
-        paramsOuvert = new LinearLayout.LayoutParams(500, LinearLayout.LayoutParams.MATCH_PARENT);
-        paramsFerme = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        paramsOuvert = new FrameLayout.LayoutParams(500, FrameLayout.LayoutParams.MATCH_PARENT);
+        paramsOuvert.gravity = Gravity.START | Gravity.TOP;
+        paramsFerme = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        paramsFerme.gravity = Gravity.START | Gravity.TOP;
         this.setLayoutParams(paramsOuvert);
 
-        LinearLayout entetePanneau = new LinearLayout(context);
+        entetePanneau = new LinearLayout(context);
         entetePanneau.setOrientation(LinearLayout.HORIZONTAL);
-        entetePanneau.setPadding(dp(12), dp(10), dp(12), dp(10));
-        entetePanneau.setBackgroundColor(Palette.enTeteDialogues);
+        entetePanneau.setPadding(dp(4), dp(4), dp(4), dp(4));
         entetePanneau.setGravity(Gravity.CENTER_VERTICAL);
 
         boutonMasquer = new Button(context);
@@ -84,18 +87,7 @@ public class PanneauRessources extends LinearLayout {
         boutonMasquer.setPadding(dp(10), dp(6), dp(10), dp(6));
         boutonMasquer.setLayoutParams(new LinearLayout.LayoutParams(dp(44), dp(40)));
 
-        TextView titrePanneau = new TextView(context);
-        titrePanneau.setText(Traducteur.get("panneau_ress_titre"));
-        titrePanneau.setTextSize(17f);
-        titrePanneau.setLetterSpacing(0.08f);
-        titrePanneau.setTypeface(null, android.graphics.Typeface.BOLD);
-        titrePanneau.setTextColor(Palette.texteSelectionne);
-        titrePanneau.setPadding(dp(10), 0, 0, 0);
-        LinearLayout.LayoutParams paramsTitre = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        titrePanneau.setLayoutParams(paramsTitre);
-
         entetePanneau.addView(boutonMasquer);
-        entetePanneau.addView(titrePanneau);
         addView(entetePanneau);
 
         scrollPanneau = new ScrollView(context);
@@ -106,7 +98,6 @@ public class PanneauRessources extends LinearLayout {
         contenuScroll.setPadding(dp(8), dp(8), dp(8), dp(8));
 
         contenuScroll.addView(creerSectionScenes(context));
-        // L'appel à creerSectionObjets a été supprimé ici
         contenuScroll.addView(creerSectionArborescence(context));
         contenuScroll.addView(creerSectionAssets(context));
         contenuScroll.addView(creerSectionVariables(context));
@@ -114,20 +105,24 @@ public class PanneauRessources extends LinearLayout {
 
         scrollPanneau.addView(contenuScroll);
         addView(scrollPanneau);
-
+        // btn 
         boutonMasquer.setOnClickListener(v -> {
             if (scrollPanneau.getVisibility() == View.VISIBLE) {
                 scrollPanneau.setVisibility(View.GONE);
-                titrePanneau.setVisibility(View.GONE);
+                entetePanneau.setBackgroundColor(Color.TRANSPARENT);
+                this.setBackgroundColor(Color.TRANSPARENT);
                 boutonMasquer.setText(">");
                 this.setLayoutParams(paramsFerme);
             } else {
                 scrollPanneau.setVisibility(View.VISIBLE);
-                titrePanneau.setVisibility(View.VISIBLE);
+                entetePanneau.setBackgroundColor(Palette.enTeteDialogues);
+                this.setBackgroundColor(Palette.fondPanneaux);
                 boutonMasquer.setText("<");
                 this.setLayoutParams(paramsOuvert);
             }
         });
+        // btn 
+        entetePanneau.setBackgroundColor(Palette.enTeteDialogues);
     }
 // bas 1
 
