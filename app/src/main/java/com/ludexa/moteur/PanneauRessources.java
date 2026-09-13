@@ -102,21 +102,23 @@ public class PanneauRessources extends LinearLayout {
 
         scrollPanneau.addView(contenuScroll);
         addView(scrollPanneau);
-
+        // btn 
         boutonMasquer.setOnClickListener(v -> {
             if (scrollPanneau.getVisibility() == View.VISIBLE) {
                 scrollPanneau.setVisibility(View.GONE);
                 entetePanneau.setBackgroundColor(Color.TRANSPARENT);
+                this.setBackgroundColor(Color.TRANSPARENT);
                 boutonMasquer.setText(">");
                 this.setLayoutParams(paramsFerme);
             } else {
                 scrollPanneau.setVisibility(View.VISIBLE);
                 entetePanneau.setBackgroundColor(Palette.enTeteDialogues);
+                this.setBackgroundColor(Palette.fondPanneaux);
                 boutonMasquer.setText("<");
                 this.setLayoutParams(paramsOuvert);
             }
         });
-
+        // btn 
         entetePanneau.setBackgroundColor(Palette.enTeteDialogues);
     }
 // bas 1
