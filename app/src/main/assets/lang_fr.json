@@ -578,13 +578,11 @@
   "insp_aucune_image": "Aucune image trouvée.",
   "style_titre_select_texture": "Sélectionner une texture",
   "valeur_aucune": "Aucune",
-  "insp_titre_select_couleur": "Sélectionner une couleur"
-  
-  
-  
-  
-  
-  
+  "insp_titre_select_couleur": "Sélectionner une couleur",
+  "titre_dialogue_assets": "Gestion des Assets",
+"titre_dossiers": "Dossiers",
+"hint_rechercher_asset": "Rechercher un fichier...",
+"erreur_lecture_son": "Impossible de lire ce fichier audio"
   
   
   
