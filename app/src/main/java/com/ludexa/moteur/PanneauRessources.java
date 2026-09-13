@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import android.widget.FrameLayout;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -43,8 +44,8 @@ public class PanneauRessources extends LinearLayout {
     private String cheminProjet;
 
     private ScrollView scrollPanneau;
-    private LinearLayout.LayoutParams paramsOuvert;
-    private LinearLayout.LayoutParams paramsFerme;
+    private FrameLayout.LayoutParams paramsOuvert;
+    private FrameLayout.LayoutParams paramsFerme;
     private Button boutonMasquer;
     private LinearLayout entetePanneau;
 
@@ -67,8 +68,10 @@ public class PanneauRessources extends LinearLayout {
             if (!rootFonctionsDir.exists()) rootFonctionsDir.mkdirs(); 
         }
 
-        paramsOuvert = new LinearLayout.LayoutParams(500, LinearLayout.LayoutParams.MATCH_PARENT);
-        paramsFerme = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        paramsOuvert = new FrameLayout.LayoutParams(500, FrameLayout.LayoutParams.MATCH_PARENT);
+        paramsOuvert.gravity = Gravity.START | Gravity.TOP;
+        paramsFerme = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        paramsFerme.gravity = Gravity.START | Gravity.TOP;
         this.setLayoutParams(paramsOuvert);
 
         entetePanneau = new LinearLayout(context);
