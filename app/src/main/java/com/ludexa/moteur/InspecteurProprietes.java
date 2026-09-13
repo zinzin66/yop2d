@@ -24,6 +24,7 @@ public class InspecteurProprietes extends LinearLayout {
     private ScrollView scrollInspecteur;
     private TextView titreInspecteur;
     private Button boutonMasquer;
+    private LinearLayout enteteInspecteur;
     private LinearLayout.LayoutParams paramsOuvert;
     private LinearLayout.LayoutParams paramsFerme;
 
@@ -197,23 +198,12 @@ public class InspecteurProprietes extends LinearLayout {
         paramsOuvert = new LinearLayout.LayoutParams(500, LinearLayout.LayoutParams.MATCH_PARENT);
         paramsFerme = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
         this.setLayoutParams(paramsOuvert);
-
-        LinearLayout enteteInspecteur = new LinearLayout(context);
+        // haut
+        enteteInspecteur = new LinearLayout(context);
         enteteInspecteur.setOrientation(LinearLayout.HORIZONTAL);
-        enteteInspecteur.setPadding(dp(12), dp(10), dp(12), dp(10));
+        enteteInspecteur.setPadding(dp(4), dp(4), dp(4), dp(4));
         enteteInspecteur.setBackground(fond(Palette.enTeteDialogues, Palette.bordure, 0));
         enteteInspecteur.setGravity(Gravity.CENTER_VERTICAL);
-
-        titreInspecteur = new TextView(context);
-        titreInspecteur.setText(Traducteur.get("insp_titre"));
-        titreInspecteur.setTextSize(17f);
-        titreInspecteur.setLetterSpacing(0.08f);
-        titreInspecteur.setTypeface(null, android.graphics.Typeface.BOLD);
-        titreInspecteur.setGravity(Gravity.CENTER_VERTICAL);
-        titreInspecteur.setTextColor(Palette.texteSelectionne);
-        LinearLayout.LayoutParams paramsTitre = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        titreInspecteur.setLayoutParams(paramsTitre);
 
         boutonMasquer = new Button(context);
         boutonMasquer.setText(">");
@@ -224,10 +214,9 @@ public class InspecteurProprietes extends LinearLayout {
         LinearLayout.LayoutParams paramsMasquer = new LinearLayout.LayoutParams(dp(44), dp(40));
         boutonMasquer.setLayoutParams(paramsMasquer);
 
-        enteteInspecteur.addView(titreInspecteur);
         enteteInspecteur.addView(boutonMasquer);
         this.addView(enteteInspecteur);
-
+        // bas 
         scrollInspecteur = new ScrollView(context);
         LinearLayout contenuInspecteur = new LinearLayout(context);
         contenuInspecteur.setOrientation(LinearLayout.VERTICAL);
@@ -951,21 +940,21 @@ public class InspecteurProprietes extends LinearLayout {
         contenuInspecteur.addView(boutonSupprimer);
         scrollInspecteur.addView(contenuInspecteur);
         this.addView(scrollInspecteur);
-
+        // btn
         boutonMasquer.setOnClickListener(v -> {
             if (scrollInspecteur.getVisibility() == View.VISIBLE) {
                 scrollInspecteur.setVisibility(View.GONE);
-                titreInspecteur.setVisibility(View.GONE);
+                enteteInspecteur.setBackgroundColor(Color.TRANSPARENT);
                 boutonMasquer.setText("<");
                 this.setLayoutParams(paramsFerme);
             } else {
                 scrollInspecteur.setVisibility(View.VISIBLE);
-                titreInspecteur.setVisibility(View.VISIBLE);
+                enteteInspecteur.setBackground(fond(Palette.enTeteDialogues, Palette.bordure, 0));
                 boutonMasquer.setText(">");
                 this.setLayoutParams(paramsOuvert);
             }
         });
-        
+        // btn 
         btnSelectStyleTitre.setOnClickListener(v -> {
             if (objetCourant == null) return;
             if (cheminProjet == null) return;
