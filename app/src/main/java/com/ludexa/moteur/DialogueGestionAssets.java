@@ -118,6 +118,10 @@ public class DialogueGestionAssets extends Dialog {
         layoutPrincipal.setOrientation(LinearLayout.VERTICAL);
         layoutPrincipal.setBackgroundColor(Palette.fondPanneaux);
         layoutPrincipal.setPadding(dp(12), dp(12), dp(12), dp(12));
+layoutPrincipal.setOnApplyWindowInsetsListener((v, insets) -> {
+    v.setPadding(dp(12), dp(12), dp(12), dp(12) + insets.getSystemWindowInsetBottom());
+    return insets;
+});
         layoutPrincipal.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
