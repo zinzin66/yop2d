@@ -112,12 +112,15 @@ public class DialogueGestionAssets extends Dialog {
                (nom.equals("Images") || nom.equals("Sons") || nom.equals("Fonts") || nom.equals("Textes"));
     }
 // bas 1
+
 // haut 2
     private void initUI() {
         LinearLayout layoutPrincipal = new LinearLayout(ctx);
         layoutPrincipal.setOrientation(LinearLayout.VERTICAL);
         layoutPrincipal.setBackgroundColor(Palette.fondPanneaux);
         layoutPrincipal.setPadding(dp(12), dp(12), dp(12), dp(12));
+        layoutPrincipal.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         LinearLayout zoneCentrale = new LinearLayout(ctx);
         zoneCentrale.setOrientation(LinearLayout.HORIZONTAL);
@@ -305,7 +308,7 @@ public class DialogueGestionAssets extends Dialog {
         rafraichirArborescenceDossiers();
         rafraichirListeAssets();
     }
-// bas 2
+// bas 2 
     
 // haut 3
     private void rafraichirArborescenceDossiers() {
