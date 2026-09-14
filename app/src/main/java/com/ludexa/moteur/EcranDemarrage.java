@@ -112,7 +112,7 @@ public class EcranDemarrage extends Activity {
         t.setAllCaps(false);
         t.setGravity(Gravity.CENTER);
         t.setPadding(dp(12), dp(9), dp(12), dp(9));
-        t.setTextColor(destructif ? Color.parseColor("#FF6B6B") : Palette.texteNormal);
+        t.setTextColor(Palette.texteNormal);
         t.setBackground(fond(Palette.boutonNormal, 6, couleurBordure(), 1));
         t.setClickable(true);
         t.setOnClickListener(action);
@@ -1099,7 +1099,7 @@ public class EcranDemarrage extends Activity {
                 .setNegativeButton(Traducteur.get("bouton_annuler"), (d, w) -> d.cancel())
                 .create();
         dialogue.show();
-        dialogue.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED);
+        
     }
 
     private void actionImporterExemple(String nomZip, String nomAffiche) {

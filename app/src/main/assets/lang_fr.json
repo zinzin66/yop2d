@@ -578,11 +578,19 @@
   "insp_aucune_image": "Aucune image trouvée.",
   "style_titre_select_texture": "Sélectionner une texture",
   "valeur_aucune": "Aucune",
-  "insp_titre_select_couleur": "Sélectionner une couleur"
-  
-  
-  
-  
+  "insp_titre_select_couleur": "Sélectionner une couleur",
+  "titre_dialogue_assets": "Gestion des Assets",
+"titre_dossiers": "Dossiers",
+"hint_rechercher_asset": "Rechercher un fichier...",
+"erreur_lecture_son": "Impossible de lire ce fichier audio",
+"cat_textes": "Textes",
+  "panneau_ress_assets": "Assets",
+"btn_gerer_animations": "Animations",
+  "cat_interactifs": "Interactifs",
+"obj_prefix_barre_progression": "BarreProg",
+  "btn_ouvrir_dialogues": "Texte",
+"btn_gerer_animations": "Animation",
+"btn_gerer_styles": "Titre"
   
   
   

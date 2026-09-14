@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import android.widget.FrameLayout;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -43,9 +44,10 @@ public class PanneauRessources extends LinearLayout {
     private String cheminProjet;
 
     private ScrollView scrollPanneau;
-    private LinearLayout.LayoutParams paramsOuvert;
-    private LinearLayout.LayoutParams paramsFerme;
-    private Button boutonMasquer;
+    private FrameLayout.LayoutParams paramsOuvert;
+    private FrameLayout.LayoutParams paramsFerme;
+    private ImageButton boutonMasquer;
+    private LinearLayout entetePanneau;
 
     public PanneauRessources(Context context, CanvasEditeur canvasEditeur, String cheminProjet) {
         super(context);
@@ -66,36 +68,26 @@ public class PanneauRessources extends LinearLayout {
             if (!rootFonctionsDir.exists()) rootFonctionsDir.mkdirs(); 
         }
 
-        paramsOuvert = new LinearLayout.LayoutParams(500, LinearLayout.LayoutParams.MATCH_PARENT);
-        paramsFerme = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        paramsOuvert = new FrameLayout.LayoutParams(dp(260), FrameLayout.LayoutParams.MATCH_PARENT);
+        paramsOuvert.gravity = Gravity.START | Gravity.TOP;
+        paramsFerme = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        paramsFerme.gravity = Gravity.START | Gravity.TOP;
         this.setLayoutParams(paramsOuvert);
 
-        LinearLayout entetePanneau = new LinearLayout(context);
+        entetePanneau = new LinearLayout(context);
         entetePanneau.setOrientation(LinearLayout.HORIZONTAL);
-        entetePanneau.setPadding(dp(12), dp(10), dp(12), dp(10));
-        entetePanneau.setBackgroundColor(Palette.enTeteDialogues);
+        entetePanneau.setPadding(dp(4), dp(4), dp(4), dp(4));
         entetePanneau.setGravity(Gravity.CENTER_VERTICAL);
 
-        boutonMasquer = new Button(context);
-        boutonMasquer.setText("<"); 
-        boutonMasquer.setAllCaps(false);
-        boutonMasquer.setTextColor(Palette.iconeNormal);
+        boutonMasquer = new ImageButton(context);
+        boutonMasquer.setImageResource(R.drawable.chevron_left_24px);
+        boutonMasquer.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        boutonMasquer.setColorFilter(Palette.iconeNormal);
         boutonMasquer.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
-        boutonMasquer.setPadding(dp(10), dp(6), dp(10), dp(6));
-        boutonMasquer.setLayoutParams(new LinearLayout.LayoutParams(dp(44), dp(40)));
-
-        TextView titrePanneau = new TextView(context);
-        titrePanneau.setText(Traducteur.get("panneau_ress_titre"));
-        titrePanneau.setTextSize(17f);
-        titrePanneau.setLetterSpacing(0.08f);
-        titrePanneau.setTypeface(null, android.graphics.Typeface.BOLD);
-        titrePanneau.setTextColor(Palette.texteSelectionne);
-        titrePanneau.setPadding(dp(10), 0, 0, 0);
-        LinearLayout.LayoutParams paramsTitre = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        titrePanneau.setLayoutParams(paramsTitre);
+        boutonMasquer.setPadding(dp(8), dp(8), dp(8), dp(8));
+        boutonMasquer.setLayoutParams(new LinearLayout.LayoutParams(dp(40), dp(40)));
 
         entetePanneau.addView(boutonMasquer);
-        entetePanneau.addView(titrePanneau);
         addView(entetePanneau);
 
         scrollPanneau = new ScrollView(context);
@@ -106,7 +98,6 @@ public class PanneauRessources extends LinearLayout {
         contenuScroll.setPadding(dp(8), dp(8), dp(8), dp(8));
 
         contenuScroll.addView(creerSectionScenes(context));
-        // L'appel à creerSectionObjets a été supprimé ici
         contenuScroll.addView(creerSectionArborescence(context));
         contenuScroll.addView(creerSectionAssets(context));
         contenuScroll.addView(creerSectionVariables(context));
@@ -114,23 +105,26 @@ public class PanneauRessources extends LinearLayout {
 
         scrollPanneau.addView(contenuScroll);
         addView(scrollPanneau);
-
+        // btn 
         boutonMasquer.setOnClickListener(v -> {
             if (scrollPanneau.getVisibility() == View.VISIBLE) {
                 scrollPanneau.setVisibility(View.GONE);
-                titrePanneau.setVisibility(View.GONE);
-                boutonMasquer.setText(">");
+                entetePanneau.setBackgroundColor(Color.TRANSPARENT);
+                this.setBackgroundColor(Color.TRANSPARENT);
+                boutonMasquer.setImageResource(R.drawable.chevron_right_24px);
                 this.setLayoutParams(paramsFerme);
             } else {
                 scrollPanneau.setVisibility(View.VISIBLE);
-                titrePanneau.setVisibility(View.VISIBLE);
-                boutonMasquer.setText("<");
+                entetePanneau.setBackgroundColor(Palette.enTeteDialogues);
+                this.setBackgroundColor(Palette.fondPanneaux);
+                boutonMasquer.setImageResource(R.drawable.chevron_left_24px);
                 this.setLayoutParams(paramsOuvert);
             }
         });
+        // btn 
+        entetePanneau.setBackgroundColor(Palette.enTeteDialogues);
     }
 // bas 1
-
 // haut 2
     private int dp(int valeur) {
         return (int) (valeur * getResources().getDisplayMetrics().density);
@@ -164,9 +158,9 @@ public class PanneauRessources extends LinearLayout {
 
     private void styliserBoutonIcone(ImageButton btn) {
         btn.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
-        btn.setPadding(dp(12), dp(12), dp(12), dp(12));
+        btn.setPadding(dp(10), dp(10), dp(10), dp(10));
         btn.setColorFilter(Palette.iconeNormal);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(44), dp(44));
         lp.setMargins(dp(4), dp(4), dp(4), dp(4));
         btn.setLayoutParams(lp);
     }
@@ -204,38 +198,8 @@ public class PanneauRessources extends LinearLayout {
 
         conteneurScenes = new LinearLayout(context);
         conteneurScenes.setOrientation(LinearLayout.VERTICAL);
-        conteneurScenes.setPadding(0, 0, 0, dp(8));
         contenu.addView(conteneurScenes);
 
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-
-        ImageButton btnCreer = new ImageButton(context);
-        btnCreer.setImageResource(R.drawable.add_24px);
-        styliserBoutonIcone(btnCreer);
-        btnCreer.setOnClickListener(v -> afficherPopupCreerScene(context));
-
-        ImageButton btnRenommer = new ImageButton(context);
-        btnRenommer.setImageResource(R.drawable.edit_square_24px);
-        styliserBoutonIcone(btnRenommer);
-        btnRenommer.setOnClickListener(v -> {
-            InterfaceEditeur editeur = (InterfaceEditeur) context;
-            afficherPopupRenommerScene(context, editeur.sceneActive);
-        });
-
-        ImageButton btnSupprimer = new ImageButton(context);
-        btnSupprimer.setImageResource(R.drawable.delete_24px);
-        styliserBoutonIcone(btnSupprimer);
-        btnSupprimer.setOnClickListener(v -> {
-            InterfaceEditeur editeur = (InterfaceEditeur) context;
-            afficherPopupSupprimerScene(context, editeur.sceneActive);
-        });
-
-        zoneBoutons.addView(btnCreer);
-        zoneBoutons.addView(btnRenommer);
-        zoneBoutons.addView(btnSupprimer);
-
-        contenu.addView(zoneBoutons);
         rafraichirScenes();
 
         btnTitre.setOnClickListener(v -> {
@@ -264,13 +228,13 @@ public class PanneauRessources extends LinearLayout {
                 nomScene.setText(s.nom);
                 if (s == editeur.sceneActive) {
                     nomScene.setTextColor(Palette.texteSelectionne);
-                    nomScene.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
+                    nomScene.setBackground(fond(Palette.fondSelection, Palette.bordure, 8));
                 } else {
                     nomScene.setTextColor(Palette.texteNormal);
                 }
                 nomScene.setPadding(dp(10), dp(10), dp(10), dp(10));
                 nomScene.setTextSize(15f);
-                
+
                 nomScene.setOnClickListener(v -> {
                     editeur.changerScene(s);
                     rafraichirArborescence();
@@ -280,133 +244,7 @@ public class PanneauRessources extends LinearLayout {
             }
         }
     }
-
-    private void afficherPopupCreerScene(Context context) {
-        Dialog dialog = new Dialog(context);
-        dialog.setTitle(Traducteur.get("popup_creer_scene_titre"));
-        LinearLayout layoutDialog = new LinearLayout(context);
-        layoutDialog.setOrientation(LinearLayout.VERTICAL);
-        styliserDialogue(layoutDialog);
-        EditText champTexte = new EditText(context);
-        champTexte.setHint(Traducteur.get("hint_entrez_nom"));
-        styliserChampDialogue(champTexte);
-        layoutDialog.addView(champTexte);
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-        ImageButton btnValider = new ImageButton(context);
-        btnValider.setImageResource(R.drawable.save_24px);
-        styliserBoutonIcone(btnValider);
-        btnValider.setOnClickListener(v -> {
-            String nom = champTexte.getText().toString().trim();
-            if(!nom.isEmpty()) {
-                InterfaceEditeur editeur = (InterfaceEditeur) context;
-                if (editeur.listeScenes != null) {
-                    for (Scene s : editeur.listeScenes) {
-                        if (s.nom != null && s.nom.trim().equalsIgnoreCase(nom)) {
-                            new AlertDialog.Builder(context).setTitle(Traducteur.get("insp_titre_impossible")).setMessage(Traducteur.get("erreur_scene_existe")).setPositiveButton(Traducteur.get("bouton_ok"), null).show();
-                            return;
-                        }
-                    }
-                }
-                editeur.creerScene(nom);
-                Toast.makeText(context, Traducteur.get("toast_scene_creee") + nom, Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
-            }
-        });
-        ImageButton btnAnnuler = new ImageButton(context);
-        btnAnnuler.setImageResource(R.drawable.undo_24px);
-        styliserBoutonIcone(btnAnnuler);
-        btnAnnuler.setOnClickListener(v -> dialog.dismiss());
-        zoneBoutons.addView(btnValider);
-        zoneBoutons.addView(btnAnnuler);
-        layoutDialog.addView(zoneBoutons);
-        dialog.setContentView(layoutDialog);
-        dialog.show();
-    }
-
-    private void afficherPopupRenommerScene(Context context, Scene scene) {
-        Dialog dialog = new Dialog(context);
-        dialog.setTitle(Traducteur.get("popup_renommer_scene_titre"));
-        LinearLayout layoutDialog = new LinearLayout(context);
-        layoutDialog.setOrientation(LinearLayout.VERTICAL);
-        styliserDialogue(layoutDialog);
-        EditText champTexte = new EditText(context);
-        champTexte.setText(scene.nom);
-        styliserChampDialogue(champTexte);
-        layoutDialog.addView(champTexte);
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-        ImageButton btnValider = new ImageButton(context);
-        btnValider.setImageResource(R.drawable.save_24px);
-        styliserBoutonIcone(btnValider);
-        btnValider.setOnClickListener(v -> {
-            String nouveauNom = champTexte.getText().toString().trim();
-            if(nouveauNom.isEmpty()) return;
-            InterfaceEditeur editeur = (InterfaceEditeur) context;
-            if (editeur.listeScenes != null) {
-                for (Scene s : editeur.listeScenes) {
-                    if (s != scene && s.nom != null && s.nom.trim().equalsIgnoreCase(nouveauNom)) {
-                        new AlertDialog.Builder(context).setTitle(Traducteur.get("insp_titre_impossible")).setMessage(Traducteur.get("erreur_scene_existe")).setPositiveButton(Traducteur.get("bouton_ok"), null).show();
-                        return;
-                    }
-                }
-            }
-            scene.nom = nouveauNom;
-            rafraichirScenes();
-            dialog.dismiss();
-        });
-        ImageButton btnAnnuler = new ImageButton(context);
-        btnAnnuler.setImageResource(R.drawable.undo_24px);
-        styliserBoutonIcone(btnAnnuler);
-        btnAnnuler.setOnClickListener(v -> dialog.dismiss());
-        zoneBoutons.addView(btnValider);
-        zoneBoutons.addView(btnAnnuler);
-        layoutDialog.addView(zoneBoutons);
-        dialog.setContentView(layoutDialog);
-        dialog.show();
-    }
-
-    private void afficherPopupSupprimerScene(Context context, Scene scene) {
-        Dialog dialog = new Dialog(context);
-        dialog.setTitle(Traducteur.get("popup_supprimer_scene_titre"));
-        LinearLayout layoutDialog = new LinearLayout(context);
-        layoutDialog.setOrientation(LinearLayout.VERTICAL);
-        styliserDialogue(layoutDialog);
-        TextView txtMessage = new TextView(context);
-        txtMessage.setText(Traducteur.get("msg_supprimer_scene_1") + scene.nom + Traducteur.get("msg_supprimer_scene_2"));
-        txtMessage.setTextColor(Palette.texteNormal);
-        txtMessage.setTextSize(15f);
-        txtMessage.setPadding(0, 0, 0, dp(14));
-        layoutDialog.addView(txtMessage);
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-        ImageButton btnOui = new ImageButton(context);
-        btnOui.setImageResource(R.drawable.save_24px);
-        styliserBoutonIcone(btnOui);
-        btnOui.setOnClickListener(v -> {
-            InterfaceEditeur editeur = (InterfaceEditeur) context;
-            if (editeur.listeScenes.size() <= 1) {
-                Toast.makeText(context, Traducteur.get("erreur_supprimer_seule_scene"), Toast.LENGTH_SHORT).show();
-            } else {
-                editeur.listeScenes.remove(scene);
-                if (editeur.sceneActive == scene) editeur.changerScene(editeur.listeScenes.get(0));
-                else rafraichirScenes();
-                rafraichirArborescence();
-            }
-            dialog.dismiss();
-        });
-        ImageButton btnNon = new ImageButton(context);
-        btnNon.setImageResource(R.drawable.undo_24px);
-        styliserBoutonIcone(btnNon);
-        btnNon.setOnClickListener(v -> dialog.dismiss());
-        zoneBoutons.addView(btnOui);
-        zoneBoutons.addView(btnNon);
-        layoutDialog.addView(zoneBoutons);
-        dialog.setContentView(layoutDialog);
-        dialog.show();
-    }
 // bas 3
-
 // haut 4
     private View creerSectionArborescence(Context context) {
         LinearLayout section = new LinearLayout(context);
@@ -444,35 +282,88 @@ public class PanneauRessources extends LinearLayout {
         this.objetSelectionne = objet;
         rafraichirArborescence();
     }
-     // ici
-public void rafraichirArborescence() {
+
+    private int iconePourType(String type) {
+        if (type == null) return R.drawable.folder_open_24px;
+        switch (type) {
+            case "carre": return R.drawable.square_24px;
+            case "rond": return R.drawable.circle_24px;
+            case "image": return R.drawable.add_photo_alternate_24px;
+            case "zone": return R.drawable.activity_zone_24px;
+            case "texte":
+            case "titre_stylise": return R.drawable.title_24px;
+            case "bouton": return R.drawable.buttons_alt_24px;
+            case "joystick": return R.drawable.gamepad_24px;
+            case "bouton_action": return R.drawable.center_focus_weak_24px;
+            case "barre_progression": return R.drawable.square_24px;
+            case "scene_instance": return R.drawable.display_add_24px;
+            default: return R.drawable.folder_open_24px;
+        }
+    }
+
+    public void rafraichirArborescence() {
         if (conteneurArborescence == null) return;
         conteneurArborescence.removeAllViews();
-        
+
         InterfaceEditeur editeur = (InterfaceEditeur) getContext();
         if (editeur.sceneActive != null && editeur.sceneActive.objets != null) {
             for (int i = 0; i < editeur.sceneActive.objets.size(); i++) {
                 ObjetBase obj = editeur.sceneActive.objets.get(i);
-                
-                TextView txtObjet = new TextView(getContext());
-                txtObjet.setText("• " + obj.nom);
-                txtObjet.setTextColor(obj == objetSelectionne ? Palette.texteSelectionne : Palette.texteNormal);
-                txtObjet.setPadding(dp(10), dp(9), dp(10), dp(9));
-                txtObjet.setTextSize(14f);
+
+                LinearLayout ligne = new LinearLayout(getContext());
+                ligne.setOrientation(LinearLayout.HORIZONTAL);
+                ligne.setGravity(Gravity.CENTER_VERTICAL);
+                ligne.setPadding(dp(10), dp(9), dp(10), dp(9));
                 if (obj == objetSelectionne) {
-                    txtObjet.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
+                    ligne.setBackground(fond(Palette.fondSelection, Palette.bordure, 8));
                 }
-                
-                txtObjet.setOnClickListener(v -> {
+
+                ImageView icone = new ImageView(getContext());
+                icone.setImageResource(iconePourType(obj.type));
+                icone.setColorFilter(obj == objetSelectionne ? Palette.accentTeal : Palette.accentBleu);
+                LinearLayout.LayoutParams lpIcone = new LinearLayout.LayoutParams(dp(16), dp(16));
+                lpIcone.setMargins(0, 0, dp(6), 0);
+                icone.setLayoutParams(lpIcone);
+                ligne.addView(icone);
+
+                TextView txtObjet = new TextView(getContext());
+                txtObjet.setText(obj.nom);
+                txtObjet.setTextColor(obj == objetSelectionne ? Palette.texteSelectionne : Palette.texteNormal);
+                txtObjet.setTextSize(14f);
+                ligne.addView(txtObjet);
+
+                if ("scene_instance".equals(obj.type) && obj.sceneLieeId != null) {
+                    Scene sceneLiee = null;
+                    if (editeur.listeScenes != null) {
+                        for (Scene s : editeur.listeScenes) {
+                            if (s.id != null && s.id.equals(obj.sceneLieeId)) {
+                                sceneLiee = s;
+                                break;
+                            }
+                        }
+                    }
+                    if (sceneLiee != null) {
+                        final Scene sceneLieeFinale = sceneLiee;
+                        TextView txtSceneLiee = new TextView(getContext());
+                        txtSceneLiee.setText(" → " + sceneLiee.nom);
+                        txtSceneLiee.setTextColor(Palette.accentBleu);
+                        txtSceneLiee.setTextSize(13f);
+                        txtSceneLiee.setPadding(dp(4), 0, 0, 0);
+                        txtSceneLiee.setOnClickListener(v -> editeur.changerScene(sceneLieeFinale));
+                        ligne.addView(txtSceneLiee);
+                    }
+                }
+
+                ligne.setOnClickListener(v -> {
                     objetSelectionne = obj;
                     canvasEditeur.setObjetSelectionne(obj);
                     rafraichirArborescence();
                 });
-                
-                conteneurArborescence.addView(txtObjet);
+
+                conteneurArborescence.addView(ligne);
             }
         }
-        
+
         if (conteneurArborescence.getChildCount() == 0) {
             TextView txtVide = new TextView(getContext());
             txtVide.setText(Traducteur.get("msg_aucun_objet_scene"));
@@ -482,540 +373,33 @@ public void rafraichirArborescence() {
             conteneurArborescence.addView(txtVide);
         }
     }
-    
-    private boolean isRacineIndestructible(File dir) {
-        if (dir == null) return false;
-        String nom = dir.getName();
-        return (dir.getParentFile() != null && dir.getParentFile().equals(rootAssetsDir)) &&
-               (nom.equals("Images") || nom.equals("Sons") || nom.equals("Fonts") || nom.equals("Textes"));
-    }
 
     private View creerSectionAssets(Context context) {
         LinearLayout section = new LinearLayout(context);
         section.setOrientation(LinearLayout.VERTICAL);
+        section.setPadding(0, dp(4), 0, dp(4));
 
         Button btnTitre = new Button(context);
-        btnTitre.setText(Traducteur.get("panneau_ress_assets") + " ▼");
-        styliserTitreSection(btnTitre);
-
-        LinearLayout contenu = new LinearLayout(context);
-        contenu.setOrientation(LinearLayout.VERTICAL);
-        styliserContenuSection(contenu);
-
-        conteneurArborescenceDossiers = new LinearLayout(context);
-        conteneurArborescenceDossiers.setOrientation(LinearLayout.VERTICAL);
-
-        LinearLayout boutonsDossiers = new LinearLayout(context);
-        boutonsDossiers.setOrientation(LinearLayout.HORIZONTAL);
-        
-        ImageButton btnAddFolder = new ImageButton(context);
-        btnAddFolder.setImageResource(R.drawable.add_24px);
-        styliserBoutonIcone(btnAddFolder);
-        
-        ImageButton btnEditFolder = new ImageButton(context);
-        btnEditFolder.setImageResource(R.drawable.edit_square_24px);
-        styliserBoutonIcone(btnEditFolder);
-        
-        ImageButton btnDelFolder = new ImageButton(context);
-        btnDelFolder.setImageResource(R.drawable.delete_24px);
-        styliserBoutonIcone(btnDelFolder);
-
-        btnAddFolder.setOnClickListener(v -> {
-            if (currentFolderSelected != null) afficherPopupNouveauDossier(context);
-        });
-        btnEditFolder.setOnClickListener(v -> {
-            if (currentFolderSelected != null && !isRacineIndestructible(currentFolderSelected)) {
-                afficherPopupRenommerDossier(context, currentFolderSelected);
-            }
-        });
-        btnDelFolder.setOnClickListener(v -> {
-            if (currentFolderSelected != null && !isRacineIndestructible(currentFolderSelected)) {
-                afficherPopupSupprimerDossier(context, currentFolderSelected);
-            }
-        });
-
-        boutonsDossiers.addView(btnAddFolder);
-        boutonsDossiers.addView(btnEditFolder);
-        boutonsDossiers.addView(btnDelFolder);
-
-        conteneurListeAssets = new LinearLayout(context);
-        conteneurListeAssets.setOrientation(LinearLayout.VERTICAL);
-        conteneurListeAssets.setPadding(0, dp(10), 0, 0);
-
-        LinearLayout boutonsAssets = new LinearLayout(context);
-        boutonsAssets.setOrientation(LinearLayout.HORIZONTAL);
-
-        ImageButton btnImportAsset = new ImageButton(context);
-        btnImportAsset.setImageResource(R.drawable.upload_file_24px);
-        styliserBoutonIcone(btnImportAsset);
-        
-        ImageButton btnEditAsset = new ImageButton(context);
-        btnEditAsset.setImageResource(R.drawable.edit_square_24px);
-        styliserBoutonIcone(btnEditAsset);
-        
-        ImageButton btnDelAsset = new ImageButton(context);
-        btnDelAsset.setImageResource(R.drawable.delete_24px);
-        styliserBoutonIcone(btnDelAsset);
-
-        btnImportAsset.setOnClickListener(v -> {
-            if (currentFolderSelected == null) return;
-            String chemin = currentFolderSelected.getAbsolutePath();
-            String mime = chemin.contains("/Images") ? "image/*" : "*/*";
-            ((InterfaceEditeur)context).lancerImportAsset(mime);
-        });
-        btnEditAsset.setOnClickListener(v -> {
-            if (currentAssetSelected != null) afficherPopupRenommerAsset(context, currentAssetSelected);
-        });
-        btnDelAsset.setOnClickListener(v -> {
-            if (currentAssetSelected != null) afficherPopupSupprimerAsset(context, currentAssetSelected);
-        });
-
-        boutonsAssets.addView(btnImportAsset);
-        boutonsAssets.addView(btnEditAsset);
-        boutonsAssets.addView(btnDelAsset);
-
-        Button btnEditeurDial = new Button(context);
-        btnEditeurDial.setText(Traducteur.get("btn_ouvrir_dialogues"));
-        btnEditeurDial.setAllCaps(false);
-        btnEditeurDial.setTextColor(Color.WHITE);
-        btnEditeurDial.setBackground(fond(Color.parseColor("#4CAF50"), Palette.bordure, 8));
-        LinearLayout.LayoutParams lpBtnDial = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lpBtnDial.setMargins(0, dp(8), 0, 0);
-        btnEditeurDial.setLayoutParams(lpBtnDial);
-        btnEditeurDial.setOnClickListener(v -> {
-            afficherEditeurTexteGeant(context);
-        });
-        
-        Button btnAnimations = new Button(context);
-        btnAnimations.setText(Traducteur.get("btn_gerer_animations"));
-        btnAnimations.setAllCaps(false);
-        btnAnimations.setTextColor(Color.WHITE);
-        btnAnimations.setBackground(fond(Color.parseColor("#673AB7"), Palette.bordure, 8)); 
-        LinearLayout.LayoutParams lpBtnAnim = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lpBtnAnim.setMargins(0, dp(8), 0, 0);
-        btnAnimations.setLayoutParams(lpBtnAnim);
-        btnAnimations.setOnClickListener(v -> {
-            InterfaceEditeur editeur = (InterfaceEditeur) getContext();
-            EditeurAnimationsDialog dialog = new EditeurAnimationsDialog(context, editeur.cheminProjet);
-            dialog.show();
-        });
-        
-        Button btnStylesTitres = new Button(context);
-        btnStylesTitres.setText(Traducteur.get("btn_gerer_styles"));
-        btnStylesTitres.setAllCaps(false);
-        btnStylesTitres.setTextColor(Color.WHITE);
-        btnStylesTitres.setBackground(fond(Color.parseColor("#E65100"), Palette.bordure, 8)); 
-        LinearLayout.LayoutParams lpBtnStyles = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lpBtnStyles.setMargins(0, dp(8), 0, 0);
-        btnStylesTitres.setLayoutParams(lpBtnStyles);
-        btnStylesTitres.setOnClickListener(v -> {
-            InterfaceEditeur editeur = (InterfaceEditeur) getContext();
-            EditeurTexteStyleDialog dialog = new EditeurTexteStyleDialog(context, editeur.cheminProjet);
-            dialog.setOnDismissListener(d -> {
-                canvasEditeur.chargerStylesTitresGlobales();
-                canvasEditeur.invalidate();
-            });
-            dialog.show();
-        });
-
-        contenu.addView(conteneurArborescenceDossiers);
-        contenu.addView(boutonsDossiers);
-        contenu.addView(conteneurListeAssets);
-        contenu.addView(boutonsAssets);
-        contenu.addView(btnEditeurDial);
-        contenu.addView(btnAnimations);
-        contenu.addView(btnStylesTitres); 
-
-        rafraichirSectionAssetsTotale();
-
+        btnTitre.setText(Traducteur.get("panneau_ress_assets"));
+        btnTitre.setAllCaps(false);
+        btnTitre.setTextColor(Palette.texteSelectionne);
+        btnTitre.setTextSize(15f);
+        btnTitre.setTypeface(null, android.graphics.Typeface.BOLD);
+        btnTitre.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
+        btnTitre.setPadding(dp(12), dp(12), dp(12), dp(12));
+        LinearLayout.LayoutParams lpBtnTitre = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lpBtnTitre.setMargins(0, dp(8), 0, dp(4));
+        btnTitre.setLayoutParams(lpBtnTitre);
         btnTitre.setOnClickListener(v -> {
-            if (contenu.getVisibility() == View.VISIBLE) {
-                contenu.setVisibility(View.GONE);
-                btnTitre.setText(Traducteur.get("panneau_ress_assets") + " ▶");
-            } else {
-                contenu.setVisibility(View.VISIBLE);
-                btnTitre.setText(Traducteur.get("panneau_ress_assets") + " ▼");
-                rafraichirSectionAssetsTotale();
-            }
+            DialogueGestionAssets dialog = new DialogueGestionAssets(context, canvasEditeur, cheminProjet);
+            dialog.show();
         });
 
         section.addView(btnTitre);
-        section.addView(contenu);
         return section;
     }
-
-    public void rafraichirSectionAssetsTotale() {
-        rafraichirArborescenceDossiers();
-        rafraichirListeAssets();
-    }
-// bas 4
-
-// haut 5
-    private void rafraichirArborescenceDossiers() {
-        if (conteneurArborescenceDossiers == null) return;
-        conteneurArborescenceDossiers.removeAllViews();
-        construireArbreDossiers(rootAssetsDir, -1);
-    }
-
-    private void construireArbreDossiers(File dir, int depth) {
-        if (dir == null || !dir.exists()) return;
-
-        if (depth >= 0) {
-            LinearLayout layoutDossier = new LinearLayout(getContext());
-            layoutDossier.setOrientation(LinearLayout.HORIZONTAL);
-            layoutDossier.setGravity(android.view.Gravity.CENTER_VERTICAL);
-            layoutDossier.setPadding(dp(6), dp(4), dp(6), dp(4));
-            if (dir.equals(currentFolderSelected)) {
-                layoutDossier.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
-            }
-            
-            if (depth > 0) {
-                TextView tvPrefix = new TextView(getContext());
-                StringBuilder prefix = new StringBuilder();
-                for (int i = 0; i < depth; i++) prefix.append("   ");
-                tvPrefix.setText(prefix.toString());
-                layoutDossier.addView(tvPrefix);
-            }
-            
-            ImageView iconeDossier = new ImageView(getContext());
-            iconeDossier.setImageResource(R.drawable.folder_open_24px);
-            iconeDossier.setColorFilter(dir.equals(currentFolderSelected) ? Palette.iconeSurvol : Palette.iconeNormal);
-            iconeDossier.setPadding(0, 0, dp(8), 0);
-            
-            TextView tv = new TextView(getContext());
-            
-            String cleDossier = "dossier_" + dir.getName().toLowerCase();
-            String nomAffiche = Traducteur.get(cleDossier);
-            if (nomAffiche.startsWith("[")) nomAffiche = dir.getName();
-            tv.setText(nomAffiche);
-            
-            tv.setTextColor(dir.equals(currentFolderSelected) ? Palette.texteSelectionne : Palette.texteNormal);
-            tv.setPadding(0, dp(6), 0, dp(6));
-            tv.setTextSize(14f);
-            
-            layoutDossier.addView(iconeDossier);
-            layoutDossier.addView(tv);
-            
-            layoutDossier.setOnClickListener(v -> {
-                currentFolderSelected = dir;
-                currentAssetSelected = null;
-                rafraichirSectionAssetsTotale();
-            });
-            conteneurArborescenceDossiers.addView(layoutDossier);
-        }
-
-        File[] enfants = dir.listFiles();
-        if (enfants != null) {
-            java.util.Arrays.sort(enfants, (f1, f2) -> f1.getName().compareToIgnoreCase(f2.getName()));
-            for (File f : enfants) {
-                if (f.isDirectory()) construireArbreDossiers(f, depth + 1);
-            }
-        }
-    }
-
-    private void rafraichirListeAssets() {
-        if (conteneurListeAssets == null || currentFolderSelected == null) return;
-        conteneurListeAssets.removeAllViews();
-        
-        File[] fichiers = currentFolderSelected.listFiles();
-        if (fichiers != null) {
-            java.util.Arrays.sort(fichiers, (f1, f2) -> f1.getName().compareToIgnoreCase(f2.getName()));
-            for (File f : fichiers) {
-                if (!f.isDirectory()) ajouterVueAsset(f);
-            }
-        }
-    }
-
-    private void ajouterVueAsset(File f) {
-        Context context = getContext();
-        LinearLayout itemLayout = new LinearLayout(context);
-        itemLayout.setOrientation(LinearLayout.HORIZONTAL);
-        itemLayout.setPadding(dp(6), dp(6), dp(6), dp(6));
-        itemLayout.setGravity(android.view.Gravity.CENTER_VERTICAL);
-        if (f.equals(currentAssetSelected)) {
-            itemLayout.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
-        }
-        
-        boolean isImage = f.getAbsolutePath().contains("/Images/");
-        
-        if (isImage) {
-            ImageView miniature = new ImageView(context);
-            miniature.setLayoutParams(new LinearLayout.LayoutParams(dp(36), dp(36)));
-            try {
-                Bitmap bmp = BitmapFactory.decodeFile(f.getAbsolutePath());
-                miniature.setImageBitmap(bmp);
-            } catch (Exception e) {}
-            miniature.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            miniature.setPadding(0, 0, dp(8), 0);
-            itemLayout.addView(miniature);
-        }
-        
-        TextView nom = new TextView(context);
-        nom.setText(f.getName());
-        nom.setTextSize(14f);
-        nom.setTextColor(f.equals(currentAssetSelected) ? Palette.texteSelectionne : Palette.texteNormal);
-        nom.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
-        
-        itemLayout.setOnClickListener(v -> {
-            currentAssetSelected = f;
-            rafraichirListeAssets();
-        });
-        
-        itemLayout.addView(nom);
-        conteneurListeAssets.addView(itemLayout);
-    }
-
-    public void traiterImportAsset(Uri uri) {
-        Context context = getContext();
-        String nomOriginal = getFileNameFromUri(context, uri);
-        if (nomOriginal == null) nomOriginal = "asset_import";
-        
-        String nomBase = nomOriginal;
-        String extension = "";
-        int dotIdx = nomOriginal.lastIndexOf('.');
-        if (dotIdx > 0) {
-            nomBase = nomOriginal.substring(0, dotIdx);
-            extension = nomOriginal.substring(dotIdx);
-        }
-        
-        File fichierCible = genererNomFichierUnique(currentFolderSelected, nomBase, extension);
-        
-        try (InputStream in = context.getContentResolver().openInputStream(uri);
-             OutputStream out = new FileOutputStream(fichierCible)) {
-            byte[] buffer = new byte[1024];
-            int lu;
-            while ((lu = in.read(buffer)) != -1) {
-                out.write(buffer, 0, lu);
-            }
-            rafraichirSectionAssetsTotale();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    private String getFileNameFromUri(Context context, Uri uri) {
-        String result = null;
-        if (uri.getScheme() != null && uri.getScheme().equals("content")) {
-            try (Cursor cursor = context.getContentResolver().query(uri, null, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    int idx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    if(idx >= 0) result = cursor.getString(idx);
-                }
-            }
-        }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result != null ? result.lastIndexOf('/') : -1;
-            if (cut != -1) result = result.substring(cut + 1);
-        }
-        return result;
-    }
-    
-    private File genererNomFichierUnique(File dossier, String base, String extension) {
-        File f = new File(dossier, base + extension);
-        if (!f.exists()) return f;
-        
-        int index = 1;
-        while (true) {
-            f = new File(dossier, base + "_" + index + extension);
-            if (!f.exists()) return f;
-            index++;
-        }
-    }
-// bas 5
-
-// haut 6
-    private void supprimerRecursif(File fileOrDirectory) {
-        if (fileOrDirectory.isDirectory()) {
-            File[] files = fileOrDirectory.listFiles();
-            if(files != null) {
-                for (File child : files) supprimerRecursif(child);
-            }
-        }
-        fileOrDirectory.delete();
-    }
-
-    private void afficherPopupNouveauDossier(Context context) {
-        Dialog dialog = new Dialog(context);
-        dialog.setTitle(Traducteur.get("popup_nouveau_dossier"));
-        LinearLayout layoutDialog = new LinearLayout(context);
-        layoutDialog.setOrientation(LinearLayout.VERTICAL);
-        styliserDialogue(layoutDialog);
-        EditText champTexte = new EditText(context);
-        champTexte.setHint(Traducteur.get("hint_nom_dossier"));
-        styliserChampDialogue(champTexte);
-        layoutDialog.addView(champTexte);
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-        ImageButton btnValider = new ImageButton(context);
-        btnValider.setImageResource(R.drawable.save_24px);
-        styliserBoutonIcone(btnValider);
-        btnValider.setOnClickListener(v -> {
-            String nom = champTexte.getText().toString().trim();
-            if (!nom.isEmpty()) {
-                File nouveauDossier = new File(currentFolderSelected, nom);
-                if (!nouveauDossier.exists()) nouveauDossier.mkdirs();
-                rafraichirSectionAssetsTotale();
-            }
-            dialog.dismiss();
-        });
-        ImageButton btnAnnuler = new ImageButton(context);
-        btnAnnuler.setImageResource(R.drawable.undo_24px);
-        styliserBoutonIcone(btnAnnuler);
-        btnAnnuler.setOnClickListener(v -> dialog.dismiss());
-        zoneBoutons.addView(btnValider);
-        zoneBoutons.addView(btnAnnuler);
-        layoutDialog.addView(zoneBoutons);
-        dialog.setContentView(layoutDialog);
-        dialog.show();
-    }
-
-    private void afficherPopupRenommerDossier(Context context, File dir) {
-        Dialog dialog = new Dialog(context);
-        dialog.setTitle(Traducteur.get("popup_renommer_dossier"));
-        LinearLayout layoutDialog = new LinearLayout(context);
-        layoutDialog.setOrientation(LinearLayout.VERTICAL);
-        styliserDialogue(layoutDialog);
-        EditText champTexte = new EditText(context);
-        champTexte.setText(dir.getName());
-        styliserChampDialogue(champTexte);
-        layoutDialog.addView(champTexte);
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-        ImageButton btnValider = new ImageButton(context);
-        btnValider.setImageResource(R.drawable.save_24px);
-        styliserBoutonIcone(btnValider);
-        btnValider.setOnClickListener(v -> {
-            String nouveauNom = champTexte.getText().toString().trim();
-            if (!nouveauNom.isEmpty()) {
-                File newFile = new File(dir.getParentFile(), nouveauNom);
-                if (!newFile.exists()) {
-                    dir.renameTo(newFile);
-                    currentFolderSelected = newFile;
-                    rafraichirSectionAssetsTotale();
-                }
-            }
-            dialog.dismiss();
-        });
-        ImageButton btnAnnuler = new ImageButton(context);
-        btnAnnuler.setImageResource(R.drawable.undo_24px);
-        styliserBoutonIcone(btnAnnuler);
-        btnAnnuler.setOnClickListener(v -> dialog.dismiss());
-        zoneBoutons.addView(btnValider);
-        zoneBoutons.addView(btnAnnuler);
-        layoutDialog.addView(zoneBoutons);
-        dialog.setContentView(layoutDialog);
-        dialog.show();
-    }
-
-    private void afficherPopupSupprimerDossier(Context context, File dir) {
-        Dialog dialog = new Dialog(context);
-        dialog.setTitle(Traducteur.get("popup_confirmer"));
-        LinearLayout layoutDialog = new LinearLayout(context);
-        layoutDialog.setOrientation(LinearLayout.VERTICAL);
-        styliserDialogue(layoutDialog);
-        TextView txtMessage = new TextView(context);
-        txtMessage.setText(Traducteur.get("msg_supprimer_dossier"));
-        txtMessage.setTextColor(Palette.texteNormal);
-        txtMessage.setTextSize(15f);
-        txtMessage.setPadding(0, 0, 0, dp(14));
-        layoutDialog.addView(txtMessage);
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-        ImageButton btnOui = new ImageButton(context);
-        btnOui.setImageResource(R.drawable.save_24px);
-        styliserBoutonIcone(btnOui);
-        btnOui.setOnClickListener(v -> {
-            supprimerRecursif(dir);
-            currentFolderSelected = new File(rootAssetsDir, "Images");
-            currentAssetSelected = null;
-            rafraichirSectionAssetsTotale();
-            dialog.dismiss();
-        });
-        ImageButton btnNon = new ImageButton(context);
-        btnNon.setImageResource(R.drawable.undo_24px);
-        styliserBoutonIcone(btnNon);
-        btnNon.setOnClickListener(v -> dialog.dismiss());
-        zoneBoutons.addView(btnOui);
-        zoneBoutons.addView(btnNon);
-        layoutDialog.addView(zoneBoutons);
-        dialog.setContentView(layoutDialog);
-        dialog.show();
-    }
-
-    private void afficherPopupRenommerAsset(Context context, File f) {
-        Dialog dialog = new Dialog(context);
-        dialog.setTitle(Traducteur.get("popup_renommer"));
-        LinearLayout layoutDialog = new LinearLayout(context);
-        layoutDialog.setOrientation(LinearLayout.VERTICAL);
-        styliserDialogue(layoutDialog);
-        EditText champTexte = new EditText(context);
-        champTexte.setText(f.getName());
-        styliserChampDialogue(champTexte);
-        layoutDialog.addView(champTexte);
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-        ImageButton btnValider = new ImageButton(context);
-        btnValider.setImageResource(R.drawable.save_24px);
-        styliserBoutonIcone(btnValider);
-        btnValider.setOnClickListener(v -> {
-            String nouveauNom = champTexte.getText().toString().trim();
-            if (!nouveauNom.isEmpty()) {
-                File newFile = new File(f.getParentFile(), nouveauNom);
-                if (!newFile.exists()) {
-                    f.renameTo(newFile);
-                    currentAssetSelected = newFile;
-                    rafraichirSectionAssetsTotale();
-                }
-            }
-            dialog.dismiss();
-        });
-        ImageButton btnAnnuler = new ImageButton(context);
-        btnAnnuler.setImageResource(R.drawable.undo_24px);
-        styliserBoutonIcone(btnAnnuler);
-        btnAnnuler.setOnClickListener(v -> dialog.dismiss());
-        zoneBoutons.addView(btnValider);
-        zoneBoutons.addView(btnAnnuler);
-        layoutDialog.addView(zoneBoutons);
-        dialog.setContentView(layoutDialog);
-        dialog.show();
-    }
-
-    private void afficherPopupSupprimerAsset(Context context, File f) {
-        Dialog dialog = new Dialog(context);
-        dialog.setTitle(Traducteur.get("popup_confirmer"));
-        LinearLayout layoutDialog = new LinearLayout(context);
-        layoutDialog.setOrientation(LinearLayout.VERTICAL);
-        styliserDialogue(layoutDialog);
-        TextView txtMessage = new TextView(context);
-        txtMessage.setText(Traducteur.get("msg_supprimer_asset"));
-        txtMessage.setTextColor(Palette.texteNormal);
-        txtMessage.setTextSize(15f);
-        txtMessage.setPadding(0, 0, 0, dp(14));
-        layoutDialog.addView(txtMessage);
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
-        ImageButton btnOui = new ImageButton(context);
-        btnOui.setImageResource(R.drawable.save_24px);
-        styliserBoutonIcone(btnOui);
-        btnOui.setOnClickListener(v -> {
-            f.delete();
-            currentAssetSelected = null;
-            rafraichirSectionAssetsTotale();
-            dialog.dismiss();
-        });
-        ImageButton btnNon = new ImageButton(context);
-        btnNon.setImageResource(R.drawable.undo_24px);
-        styliserBoutonIcone(btnNon);
-        btnNon.setOnClickListener(v -> dialog.dismiss());
-        zoneBoutons.addView(btnOui);
-        zoneBoutons.addView(btnNon);
-        layoutDialog.addView(zoneBoutons);
-        dialog.setContentView(layoutDialog);
-        dialog.show();
-    }
-// bas 6
-
+// bas 4    
 // haut 7
     private void afficherEditeurTexteGeant(Context context) {
         Dialog dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -1220,9 +604,9 @@ public void rafraichirArborescence() {
         
         if (var == variableSelectionnee) {
             nomVariable.setTextColor(Palette.texteSelectionne);
-            nomVariable.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
+            nomVariable.setBackground(fond(Palette.fondSelection, Palette.bordure, 8));
         } else {
-            nomVariable.setTextColor(var.scope.equals("GLOBALE") ? Color.parseColor("#ADD8E6") : Color.parseColor("#90EE90"));
+            nomVariable.setTextColor(var.scope.equals("GLOBALE") ? Palette.accentBleu : Palette.accentTeal);
         }
         
         nomVariable.setPadding(dp(10), dp(8), dp(10), dp(8));
@@ -1237,6 +621,7 @@ public void rafraichirArborescence() {
         conteneurVariables.addView(conteneurLigne);
     }
 // bas 7
+
 
 // haut 8
     private void afficherPopupCreerVariable(Context context) {
@@ -1486,8 +871,11 @@ public void rafraichirArborescence() {
         conteneurFonctions.setPadding(0, 0, 0, dp(8));
         contenu.addView(conteneurFonctions);
 
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout ligneBoutons1 = new LinearLayout(context);
+        ligneBoutons1.setOrientation(LinearLayout.HORIZONTAL);
+
+        LinearLayout ligneBoutons2 = new LinearLayout(context);
+        ligneBoutons2.setOrientation(LinearLayout.HORIZONTAL);
 
         ImageButton btnCreer = new ImageButton(context);
         btnCreer.setImageResource(R.drawable.add_24px);
@@ -1522,12 +910,13 @@ public void rafraichirArborescence() {
             if (fonctionSelectionnee != null) afficherPopupSupprimerFonction(context, fonctionSelectionnee);
         });
 
-        zoneBoutons.addView(btnCreer);
-        zoneBoutons.addView(btnEditer);
-        zoneBoutons.addView(btnRenommer);
-        zoneBoutons.addView(btnSupprimer);
+        ligneBoutons1.addView(btnCreer);
+        ligneBoutons1.addView(btnEditer);
+        ligneBoutons2.addView(btnRenommer);
+        ligneBoutons2.addView(btnSupprimer);
 
-        contenu.addView(zoneBoutons);
+        contenu.addView(ligneBoutons1);
+        contenu.addView(ligneBoutons2);
         rafraichirFonctions();
 
         btnTitre.setOnClickListener(v -> {
@@ -1559,9 +948,9 @@ public void rafraichirArborescence() {
                 nomView.setText("ƒ " + nomFonc);
                 if (nomFonc.equals(fonctionSelectionnee)) {
                     nomView.setTextColor(Palette.texteSelectionne);
-                    nomView.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
+                    nomView.setBackground(fond(Palette.fondSelection, Palette.bordure, 8));
                 } else {
-                    nomView.setTextColor(Color.parseColor("#E040FB")); 
+                    nomView.setTextColor(Palette.accentAmbre);
                 }
                 nomView.setPadding(dp(10), dp(8), dp(10), dp(8));
                 nomView.setTextSize(14f);
@@ -1576,6 +965,7 @@ public void rafraichirArborescence() {
         }
     }
 // bas 9
+    
 
 // haut 10
     private void afficherPopupCreerFonction(Context context) {

@@ -23,10 +23,10 @@ public class InspecteurProprietes extends LinearLayout {
 
     private ScrollView scrollInspecteur;
     private TextView titreInspecteur;
-    private Button boutonMasquer;
-    private LinearLayout.LayoutParams paramsOuvert;
-    private LinearLayout.LayoutParams paramsFerme;
-
+    private ImageButton boutonMasquer;
+    private LinearLayout enteteInspecteur;
+    private FrameLayout.LayoutParams paramsOuvert;
+    private FrameLayout.LayoutParams paramsFerme;
     private TextView texteInfo;
     private LinearLayout blocProprietes;
     private EditText champNom;
@@ -52,13 +52,16 @@ public class InspecteurProprietes extends LinearLayout {
     private Button btnSelectStyleTitre;
 
     private LinearLayout blocImage;
-    private Button btnChargerImage, btnSupprimerImage;
+    private Button btnChargerImage;
+    private ImageButton btnSupprimerImage;
     private CheckBox cbFondColore;
     private CheckBox cbRamassable, cbZoneDeClic, cbDeplacable;
 
     private LinearLayout blocBouton;
-    private Button btnChargerImagePresse, btnSupprimerImagePresse;
-    private Button btnChargerImageDesactive, btnSupprimerImageDesactive;
+    private Button btnChargerImagePresse;
+    private ImageButton btnSupprimerImagePresse;
+    private Button btnChargerImageDesactive;
+    private ImageButton btnSupprimerImageDesactive;
     private CheckBox cbDesactive;
 
     private LinearLayout blocJoystick;
@@ -177,6 +180,23 @@ public class InspecteurProprietes extends LinearLayout {
         b.setLayoutParams(lp);
     }
 
+    private void styliserBoutonFlexible(Button b) {
+        styliserBouton(b);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        lp.setMargins(dp(3), dp(4), dp(3), dp(4));
+        b.setLayoutParams(lp);
+    }
+
+    private void styliserBoutonIcone(ImageButton btn) {
+        btn.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
+        btn.setPadding(dp(10), dp(10), dp(10), dp(10));
+        btn.setColorFilter(Palette.iconeNormal);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(44), dp(44));
+        lp.setMargins(dp(3), dp(4), dp(3), dp(4));
+        btn.setLayoutParams(lp);
+    }
+
     private void styliserCase(CheckBox cb) {
         cb.setTextColor(Palette.texteNormal);
         cb.setTextSize(14f);
@@ -188,46 +208,35 @@ public class InspecteurProprietes extends LinearLayout {
         cb.setLayoutParams(lp);
     }
 // bas 1
-
 // haut 2
     private void initialiserInterface(Context context) {
         this.setOrientation(LinearLayout.VERTICAL);
         this.setBackgroundColor(Palette.fondPanneaux);
 
-        paramsOuvert = new LinearLayout.LayoutParams(500, LinearLayout.LayoutParams.MATCH_PARENT);
-        paramsFerme = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        paramsOuvert = new FrameLayout.LayoutParams(dp(260), FrameLayout.LayoutParams.MATCH_PARENT);
+        paramsOuvert.gravity = Gravity.END | Gravity.TOP;
+        paramsFerme = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        paramsFerme.gravity = Gravity.END | Gravity.TOP;
         this.setLayoutParams(paramsOuvert);
-
-        LinearLayout enteteInspecteur = new LinearLayout(context);
+        // haut
+        enteteInspecteur = new LinearLayout(context);
         enteteInspecteur.setOrientation(LinearLayout.HORIZONTAL);
-        enteteInspecteur.setPadding(dp(12), dp(10), dp(12), dp(10));
+        enteteInspecteur.setPadding(dp(4), dp(4), dp(4), dp(4));
         enteteInspecteur.setBackground(fond(Palette.enTeteDialogues, Palette.bordure, 0));
         enteteInspecteur.setGravity(Gravity.CENTER_VERTICAL);
 
-        titreInspecteur = new TextView(context);
-        titreInspecteur.setText(Traducteur.get("insp_titre"));
-        titreInspecteur.setTextSize(17f);
-        titreInspecteur.setLetterSpacing(0.08f);
-        titreInspecteur.setTypeface(null, android.graphics.Typeface.BOLD);
-        titreInspecteur.setGravity(Gravity.CENTER_VERTICAL);
-        titreInspecteur.setTextColor(Palette.texteSelectionne);
-        LinearLayout.LayoutParams paramsTitre = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        titreInspecteur.setLayoutParams(paramsTitre);
-
-        boutonMasquer = new Button(context);
-        boutonMasquer.setText(">");
-        boutonMasquer.setAllCaps(false);
-        boutonMasquer.setTextColor(Palette.iconeNormal);
+        boutonMasquer = new ImageButton(context);
+        boutonMasquer.setImageResource(R.drawable.chevron_right_24px);
+        boutonMasquer.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        boutonMasquer.setColorFilter(Palette.iconeNormal);
         boutonMasquer.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
-        boutonMasquer.setPadding(dp(10), dp(6), dp(10), dp(6));
-        LinearLayout.LayoutParams paramsMasquer = new LinearLayout.LayoutParams(dp(44), dp(40));
+        boutonMasquer.setPadding(dp(8), dp(8), dp(8), dp(8));
+        LinearLayout.LayoutParams paramsMasquer = new LinearLayout.LayoutParams(dp(40), dp(40));
         boutonMasquer.setLayoutParams(paramsMasquer);
 
-        enteteInspecteur.addView(titreInspecteur);
         enteteInspecteur.addView(boutonMasquer);
         this.addView(enteteInspecteur);
-
+        // bas 
         scrollInspecteur = new ScrollView(context);
         LinearLayout contenuInspecteur = new LinearLayout(context);
         contenuInspecteur.setOrientation(LinearLayout.VERTICAL);
@@ -499,7 +508,6 @@ public class InspecteurProprietes extends LinearLayout {
                 }).show();
         });
 // bas 2
-
 // haut 3
         blocTexte = new LinearLayout(context);
         blocTexte.setOrientation(LinearLayout.VERTICAL);
@@ -512,8 +520,6 @@ public class InspecteurProprietes extends LinearLayout {
         
         btnSelectStyleTitre = new Button(context);
         btnSelectStyleTitre.setText(Traducteur.get("insp_btn_select_style"));
-        btnSelectStyleTitre.setBackground(fond(Color.parseColor("#E65100"), Palette.bordure, 8));
-        btnSelectStyleTitre.setTextColor(Color.WHITE);
         styliserBouton(btnSelectStyleTitre);
         blocTexte.addView(btnSelectStyleTitre);
 
@@ -615,15 +621,20 @@ public class InspecteurProprietes extends LinearLayout {
         styliserSousTitre(sepImage);
         blocImage.addView(sepImage);
 
+        LinearLayout ligneImage = new LinearLayout(context);
+        ligneImage.setOrientation(LinearLayout.HORIZONTAL);
+
         btnChargerImage = new Button(context);
         btnChargerImage.setText(Traducteur.get("insp_btn_charger_image"));
-        styliserBouton(btnChargerImage);
-        blocImage.addView(btnChargerImage);
+        styliserBoutonFlexible(btnChargerImage);
+        ligneImage.addView(btnChargerImage);
 
-        btnSupprimerImage = new Button(context);
-        btnSupprimerImage.setText(Traducteur.get("insp_btn_supprimer_image"));
-        styliserBouton(btnSupprimerImage);
-        blocImage.addView(btnSupprimerImage);
+        btnSupprimerImage = new ImageButton(context);
+        btnSupprimerImage.setImageResource(R.drawable.delete_24px);
+        styliserBoutonIcone(btnSupprimerImage);
+        ligneImage.addView(btnSupprimerImage);
+
+        blocImage.addView(ligneImage);
 
         cbFondColore = new CheckBox(context);
         cbFondColore.setText(Traducteur.get("insp_cb_fond_colore"));
@@ -641,25 +652,35 @@ public class InspecteurProprietes extends LinearLayout {
         styliserSousTitre(sepBouton);
         blocBouton.addView(sepBouton);
 
+        LinearLayout lignePresse = new LinearLayout(context);
+        lignePresse.setOrientation(LinearLayout.HORIZONTAL);
+
         btnChargerImagePresse = new Button(context);
         btnChargerImagePresse.setText(Traducteur.get("insp_btn_charger_image_presse"));
-        styliserBouton(btnChargerImagePresse);
-        blocBouton.addView(btnChargerImagePresse);
+        styliserBoutonFlexible(btnChargerImagePresse);
+        lignePresse.addView(btnChargerImagePresse);
 
-        btnSupprimerImagePresse = new Button(context);
-        btnSupprimerImagePresse.setText(Traducteur.get("insp_btn_suppr_image_presse"));
-        styliserBouton(btnSupprimerImagePresse);
-        blocBouton.addView(btnSupprimerImagePresse);
+        btnSupprimerImagePresse = new ImageButton(context);
+        btnSupprimerImagePresse.setImageResource(R.drawable.delete_24px);
+        styliserBoutonIcone(btnSupprimerImagePresse);
+        lignePresse.addView(btnSupprimerImagePresse);
+
+        blocBouton.addView(lignePresse);
+
+        LinearLayout ligneDesac = new LinearLayout(context);
+        ligneDesac.setOrientation(LinearLayout.HORIZONTAL);
 
         btnChargerImageDesactive = new Button(context);
         btnChargerImageDesactive.setText(Traducteur.get("insp_btn_charger_image_desac"));
-        styliserBouton(btnChargerImageDesactive);
-        blocBouton.addView(btnChargerImageDesactive);
+        styliserBoutonFlexible(btnChargerImageDesactive);
+        ligneDesac.addView(btnChargerImageDesactive);
 
-        btnSupprimerImageDesactive = new Button(context);
-        btnSupprimerImageDesactive.setText(Traducteur.get("insp_btn_suppr_image_desac"));
-        styliserBouton(btnSupprimerImageDesactive);
-        blocBouton.addView(btnSupprimerImageDesactive);
+        btnSupprimerImageDesactive = new ImageButton(context);
+        btnSupprimerImageDesactive.setImageResource(R.drawable.delete_24px);
+        styliserBoutonIcone(btnSupprimerImageDesactive);
+        ligneDesac.addView(btnSupprimerImageDesactive);
+
+        blocBouton.addView(ligneDesac);
 
         cbDesactive = new CheckBox(context);
         cbDesactive.setText(Traducteur.get("insp_cb_desactive"));
@@ -733,7 +754,7 @@ public class InspecteurProprietes extends LinearLayout {
         btnEditerSceneLiee = new Button(context);
         btnEditerSceneLiee.setText(Traducteur.get("insp_btn_editer_scene_liee"));
         styliserBouton(btnEditerSceneLiee);
-        btnEditerSceneLiee.setTextColor(Color.parseColor("#4CAF50")); 
+        btnEditerSceneLiee.setTextColor(Palette.accentBleu);
         blocSceneInstance.addView(btnEditerSceneLiee);
         
         conteurVariablesSurcharge = new LinearLayout(context);
@@ -927,7 +948,7 @@ public class InspecteurProprietes extends LinearLayout {
         boutonSupprimer.setAllCaps(false);
         boutonSupprimer.setTextSize(15f);
         boutonSupprimer.setTextColor(Palette.texteNormal);
-        boutonSupprimer.setBackground(fond(Color.parseColor("#8B3A3A"), Palette.bordure, 10));
+        boutonSupprimer.setBackground(fond(Palette.boutonNormal, Palette.bordure, 10));
         boutonSupprimer.setPadding(dp(14), dp(11), dp(14), dp(11));
         boutonSupprimer.setOnClickListener(v -> {
             if (objetCourant == null) { Toast.makeText(context, Traducteur.get("insp_erreur_aucun_objet"), Toast.LENGTH_SHORT).show(); return; }
@@ -951,21 +972,21 @@ public class InspecteurProprietes extends LinearLayout {
         contenuInspecteur.addView(boutonSupprimer);
         scrollInspecteur.addView(contenuInspecteur);
         this.addView(scrollInspecteur);
-
+        // btn
         boutonMasquer.setOnClickListener(v -> {
             if (scrollInspecteur.getVisibility() == View.VISIBLE) {
                 scrollInspecteur.setVisibility(View.GONE);
-                titreInspecteur.setVisibility(View.GONE);
-                boutonMasquer.setText("<");
+                enteteInspecteur.setBackgroundColor(Color.TRANSPARENT);
+                boutonMasquer.setImageResource(R.drawable.chevron_left_24px);
                 this.setLayoutParams(paramsFerme);
             } else {
                 scrollInspecteur.setVisibility(View.VISIBLE);
-                titreInspecteur.setVisibility(View.VISIBLE);
-                boutonMasquer.setText(">");
+                enteteInspecteur.setBackground(fond(Palette.enTeteDialogues, Palette.bordure, 0));
+                boutonMasquer.setImageResource(R.drawable.chevron_right_24px);
                 this.setLayoutParams(paramsOuvert);
             }
         });
-        
+        // btn 
         btnSelectStyleTitre.setOnClickListener(v -> {
             if (objetCourant == null) return;
             if (cheminProjet == null) return;
@@ -1882,7 +1903,6 @@ public class InspecteurProprietes extends LinearLayout {
         miseAJourEnCours = false;
     }
 // bas 8
-
 // haut 9
     private void rafraichirVariablesObjet(Context context) {
         conteneurListeVariables.removeAllViews();
@@ -1931,8 +1951,8 @@ public class InspecteurProprietes extends LinearLayout {
             
             Button btnSuppr = new Button(context);
             btnSuppr.setText("X");
-            btnSuppr.setTextColor(Color.WHITE);
-            btnSuppr.setBackground(fond(Color.parseColor("#8B3A3A"), Palette.bordure, 8));
+            btnSuppr.setTextColor(Palette.texteNormal);
+            btnSuppr.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
             btnSuppr.setPadding(dp(8), dp(4), dp(8), dp(4));
             LinearLayout.LayoutParams paramsBtn = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             paramsBtn.setMargins(dp(4), 0, 0, 0);
@@ -2002,30 +2022,3 @@ public class InspecteurProprietes extends LinearLayout {
     }
 }
 // bas 9
-
-
-
-
-
-
-
-    
-
-
-
-    
-
-        
-
-        
-
-
-
-
-        
-
-
-
-        
-
-
