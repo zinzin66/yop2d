@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import android.widget.FrameLayout;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -43,9 +44,10 @@ public class PanneauRessources extends LinearLayout {
     private String cheminProjet;
 
     private ScrollView scrollPanneau;
-    private LinearLayout.LayoutParams paramsOuvert;
-    private LinearLayout.LayoutParams paramsFerme;
-    private Button boutonMasquer;
+    private FrameLayout.LayoutParams paramsOuvert;
+    private FrameLayout.LayoutParams paramsFerme;
+    private ImageButton boutonMasquer;
+    private LinearLayout entetePanneau;
 
     public PanneauRessources(Context context, CanvasEditeur canvasEditeur, String cheminProjet) {
         super(context);
@@ -66,36 +68,26 @@ public class PanneauRessources extends LinearLayout {
             if (!rootFonctionsDir.exists()) rootFonctionsDir.mkdirs(); 
         }
 
-        paramsOuvert = new LinearLayout.LayoutParams(500, LinearLayout.LayoutParams.MATCH_PARENT);
-        paramsFerme = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        paramsOuvert = new FrameLayout.LayoutParams(dp(260), FrameLayout.LayoutParams.MATCH_PARENT);
+        paramsOuvert.gravity = Gravity.START | Gravity.TOP;
+        paramsFerme = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        paramsFerme.gravity = Gravity.START | Gravity.TOP;
         this.setLayoutParams(paramsOuvert);
 
-        LinearLayout entetePanneau = new LinearLayout(context);
+        entetePanneau = new LinearLayout(context);
         entetePanneau.setOrientation(LinearLayout.HORIZONTAL);
-        entetePanneau.setPadding(dp(12), dp(10), dp(12), dp(10));
-        entetePanneau.setBackgroundColor(Palette.enTeteDialogues);
+        entetePanneau.setPadding(dp(4), dp(4), dp(4), dp(4));
         entetePanneau.setGravity(Gravity.CENTER_VERTICAL);
 
-        boutonMasquer = new Button(context);
-        boutonMasquer.setText("<"); 
-        boutonMasquer.setAllCaps(false);
-        boutonMasquer.setTextColor(Palette.iconeNormal);
+        boutonMasquer = new ImageButton(context);
+        boutonMasquer.setImageResource(R.drawable.chevron_left_24px);
+        boutonMasquer.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        boutonMasquer.setColorFilter(Palette.iconeNormal);
         boutonMasquer.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
-        boutonMasquer.setPadding(dp(10), dp(6), dp(10), dp(6));
-        boutonMasquer.setLayoutParams(new LinearLayout.LayoutParams(dp(44), dp(40)));
-
-        TextView titrePanneau = new TextView(context);
-        titrePanneau.setText(Traducteur.get("panneau_ress_titre"));
-        titrePanneau.setTextSize(17f);
-        titrePanneau.setLetterSpacing(0.08f);
-        titrePanneau.setTypeface(null, android.graphics.Typeface.BOLD);
-        titrePanneau.setTextColor(Palette.texteSelectionne);
-        titrePanneau.setPadding(dp(10), 0, 0, 0);
-        LinearLayout.LayoutParams paramsTitre = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
-        titrePanneau.setLayoutParams(paramsTitre);
+        boutonMasquer.setPadding(dp(8), dp(8), dp(8), dp(8));
+        boutonMasquer.setLayoutParams(new LinearLayout.LayoutParams(dp(40), dp(40)));
 
         entetePanneau.addView(boutonMasquer);
-        entetePanneau.addView(titrePanneau);
         addView(entetePanneau);
 
         scrollPanneau = new ScrollView(context);
@@ -106,7 +98,6 @@ public class PanneauRessources extends LinearLayout {
         contenuScroll.setPadding(dp(8), dp(8), dp(8), dp(8));
 
         contenuScroll.addView(creerSectionScenes(context));
-        // L'appel à creerSectionObjets a été supprimé ici
         contenuScroll.addView(creerSectionArborescence(context));
         contenuScroll.addView(creerSectionAssets(context));
         contenuScroll.addView(creerSectionVariables(context));
@@ -114,23 +105,26 @@ public class PanneauRessources extends LinearLayout {
 
         scrollPanneau.addView(contenuScroll);
         addView(scrollPanneau);
-
+        // btn 
         boutonMasquer.setOnClickListener(v -> {
             if (scrollPanneau.getVisibility() == View.VISIBLE) {
                 scrollPanneau.setVisibility(View.GONE);
-                titrePanneau.setVisibility(View.GONE);
-                boutonMasquer.setText(">");
+                entetePanneau.setBackgroundColor(Color.TRANSPARENT);
+                this.setBackgroundColor(Color.TRANSPARENT);
+                boutonMasquer.setImageResource(R.drawable.chevron_right_24px);
                 this.setLayoutParams(paramsFerme);
             } else {
                 scrollPanneau.setVisibility(View.VISIBLE);
-                titrePanneau.setVisibility(View.VISIBLE);
-                boutonMasquer.setText("<");
+                entetePanneau.setBackgroundColor(Palette.enTeteDialogues);
+                this.setBackgroundColor(Palette.fondPanneaux);
+                boutonMasquer.setImageResource(R.drawable.chevron_left_24px);
                 this.setLayoutParams(paramsOuvert);
             }
         });
+        // btn 
+        entetePanneau.setBackgroundColor(Palette.enTeteDialogues);
     }
 // bas 1
-
 // haut 2
     private int dp(int valeur) {
         return (int) (valeur * getResources().getDisplayMetrics().density);
@@ -164,9 +158,9 @@ public class PanneauRessources extends LinearLayout {
 
     private void styliserBoutonIcone(ImageButton btn) {
         btn.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
-        btn.setPadding(dp(12), dp(12), dp(12), dp(12));
+        btn.setPadding(dp(10), dp(10), dp(10), dp(10));
         btn.setColorFilter(Palette.iconeNormal);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(44), dp(44));
         lp.setMargins(dp(4), dp(4), dp(4), dp(4));
         btn.setLayoutParams(lp);
     }
@@ -234,7 +228,7 @@ public class PanneauRessources extends LinearLayout {
                 nomScene.setText(s.nom);
                 if (s == editeur.sceneActive) {
                     nomScene.setTextColor(Palette.texteSelectionne);
-                    nomScene.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
+                    nomScene.setBackground(fond(Palette.fondSelection, Palette.bordure, 8));
                 } else {
                     nomScene.setTextColor(Palette.texteNormal);
                 }
@@ -321,12 +315,12 @@ public class PanneauRessources extends LinearLayout {
                 ligne.setGravity(Gravity.CENTER_VERTICAL);
                 ligne.setPadding(dp(10), dp(9), dp(10), dp(9));
                 if (obj == objetSelectionne) {
-                    ligne.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
+                    ligne.setBackground(fond(Palette.fondSelection, Palette.bordure, 8));
                 }
 
                 ImageView icone = new ImageView(getContext());
                 icone.setImageResource(iconePourType(obj.type));
-                icone.setColorFilter(obj == objetSelectionne ? Palette.iconeSurvol : Palette.iconeNormal);
+                icone.setColorFilter(obj == objetSelectionne ? Palette.accentTeal : Palette.accentBleu);
                 LinearLayout.LayoutParams lpIcone = new LinearLayout.LayoutParams(dp(16), dp(16));
                 lpIcone.setMargins(0, 0, dp(6), 0);
                 icone.setLayoutParams(lpIcone);
@@ -352,7 +346,7 @@ public class PanneauRessources extends LinearLayout {
                         final Scene sceneLieeFinale = sceneLiee;
                         TextView txtSceneLiee = new TextView(getContext());
                         txtSceneLiee.setText(" → " + sceneLiee.nom);
-                        txtSceneLiee.setTextColor(Color.parseColor("#64B5F6"));
+                        txtSceneLiee.setTextColor(Palette.accentBleu);
                         txtSceneLiee.setTextSize(13f);
                         txtSceneLiee.setPadding(dp(4), 0, 0, 0);
                         txtSceneLiee.setOnClickListener(v -> editeur.changerScene(sceneLieeFinale));
@@ -405,8 +399,7 @@ public class PanneauRessources extends LinearLayout {
         section.addView(btnTitre);
         return section;
     }
-// bas 4
-
+// bas 4    
 // haut 7
     private void afficherEditeurTexteGeant(Context context) {
         Dialog dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
@@ -611,9 +604,9 @@ public class PanneauRessources extends LinearLayout {
         
         if (var == variableSelectionnee) {
             nomVariable.setTextColor(Palette.texteSelectionne);
-            nomVariable.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
+            nomVariable.setBackground(fond(Palette.fondSelection, Palette.bordure, 8));
         } else {
-            nomVariable.setTextColor(var.scope.equals("GLOBALE") ? Color.parseColor("#ADD8E6") : Color.parseColor("#90EE90"));
+            nomVariable.setTextColor(var.scope.equals("GLOBALE") ? Palette.accentBleu : Palette.accentTeal);
         }
         
         nomVariable.setPadding(dp(10), dp(8), dp(10), dp(8));
@@ -628,6 +621,7 @@ public class PanneauRessources extends LinearLayout {
         conteneurVariables.addView(conteneurLigne);
     }
 // bas 7
+
 
 // haut 8
     private void afficherPopupCreerVariable(Context context) {
@@ -877,8 +871,11 @@ public class PanneauRessources extends LinearLayout {
         conteneurFonctions.setPadding(0, 0, 0, dp(8));
         contenu.addView(conteneurFonctions);
 
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout ligneBoutons1 = new LinearLayout(context);
+        ligneBoutons1.setOrientation(LinearLayout.HORIZONTAL);
+
+        LinearLayout ligneBoutons2 = new LinearLayout(context);
+        ligneBoutons2.setOrientation(LinearLayout.HORIZONTAL);
 
         ImageButton btnCreer = new ImageButton(context);
         btnCreer.setImageResource(R.drawable.add_24px);
@@ -913,12 +910,13 @@ public class PanneauRessources extends LinearLayout {
             if (fonctionSelectionnee != null) afficherPopupSupprimerFonction(context, fonctionSelectionnee);
         });
 
-        zoneBoutons.addView(btnCreer);
-        zoneBoutons.addView(btnEditer);
-        zoneBoutons.addView(btnRenommer);
-        zoneBoutons.addView(btnSupprimer);
+        ligneBoutons1.addView(btnCreer);
+        ligneBoutons1.addView(btnEditer);
+        ligneBoutons2.addView(btnRenommer);
+        ligneBoutons2.addView(btnSupprimer);
 
-        contenu.addView(zoneBoutons);
+        contenu.addView(ligneBoutons1);
+        contenu.addView(ligneBoutons2);
         rafraichirFonctions();
 
         btnTitre.setOnClickListener(v -> {
@@ -950,9 +948,9 @@ public class PanneauRessources extends LinearLayout {
                 nomView.setText("ƒ " + nomFonc);
                 if (nomFonc.equals(fonctionSelectionnee)) {
                     nomView.setTextColor(Palette.texteSelectionne);
-                    nomView.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
+                    nomView.setBackground(fond(Palette.fondSelection, Palette.bordure, 8));
                 } else {
-                    nomView.setTextColor(Color.parseColor("#E040FB")); 
+                    nomView.setTextColor(Palette.accentAmbre);
                 }
                 nomView.setPadding(dp(10), dp(8), dp(10), dp(8));
                 nomView.setTextSize(14f);
@@ -967,6 +965,7 @@ public class PanneauRessources extends LinearLayout {
         }
     }
 // bas 9
+    
 
 // haut 10
     private void afficherPopupCreerFonction(Context context) {

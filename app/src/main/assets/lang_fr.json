@@ -583,7 +583,14 @@
 "titre_dossiers": "Dossiers",
 "hint_rechercher_asset": "Rechercher un fichier...",
 "erreur_lecture_son": "Impossible de lire ce fichier audio",
-"cat_textes": "Textes"
+"cat_textes": "Textes",
+  "panneau_ress_assets": "Assets",
+"btn_gerer_animations": "Animations",
+  "cat_interactifs": "Interactifs",
+"obj_prefix_barre_progression": "BarreProg",
+  "btn_ouvrir_dialogues": "Texte",
+"btn_gerer_animations": "Animation",
+"btn_gerer_styles": "Titre"
   
   
   

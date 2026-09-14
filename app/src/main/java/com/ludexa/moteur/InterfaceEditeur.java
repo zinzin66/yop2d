@@ -152,8 +152,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         layoutPrincipal = new LinearLayout(this);
         layoutPrincipal.setOrientation(LinearLayout.VERTICAL);
         layoutPrincipal.setBackgroundColor(Palette.fondNormal);
-        layoutPrincipal.setPadding(dp(8), dp(8), dp(8), dp(8));
-
+        layoutPrincipal.setPadding(0, dp(8), 0, dp(8));
         LinearLayout bandeauHaut = new LinearLayout(this);
         bandeauHaut.setOrientation(LinearLayout.HORIZONTAL);
         bandeauHaut.setGravity(Gravity.CENTER_VERTICAL);
@@ -225,10 +224,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         bandeauHaut.addView(separateurVertical());
 // bas 1
-
-
-
-// haut 2
+   // haut 2
         listeScenes = new ArrayList<>();
         if (cheminProjet != null) {
             try {
@@ -343,9 +339,8 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
             }
         }
 
-        LinearLayout.LayoutParams paramsCentre = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
-        paramsCentre.setMargins(dp(8), 0, dp(8), 0);
+        FrameLayout.LayoutParams paramsCentre = new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
         canvasEditeur.setLayoutParams(paramsCentre);
 
         ImageButton boutonZoomMoins = new ImageButton(this);
@@ -462,8 +457,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         boutonPlay.setOnClickListener(v -> basculerVersJeu());
         bandeauHaut.addView(boutonPlay);
 
-        LinearLayout zoneMilieu = new LinearLayout(this);
-        zoneMilieu.setOrientation(LinearLayout.HORIZONTAL);
+        FrameLayout zoneMilieu = new FrameLayout(this);
         LinearLayout.LayoutParams paramsMilieu = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f);
         paramsMilieu.setMargins(0, dp(8), 0, 0);
@@ -474,8 +468,8 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         menuInspecteur.setCheminProjet(cheminProjet); 
         canvasEditeur.setInspecteur(menuInspecteur);
         
-        zoneMilieu.addView(panneauRessources);
         zoneMilieu.addView(canvasEditeur);
+        zoneMilieu.addView(panneauRessources);
         zoneMilieu.addView(menuInspecteur);
 
         layoutPrincipal.addView(bandeauHaut);
@@ -506,11 +500,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
             }
         }
     }
-// bas 2
-
-
-
-        
+// bas 2     
 // haut 3
     // ici
     private void afficherMenuScene(View ancre) {
@@ -551,7 +541,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         Button btnSupprimer = new Button(this);
         btnSupprimer.setText(Traducteur.get("popup_supprimer_scene_titre"));
-        btnSupprimer.setTextColor(Color.parseColor("#E57373"));
+        btnSupprimer.setTextColor(Palette.texteNormal);
         btnSupprimer.setBackground(fond(Palette.boutonNormal, 8, Palette.bordure, 1));
         btnSupprimer.setAllCaps(false);
         LinearLayout.LayoutParams lpBtnSuppr = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -766,7 +756,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         boutonStop.setImageResource(R.drawable.stop_circle_24px);
         boutonStop.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         boutonStop.setPadding(dp(6), dp(6), dp(6), dp(6));
-        boutonStop.setBackground(fond(Color.parseColor("#C0392B"), 6, Palette.bordure, 1));
+        boutonStop.setBackground(fond(Palette.boutonNormal, 6, Palette.bordure, 1));
         Palette.appliquerCouleurIcone(boutonStop, Palette.iconeNormal);
         boutonStop.setOnClickListener(v -> revenirAEditeur());
 
