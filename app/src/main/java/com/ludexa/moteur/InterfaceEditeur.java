@@ -541,7 +541,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         Button btnSupprimer = new Button(this);
         btnSupprimer.setText(Traducteur.get("popup_supprimer_scene_titre"));
-        btnSupprimer.setTextColor(Color.parseColor("#E57373"));
+        btnSupprimer.setTextColor(Palette.texteNormal);
         btnSupprimer.setBackground(fond(Palette.boutonNormal, 8, Palette.bordure, 1));
         btnSupprimer.setAllCaps(false);
         LinearLayout.LayoutParams lpBtnSuppr = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -756,7 +756,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         boutonStop.setImageResource(R.drawable.stop_circle_24px);
         boutonStop.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         boutonStop.setPadding(dp(6), dp(6), dp(6), dp(6));
-        boutonStop.setBackground(fond(Color.parseColor("#C0392B"), 6, Palette.bordure, 1));
+        boutonStop.setBackground(fond(Palette.boutonNormal, 6, Palette.bordure, 1));
         Palette.appliquerCouleurIcone(boutonStop, Palette.iconeNormal);
         boutonStop.setOnClickListener(v -> revenirAEditeur());
 
