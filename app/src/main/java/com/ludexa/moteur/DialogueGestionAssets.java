@@ -45,10 +45,6 @@ public class DialogueGestionAssets extends Dialog {
         this.canvasEditeur = canvasEditeur;
         this.cheminProjet = cheminProjet;
 
-        if (getWindow() != null) {
-            getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        }
-
         if (cheminProjet != null) {
             rootAssetsDir = new File(cheminProjet, "assets_ludexa");
             if (!rootAssetsDir.exists()) rootAssetsDir.mkdirs();
@@ -61,6 +57,14 @@ public class DialogueGestionAssets extends Dialog {
         initUI();
 
         setOnDismissListener(d -> arreterSon());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (getWindow() != null) {
+            getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        }
     }
 
     private int dp(int valeur) {
@@ -108,7 +112,6 @@ public class DialogueGestionAssets extends Dialog {
                (nom.equals("Images") || nom.equals("Sons") || nom.equals("Fonts") || nom.equals("Textes"));
     }
 // bas 1
-
 // haut 2
     private void initUI() {
         LinearLayout layoutPrincipal = new LinearLayout(ctx);
@@ -390,8 +393,6 @@ public class DialogueGestionAssets extends Dialog {
         }
     }
 // bas 3
-
-
 // haut 4
     private void ajouterVigneteAsset(File f) {
         LinearLayout carte = new LinearLayout(ctx);
@@ -399,7 +400,7 @@ public class DialogueGestionAssets extends Dialog {
         carte.setGravity(Gravity.CENTER_HORIZONTAL);
         carte.setPadding(dp(6), dp(6), dp(6), dp(6));
         if (f.equals(currentAssetSelected)) {
-            carte.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
+            carte.setBackground(fond(Palette.fondListe, Color.WHITE, 8));
         } else {
             carte.setBackground(fond(Palette.fondNormal, Palette.bordure, 8));
         }
@@ -522,7 +523,7 @@ public class DialogueGestionAssets extends Dialog {
         fichierSonEnLecture = null;
         boutonPlaySonActif = null;
     }
-// bas 4
+// bas 4 
 
 // haut 5
     public void traiterImportAsset(Uri uri) {
