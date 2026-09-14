@@ -132,7 +132,7 @@ public class DialogueGestionAssets extends Dialog {
         enTete.setLayoutParams(lpEntete);
 
         ImageButton btnFermerCroix = new ImageButton(ctx);
-        btnFermerCroix.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+        btnFermerCroix.setImageResource(R.drawable.exit_to_app_24px);
         btnFermerCroix.setBackground(null);
         btnFermerCroix.setColorFilter(Palette.texteDesactive);
         btnFermerCroix.setPadding(dp(8), dp(8), dp(8), dp(8));
@@ -278,7 +278,7 @@ public class DialogueGestionAssets extends Dialog {
         });
         ligneAnnexes.addView(btnAnimations);
 
-        LinearLayout btnStylesTitres = creerBoutonCompact(Traducteur.get("btn_gerer_styles"), R.drawable.title_24px);
+        LinearLayout btnStylesTitres = creerBoutonCompact(Traducteur.get("btn_gerer_styles"), R.drawable.movie_24px);
         btnStylesTitres.setOnClickListener(v -> {
             EditeurTexteStyleDialog dialog = new EditeurTexteStyleDialog(ctx, cheminProjet);
             dialog.setOnDismissListener(d -> {
