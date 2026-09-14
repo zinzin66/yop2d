@@ -52,13 +52,16 @@ public class InspecteurProprietes extends LinearLayout {
     private Button btnSelectStyleTitre;
 
     private LinearLayout blocImage;
-    private Button btnChargerImage, btnSupprimerImage;
+    private Button btnChargerImage;
+    private ImageButton btnSupprimerImage;
     private CheckBox cbFondColore;
     private CheckBox cbRamassable, cbZoneDeClic, cbDeplacable;
 
     private LinearLayout blocBouton;
-    private Button btnChargerImagePresse, btnSupprimerImagePresse;
-    private Button btnChargerImageDesactive, btnSupprimerImageDesactive;
+    private Button btnChargerImagePresse;
+    private ImageButton btnSupprimerImagePresse;
+    private Button btnChargerImageDesactive;
+    private ImageButton btnSupprimerImageDesactive;
     private CheckBox cbDesactive;
 
     private LinearLayout blocJoystick;
@@ -175,6 +178,23 @@ public class InspecteurProprietes extends LinearLayout {
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lp.setMargins(dp(3), dp(4), dp(3), dp(4));
         b.setLayoutParams(lp);
+    }
+
+    private void styliserBoutonFlexible(Button b) {
+        styliserBouton(b);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        lp.setMargins(dp(3), dp(4), dp(3), dp(4));
+        b.setLayoutParams(lp);
+    }
+
+    private void styliserBoutonIcone(ImageButton btn) {
+        btn.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
+        btn.setPadding(dp(10), dp(10), dp(10), dp(10));
+        btn.setColorFilter(Palette.iconeNormal);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(44), dp(44));
+        lp.setMargins(dp(3), dp(4), dp(3), dp(4));
+        btn.setLayoutParams(lp);
     }
 
     private void styliserCase(CheckBox cb) {
@@ -489,7 +509,6 @@ public class InspecteurProprietes extends LinearLayout {
                 }).show();
         });
 // bas 2
-
 // haut 3
         blocTexte = new LinearLayout(context);
         blocTexte.setOrientation(LinearLayout.VERTICAL);
@@ -605,15 +624,20 @@ public class InspecteurProprietes extends LinearLayout {
         styliserSousTitre(sepImage);
         blocImage.addView(sepImage);
 
+        LinearLayout ligneImage = new LinearLayout(context);
+        ligneImage.setOrientation(LinearLayout.HORIZONTAL);
+
         btnChargerImage = new Button(context);
         btnChargerImage.setText(Traducteur.get("insp_btn_charger_image"));
-        styliserBouton(btnChargerImage);
-        blocImage.addView(btnChargerImage);
+        styliserBoutonFlexible(btnChargerImage);
+        ligneImage.addView(btnChargerImage);
 
-        btnSupprimerImage = new Button(context);
-        btnSupprimerImage.setText(Traducteur.get("insp_btn_supprimer_image"));
-        styliserBouton(btnSupprimerImage);
-        blocImage.addView(btnSupprimerImage);
+        btnSupprimerImage = new ImageButton(context);
+        btnSupprimerImage.setImageResource(R.drawable.delete_24px);
+        styliserBoutonIcone(btnSupprimerImage);
+        ligneImage.addView(btnSupprimerImage);
+
+        blocImage.addView(ligneImage);
 
         cbFondColore = new CheckBox(context);
         cbFondColore.setText(Traducteur.get("insp_cb_fond_colore"));
@@ -631,25 +655,35 @@ public class InspecteurProprietes extends LinearLayout {
         styliserSousTitre(sepBouton);
         blocBouton.addView(sepBouton);
 
+        LinearLayout lignePresse = new LinearLayout(context);
+        lignePresse.setOrientation(LinearLayout.HORIZONTAL);
+
         btnChargerImagePresse = new Button(context);
         btnChargerImagePresse.setText(Traducteur.get("insp_btn_charger_image_presse"));
-        styliserBouton(btnChargerImagePresse);
-        blocBouton.addView(btnChargerImagePresse);
+        styliserBoutonFlexible(btnChargerImagePresse);
+        lignePresse.addView(btnChargerImagePresse);
 
-        btnSupprimerImagePresse = new Button(context);
-        btnSupprimerImagePresse.setText(Traducteur.get("insp_btn_suppr_image_presse"));
-        styliserBouton(btnSupprimerImagePresse);
-        blocBouton.addView(btnSupprimerImagePresse);
+        btnSupprimerImagePresse = new ImageButton(context);
+        btnSupprimerImagePresse.setImageResource(R.drawable.delete_24px);
+        styliserBoutonIcone(btnSupprimerImagePresse);
+        lignePresse.addView(btnSupprimerImagePresse);
+
+        blocBouton.addView(lignePresse);
+
+        LinearLayout ligneDesac = new LinearLayout(context);
+        ligneDesac.setOrientation(LinearLayout.HORIZONTAL);
 
         btnChargerImageDesactive = new Button(context);
         btnChargerImageDesactive.setText(Traducteur.get("insp_btn_charger_image_desac"));
-        styliserBouton(btnChargerImageDesactive);
-        blocBouton.addView(btnChargerImageDesactive);
+        styliserBoutonFlexible(btnChargerImageDesactive);
+        ligneDesac.addView(btnChargerImageDesactive);
 
-        btnSupprimerImageDesactive = new Button(context);
-        btnSupprimerImageDesactive.setText(Traducteur.get("insp_btn_suppr_image_desac"));
-        styliserBouton(btnSupprimerImageDesactive);
-        blocBouton.addView(btnSupprimerImageDesactive);
+        btnSupprimerImageDesactive = new ImageButton(context);
+        btnSupprimerImageDesactive.setImageResource(R.drawable.delete_24px);
+        styliserBoutonIcone(btnSupprimerImageDesactive);
+        ligneDesac.addView(btnSupprimerImageDesactive);
+
+        blocBouton.addView(ligneDesac);
 
         cbDesactive = new CheckBox(context);
         cbDesactive.setText(Traducteur.get("insp_cb_desactive"));
@@ -843,6 +877,7 @@ public class InspecteurProprietes extends LinearLayout {
 
         blocProprietes.addView(blocProgression);
 // bas 3
+
 // haut 4
         btnAjouterVariable.setOnClickListener(v -> {
             if (objetCourant == null) return;
