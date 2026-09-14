@@ -45,6 +45,10 @@ public class DialogueGestionAssets extends Dialog {
         this.canvasEditeur = canvasEditeur;
         this.cheminProjet = cheminProjet;
 
+        if (getWindow() != null) {
+            getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        }
+
         if (cheminProjet != null) {
             rootAssetsDir = new File(cheminProjet, "assets_ludexa");
             if (!rootAssetsDir.exists()) rootAssetsDir.mkdirs();
@@ -92,8 +96,8 @@ public class DialogueGestionAssets extends Dialog {
         btn.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
         btn.setPadding(dp(10), dp(10), dp(10), dp(10));
         btn.setColorFilter(Palette.iconeNormal);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-        lp.setMargins(dp(3), dp(3), dp(3), dp(3));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(44), dp(44));
+        lp.setMargins(dp(4), dp(3), dp(4), dp(3));
         btn.setLayoutParams(lp);
     }
 
@@ -240,8 +244,8 @@ public class DialogueGestionAssets extends Dialog {
         Button btnEditeurDial = new Button(ctx);
         btnEditeurDial.setText(Traducteur.get("btn_ouvrir_dialogues"));
         btnEditeurDial.setAllCaps(false);
-        btnEditeurDial.setTextColor(Color.WHITE);
-        btnEditeurDial.setBackground(fond(Color.parseColor("#4CAF50"), Palette.bordure, 8));
+        btnEditeurDial.setTextColor(Palette.texteNormal);
+        btnEditeurDial.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
         LinearLayout.LayoutParams lpBtnAnnexe = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
         lpBtnAnnexe.setMargins(dp(3), 0, dp(3), 0);
         btnEditeurDial.setLayoutParams(lpBtnAnnexe);
@@ -251,8 +255,8 @@ public class DialogueGestionAssets extends Dialog {
         Button btnAnimations = new Button(ctx);
         btnAnimations.setText(Traducteur.get("btn_gerer_animations"));
         btnAnimations.setAllCaps(false);
-        btnAnimations.setTextColor(Color.WHITE);
-        btnAnimations.setBackground(fond(Color.parseColor("#673AB7"), Palette.bordure, 8));
+        btnAnimations.setTextColor(Palette.texteNormal);
+        btnAnimations.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
         LinearLayout.LayoutParams lpBtnAnnexe2 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
         lpBtnAnnexe2.setMargins(dp(3), 0, dp(3), 0);
         btnAnimations.setLayoutParams(lpBtnAnnexe2);
@@ -265,8 +269,8 @@ public class DialogueGestionAssets extends Dialog {
         Button btnStylesTitres = new Button(ctx);
         btnStylesTitres.setText(Traducteur.get("btn_gerer_styles"));
         btnStylesTitres.setAllCaps(false);
-        btnStylesTitres.setTextColor(Color.WHITE);
-        btnStylesTitres.setBackground(fond(Color.parseColor("#E65100"), Palette.bordure, 8));
+        btnStylesTitres.setTextColor(Palette.texteNormal);
+        btnStylesTitres.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
         LinearLayout.LayoutParams lpBtnAnnexe3 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
         lpBtnAnnexe3.setMargins(dp(3), 0, dp(3), 0);
         btnStylesTitres.setLayoutParams(lpBtnAnnexe3);
@@ -299,7 +303,6 @@ public class DialogueGestionAssets extends Dialog {
         rafraichirListeAssets();
     }
 // bas 2
-
     
 // haut 3
     private void rafraichirArborescenceDossiers() {
