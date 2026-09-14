@@ -123,11 +123,11 @@ public class DialogueGestionAssets extends Dialog {
 
         LinearLayout enTete = new LinearLayout(ctx);
         enTete.setOrientation(LinearLayout.HORIZONTAL);
-        enTete.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
+        enTete.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         enTete.setBackground(fond(Palette.enTeteDialogues, Palette.bordure, 8));
         enTete.setPadding(dp(6), dp(4), dp(6), dp(4));
         LinearLayout.LayoutParams lpEntete = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lpEntete.setMargins(0, 0, 0, dp(8));
         enTete.setLayoutParams(lpEntete);
 
@@ -136,9 +136,35 @@ public class DialogueGestionAssets extends Dialog {
         btnFermerCroix.setBackground(null);
         btnFermerCroix.setColorFilter(Palette.texteDesactive);
         btnFermerCroix.setPadding(dp(8), dp(8), dp(8), dp(8));
-        btnFermerCroix.setLayoutParams(new LinearLayout.LayoutParams(dp(40), dp(40)));
+        LinearLayout.LayoutParams lpCroix = new LinearLayout.LayoutParams(dp(40), dp(40));
+        lpCroix.setMargins(0, 0, dp(10), 0);
+        btnFermerCroix.setLayoutParams(lpCroix);
         btnFermerCroix.setOnClickListener(v -> dismiss());
         enTete.addView(btnFermerCroix);
+
+        LinearLayout btnEditeurDial = creerBoutonCompact(Traducteur.get("btn_ouvrir_dialogues"), R.drawable.script_24px);
+        btnEditeurDial.setOnClickListener(v -> afficherEditeurTexteGeant());
+        enTete.addView(btnEditeurDial);
+
+        LinearLayout btnAnimations = creerBoutonCompact(Traducteur.get("btn_gerer_animations"), R.drawable.movie_24px);
+        btnAnimations.setOnClickListener(v -> {
+            EditeurAnimationsDialog dialog = new EditeurAnimationsDialog(ctx, cheminProjet);
+            dialog.show();
+        });
+        enTete.addView(btnAnimations);
+
+        LinearLayout btnStylesTitres = creerBoutonCompact(Traducteur.get("btn_gerer_styles"), R.drawable.title_24px);
+        btnStylesTitres.setOnClickListener(v -> {
+            EditeurTexteStyleDialog dialog = new EditeurTexteStyleDialog(ctx, cheminProjet);
+            dialog.setOnDismissListener(d -> {
+                if (canvasEditeur != null) {
+                    canvasEditeur.chargerStylesTitresGlobales();
+                    canvasEditeur.invalidate();
+                }
+            });
+            dialog.show();
+        });
+        enTete.addView(btnStylesTitres);
 
         layoutPrincipal.addView(enTete);
 
@@ -262,37 +288,6 @@ public class DialogueGestionAssets extends Dialog {
         zoneCentrale.addView(colonneDroite);
         layoutPrincipal.addView(zoneCentrale);
 
-        // --- BAS : BOUTONS ANNEXES ---
-        LinearLayout ligneAnnexes = new LinearLayout(ctx);
-        ligneAnnexes.setOrientation(LinearLayout.HORIZONTAL);
-        ligneAnnexes.setPadding(0, dp(10), 0, dp(6));
-
-        LinearLayout btnEditeurDial = creerBoutonCompact(Traducteur.get("btn_ouvrir_dialogues"), R.drawable.script_24px);
-        btnEditeurDial.setOnClickListener(v -> afficherEditeurTexteGeant());
-        ligneAnnexes.addView(btnEditeurDial);
-
-        LinearLayout btnAnimations = creerBoutonCompact(Traducteur.get("btn_gerer_animations"), R.drawable.play_circle_24px);
-        btnAnimations.setOnClickListener(v -> {
-            EditeurAnimationsDialog dialog = new EditeurAnimationsDialog(ctx, cheminProjet);
-            dialog.show();
-        });
-        ligneAnnexes.addView(btnAnimations);
-
-        LinearLayout btnStylesTitres = creerBoutonCompact(Traducteur.get("btn_gerer_styles"), R.drawable.movie_24px);
-        btnStylesTitres.setOnClickListener(v -> {
-            EditeurTexteStyleDialog dialog = new EditeurTexteStyleDialog(ctx, cheminProjet);
-            dialog.setOnDismissListener(d -> {
-                if (canvasEditeur != null) {
-                    canvasEditeur.chargerStylesTitresGlobales();
-                    canvasEditeur.invalidate();
-                }
-            });
-            dialog.show();
-        });
-        ligneAnnexes.addView(btnStylesTitres);
-
-        layoutPrincipal.addView(ligneAnnexes);
-
         setContentView(layoutPrincipal);
 
         currentFolderSelected = new File(rootAssetsDir, "Images");
@@ -306,7 +301,7 @@ public class DialogueGestionAssets extends Dialog {
         btn.setGravity(Gravity.CENTER);
         btn.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
         btn.setPadding(dp(8), dp(4), dp(8), dp(4));
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(30), 1f);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, dp(30));
         lp.setMargins(dp(3), 0, dp(3), 0);
         btn.setLayoutParams(lp);
 
@@ -327,6 +322,7 @@ public class DialogueGestionAssets extends Dialog {
         return btn;
     }
 // bas 2
+
 // haut 3
     private void rafraichirArborescenceDossiers() {
         if (conteneurArborescenceDossiers == null) return;
