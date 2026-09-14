@@ -112,7 +112,6 @@ public class DialogueGestionAssets extends Dialog {
                (nom.equals("Images") || nom.equals("Sons") || nom.equals("Fonts") || nom.equals("Textes"));
     }
 // bas 1
-
 // haut 2
     private void initUI() {
         LinearLayout layoutPrincipal = new LinearLayout(ctx);
@@ -121,6 +120,27 @@ public class DialogueGestionAssets extends Dialog {
         layoutPrincipal.setPadding(dp(12), dp(12), dp(12), dp(12));
         layoutPrincipal.setLayoutParams(new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        LinearLayout enTete = new LinearLayout(ctx);
+        enTete.setOrientation(LinearLayout.HORIZONTAL);
+        enTete.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);
+        enTete.setBackground(fond(Palette.enTeteDialogues, Palette.bordure, 8));
+        enTete.setPadding(dp(6), dp(4), dp(6), dp(4));
+        LinearLayout.LayoutParams lpEntete = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lpEntete.setMargins(0, 0, 0, dp(8));
+        enTete.setLayoutParams(lpEntete);
+
+        ImageButton btnFermerCroix = new ImageButton(ctx);
+        btnFermerCroix.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+        btnFermerCroix.setBackground(null);
+        btnFermerCroix.setColorFilter(Palette.texteDesactive);
+        btnFermerCroix.setPadding(dp(8), dp(8), dp(8), dp(8));
+        btnFermerCroix.setLayoutParams(new LinearLayout.LayoutParams(dp(40), dp(40)));
+        btnFermerCroix.setOnClickListener(v -> dismiss());
+        enTete.addView(btnFermerCroix);
+
+        layoutPrincipal.addView(enTete);
 
         LinearLayout zoneCentrale = new LinearLayout(ctx);
         zoneCentrale.setOrientation(LinearLayout.HORIZONTAL);
@@ -247,39 +267,18 @@ public class DialogueGestionAssets extends Dialog {
         ligneAnnexes.setOrientation(LinearLayout.HORIZONTAL);
         ligneAnnexes.setPadding(0, dp(10), 0, dp(6));
 
-        Button btnEditeurDial = new Button(ctx);
-        btnEditeurDial.setText(Traducteur.get("btn_ouvrir_dialogues"));
-        btnEditeurDial.setAllCaps(false);
-        btnEditeurDial.setTextColor(Palette.texteNormal);
-        btnEditeurDial.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
-        LinearLayout.LayoutParams lpBtnAnnexe = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-        lpBtnAnnexe.setMargins(dp(3), 0, dp(3), 0);
-        btnEditeurDial.setLayoutParams(lpBtnAnnexe);
+        LinearLayout btnEditeurDial = creerBoutonCompact(Traducteur.get("btn_ouvrir_dialogues"), R.drawable.script_24px);
         btnEditeurDial.setOnClickListener(v -> afficherEditeurTexteGeant());
         ligneAnnexes.addView(btnEditeurDial);
 
-        Button btnAnimations = new Button(ctx);
-        btnAnimations.setText(Traducteur.get("btn_gerer_animations"));
-        btnAnimations.setAllCaps(false);
-        btnAnimations.setTextColor(Palette.texteNormal);
-        btnAnimations.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
-        LinearLayout.LayoutParams lpBtnAnnexe2 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-        lpBtnAnnexe2.setMargins(dp(3), 0, dp(3), 0);
-        btnAnimations.setLayoutParams(lpBtnAnnexe2);
+        LinearLayout btnAnimations = creerBoutonCompact(Traducteur.get("btn_gerer_animations"), R.drawable.play_circle_24px);
         btnAnimations.setOnClickListener(v -> {
             EditeurAnimationsDialog dialog = new EditeurAnimationsDialog(ctx, cheminProjet);
             dialog.show();
         });
         ligneAnnexes.addView(btnAnimations);
 
-        Button btnStylesTitres = new Button(ctx);
-        btnStylesTitres.setText(Traducteur.get("btn_gerer_styles"));
-        btnStylesTitres.setAllCaps(false);
-        btnStylesTitres.setTextColor(Palette.texteNormal);
-        btnStylesTitres.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
-        LinearLayout.LayoutParams lpBtnAnnexe3 = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
-        lpBtnAnnexe3.setMargins(dp(3), 0, dp(3), 0);
-        btnStylesTitres.setLayoutParams(lpBtnAnnexe3);
+        LinearLayout btnStylesTitres = creerBoutonCompact(Traducteur.get("btn_gerer_styles"), R.drawable.title_24px);
         btnStylesTitres.setOnClickListener(v -> {
             EditeurTexteStyleDialog dialog = new EditeurTexteStyleDialog(ctx, cheminProjet);
             dialog.setOnDismissListener(d -> {
@@ -294,22 +293,40 @@ public class DialogueGestionAssets extends Dialog {
 
         layoutPrincipal.addView(ligneAnnexes);
 
-        Button btnFermer = new Button(ctx);
-        btnFermer.setText(Traducteur.get("bouton_fermer"));
-        btnFermer.setTextColor(Palette.texteNormal);
-        btnFermer.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
-        btnFermer.setPadding(dp(16), dp(12), dp(16), dp(12));
-        btnFermer.setOnClickListener(v -> dismiss());
-        layoutPrincipal.addView(btnFermer);
-
         setContentView(layoutPrincipal);
 
         currentFolderSelected = new File(rootAssetsDir, "Images");
         rafraichirArborescenceDossiers();
         rafraichirListeAssets();
     }
-// bas 2 
-    
+
+    private LinearLayout creerBoutonCompact(String texte, int iconRes) {
+        LinearLayout btn = new LinearLayout(ctx);
+        btn.setOrientation(LinearLayout.HORIZONTAL);
+        btn.setGravity(Gravity.CENTER);
+        btn.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
+        btn.setPadding(dp(8), dp(4), dp(8), dp(4));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(30), 1f);
+        lp.setMargins(dp(3), 0, dp(3), 0);
+        btn.setLayoutParams(lp);
+
+        ImageView icone = new ImageView(ctx);
+        icone.setImageResource(iconRes);
+        icone.setColorFilter(Palette.iconeNormal);
+        LinearLayout.LayoutParams lpIcone = new LinearLayout.LayoutParams(dp(16), dp(16));
+        lpIcone.setMargins(0, 0, dp(6), 0);
+        icone.setLayoutParams(lpIcone);
+        btn.addView(icone);
+
+        TextView label = new TextView(ctx);
+        label.setText(texte);
+        label.setTextColor(Palette.texteNormal);
+        label.setTextSize(13f);
+        btn.addView(label);
+
+        return btn;
+    }
+// bas 2
 // haut 3
     private void rafraichirArborescenceDossiers() {
         if (conteneurArborescenceDossiers == null) return;
@@ -326,7 +343,7 @@ public class DialogueGestionAssets extends Dialog {
             layoutDossier.setGravity(Gravity.CENTER_VERTICAL);
             layoutDossier.setPadding(dp(6), dp(4), dp(6), dp(4));
             if (dir.equals(currentFolderSelected)) {
-                layoutDossier.setBackground(fond(Palette.fondListe, Palette.bordure, 8));
+                layoutDossier.setBackground(fond(Palette.fondSelection, Palette.bordure, 8));
             }
 
             if (depth > 0) {
@@ -339,7 +356,7 @@ public class DialogueGestionAssets extends Dialog {
 
             ImageView iconeDossier = new ImageView(ctx);
             iconeDossier.setImageResource(R.drawable.folder_open_24px);
-            iconeDossier.setColorFilter(dir.equals(currentFolderSelected) ? Palette.iconeSurvol : Palette.iconeNormal);
+            iconeDossier.setColorFilter(dir.equals(currentFolderSelected) ? Palette.accentTeal : Palette.accentBleu);
             iconeDossier.setPadding(0, 0, dp(8), 0);
 
             TextView tv = new TextView(ctx);
@@ -396,16 +413,17 @@ public class DialogueGestionAssets extends Dialog {
         }
     }
 // bas 3
-// haut 4
+
+    // haut 4
     private void ajouterVigneteAsset(File f) {
         LinearLayout carte = new LinearLayout(ctx);
         carte.setOrientation(LinearLayout.VERTICAL);
         carte.setGravity(Gravity.CENTER_HORIZONTAL);
         carte.setPadding(dp(6), dp(6), dp(6), dp(6));
         if (f.equals(currentAssetSelected)) {
-            carte.setBackground(fond(Palette.fondListe, Color.WHITE, 8));
+            carte.setBackground(fond(Palette.fondSelection, Color.WHITE, 8));
         } else {
-            carte.setBackground(fond(Palette.fondNormal, Palette.bordure, 8));
+            carte.setBackground(fond(Palette.fondVignette, Palette.bordure, 8));
         }
 
         GridLayout.LayoutParams lpCarte = new GridLayout.LayoutParams();
@@ -477,12 +495,12 @@ public class DialogueGestionAssets extends Dialog {
         carte.addView(zoneVisuelle);
 
         TextView nom = new TextView(ctx);
-        String nomAffiche = f.getName();
-        if (nomAffiche.length() > 12) nomAffiche = nomAffiche.substring(0, 10) + "…";
-        nom.setText(nomAffiche);
+        nom.setText(f.getName());
+        nom.setSingleLine(true);
+        nom.setEllipsize(android.text.TextUtils.TruncateAt.END);
         nom.setTextSize(11f);
         nom.setGravity(Gravity.CENTER);
-        nom.setTextColor(f.equals(currentAssetSelected) ? Palette.texteSelectionne : Palette.texteNormal);
+        nom.setTextColor(f.equals(currentAssetSelected) ? Palette.texteSelectionne : Palette.texteSecondaire);
         nom.setPadding(0, dp(4), 0, 0);
         nom.setLayoutParams(new LinearLayout.LayoutParams(dp(70), ViewGroup.LayoutParams.WRAP_CONTENT));
         carte.addView(nom);
@@ -526,7 +544,9 @@ public class DialogueGestionAssets extends Dialog {
         fichierSonEnLecture = null;
         boutonPlaySonActif = null;
     }
-// bas 4 
+// bas 4
+
+    
 
 // haut 5
     public void traiterImportAsset(Uri uri) {
