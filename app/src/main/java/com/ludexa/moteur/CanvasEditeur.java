@@ -25,9 +25,10 @@ public class CanvasEditeur extends View {
     private boolean isModeDeplacementObjet = false;
     private float niveauZoom = 1.0f;
 
-    private int tailleGrille = 100;
+    private int tailleGrille = 50;
     private boolean snapActif = false;
-
+    private float dragRawX, dragRawY;
+    
     private Scene sceneActive;
     private ObjetBase objetSelectionne;
     private InspecteurProprietes inspecteurLie;
@@ -833,6 +834,7 @@ public class CanvasEditeur extends View {
                         initScaleX = objetSelectionne.scaleX; initScaleY = objetSelectionne.scaleY;
                         initMatrix = getAbsoluteMatrix(objetSelectionne);
                         dragStartX = objetSelectionne.x; dragStartY = objetSelectionne.y;
+                        dragRawX = objetSelectionne.x; dragRawY = objetSelectionne.y;
                     }
                     if (inspecteurLie != null) inspecteurLie.afficherObjet(objetSelectionne);
                     invalidate();
@@ -860,12 +862,15 @@ public class CanvasEditeur extends View {
                         float[] lastTouchP = {ecranVersScene(lastTouchX, lastTouchY)[0], ecranVersScene(lastTouchX, lastTouchY)[1]};
                         
                         invParent.mapPoints(curTouchP); invParent.mapPoints(lastTouchP);
-                        objetSelectionne.x += (curTouchP[0] - lastTouchP[0]);
-                        objetSelectionne.y += (curTouchP[1] - lastTouchP[1]);
+                        dragRawX += (curTouchP[0] - lastTouchP[0]);
+                        dragRawY += (curTouchP[1] - lastTouchP[1]);
 
                         if (snapActif) {
-                            objetSelectionne.x = accrocherGrille(objetSelectionne.x);
-                            objetSelectionne.y = accrocherGrille(objetSelectionne.y);
+                            objetSelectionne.x = accrocherGrille(dragRawX);
+                            objetSelectionne.y = accrocherGrille(dragRawY);
+                        } else {
+                            objetSelectionne.x = dragRawX;
+                            objetSelectionne.y = dragRawY;
                         }
                     }
                 } else if (currentMode >= 4 && currentMode <= 7 && objetSelectionne != null) { 
@@ -986,4 +991,3 @@ public class CanvasEditeur extends View {
     }
 }
 // bas 5
-
