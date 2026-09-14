@@ -587,7 +587,10 @@
   "panneau_ress_assets": "Assets",
 "btn_gerer_animations": "Animations",
   "cat_interactifs": "Interactifs",
-"obj_prefix_barre_progression": "BarreProg"
+"obj_prefix_barre_progression": "BarreProg",
+  "btn_ouvrir_dialogues": "Texte",
+"btn_gerer_animations": "Animation",
+"btn_gerer_styles": "Titre"
   
   
   
