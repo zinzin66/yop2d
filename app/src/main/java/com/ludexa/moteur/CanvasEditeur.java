@@ -666,23 +666,33 @@ public class CanvasEditeur extends View {
         canvas.save();
         canvas.scale(niveauZoom, niveauZoom, getWidth() / 2f, getHeight() / 2f);
 
-        int gridSize = tailleGrille;
-        int w = getWidth();
-        int h = getHeight();
-        int limiteMax = (int) (Math.max(w, h) * 2 / niveauZoom);
+        if (snapActif) {
+            int gridSize = tailleGrille;
+            int w = getWidth();
+            int h = getHeight();
+            int limiteMax = (int) (Math.max(w, h) * 2 / niveauZoom);
 
-        int indexDepart = -limiteMax / gridSize - 1;
-        int indexFin = limiteMax / gridSize + 1;
+            float debutMondeX = -cameraX - limiteMax;
+            float finMondeX = -cameraX + limiteMax;
+            int idxDebutX = (int) Math.floor(debutMondeX / gridSize) - 1;
+            int idxFinX = (int) Math.ceil(finMondeX / gridSize) + 1;
 
-        for (int idx = indexDepart; idx <= indexFin; idx++) {
-            int i = idx * gridSize + (int) (cameraX % gridSize);
-            Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
-            canvas.drawLine(i, -limiteMax, i, limiteMax, p);
-        }
-        for (int idx = indexDepart; idx <= indexFin; idx++) {
-            int i = idx * gridSize + (int) (cameraY % gridSize);
-            Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
-            canvas.drawLine(-limiteMax, i, limiteMax, i, p);
+            for (int idx = idxDebutX; idx <= idxFinX; idx++) {
+                float screenX = idx * gridSize + cameraX;
+                Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
+                canvas.drawLine(screenX, -limiteMax, screenX, limiteMax, p);
+            }
+
+            float debutMondeY = -cameraY - limiteMax;
+            float finMondeY = -cameraY + limiteMax;
+            int idxDebutY = (int) Math.floor(debutMondeY / gridSize) - 1;
+            int idxFinY = (int) Math.ceil(finMondeY / gridSize) + 1;
+
+            for (int idx = idxDebutY; idx <= idxFinY; idx++) {
+                float screenY = idx * gridSize + cameraY;
+                Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
+                canvas.drawLine(-limiteMax, screenY, limiteMax, screenY, p);
+            }
         }
 
         if (sceneActive != null) {
