@@ -68,7 +68,7 @@ public class PanneauRessources extends LinearLayout {
             if (!rootFonctionsDir.exists()) rootFonctionsDir.mkdirs(); 
         }
 
-        paramsOuvert = new FrameLayout.LayoutParams(500, FrameLayout.LayoutParams.MATCH_PARENT);
+        paramsOuvert = new FrameLayout.LayoutParams(dp(260), FrameLayout.LayoutParams.MATCH_PARENT);
         paramsOuvert.gravity = Gravity.START | Gravity.TOP;
         paramsFerme = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         paramsFerme.gravity = Gravity.START | Gravity.TOP;
@@ -871,8 +871,11 @@ public class PanneauRessources extends LinearLayout {
         conteneurFonctions.setPadding(0, 0, 0, dp(8));
         contenu.addView(conteneurFonctions);
 
-        LinearLayout zoneBoutons = new LinearLayout(context);
-        zoneBoutons.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout ligneBoutons1 = new LinearLayout(context);
+        ligneBoutons1.setOrientation(LinearLayout.HORIZONTAL);
+
+        LinearLayout ligneBoutons2 = new LinearLayout(context);
+        ligneBoutons2.setOrientation(LinearLayout.HORIZONTAL);
 
         ImageButton btnCreer = new ImageButton(context);
         btnCreer.setImageResource(R.drawable.add_24px);
@@ -907,12 +910,13 @@ public class PanneauRessources extends LinearLayout {
             if (fonctionSelectionnee != null) afficherPopupSupprimerFonction(context, fonctionSelectionnee);
         });
 
-        zoneBoutons.addView(btnCreer);
-        zoneBoutons.addView(btnEditer);
-        zoneBoutons.addView(btnRenommer);
-        zoneBoutons.addView(btnSupprimer);
+        ligneBoutons1.addView(btnCreer);
+        ligneBoutons1.addView(btnEditer);
+        ligneBoutons2.addView(btnRenommer);
+        ligneBoutons2.addView(btnSupprimer);
 
-        contenu.addView(zoneBoutons);
+        contenu.addView(ligneBoutons1);
+        contenu.addView(ligneBoutons2);
         rafraichirFonctions();
 
         btnTitre.setOnClickListener(v -> {
