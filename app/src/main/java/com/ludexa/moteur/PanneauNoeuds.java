@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -17,7 +19,7 @@ import java.util.Map;
 public class PanneauNoeuds extends ScrollView {
 
     private LinearLayout conteneurSections;
-    private Button boutonMasquer;
+    private ImageButton boutonMasquer;
     private TextView titrePanneau;
     private boolean estOuvert = true;
 
@@ -26,9 +28,31 @@ public class PanneauNoeuds extends ScrollView {
         init(context);
     }
 
+    private int dp(int valeur) {
+        return (int) (valeur * getResources().getDisplayMetrics().density);
+    }
+
+    private android.graphics.drawable.GradientDrawable fond(int couleurFond, int couleurBordure, int rayon) {
+        android.graphics.drawable.GradientDrawable g = new android.graphics.drawable.GradientDrawable();
+        g.setColor(couleurFond);
+        g.setCornerRadius(dp(rayon));
+        g.setStroke(dp(1), couleurBordure);
+        return g;
+    }
+
+    private void styliserTitreCategorie(Button btn) {
+        btn.setBackgroundColor(Color.TRANSPARENT);
+        btn.setTextColor(Palette.texteSelectionne);
+        btn.setTextSize(14f);
+        btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+        btn.setTypeface(null, android.graphics.Typeface.BOLD);
+        btn.setPadding(dp(8), dp(10), dp(8), dp(6));
+        btn.setAllCaps(false);
+    }
+
     private void init(Context context) {
         setBackgroundColor(Palette.fondPanneaux); 
-        setLayoutParams(new LinearLayout.LayoutParams(300, LinearLayout.LayoutParams.MATCH_PARENT));
+        setLayoutParams(new LinearLayout.LayoutParams(dp(240), LinearLayout.LayoutParams.MATCH_PARENT));
 
         LinearLayout layoutPrincipal = new LinearLayout(context);
         layoutPrincipal.setOrientation(LinearLayout.VERTICAL);
@@ -36,24 +60,25 @@ public class PanneauNoeuds extends ScrollView {
         LinearLayout enTete = new LinearLayout(context);
         enTete.setOrientation(LinearLayout.HORIZONTAL);
         enTete.setGravity(Gravity.CENTER_VERTICAL);
-        enTete.setBackgroundColor(Palette.fondPanneaux);
-        enTete.setPadding(10, 10, 10, 10);
+        enTete.setBackground(fond(Palette.enTeteDialogues, Palette.bordure, 0));
+        enTete.setPadding(dp(8), dp(8), dp(8), dp(8));
 
         titrePanneau = new TextView(context);
         titrePanneau.setText(Traducteur.get("panneau_noeuds_titre"));
         titrePanneau.setTextColor(Palette.texteSelectionne);
-        titrePanneau.setTextSize(14);
+        titrePanneau.setTextSize(14f);
         LinearLayout.LayoutParams paramsTitre = new LinearLayout.LayoutParams(
             0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f
         );
         titrePanneau.setLayoutParams(paramsTitre);
 
-        boutonMasquer = new Button(context);
-        boutonMasquer.setText("<");
-        boutonMasquer.setTextColor(Palette.texteNormal);
-        boutonMasquer.setBackgroundColor(Color.TRANSPARENT);
-        boutonMasquer.setPadding(0, 0, 0, 0);
-        boutonMasquer.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
+        boutonMasquer = new ImageButton(context);
+        boutonMasquer.setImageResource(R.drawable.chevron_left_24px);
+        boutonMasquer.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        boutonMasquer.setColorFilter(Palette.iconeNormal);
+        boutonMasquer.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
+        boutonMasquer.setPadding(dp(8), dp(8), dp(8), dp(8));
+        boutonMasquer.setLayoutParams(new LinearLayout.LayoutParams(dp(40), dp(40)));
 
         enTete.addView(titrePanneau);
         enTete.addView(boutonMasquer);
@@ -61,6 +86,7 @@ public class PanneauNoeuds extends ScrollView {
 
         conteneurSections = new LinearLayout(context);
         conteneurSections.setOrientation(LinearLayout.VERTICAL);
+        conteneurSections.setPadding(dp(4), dp(4), dp(4), dp(4));
 
         Map<String, List<RegistreNoeuds.InfoNoeud>> categories = RegistreNoeuds.getNoeudsParCategorie();
         
@@ -71,10 +97,11 @@ public class PanneauNoeuds extends ScrollView {
             Button btnCat = new Button(context);
             // CORRECTION : On retire le Traducteur.get ici car nomCat est déjà traduit par le Registre
             btnCat.setText(nomCat + " ▼");
+            styliserTitreCategorie(btnCat);
             
             LinearLayout conteneurCat = new LinearLayout(context);
             conteneurCat.setOrientation(LinearLayout.VERTICAL);
-            conteneurCat.setPadding(20, 10, 10, 20);
+            conteneurCat.setPadding(dp(16), dp(8), dp(8), dp(16));
             
             for (RegistreNoeuds.InfoNoeud info : noeuds) {
                 TextView item = creerItemNoeud(context, info.libelle, info.classeType);
@@ -102,12 +129,12 @@ public class PanneauNoeuds extends ScrollView {
             if (estOuvert) {
                 conteneurSections.setVisibility(View.VISIBLE);
                 titrePanneau.setVisibility(View.VISIBLE);
-                boutonMasquer.setText("<");
-                setLayoutParams(new LinearLayout.LayoutParams(300, LinearLayout.LayoutParams.MATCH_PARENT));
+                boutonMasquer.setImageResource(R.drawable.chevron_left_24px);
+                setLayoutParams(new LinearLayout.LayoutParams(dp(240), LinearLayout.LayoutParams.MATCH_PARENT));
             } else {
                 conteneurSections.setVisibility(View.GONE);
                 titrePanneau.setVisibility(View.GONE);
-                boutonMasquer.setText(">");
+                boutonMasquer.setImageResource(R.drawable.chevron_right_24px);
                 setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT));
             }
@@ -122,14 +149,15 @@ public class PanneauNoeuds extends ScrollView {
         // CORRECTION : On retire le Traducteur.get ici car libelle est déjà traduit par le Registre
         item.setText(libelle);
         item.setTextColor(Palette.texteNormal);
-        item.setPadding(20, 20, 20, 20);
-        item.setBackgroundColor(Color.TRANSPARENT);
+        item.setTextSize(13f);
+        item.setPadding(dp(10), dp(10), dp(10), dp(10));
+        item.setBackground(fond(Palette.fondNormal, Palette.bordure, 6));
         
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, 
             LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        params.setMargins(0, 0, 0, 15);
+        params.setMargins(0, 0, 0, dp(6));
         item.setLayoutParams(params);
 
         item.setOnLongClickListener(v -> {

@@ -23,7 +23,7 @@ public class InspecteurProprietes extends LinearLayout {
 
     private ScrollView scrollInspecteur;
     private TextView titreInspecteur;
-    private Button boutonMasquer;
+    private ImageButton boutonMasquer;
     private LinearLayout enteteInspecteur;
     private FrameLayout.LayoutParams paramsOuvert;
     private FrameLayout.LayoutParams paramsFerme;
@@ -208,13 +208,12 @@ public class InspecteurProprietes extends LinearLayout {
         cb.setLayoutParams(lp);
     }
 // bas 1
-
 // haut 2
     private void initialiserInterface(Context context) {
         this.setOrientation(LinearLayout.VERTICAL);
         this.setBackgroundColor(Palette.fondPanneaux);
 
-        paramsOuvert = new FrameLayout.LayoutParams(500, FrameLayout.LayoutParams.MATCH_PARENT);
+        paramsOuvert = new FrameLayout.LayoutParams(dp(260), FrameLayout.LayoutParams.MATCH_PARENT);
         paramsOuvert.gravity = Gravity.END | Gravity.TOP;
         paramsFerme = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         paramsFerme.gravity = Gravity.END | Gravity.TOP;
@@ -226,13 +225,13 @@ public class InspecteurProprietes extends LinearLayout {
         enteteInspecteur.setBackground(fond(Palette.enTeteDialogues, Palette.bordure, 0));
         enteteInspecteur.setGravity(Gravity.CENTER_VERTICAL);
 
-        boutonMasquer = new Button(context);
-        boutonMasquer.setText(">");
-        boutonMasquer.setAllCaps(false);
-        boutonMasquer.setTextColor(Palette.iconeNormal);
+        boutonMasquer = new ImageButton(context);
+        boutonMasquer.setImageResource(R.drawable.chevron_right_24px);
+        boutonMasquer.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        boutonMasquer.setColorFilter(Palette.iconeNormal);
         boutonMasquer.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
-        boutonMasquer.setPadding(dp(10), dp(6), dp(10), dp(6));
-        LinearLayout.LayoutParams paramsMasquer = new LinearLayout.LayoutParams(dp(44), dp(40));
+        boutonMasquer.setPadding(dp(8), dp(8), dp(8), dp(8));
+        LinearLayout.LayoutParams paramsMasquer = new LinearLayout.LayoutParams(dp(40), dp(40));
         boutonMasquer.setLayoutParams(paramsMasquer);
 
         enteteInspecteur.addView(boutonMasquer);
@@ -521,8 +520,6 @@ public class InspecteurProprietes extends LinearLayout {
         
         btnSelectStyleTitre = new Button(context);
         btnSelectStyleTitre.setText(Traducteur.get("insp_btn_select_style"));
-        btnSelectStyleTitre.setBackground(fond(Color.parseColor("#E65100"), Palette.bordure, 8));
-        btnSelectStyleTitre.setTextColor(Color.WHITE);
         styliserBouton(btnSelectStyleTitre);
         blocTexte.addView(btnSelectStyleTitre);
 
@@ -757,7 +754,7 @@ public class InspecteurProprietes extends LinearLayout {
         btnEditerSceneLiee = new Button(context);
         btnEditerSceneLiee.setText(Traducteur.get("insp_btn_editer_scene_liee"));
         styliserBouton(btnEditerSceneLiee);
-        btnEditerSceneLiee.setTextColor(Color.parseColor("#4CAF50")); 
+        btnEditerSceneLiee.setTextColor(Palette.accentBleu);
         blocSceneInstance.addView(btnEditerSceneLiee);
         
         conteurVariablesSurcharge = new LinearLayout(context);
@@ -877,7 +874,6 @@ public class InspecteurProprietes extends LinearLayout {
 
         blocProprietes.addView(blocProgression);
 // bas 3
-
 // haut 4
         btnAjouterVariable.setOnClickListener(v -> {
             if (objetCourant == null) return;
@@ -952,7 +948,7 @@ public class InspecteurProprietes extends LinearLayout {
         boutonSupprimer.setAllCaps(false);
         boutonSupprimer.setTextSize(15f);
         boutonSupprimer.setTextColor(Palette.texteNormal);
-        boutonSupprimer.setBackground(fond(Color.parseColor("#8B3A3A"), Palette.bordure, 10));
+        boutonSupprimer.setBackground(fond(Palette.boutonNormal, Palette.bordure, 10));
         boutonSupprimer.setPadding(dp(14), dp(11), dp(14), dp(11));
         boutonSupprimer.setOnClickListener(v -> {
             if (objetCourant == null) { Toast.makeText(context, Traducteur.get("insp_erreur_aucun_objet"), Toast.LENGTH_SHORT).show(); return; }
@@ -981,12 +977,12 @@ public class InspecteurProprietes extends LinearLayout {
             if (scrollInspecteur.getVisibility() == View.VISIBLE) {
                 scrollInspecteur.setVisibility(View.GONE);
                 enteteInspecteur.setBackgroundColor(Color.TRANSPARENT);
-                boutonMasquer.setText("<");
+                boutonMasquer.setImageResource(R.drawable.chevron_left_24px);
                 this.setLayoutParams(paramsFerme);
             } else {
                 scrollInspecteur.setVisibility(View.VISIBLE);
                 enteteInspecteur.setBackground(fond(Palette.enTeteDialogues, Palette.bordure, 0));
-                boutonMasquer.setText(">");
+                boutonMasquer.setImageResource(R.drawable.chevron_right_24px);
                 this.setLayoutParams(paramsOuvert);
             }
         });
@@ -1907,7 +1903,6 @@ public class InspecteurProprietes extends LinearLayout {
         miseAJourEnCours = false;
     }
 // bas 8
-
 // haut 9
     private void rafraichirVariablesObjet(Context context) {
         conteneurListeVariables.removeAllViews();
@@ -1956,8 +1951,8 @@ public class InspecteurProprietes extends LinearLayout {
             
             Button btnSuppr = new Button(context);
             btnSuppr.setText("X");
-            btnSuppr.setTextColor(Color.WHITE);
-            btnSuppr.setBackground(fond(Color.parseColor("#8B3A3A"), Palette.bordure, 8));
+            btnSuppr.setTextColor(Palette.texteNormal);
+            btnSuppr.setBackground(fond(Palette.boutonNormal, Palette.bordure, 8));
             btnSuppr.setPadding(dp(8), dp(4), dp(8), dp(4));
             LinearLayout.LayoutParams paramsBtn = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             paramsBtn.setMargins(dp(4), 0, 0, 0);
@@ -2027,30 +2022,3 @@ public class InspecteurProprietes extends LinearLayout {
     }
 }
 // bas 9
-
-
-
-
-
-
-
-    
-
-
-
-    
-
-        
-
-        
-
-
-
-
-        
-
-
-
-        
-
-
