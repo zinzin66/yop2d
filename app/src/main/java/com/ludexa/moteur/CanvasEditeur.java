@@ -18,7 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CanvasEditeur extends View {
-    private Paint paintGrille, paintGrilleMajeure, paintCamera, paintObjet, paintSelection, paintTexte, paintPoignee;
+    private Paint paintGrille, paintGrilleMajeure, paintCamera, paintObjet, paintSelection, paintTexte, paintPoignee, paintPoigneeBordure;
     private float cameraX = 0, cameraY = 0;
     private float lastTouchX, lastTouchY;
     private boolean isPanMode = false;
@@ -27,8 +27,8 @@ public class CanvasEditeur extends View {
 
     private int tailleGrille = 50;
     private boolean snapActif = false;
-    private int couleurFondCanvas;
     private float dragRawX, dragRawY;
+    private int couleurFondCanvas;
     
     private Scene sceneActive;
     private ObjetBase objetSelectionne;
@@ -104,21 +104,21 @@ public class CanvasEditeur extends View {
     public void setSnapActif(boolean actif) { this.snapActif = actif; invalidate(); }
     public int getTailleGrille() { return tailleGrille; }
     public void setTailleGrille(int taille) {
-    if (taille > 0) { this.tailleGrille = taille; invalidate(); }
-}
-public int getCouleurFondCanvas() { return couleurFondCanvas; }
-public void setCouleurFondCanvas(int couleur) {
-    this.couleurFondCanvas = couleur;
-    setBackgroundColor(couleur);
-    invalidate();
-}
+        if (taille > 0) { this.tailleGrille = taille; invalidate(); }
+    }
+    public int getCouleurFondCanvas() { return couleurFondCanvas; }
+    public void setCouleurFondCanvas(int couleur) {
+        this.couleurFondCanvas = couleur;
+        setBackgroundColor(couleur);
+        invalidate();
+    }
 
     private void init() {
         paintGrille = new Paint();
         paintGrille.setColor(Palette.canvasGrille);
         paintGrille.setStyle(Paint.Style.STROKE);
         paintGrille.setStrokeWidth(1);
-        paintGrille.setAntiAlias(false);
+        paintGrille.setAntiAlias(true);
         paintGrille.setAlpha(255);
 
         paintGrilleMajeure = new Paint();
@@ -148,15 +148,20 @@ public void setCouleurFondCanvas(int couleur) {
         paintTexte.setSubpixelText(true);
 
         paintSelection = new Paint();
-        paintSelection.setColor(Palette.texteSelectionne);
+        paintSelection.setColor(Palette.accentTeal);
         paintSelection.setStyle(Paint.Style.STROKE);
         paintSelection.setAntiAlias(true);
         paintSelection.setStrokeCap(Paint.Cap.ROUND);
 
         paintPoignee = new Paint();
-        paintPoignee.setColor(Palette.boutonSurvol);
+        paintPoignee.setColor(Palette.accentTeal);
         paintPoignee.setStyle(Paint.Style.FILL);
         paintPoignee.setAntiAlias(true);
+
+        paintPoigneeBordure = new Paint();
+        paintPoigneeBordure.setColor(Color.WHITE);
+        paintPoigneeBordure.setStyle(Paint.Style.STROKE);
+        paintPoigneeBordure.setAntiAlias(true);
 
         scaleGestureDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
     }
@@ -382,7 +387,7 @@ public void setCouleurFondCanvas(int couleur) {
         }
     }
 // bas 2
-// haut 3
+  // haut 3
     private void dessinerObjetBase(Canvas canvas, ObjetBase objet, List<ObjetBase> contexteObjets, int baseAlpha, boolean isRoot) {
         int alphaVal = (int) (objet.alpha * baseAlpha);
         if (alphaVal < 0) alphaVal = 0;
@@ -596,7 +601,7 @@ public void setCouleurFondCanvas(int couleur) {
                     paintSelection.setPathEffect(new android.graphics.DashPathEffect(new float[]{10f, 10f}, 0f));
                     canvas.drawRect(0, 0, largeurVisuelle, hauteurVisuelle, paintSelection);
                     paintSelection.setPathEffect(null);
-                    paintSelection.setColor(Palette.texteSelectionne);
+                    paintSelection.setColor(Palette.accentTeal);
                     
                     pilesRenduEnCours.remove(objet.sceneLieeId);
                 } else {
@@ -648,27 +653,41 @@ public void setCouleurFondCanvas(int couleur) {
             canvas.drawRect(l, t, r, b, paintSelection);
             
             if (!isModeDeplacementObjet) {
-                float hsX = 12f / scaleFactorX;
-                float hsY = 12f / scaleFactorY;
-                float rcX = 4f / scaleFactorX;
-                float rcY = 4f / scaleFactorY;
+                float hsX = 10f / scaleFactorX;
+                float hsY = 10f / scaleFactorY;
+                float rcX = 5f / scaleFactorX;
+                float rcY = 5f / scaleFactorY;
+                float bordureLargeur = 1.5f / maxScale;
+                paintPoigneeBordure.setStrokeWidth(bordureLargeur);
                 
-                canvas.drawRoundRect(new android.graphics.RectF(l - hsX, t - hsY, l + hsX, t + hsY), rcX, rcY, paintPoignee);
-                canvas.drawRoundRect(new android.graphics.RectF(r - hsX, t - hsY, r + hsX, t + hsY), rcX, rcY, paintPoignee);
-                canvas.drawRoundRect(new android.graphics.RectF(l - hsX, b - hsY, l + hsX, b + hsY), rcX, rcY, paintPoignee);
-                canvas.drawRoundRect(new android.graphics.RectF(r - hsX, b - hsY, r + hsX, b + hsY), rcX, rcY, paintPoignee);
+                android.graphics.RectF poigneeHG = new android.graphics.RectF(l - hsX, t - hsY, l + hsX, t + hsY);
+                android.graphics.RectF poigneeHD = new android.graphics.RectF(r - hsX, t - hsY, r + hsX, t + hsY);
+                android.graphics.RectF poigneeBG = new android.graphics.RectF(l - hsX, b - hsY, l + hsX, b + hsY);
+                android.graphics.RectF poigneeBD = new android.graphics.RectF(r - hsX, b - hsY, r + hsX, b + hsY);
+                
+                canvas.drawRoundRect(poigneeHG, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeHG, rcX, rcY, paintPoigneeBordure);
+                canvas.drawRoundRect(poigneeHD, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeHD, rcX, rcY, paintPoigneeBordure);
+                canvas.drawRoundRect(poigneeBG, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeBG, rcX, rcY, paintPoigneeBordure);
+                canvas.drawRoundRect(poigneeBD, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeBD, rcX, rcY, paintPoigneeBordure);
                 
                 float cx = dimLargeur / 2f;
                 float rotY = t - (50f / scaleFactorY);
                 canvas.drawLine(cx, t, cx, rotY, paintSelection);
                 
                 float scaleFactorAvg = (scaleFactorX + scaleFactorY) / 2f;
-                canvas.drawCircle(cx, rotY, 15f / scaleFactorAvg, paintPoignee);
+                float rayonRotation = 13f / scaleFactorAvg;
+                canvas.drawCircle(cx, rotY, rayonRotation, paintPoignee);
+                canvas.drawCircle(cx, rotY, rayonRotation, paintPoigneeBordure);
             }
         }
         canvas.restore();
     }
-// bas 3
+// bas 3  
+
 // haut 4
     @Override
     protected void onDraw(Canvas canvas) {
