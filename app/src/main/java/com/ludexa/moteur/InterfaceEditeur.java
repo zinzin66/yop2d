@@ -224,7 +224,8 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         bandeauHaut.addView(separateurVertical());
 // bas 1
-   // haut 2
+
+// haut 2
         listeScenes = new ArrayList<>();
         if (cheminProjet != null) {
             try {
@@ -410,7 +411,16 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
             if (objSel != null) {
                 ObjetBase copie = objSel.clonerProfond();
                 copie.id = java.util.UUID.randomUUID().toString();
-                copie.nom = (copie.nom != null ? copie.nom : Traducteur.get("objet_nom_defaut")) + " " + Traducteur.get("projet_copie");
+                
+                String baseNom = objSel.nom != null ? objSel.nom : Traducteur.get("objet_nom_defaut");
+                int indexClone = 1;
+                String nomCandidat;
+                do {
+                    nomCandidat = baseNom + " " + indexClone;
+                    indexClone++;
+                } while (nomObjetDejaUtilise(nomCandidat, sceneActive));
+                copie.nom = nomCandidat;
+                
                 copie.x += 20;
                 copie.y += 20;
                 
@@ -490,6 +500,14 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         layoutPrincipal.addView(zoneMilieu);
 
         setContentView(layoutPrincipal);
+    }
+
+    private boolean nomObjetDejaUtilise(String nom, Scene scene) {
+        if (scene == null || scene.objets == null) return false;
+        for (ObjetBase o : scene.objets) {
+            if (o.nom != null && o.nom.equals(nom)) return true;
+        }
+        return false;
     }
 
     private void afficherMenuReglages() {
@@ -633,7 +651,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         startActivityForResult(intent, REQUEST_CODE_IMPORT_ASSET);
     }
 
-       @Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_IMPORT_ASSET && resultCode == Activity.RESULT_OK) {
@@ -645,6 +663,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         }
     }
 // bas 2
+    
 // haut 3
     // ici
     private void afficherMenuScene(View ancre) {
