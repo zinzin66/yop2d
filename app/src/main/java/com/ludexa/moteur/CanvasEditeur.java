@@ -18,7 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CanvasEditeur extends View {
-    private Paint paintGrille, paintGrilleMajeure, paintCamera, paintObjet, paintSelection, paintTexte, paintPoignee, paintPoigneeBordure;
+    private Paint paintGrille, paintGrilleMajeure, paintCamera, paintObjet, paintSelection, paintTexte, paintPoignee, paintPoigneeBordure, paintHitbox, paintPoigneeHitbox;
     private float cameraX = 0, cameraY = 0;
     private float lastTouchX, lastTouchY;
     private boolean isPanMode = false;
@@ -40,6 +40,7 @@ public class CanvasEditeur extends View {
     private int currentMode = 0; 
     private float dragStartX, dragStartY;
     private float initX, initY, initW, initH, initRot, initScaleX, initScaleY;
+    private float initHitboxLargeur, initHitboxHauteur, initHitboxDecalageX, initHitboxDecalageY;
     private Matrix initMatrix;
     
     private ScaleGestureDetector scaleGestureDetector;
@@ -162,6 +163,17 @@ public class CanvasEditeur extends View {
         paintPoigneeBordure.setColor(Color.WHITE);
         paintPoigneeBordure.setStyle(Paint.Style.STROKE);
         paintPoigneeBordure.setAntiAlias(true);
+
+        paintHitbox = new Paint();
+        paintHitbox.setColor(Palette.accentAmbre);
+        paintHitbox.setStyle(Paint.Style.STROKE);
+        paintHitbox.setAntiAlias(true);
+        paintHitbox.setPathEffect(new android.graphics.DashPathEffect(new float[]{10f, 6f}, 0f));
+
+        paintPoigneeHitbox = new Paint();
+        paintPoigneeHitbox.setColor(Palette.accentAmbre);
+        paintPoigneeHitbox.setStyle(Paint.Style.FILL);
+        paintPoigneeHitbox.setAntiAlias(true);
 
         scaleGestureDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
     }
@@ -651,6 +663,12 @@ public class CanvasEditeur extends View {
             float b = dimHauteur + 4f / scaleFactorY;
             
             canvas.drawRect(l, t, r, b, paintSelection);
+
+            if (objet.hitboxPersonnalisee) {
+                float[] rectHitbox = objet.getRectangleHitboxLocal();
+                paintHitbox.setStrokeWidth(2f / maxScale);
+                canvas.drawRect(rectHitbox[0], rectHitbox[1], rectHitbox[2], rectHitbox[3], paintHitbox);
+            }
             
             if (!isModeDeplacementObjet) {
                 float hsX = 10f / scaleFactorX;
@@ -698,13 +716,39 @@ public class CanvasEditeur extends View {
                 float rayonRotation = 13f / scaleFactorAvg;
                 canvas.drawCircle(cx, rotY, rayonRotation, paintPoignee);
                 canvas.drawCircle(cx, rotY, rayonRotation, paintPoigneeBordure);
+
+                if (objet.hitboxPersonnalisee) {
+                    float[] rectHitbox = objet.getRectangleHitboxLocal();
+                    float hHsX = 8f / scaleFactorX;
+                    float hHsY = 8f / scaleFactorY;
+                    float hRcX = 4f / scaleFactorX;
+                    float hRcY = 4f / scaleFactorY;
+
+                    android.graphics.RectF hTL = new android.graphics.RectF(rectHitbox[0] - hHsX, rectHitbox[1] - hHsY, rectHitbox[0] + hHsX, rectHitbox[1] + hHsY);
+                    android.graphics.RectF hTR = new android.graphics.RectF(rectHitbox[2] - hHsX, rectHitbox[1] - hHsY, rectHitbox[2] + hHsX, rectHitbox[1] + hHsY);
+                    android.graphics.RectF hBL = new android.graphics.RectF(rectHitbox[0] - hHsX, rectHitbox[3] - hHsY, rectHitbox[0] + hHsX, rectHitbox[3] + hHsY);
+                    android.graphics.RectF hBR = new android.graphics.RectF(rectHitbox[2] - hHsX, rectHitbox[3] - hHsY, rectHitbox[2] + hHsX, rectHitbox[3] + hHsY);
+
+                    canvas.drawRoundRect(hTL, hRcX, hRcY, paintPoigneeHitbox);
+                    canvas.drawRoundRect(hTL, hRcX, hRcY, paintPoigneeBordure);
+                    canvas.drawRoundRect(hTR, hRcX, hRcY, paintPoigneeHitbox);
+                    canvas.drawRoundRect(hTR, hRcX, hRcY, paintPoigneeBordure);
+                    canvas.drawRoundRect(hBL, hRcX, hRcY, paintPoigneeHitbox);
+                    canvas.drawRoundRect(hBL, hRcX, hRcY, paintPoigneeBordure);
+                    canvas.drawRoundRect(hBR, hRcX, hRcY, paintPoigneeHitbox);
+                    canvas.drawRoundRect(hBR, hRcX, hRcY, paintPoigneeBordure);
+
+                    float centreHX = (rectHitbox[0] + rectHitbox[2]) / 2f;
+                    float centreHY = (rectHitbox[1] + rectHitbox[3]) / 2f;
+                    float rayonCentreH = 8f / scaleFactorAvg;
+                    canvas.drawCircle(centreHX, centreHY, rayonCentreH, paintPoigneeHitbox);
+                    canvas.drawCircle(centreHX, centreHY, rayonCentreH, paintPoigneeBordure);
+                }
             }
         }
         canvas.restore();
     }
 // bas 3
-    
-
 // haut 4
     @Override
     protected void onDraw(Canvas canvas) {
@@ -817,7 +861,8 @@ public class CanvasEditeur extends View {
         return null;
     }
 // bas 4
-// haut 5
+
+    // haut 5
     private int getTouchTarget(float xEcran, float yEcran) {
         float[] scenePos = ecranVersScene(xEcran, yEcran);
         float sx = scenePos[0], sy = scenePos[1];
@@ -841,6 +886,18 @@ public class CanvasEditeur extends View {
             float rotY = -50f / scaleY;
 
             if (!isModeDeplacementObjet) {
+                if (objetSelectionne.hitboxPersonnalisee) {
+                    float[] rectHitbox = objetSelectionne.getRectangleHitboxLocal();
+                    float centreHX = (rectHitbox[0] + rectHitbox[2]) / 2f;
+                    float centreHY = (rectHitbox[1] + rectHitbox[3]) / 2f;
+
+                    if (Math.abs(lx - rectHitbox[0]) < hitX && Math.abs(ly - rectHitbox[1]) < hitY) return 31;
+                    if (Math.abs(lx - rectHitbox[2]) < hitX && Math.abs(ly - rectHitbox[1]) < hitY) return 32;
+                    if (Math.abs(lx - rectHitbox[0]) < hitX && Math.abs(ly - rectHitbox[3]) < hitY) return 33;
+                    if (Math.abs(lx - rectHitbox[2]) < hitX && Math.abs(ly - rectHitbox[3]) < hitY) return 34;
+                    if (Math.abs(lx - centreHX) < hitX && Math.abs(ly - centreHY) < hitY) return 30;
+                }
+
                 if (Math.hypot(lx - midX, ly - rotY) < hitAvg) return 8; 
                 
                 if (Math.abs(lx) < hitX && Math.abs(ly) < hitY) return 4; 
@@ -895,6 +952,10 @@ public class CanvasEditeur extends View {
                         initMatrix = getAbsoluteMatrix(objetSelectionne);
                         dragStartX = objetSelectionne.x; dragStartY = objetSelectionne.y;
                         dragRawX = objetSelectionne.x; dragRawY = objetSelectionne.y;
+                        initHitboxLargeur = objetSelectionne.hitboxLargeur;
+                        initHitboxHauteur = objetSelectionne.hitboxHauteur;
+                        initHitboxDecalageX = objetSelectionne.hitboxDecalageX;
+                        initHitboxDecalageY = objetSelectionne.hitboxDecalageY;
                     }
                     if (inspecteurLie != null) inspecteurLie.afficherObjet(objetSelectionne);
                     invalidate();
@@ -981,6 +1042,37 @@ public class CanvasEditeur extends View {
                         objetSelectionne.x += (initAncParent[0] - newAncParent[0]);
                         objetSelectionne.y += (initAncParent[1] - newAncParent[1]);
                     }
+                } else if (currentMode >= 30 && currentMode <= 34 && objetSelectionne != null && objetSelectionne.hitboxPersonnalisee) {
+                    if (!objetSelectionne.estVerrouille) {
+                        float[] localPt = worldToLocal(objetSelectionne, sx, sy);
+                        float lxH = localPt[0], lyH = localPt[1];
+
+                        if (currentMode == 30) {
+                            objetSelectionne.hitboxDecalageX = lxH - objetSelectionne.largeur / 2f;
+                            objetSelectionne.hitboxDecalageY = lyH - objetSelectionne.hauteur / 2f;
+                        } else {
+                            float initGauche = (objetSelectionne.largeur - initHitboxLargeur) / 2f + initHitboxDecalageX;
+                            float initHaut = (objetSelectionne.hauteur - initHitboxHauteur) / 2f + initHitboxDecalageY;
+                            float initDroite = initGauche + initHitboxLargeur;
+                            float initBas = initHaut + initHitboxHauteur;
+
+                            float ancreX, ancreY;
+                            if (currentMode == 31) { ancreX = initDroite; ancreY = initBas; }
+                            else if (currentMode == 32) { ancreX = initGauche; ancreY = initBas; }
+                            else if (currentMode == 33) { ancreX = initDroite; ancreY = initHaut; }
+                            else { ancreX = initGauche; ancreY = initHaut; }
+
+                            float nouvelleLargeur = Math.max(4f, Math.abs(ancreX - lxH));
+                            float nouvelleHauteur = Math.max(4f, Math.abs(ancreY - lyH));
+                            float nouveauCentreX = (ancreX + lxH) / 2f;
+                            float nouveauCentreY = (ancreY + lyH) / 2f;
+
+                            objetSelectionne.hitboxLargeur = nouvelleLargeur;
+                            objetSelectionne.hitboxHauteur = nouvelleHauteur;
+                            objetSelectionne.hitboxDecalageX = nouveauCentreX - objetSelectionne.largeur / 2f;
+                            objetSelectionne.hitboxDecalageY = nouveauCentreY - objetSelectionne.hauteur / 2f;
+                        }
+                    }
                 } else if (currentMode == 8 && objetSelectionne != null) { 
                     if (!objetSelectionne.estVerrouille) {
                         float[] centerWorld = {objetSelectionne.largeur / 2f, objetSelectionne.hauteur / 2f};
@@ -1059,5 +1151,5 @@ public class CanvasEditeur extends View {
     }
 }
 // bas 5
-
-
+                                
+                        
