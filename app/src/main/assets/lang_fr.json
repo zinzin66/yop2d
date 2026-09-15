@@ -590,7 +590,15 @@
 "obj_prefix_barre_progression": "BarreProg",
   "btn_ouvrir_dialogues": "Texte",
 "btn_gerer_animations": "Animation",
-"btn_gerer_styles": "Titre"
+"btn_gerer_styles": "Titre",
+  "reglages_titre_menu": "Réglages",
+"reglages_titre_grille": "Taille de la grille",
+"reglages_titre_resolution": "Résolution du jeu (largeur / hauteur)",
+"reglages_titre_fond_canvas": "Couleur de fond du canvas",
+  "insp_sep_hitbox": "Hitbox (zone de collision)",
+"insp_cb_hitbox_personnalisee": "Hitbox personnalisée",
+"insp_label_hitbox_dim": "Largeur / Hauteur de la hitbox",
+"insp_label_hitbox_decalage": "Décalage X / Y"
   
   
   

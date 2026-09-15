@@ -35,11 +35,13 @@ public class UtilCollision {
 
     private static float[] obtenirCoinsMonde(ObjetBase obj, List<ObjetBase> contexte, VueJeu vueJeu) {
         Matrix matrice = vueJeu.getAbsoluteMatrix(obj, contexte);
+        float[] rectHitbox = obj.getRectangleHitboxLocal();
+        float gauche = rectHitbox[0], haut = rectHitbox[1], droite = rectHitbox[2], bas = rectHitbox[3];
         float[] coinsLocaux = {
-            0, 0,
-            obj.largeur, 0,
-            obj.largeur, obj.hauteur,
-            0, obj.hauteur
+            gauche, haut,
+            droite, haut,
+            droite, bas,
+            gauche, bas
         };
         matrice.mapPoints(coinsLocaux);
         return coinsLocaux;

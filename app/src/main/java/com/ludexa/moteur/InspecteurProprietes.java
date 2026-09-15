@@ -79,6 +79,11 @@ public class InspecteurProprietes extends LinearLayout {
     private EditText champRebond;
     private EditText champGravite;
 
+    private LinearLayout blocHitbox;
+    private CheckBox cbHitboxPersonnalisee;
+    private LinearLayout conteneurHitboxDetails;
+    private EditText champHitboxLargeur, champHitboxHauteur, champHitboxDecalageX, champHitboxDecalageY;
+
     private LinearLayout blocVariables;
     private LinearLayout conteneurListeVariables;
     private Button btnAjouterVariable;
@@ -811,6 +816,71 @@ public class InspecteurProprietes extends LinearLayout {
         blocPhysique.addView(conteneurPhysiqueDetails);
         blocProprietes.addView(blocPhysique);
 
+        blocHitbox = new LinearLayout(context);
+        blocHitbox.setOrientation(LinearLayout.VERTICAL);
+        styliserSection(blocHitbox);
+
+        TextView sepHitbox = new TextView(context);
+        sepHitbox.setText(Traducteur.get("insp_sep_hitbox"));
+        styliserSousTitre(sepHitbox);
+        blocHitbox.addView(sepHitbox);
+
+        cbHitboxPersonnalisee = new CheckBox(context);
+        cbHitboxPersonnalisee.setText(Traducteur.get("insp_cb_hitbox_personnalisee"));
+        styliserCase(cbHitboxPersonnalisee);
+        blocHitbox.addView(cbHitboxPersonnalisee);
+
+        conteneurHitboxDetails = new LinearLayout(context);
+        conteneurHitboxDetails.setOrientation(LinearLayout.VERTICAL);
+        conteneurHitboxDetails.setVisibility(View.GONE);
+
+        TextView labelHitboxDim = new TextView(context);
+        labelHitboxDim.setText(Traducteur.get("insp_label_hitbox_dim"));
+        styliserLabel(labelHitboxDim);
+        conteneurHitboxDetails.addView(labelHitboxDim);
+
+        LinearLayout ligneHitboxDim = new LinearLayout(context);
+        ligneHitboxDim.setOrientation(LinearLayout.HORIZONTAL);
+
+        champHitboxLargeur = new EditText(context);
+        champHitboxLargeur.setHint(Traducteur.get("insp_hint_largeur"));
+        champHitboxLargeur.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        styliserChampFlexible(champHitboxLargeur);
+        ligneHitboxDim.addView(champHitboxLargeur);
+
+        champHitboxHauteur = new EditText(context);
+        champHitboxHauteur.setHint(Traducteur.get("insp_hint_hauteur"));
+        champHitboxHauteur.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        styliserChampFlexible(champHitboxHauteur);
+        ligneHitboxDim.addView(champHitboxHauteur);
+
+        conteneurHitboxDetails.addView(ligneHitboxDim);
+
+        TextView labelHitboxDecalage = new TextView(context);
+        labelHitboxDecalage.setText(Traducteur.get("insp_label_hitbox_decalage"));
+        styliserLabel(labelHitboxDecalage);
+        conteneurHitboxDetails.addView(labelHitboxDecalage);
+
+        LinearLayout ligneHitboxDecalage = new LinearLayout(context);
+        ligneHitboxDecalage.setOrientation(LinearLayout.HORIZONTAL);
+
+        champHitboxDecalageX = new EditText(context);
+        champHitboxDecalageX.setHint(Traducteur.get("insp_hint_x"));
+        champHitboxDecalageX.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
+        styliserChampFlexible(champHitboxDecalageX);
+        ligneHitboxDecalage.addView(champHitboxDecalageX);
+
+        champHitboxDecalageY = new EditText(context);
+        champHitboxDecalageY.setHint(Traducteur.get("insp_hint_y"));
+        champHitboxDecalageY.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
+        styliserChampFlexible(champHitboxDecalageY);
+        ligneHitboxDecalage.addView(champHitboxDecalageY);
+
+        conteneurHitboxDetails.addView(ligneHitboxDecalage);
+
+        blocHitbox.addView(conteneurHitboxDetails);
+        blocProprietes.addView(blocHitbox);
+
         blocVariables = new LinearLayout(context);
         blocVariables.setOrientation(LinearLayout.VERTICAL);
         styliserSection(blocVariables);
@@ -1206,6 +1276,34 @@ public class InspecteurProprietes extends LinearLayout {
                     objetCourant.graviteScale = Float.parseFloat(texte);
                 } catch (NumberFormatException ignored) {}
             }
+        }));
+
+        cbHitboxPersonnalisee.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (objetCourant != null && !miseAJourEnCours) {
+                objetCourant.hitboxPersonnalisee = isChecked;
+                if (isChecked && objetCourant.hitboxLargeur <= 0f && objetCourant.hitboxHauteur <= 0f) {
+                    objetCourant.hitboxLargeur = objetCourant.largeur;
+                    objetCourant.hitboxHauteur = objetCourant.hauteur;
+                }
+                canvasEditeur.invalidate();
+                afficherObjet(objetCourant);
+            }
+        });
+
+        champHitboxLargeur.addTextChangedListener(creerWatcherSimple(texte -> {
+            if (objetCourant != null) { try { objetCourant.hitboxLargeur = Float.parseFloat(texte); canvasEditeur.invalidate(); } catch (NumberFormatException ignored) {} }
+        }));
+
+        champHitboxHauteur.addTextChangedListener(creerWatcherSimple(texte -> {
+            if (objetCourant != null) { try { objetCourant.hitboxHauteur = Float.parseFloat(texte); canvasEditeur.invalidate(); } catch (NumberFormatException ignored) {} }
+        }));
+
+        champHitboxDecalageX.addTextChangedListener(creerWatcherSimple(texte -> {
+            if (objetCourant != null) { try { objetCourant.hitboxDecalageX = Float.parseFloat(texte); canvasEditeur.invalidate(); } catch (NumberFormatException ignored) {} }
+        }));
+
+        champHitboxDecalageY.addTextChangedListener(creerWatcherSimple(texte -> {
+            if (objetCourant != null) { try { objetCourant.hitboxDecalageY = Float.parseFloat(texte); canvasEditeur.invalidate(); } catch (NumberFormatException ignored) {} }
         }));
 
         cbRamassable.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -1724,6 +1822,17 @@ public class InspecteurProprietes extends LinearLayout {
             }
             champRebond.setText(String.valueOf(objet.rebond));
             champGravite.setText(String.valueOf(objet.graviteScale));
+
+            cbHitboxPersonnalisee.setChecked(objet.hitboxPersonnalisee);
+            if (objet.hitboxPersonnalisee) {
+                conteneurHitboxDetails.setVisibility(View.VISIBLE);
+                champHitboxLargeur.setText(String.valueOf((int) objet.hitboxLargeur));
+                champHitboxHauteur.setText(String.valueOf((int) objet.hitboxHauteur));
+                champHitboxDecalageX.setText(String.valueOf((int) objet.hitboxDecalageX));
+                champHitboxDecalageY.setText(String.valueOf((int) objet.hitboxDecalageY));
+            } else {
+                conteneurHitboxDetails.setVisibility(View.GONE);
+            }
 
             if ("texte".equals(objet.type) || "titre_stylise".equals(objet.type)) {
                 blocTexte.setVisibility(View.VISIBLE);
