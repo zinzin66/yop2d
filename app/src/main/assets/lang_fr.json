@@ -590,7 +590,11 @@
 "obj_prefix_barre_progression": "BarreProg",
   "btn_ouvrir_dialogues": "Texte",
 "btn_gerer_animations": "Animation",
-"btn_gerer_styles": "Titre"
+"btn_gerer_styles": "Titre",
+  "reglages_titre_menu": "Réglages",
+"reglages_titre_grille": "Taille de la grille",
+"reglages_titre_resolution": "Résolution du jeu (largeur / hauteur)",
+"reglages_titre_fond_canvas": "Couleur de fond du canvas"
   
   
   
