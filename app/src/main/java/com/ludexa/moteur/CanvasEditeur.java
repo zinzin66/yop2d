@@ -18,13 +18,17 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CanvasEditeur extends View {
-    private Paint paintGrille, paintCamera, paintObjet, paintSelection, paintTexte, paintPoignee;
+    private Paint paintGrille, paintGrilleMajeure, paintCamera, paintObjet, paintSelection, paintTexte, paintPoignee;
     private float cameraX = 0, cameraY = 0;
     private float lastTouchX, lastTouchY;
     private boolean isPanMode = false;
     private boolean isModeDeplacementObjet = false;
     private float niveauZoom = 1.0f;
 
+    private int tailleGrille = 50;
+    private boolean snapActif = false;
+    private float dragRawX, dragRawY;
+    
     private Scene sceneActive;
     private ObjetBase objetSelectionne;
     private InspecteurProprietes inspecteurLie;
@@ -95,13 +99,24 @@ public class CanvasEditeur extends View {
 
     public boolean isModeDeplacementObjet() { return isModeDeplacementObjet; }
 
+    public boolean isSnapActif() { return snapActif; }
+    public void setSnapActif(boolean actif) { this.snapActif = actif; invalidate(); }
+    public int getTailleGrille() { return tailleGrille; }
+
     private void init() {
         paintGrille = new Paint();
         paintGrille.setColor(Palette.canvasGrille);
         paintGrille.setStyle(Paint.Style.STROKE);
         paintGrille.setStrokeWidth(1);
         paintGrille.setAntiAlias(false);
-        paintGrille.setAlpha(180);
+        paintGrille.setAlpha(255);
+
+        paintGrilleMajeure = new Paint();
+        paintGrilleMajeure.setColor(Palette.accentBleu);
+        paintGrilleMajeure.setStyle(Paint.Style.STROKE);
+        paintGrilleMajeure.setStrokeWidth(1.5f);
+        paintGrilleMajeure.setAntiAlias(true);
+        paintGrilleMajeure.setAlpha(110);
 
         setBackgroundColor(Palette.canvasFond);
 
@@ -254,6 +269,7 @@ public class CanvasEditeur extends View {
         return pts;
     }
 // bas 1
+             
 // haut 2
     private float getHauteurReelle(ObjetBase objet) {
         if (!"texte".equals(objet.type) && !"titre_stylise".equals(objet.type)) return objet.hauteur;
@@ -642,8 +658,6 @@ public class CanvasEditeur extends View {
         canvas.restore();
     }
 // bas 3
-                
-
 // haut 4
     @Override
     protected void onDraw(Canvas canvas) {
@@ -652,19 +666,32 @@ public class CanvasEditeur extends View {
         canvas.save();
         canvas.scale(niveauZoom, niveauZoom, getWidth() / 2f, getHeight() / 2f);
 
-        int gridSize = 100;
+        int gridSize = tailleGrille;
         int w = getWidth();
         int h = getHeight();
         int limiteMax = (int) (Math.max(w, h) * 2 / niveauZoom);
 
-        for (int i = -limiteMax + (int) (cameraX % gridSize); i < limiteMax; i += gridSize) {
-            canvas.drawLine(i, -limiteMax, i, limiteMax, paintGrille);
-        }
-        for (int i = -limiteMax + (int) (cameraY % gridSize); i < limiteMax; i += gridSize) {
-            canvas.drawLine(-limiteMax, i, limiteMax, i, paintGrille);
+        float debutMondeX = -cameraX - limiteMax;
+        float finMondeX = -cameraX + limiteMax;
+        int idxDebutX = (int) Math.floor(debutMondeX / gridSize) - 1;
+        int idxFinX = (int) Math.ceil(finMondeX / gridSize) + 1;
+
+        for (int idx = idxDebutX; idx <= idxFinX; idx++) {
+            float screenX = idx * gridSize + cameraX;
+            Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
+            canvas.drawLine(screenX, -limiteMax, screenX, limiteMax, p);
         }
 
-        canvas.drawRect(0 + cameraX, 0 + cameraY, ConfigurationJeu.LARGEUR_JEU + cameraX, ConfigurationJeu.HAUTEUR_JEU + cameraY, paintCamera);
+        float debutMondeY = -cameraY - limiteMax;
+        float finMondeY = -cameraY + limiteMax;
+        int idxDebutY = (int) Math.floor(debutMondeY / gridSize) - 1;
+        int idxFinY = (int) Math.ceil(finMondeY / gridSize) + 1;
+
+        for (int idx = idxDebutY; idx <= idxFinY; idx++) {
+            float screenY = idx * gridSize + cameraY;
+            Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
+            canvas.drawLine(-limiteMax, screenY, limiteMax, screenY, p);
+        }
 
         if (sceneActive != null) {
             List<ObjetBase> objetsTries = new ArrayList<>(sceneActive.objets);
@@ -675,6 +702,9 @@ public class CanvasEditeur extends View {
                 dessinerObjetBase(canvas, objet, sceneActive.objets, 255, true);
             }
         }
+
+        canvas.drawRect(0 + cameraX, 0 + cameraY, ConfigurationJeu.LARGEUR_JEU + cameraX, ConfigurationJeu.HAUTEUR_JEU + cameraY, paintCamera);
+
         canvas.restore();
     }
 
@@ -785,6 +815,10 @@ public class CanvasEditeur extends View {
         return 0; 
     }
 
+    private float accrocherGrille(float valeur) {
+        return Math.round(valeur / tailleGrille) * tailleGrille;
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         scaleGestureDetector.onTouchEvent(event);
@@ -807,6 +841,7 @@ public class CanvasEditeur extends View {
                         initScaleX = objetSelectionne.scaleX; initScaleY = objetSelectionne.scaleY;
                         initMatrix = getAbsoluteMatrix(objetSelectionne);
                         dragStartX = objetSelectionne.x; dragStartY = objetSelectionne.y;
+                        dragRawX = objetSelectionne.x; dragRawY = objetSelectionne.y;
                     }
                     if (inspecteurLie != null) inspecteurLie.afficherObjet(objetSelectionne);
                     invalidate();
@@ -834,8 +869,16 @@ public class CanvasEditeur extends View {
                         float[] lastTouchP = {ecranVersScene(lastTouchX, lastTouchY)[0], ecranVersScene(lastTouchX, lastTouchY)[1]};
                         
                         invParent.mapPoints(curTouchP); invParent.mapPoints(lastTouchP);
-                        objetSelectionne.x += (curTouchP[0] - lastTouchP[0]);
-                        objetSelectionne.y += (curTouchP[1] - lastTouchP[1]);
+                        dragRawX += (curTouchP[0] - lastTouchP[0]);
+                        dragRawY += (curTouchP[1] - lastTouchP[1]);
+
+                        if (snapActif) {
+                            objetSelectionne.x = accrocherGrille(dragRawX);
+                            objetSelectionne.y = accrocherGrille(dragRawY);
+                        } else {
+                            objetSelectionne.x = dragRawX;
+                            objetSelectionne.y = dragRawY;
+                        }
                     }
                 } else if (currentMode >= 4 && currentMode <= 7 && objetSelectionne != null) { 
                     if (!objetSelectionne.estVerrouille) {
@@ -955,19 +998,3 @@ public class CanvasEditeur extends View {
     }
 }
 // bas 5
-
-
-
-
-
-    
-
-
-
-    
-
-    
-
-
-
-
