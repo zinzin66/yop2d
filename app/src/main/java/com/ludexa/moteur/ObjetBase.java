@@ -106,6 +106,13 @@ public class ObjetBase {
     public float progressionActuelle = 100f;
     public int couleurFondProgression = Color.DKGRAY;
 
+    // --- NOUVEAUX CHAMPS : HITBOX PERSONNALISÉE ---
+    public boolean hitboxPersonnalisee = false;
+    public float hitboxLargeur = 0f;
+    public float hitboxHauteur = 0f;
+    public float hitboxDecalageX = 0f;
+    public float hitboxDecalageY = 0f;
+
     public List<Variable> variablesLocales = new ArrayList<>();
     public transient String idCloneRacine = null;
 
@@ -122,6 +129,16 @@ public class ObjetBase {
         this.hauteur = hauteur;
         this.ancienneX = x;
         this.ancienneY = y;
+    }
+
+    // Retourne le rectangle de collision effectif, en coordonnées locales (avant rotation/échelle) :
+    // {gauche, haut, droite, bas}. Si hitboxPersonnalisee est faux, correspond exactement à largeur/hauteur.
+    public float[] getRectangleHitboxLocal() {
+        float effL = hitboxPersonnalisee ? hitboxLargeur : largeur;
+        float effH = hitboxPersonnalisee ? hitboxHauteur : hauteur;
+        float gauche = (largeur - effL) / 2f + hitboxDecalageX;
+        float haut = (hauteur - effH) / 2f + hitboxDecalageY;
+        return new float[]{gauche, haut, gauche + effL, haut + effH};
     }
 
     public ObjetBase clonerProfond() {
@@ -208,6 +225,13 @@ public class ObjetBase {
         copie.progressionMax = this.progressionMax;
         copie.progressionActuelle = this.progressionActuelle;
         copie.couleurFondProgression = this.couleurFondProgression;
+
+        // --- COPIE DES CHAMPS HITBOX PERSONNALISÉE ---
+        copie.hitboxPersonnalisee = this.hitboxPersonnalisee;
+        copie.hitboxLargeur = this.hitboxLargeur;
+        copie.hitboxHauteur = this.hitboxHauteur;
+        copie.hitboxDecalageX = this.hitboxDecalageX;
+        copie.hitboxDecalageY = this.hitboxDecalageY;
 
         copie.variablesLocales = new ArrayList<>();
         if (this.variablesLocales != null) {
