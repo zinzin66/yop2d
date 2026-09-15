@@ -1,4 +1,3 @@
-// haut 1
 package com.ludexa.moteur;
 
 import android.app.Dialog;
@@ -218,6 +217,9 @@ public class DialogueCreationObjets extends Dialog {
         }
 
         if (nouveau != null) {
+            float[] centreVisible = canvas.getCentreVisible();
+            nouveau.x = centreVisible[0] - nouveau.largeur / 2f;
+            nouveau.y = centreVisible[1] - nouveau.hauteur / 2f;
             finaliserCreationObjet(nouveau);
         }
     }
@@ -291,7 +293,8 @@ public class DialogueCreationObjets extends Dialog {
                 float initLargeur = Math.max(50f, limites.right);
                 float initHauteur = Math.max(50f, limites.bottom);
                 
-                ObjetBase nouveau = new ObjetBase(nomUnique, 150f, 150f, initLargeur, initHauteur);
+                float[] centreVisible = canvas.getCentreVisible();
+                ObjetBase nouveau = new ObjetBase(nomUnique, centreVisible[0] - initLargeur / 2f, centreVisible[1] - initHauteur / 2f, initLargeur, initHauteur);
                 nouveau.type = "scene_instance";
                 nouveau.sceneLieeId = s.id;
                 nouveau.afficherFondColore = true;
@@ -351,4 +354,3 @@ public class DialogueCreationObjets extends Dialog {
         return nom;
     }
 }
-// bas 1
