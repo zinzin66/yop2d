@@ -412,7 +412,8 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
                 ObjetBase copie = objSel.clonerProfond();
                 copie.id = java.util.UUID.randomUUID().toString();
                 
-                String baseNom = objSel.nom != null ? objSel.nom : Traducteur.get("objet_nom_defaut");
+                String nomOriginal = objSel.nom != null ? objSel.nom : Traducteur.get("objet_nom_defaut");
+                String baseNom = nomOriginal.replaceAll("\\s+\\d+$", "");
                 int indexClone = 1;
                 String nomCandidat;
                 do {
