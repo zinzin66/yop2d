@@ -387,7 +387,7 @@ public class CanvasEditeur extends View {
         }
     }
 // bas 2
-  // haut 3
+// haut 3
     private void dessinerObjetBase(Canvas canvas, ObjetBase objet, List<ObjetBase> contexteObjets, int baseAlpha, boolean isRoot) {
         int alphaVal = (int) (objet.alpha * baseAlpha);
         if (alphaVal < 0) alphaVal = 0;
@@ -660,6 +660,9 @@ public class CanvasEditeur extends View {
                 float bordureLargeur = 1.5f / maxScale;
                 paintPoigneeBordure.setStrokeWidth(bordureLargeur);
                 
+                float cx = dimLargeur / 2f;
+                float cy = (t + b) / 2f;
+                
                 android.graphics.RectF poigneeHG = new android.graphics.RectF(l - hsX, t - hsY, l + hsX, t + hsY);
                 android.graphics.RectF poigneeHD = new android.graphics.RectF(r - hsX, t - hsY, r + hsX, t + hsY);
                 android.graphics.RectF poigneeBG = new android.graphics.RectF(l - hsX, b - hsY, l + hsX, b + hsY);
@@ -673,8 +676,21 @@ public class CanvasEditeur extends View {
                 canvas.drawRoundRect(poigneeBG, rcX, rcY, paintPoigneeBordure);
                 canvas.drawRoundRect(poigneeBD, rcX, rcY, paintPoignee);
                 canvas.drawRoundRect(poigneeBD, rcX, rcY, paintPoigneeBordure);
+
+                android.graphics.RectF poigneeHaut = new android.graphics.RectF(cx - hsX, t - hsY, cx + hsX, t + hsY);
+                android.graphics.RectF poigneeBas = new android.graphics.RectF(cx - hsX, b - hsY, cx + hsX, b + hsY);
+                android.graphics.RectF poigneeGauche = new android.graphics.RectF(l - hsX, cy - hsY, l + hsX, cy + hsY);
+                android.graphics.RectF poigneeDroite = new android.graphics.RectF(r - hsX, cy - hsY, r + hsX, cy + hsY);
+
+                canvas.drawRoundRect(poigneeHaut, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeHaut, rcX, rcY, paintPoigneeBordure);
+                canvas.drawRoundRect(poigneeBas, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeBas, rcX, rcY, paintPoigneeBordure);
+                canvas.drawRoundRect(poigneeGauche, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeGauche, rcX, rcY, paintPoigneeBordure);
+                canvas.drawRoundRect(poigneeDroite, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeDroite, rcX, rcY, paintPoigneeBordure);
                 
-                float cx = dimLargeur / 2f;
                 float rotY = t - (50f / scaleFactorY);
                 canvas.drawLine(cx, t, cx, rotY, paintSelection);
                 
@@ -686,7 +702,8 @@ public class CanvasEditeur extends View {
         }
         canvas.restore();
     }
-// bas 3  
+// bas 3
+    
 
 // haut 4
     @Override
@@ -820,6 +837,7 @@ public class CanvasEditeur extends View {
             float dimHauteur = ("scene_instance".equals(objetSelectionne.type)) ? Math.max(50f, getHauteurReelle(objetSelectionne)) : getHauteurReelle(objetSelectionne);
 
             float midX = dimLargeur / 2f;
+            float midY = dimHauteur / 2f;
             float rotY = -50f / scaleY;
 
             if (!isModeDeplacementObjet) {
@@ -829,6 +847,11 @@ public class CanvasEditeur extends View {
                 if (Math.abs(lx - dimLargeur) < hitX && Math.abs(ly) < hitY) return 5; 
                 if (Math.abs(lx) < hitX && Math.abs(ly - dimHauteur) < hitY) return 6; 
                 if (Math.abs(lx - dimLargeur) < hitX && Math.abs(ly - dimHauteur) < hitY) return 7; 
+
+                if (Math.abs(lx - midX) < hitX && Math.abs(ly) < hitY) return 9; 
+                if (Math.abs(lx - midX) < hitX && Math.abs(ly - dimHauteur) < hitY) return 10; 
+                if (Math.abs(lx) < hitX && Math.abs(ly - midY) < hitY) return 11; 
+                if (Math.abs(lx - dimLargeur) < hitX && Math.abs(ly - midY) < hitY) return 12; 
             }
             
             if (lx >= 0 && lx <= dimLargeur && ly >= 0 && ly <= dimHauteur) return 2; 
@@ -910,7 +933,7 @@ public class CanvasEditeur extends View {
                             objetSelectionne.y = dragRawY;
                         }
                     }
-                } else if (currentMode >= 4 && currentMode <= 7 && objetSelectionne != null) { 
+                } else if (((currentMode >= 4 && currentMode <= 7) || (currentMode >= 9 && currentMode <= 12)) && objetSelectionne != null) { 
                     if (!objetSelectionne.estVerrouille) {
                         Matrix invInit = new Matrix();
                         initMatrix.invert(invInit);
@@ -923,14 +946,22 @@ public class CanvasEditeur extends View {
                         else if (currentMode == 5) { newSx = initScaleX * (lx / initW); newSy = initScaleY * ((initH - ly) / initH); }
                         else if (currentMode == 6) { newSx = initScaleX * ((initW - lx) / initW); newSy = initScaleY * (ly / initH); }
                         else if (currentMode == 7) { newSx = initScaleX * (lx / initW); newSy = initScaleY * (ly / initH); }
+                        else if (currentMode == 9) { newSy = initScaleY * ((initH - ly) / initH); }
+                        else if (currentMode == 10) { newSy = initScaleY * (ly / initH); }
+                        else if (currentMode == 11) { newSx = initScaleX * ((initW - lx) / initW); }
+                        else if (currentMode == 12) { newSx = initScaleX * (lx / initW); }
                         
                         if (Math.abs(newSx) < 0.05f) newSx = 0.05f * Math.signum(newSx);
                         if (Math.abs(newSy) < 0.05f) newSy = 0.05f * Math.signum(newSy);
                         
                         objetSelectionne.scaleX = newSx; objetSelectionne.scaleY = newSy;
                         
-                        float ancLocX = (currentMode == 4 || currentMode == 6) ? initW : 0;
-                        float ancLocY = (currentMode == 4 || currentMode == 5) ? initH : 0;
+                        float ancLocX = (currentMode == 4 || currentMode == 6 || currentMode == 11) ? initW
+                                : (currentMode == 5 || currentMode == 7 || currentMode == 12) ? 0
+                                : initW / 2f;
+                        float ancLocY = (currentMode == 4 || currentMode == 5 || currentMode == 9) ? initH
+                                : (currentMode == 6 || currentMode == 7 || currentMode == 10) ? 0
+                                : initH / 2f;
                         
                         float[] initAnchorWorld = {ancLocX, ancLocY};
                         initMatrix.mapPoints(initAnchorWorld);
@@ -1028,3 +1059,5 @@ public class CanvasEditeur extends View {
     }
 }
 // bas 5
+
+
