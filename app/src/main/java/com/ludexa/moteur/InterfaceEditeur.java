@@ -567,15 +567,25 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         int[] couleursRapides = {
                 Color.parseColor("#20252D"), Color.parseColor("#161A20"), Color.parseColor("#1A1F26"),
                 Color.BLACK, Color.parseColor("#2F3B45"), Color.parseColor("#0D1117"),
-                Color.parseColor("#263238"), Color.parseColor("#1B1B2F")
+                Color.parseColor("#263238"), Color.parseColor("#1B1B2F"), Color.parseColor("#D8DEE6")
         };
+        List<View> pastilles = new ArrayList<>();
         for (int c : couleursRapides) {
             View pastille = new View(this);
             LinearLayout.LayoutParams lpPastille = new LinearLayout.LayoutParams(dp(36), dp(36));
             lpPastille.setMargins(0, 0, dp(10), 0);
             pastille.setLayoutParams(lpPastille);
-            pastille.setBackground(fond(c, 8, Palette.bordure, 1));
-            pastille.setOnClickListener(vp -> couleurChoisie[0] = c);
+            boolean estSelectionnee = (c == couleurChoisie[0]);
+            pastille.setBackground(fond(c, 8, estSelectionnee ? Color.WHITE : Palette.bordure, estSelectionnee ? 2 : 1));
+            pastille.setOnClickListener(vp -> {
+                couleurChoisie[0] = c;
+                for (int i = 0; i < pastilles.size(); i++) {
+                    int cAutre = couleursRapides[i];
+                    boolean sel = (cAutre == c);
+                    pastilles.get(i).setBackground(fond(cAutre, 8, sel ? Color.WHITE : Palette.bordure, sel ? 2 : 1));
+                }
+            });
+            pastilles.add(pastille);
             ligneCouleurs.addView(pastille);
         }
         scrollCouleurs.addView(ligneCouleurs);
