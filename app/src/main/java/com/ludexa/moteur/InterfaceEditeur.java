@@ -391,16 +391,16 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         
         ImageButton boutonMagnetisme = new ImageButton(this);
         boutonMagnetisme.setImageResource(R.drawable.grid_4x4_24px);
-      styliserBoutonBandeau(boutonMagnetisme);
-      boutonMagnetisme.setOnClickListener(v -> {
-    boolean nouveauMode = !canvasEditeur.isSnapActif();
-    canvasEditeur.setSnapActif(nouveauMode);
-    boutonMagnetisme.setBackground(fond(
-            nouveauMode ? Palette.boutonSurvol : Palette.boutonNormal, 6, Palette.bordure, 1));
-    Palette.appliquerCouleurIcone(boutonMagnetisme,
-            nouveauMode ? Palette.iconeSurvol : Palette.iconeNormal);
-});
-      bandeauHaut.addView(boutonMagnetisme);
+        styliserBoutonBandeau(boutonMagnetisme);
+        boutonMagnetisme.setOnClickListener(v -> {
+            boolean nouveauMode = !canvasEditeur.isSnapActif();
+            canvasEditeur.setSnapActif(nouveauMode);
+            boutonMagnetisme.setBackground(fond(
+                    nouveauMode ? Palette.boutonSurvol : Palette.boutonNormal, 6, Palette.bordure, 1));
+            Palette.appliquerCouleurIcone(boutonMagnetisme,
+                    nouveauMode ? Palette.iconeSurvol : Palette.iconeNormal);
+        });
+        bandeauHaut.addView(boutonMagnetisme);
         
         ImageButton boutonCopierObjet = new ImageButton(this);
         boutonCopierObjet.setImageResource(R.drawable.content_copy_24px);
@@ -463,6 +463,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         styliserBoutonBandeau(boutonReglages);
         boutonReglages.setOnClickListener(v -> afficherMenuReglages());
         bandeauHaut.addView(boutonReglages);
+
         ImageButton boutonPlay = new ImageButton(this);
         boutonPlay.setImageResource(R.drawable.play_circle_24px);
         styliserBoutonBandeau(boutonPlay);
@@ -491,6 +492,126 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         setContentView(layoutPrincipal);
     }
 
+    private void afficherMenuReglages() {
+        LinearLayout layoutDialog = new LinearLayout(this);
+        layoutDialog.setOrientation(LinearLayout.VERTICAL);
+        layoutDialog.setBackgroundColor(Palette.fondPanneaux);
+        layoutDialog.setPadding(dp(16), dp(16), dp(16), dp(16));
+
+        TextView titreGrille = new TextView(this);
+        titreGrille.setText(Traducteur.get("reglages_titre_grille"));
+        titreGrille.setTextColor(Palette.texteSelectionne);
+        titreGrille.setTextSize(14f);
+        titreGrille.setPadding(0, 0, 0, dp(6));
+        layoutDialog.addView(titreGrille);
+
+        EditText champTailleGrille = new EditText(this);
+        champTailleGrille.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        champTailleGrille.setText(String.valueOf(canvasEditeur.getTailleGrille()));
+        champTailleGrille.setTextColor(Palette.texteNormal);
+        champTailleGrille.setBackground(fond(Palette.fondNormal, 8, Palette.bordure, 1));
+        champTailleGrille.setPadding(dp(12), dp(8), dp(12), dp(8));
+        LinearLayout.LayoutParams lpChamp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lpChamp.setMargins(0, 0, 0, dp(14));
+        champTailleGrille.setLayoutParams(lpChamp);
+        layoutDialog.addView(champTailleGrille);
+
+        TextView titreRes = new TextView(this);
+        titreRes.setText(Traducteur.get("reglages_titre_resolution"));
+        titreRes.setTextColor(Palette.texteSelectionne);
+        titreRes.setTextSize(14f);
+        titreRes.setPadding(0, 0, 0, dp(6));
+        layoutDialog.addView(titreRes);
+
+        LinearLayout ligneRes = new LinearLayout(this);
+        ligneRes.setOrientation(LinearLayout.HORIZONTAL);
+
+        EditText champLargeurJeu = new EditText(this);
+        champLargeurJeu.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        champLargeurJeu.setText(String.valueOf(ConfigurationJeu.LARGEUR_JEU));
+        champLargeurJeu.setTextColor(Palette.texteNormal);
+        champLargeurJeu.setBackground(fond(Palette.fondNormal, 8, Palette.bordure, 1));
+        champLargeurJeu.setPadding(dp(12), dp(8), dp(12), dp(8));
+        LinearLayout.LayoutParams lpLargeur = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        lpLargeur.setMargins(0, 0, dp(6), dp(14));
+        champLargeurJeu.setLayoutParams(lpLargeur);
+        ligneRes.addView(champLargeurJeu);
+
+        EditText champHauteurJeu = new EditText(this);
+        champHauteurJeu.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        champHauteurJeu.setText(String.valueOf(ConfigurationJeu.HAUTEUR_JEU));
+        champHauteurJeu.setTextColor(Palette.texteNormal);
+        champHauteurJeu.setBackground(fond(Palette.fondNormal, 8, Palette.bordure, 1));
+        champHauteurJeu.setPadding(dp(12), dp(8), dp(12), dp(8));
+        LinearLayout.LayoutParams lpHauteur = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        lpHauteur.setMargins(dp(6), 0, 0, dp(14));
+        champHauteurJeu.setLayoutParams(lpHauteur);
+        ligneRes.addView(champHauteurJeu);
+
+        layoutDialog.addView(ligneRes);
+
+        TextView titreFond = new TextView(this);
+        titreFond.setText(Traducteur.get("reglages_titre_fond_canvas"));
+        titreFond.setTextColor(Palette.texteSelectionne);
+        titreFond.setTextSize(14f);
+        titreFond.setPadding(0, 0, 0, dp(6));
+        layoutDialog.addView(titreFond);
+
+        HorizontalScrollView scrollCouleurs = new HorizontalScrollView(this);
+        scrollCouleurs.setHorizontalScrollBarEnabled(false);
+        LinearLayout ligneCouleurs = new LinearLayout(this);
+        ligneCouleurs.setOrientation(LinearLayout.HORIZONTAL);
+
+        final int[] couleurChoisie = {canvasEditeur.getCouleurFondCanvas()};
+
+        int[] couleursRapides = {
+                Color.parseColor("#20252D"), Color.parseColor("#161A20"), Color.parseColor("#1A1F26"),
+                Color.BLACK, Color.parseColor("#2F3B45"), Color.parseColor("#0D1117"),
+                Color.parseColor("#263238"), Color.parseColor("#1B1B2F")
+        };
+        for (int c : couleursRapides) {
+            View pastille = new View(this);
+            LinearLayout.LayoutParams lpPastille = new LinearLayout.LayoutParams(dp(36), dp(36));
+            lpPastille.setMargins(0, 0, dp(10), 0);
+            pastille.setLayoutParams(lpPastille);
+            pastille.setBackground(fond(c, 8, Palette.bordure, 1));
+            pastille.setOnClickListener(vp -> couleurChoisie[0] = c);
+            ligneCouleurs.addView(pastille);
+        }
+        scrollCouleurs.addView(ligneCouleurs);
+        LinearLayout.LayoutParams lpScrollCouleurs = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lpScrollCouleurs.setMargins(0, 0, 0, dp(16));
+        scrollCouleurs.setLayoutParams(lpScrollCouleurs);
+        layoutDialog.addView(scrollCouleurs);
+
+        android.app.AlertDialog dialogue = new android.app.AlertDialog.Builder(this)
+                .setTitle(Traducteur.get("reglages_titre_menu"))
+                .setView(layoutDialog)
+                .setPositiveButton(Traducteur.get("bouton_valider"), null)
+                .setNegativeButton(Traducteur.get("bouton_annuler"), (d, w) -> d.cancel())
+                .create();
+        dialogue.show();
+
+        dialogue.getButton(android.app.AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
+            try {
+                int nouvelleTailleGrille = Integer.parseInt(champTailleGrille.getText().toString().trim());
+                canvasEditeur.setTailleGrille(nouvelleTailleGrille);
+            } catch (Exception ignored) {}
+
+            try {
+                int nouvelleLargeur = Integer.parseInt(champLargeurJeu.getText().toString().trim());
+                int nouvelleHauteur = Integer.parseInt(champHauteurJeu.getText().toString().trim());
+                if (nouvelleLargeur > 0 && nouvelleHauteur > 0) {
+                    ConfigurationJeu.LARGEUR_JEU = nouvelleLargeur;
+                    ConfigurationJeu.HAUTEUR_JEU = nouvelleHauteur;
+                }
+            } catch (Exception ignored) {}
+
+            canvasEditeur.setCouleurFondCanvas(couleurChoisie[0]);
+            dialogue.dismiss();
+        });
+    }
+
     public void setDialogueAssetsActif(DialogueGestionAssets dialogue) {
         this.dialogueAssetsActif = dialogue;
     }
@@ -502,7 +623,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         startActivityForResult(intent, REQUEST_CODE_IMPORT_ASSET);
     }
 
-    @Override
+       @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_IMPORT_ASSET && resultCode == Activity.RESULT_OK) {
@@ -513,7 +634,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
             }
         }
     }
-// bas 2     
+// bas 2
 // haut 3
     // ici
     private void afficherMenuScene(View ancre) {
