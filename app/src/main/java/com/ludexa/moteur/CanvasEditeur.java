@@ -28,7 +28,6 @@ public class CanvasEditeur extends View {
     private int tailleGrille = 50;
     private boolean snapActif = false;
     private int couleurFondCanvas;
-    private int couleurFondCanvas;
     private float dragRawX, dragRawY;
     
     private Scene sceneActive;
