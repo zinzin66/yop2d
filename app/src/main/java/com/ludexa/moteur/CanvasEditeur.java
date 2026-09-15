@@ -27,6 +27,8 @@ public class CanvasEditeur extends View {
 
     private int tailleGrille = 50;
     private boolean snapActif = false;
+    private int couleurFondCanvas;
+    private int couleurFondCanvas;
     private float dragRawX, dragRawY;
     
     private Scene sceneActive;
@@ -102,6 +104,15 @@ public class CanvasEditeur extends View {
     public boolean isSnapActif() { return snapActif; }
     public void setSnapActif(boolean actif) { this.snapActif = actif; invalidate(); }
     public int getTailleGrille() { return tailleGrille; }
+    public void setTailleGrille(int taille) {
+    if (taille > 0) { this.tailleGrille = taille; invalidate(); }
+}
+public int getCouleurFondCanvas() { return couleurFondCanvas; }
+public void setCouleurFondCanvas(int couleur) {
+    this.couleurFondCanvas = couleur;
+    setBackgroundColor(couleur);
+    invalidate();
+}
 
     private void init() {
         paintGrille = new Paint();
@@ -118,7 +129,8 @@ public class CanvasEditeur extends View {
         paintGrilleMajeure.setAntiAlias(true);
         paintGrilleMajeure.setAlpha(110);
 
-        setBackgroundColor(Palette.canvasFond);
+        couleurFondCanvas = Palette.canvasFond;
+        setBackgroundColor(couleurFondCanvas);
 
         paintCamera = new Paint();
         paintCamera.setColor(Palette.texteSelectionne);
