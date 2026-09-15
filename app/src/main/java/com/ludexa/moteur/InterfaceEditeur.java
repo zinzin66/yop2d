@@ -458,11 +458,11 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         bandeauHaut.addView(separateurVertical());
 
-        ImageButton boutonBuild = new ImageButton(this);
-        boutonBuild.setImageResource(R.drawable.build_24px);
-        styliserBoutonBandeau(boutonBuild);
-        bandeauHaut.addView(boutonBuild);
-
+        ImageButton boutonReglages = new ImageButton(this);
+        boutonReglages.setImageResource(R.drawable.build_24px);
+        styliserBoutonBandeau(boutonReglages);
+        boutonReglages.setOnClickListener(v -> afficherMenuReglages());
+        bandeauHaut.addView(boutonReglages);
         ImageButton boutonPlay = new ImageButton(this);
         boutonPlay.setImageResource(R.drawable.play_circle_24px);
         styliserBoutonBandeau(boutonPlay);
