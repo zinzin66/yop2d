@@ -1,24 +1,4 @@
 
-    if (o.id.equals(cur.parentId)) { parent = o; break; }
-                }
-            }
-            cur = parent;
-        }
-        return true;
-    }
-
-    public boolean estVisibleEffectif(ObjetBase obj) {
-        return estVisibleEffectifGen(obj, sceneActive != null ? sceneActive.objets : new ArrayList<>());
-    }
-
-    public Matrix getAbsoluteMatrixGen(ObjetBase obj, List<ObjetBase> contexte) {
-        Matrix m = new Matrix();
-        List<ObjetBase> chaine = new ArrayList<>();
-        ObjetBase cur = obj;
-        while (cur != null) {
-            chaine.add(cur);
-            ObjetBase parent = null;
-            if (cur.parentId != null) {
 // haut 1
 package com.ludexa.moteur;
 
