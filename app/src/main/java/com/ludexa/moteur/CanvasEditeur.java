@@ -100,7 +100,7 @@ public class CanvasEditeur extends View {
     public boolean isModeDeplacementObjet() { return isModeDeplacementObjet; }
 
     public boolean isSnapActif() { return snapActif; }
-    public void setSnapActif(boolean actif) { this.snapActif = actif; }
+    public void setSnapActif(boolean actif) { this.snapActif = actif; invalidate(); }
     public int getTailleGrille() { return tailleGrille; }
 
     private void init() {
@@ -666,33 +666,31 @@ public class CanvasEditeur extends View {
         canvas.save();
         canvas.scale(niveauZoom, niveauZoom, getWidth() / 2f, getHeight() / 2f);
 
-        if (snapActif) {
-            int gridSize = tailleGrille;
-            int w = getWidth();
-            int h = getHeight();
-            int limiteMax = (int) (Math.max(w, h) * 2 / niveauZoom);
+        int gridSize = tailleGrille;
+        int w = getWidth();
+        int h = getHeight();
+        int limiteMax = (int) (Math.max(w, h) * 2 / niveauZoom);
 
-            float debutMondeX = -cameraX - limiteMax;
-            float finMondeX = -cameraX + limiteMax;
-            int idxDebutX = (int) Math.floor(debutMondeX / gridSize) - 1;
-            int idxFinX = (int) Math.ceil(finMondeX / gridSize) + 1;
+        float debutMondeX = -cameraX - limiteMax;
+        float finMondeX = -cameraX + limiteMax;
+        int idxDebutX = (int) Math.floor(debutMondeX / gridSize) - 1;
+        int idxFinX = (int) Math.ceil(finMondeX / gridSize) + 1;
 
-            for (int idx = idxDebutX; idx <= idxFinX; idx++) {
-                float screenX = idx * gridSize + cameraX;
-                Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
-                canvas.drawLine(screenX, -limiteMax, screenX, limiteMax, p);
-            }
+        for (int idx = idxDebutX; idx <= idxFinX; idx++) {
+            float screenX = idx * gridSize + cameraX;
+            Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
+            canvas.drawLine(screenX, -limiteMax, screenX, limiteMax, p);
+        }
 
-            float debutMondeY = -cameraY - limiteMax;
-            float finMondeY = -cameraY + limiteMax;
-            int idxDebutY = (int) Math.floor(debutMondeY / gridSize) - 1;
-            int idxFinY = (int) Math.ceil(finMondeY / gridSize) + 1;
+        float debutMondeY = -cameraY - limiteMax;
+        float finMondeY = -cameraY + limiteMax;
+        int idxDebutY = (int) Math.floor(debutMondeY / gridSize) - 1;
+        int idxFinY = (int) Math.ceil(finMondeY / gridSize) + 1;
 
-            for (int idx = idxDebutY; idx <= idxFinY; idx++) {
-                float screenY = idx * gridSize + cameraY;
-                Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
-                canvas.drawLine(-limiteMax, screenY, limiteMax, screenY, p);
-            }
+        for (int idx = idxDebutY; idx <= idxFinY; idx++) {
+            float screenY = idx * gridSize + cameraY;
+            Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
+            canvas.drawLine(-limiteMax, screenY, limiteMax, screenY, p);
         }
 
         if (sceneActive != null) {
@@ -772,7 +770,6 @@ public class CanvasEditeur extends View {
         return null;
     }
 // bas 4
-
 // haut 5
     private int getTouchTarget(float xEcran, float yEcran) {
         float[] scenePos = ecranVersScene(xEcran, yEcran);
