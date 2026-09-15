@@ -115,7 +115,7 @@ public class CanvasEditeur extends View {
         paintGrilleMajeure.setColor(Palette.accentBleu);
         paintGrilleMajeure.setStyle(Paint.Style.STROKE);
         paintGrilleMajeure.setStrokeWidth(1.5f);
-        paintGrilleMajeure.setAntiAlias(false);
+        paintGrilleMajeure.setAntiAlias(true);
         paintGrilleMajeure.setAlpha(110);
 
         setBackgroundColor(Palette.canvasFond);
