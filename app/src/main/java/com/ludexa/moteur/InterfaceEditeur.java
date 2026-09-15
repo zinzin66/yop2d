@@ -389,6 +389,19 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         });
         bandeauHaut.addView(boutonDeplacerObjet);
         
+        ImageButton boutonMagnetisme = new ImageButton(this);
+        boutonMagnetisme.setImageResource(R.drawable.grid_4x4_24px);
+      styliserBoutonBandeau(boutonMagnetisme);
+      boutonMagnetisme.setOnClickListener(v -> {
+    boolean nouveauMode = !canvasEditeur.isSnapActif();
+    canvasEditeur.setSnapActif(nouveauMode);
+    boutonMagnetisme.setBackground(fond(
+            nouveauMode ? Palette.boutonSurvol : Palette.boutonNormal, 6, Palette.bordure, 1));
+    Palette.appliquerCouleurIcone(boutonMagnetisme,
+            nouveauMode ? Palette.iconeSurvol : Palette.iconeNormal);
+});
+      bandeauHaut.addView(boutonMagnetisme);
+        
         ImageButton boutonCopierObjet = new ImageButton(this);
         boutonCopierObjet.setImageResource(R.drawable.content_copy_24px);
         styliserBoutonBandeau(boutonCopierObjet);
