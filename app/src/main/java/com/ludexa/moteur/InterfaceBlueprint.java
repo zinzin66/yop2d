@@ -202,7 +202,7 @@ public class InterfaceBlueprint extends Activity {
         bandeauHaut.addView(boutonSupprimerNode);
 
         ImageButton boutonCopierNode = new ImageButton(this);
-        boutonCopierNode.setImageResource(R.drawable.add_24px);
+        boutonCopierNode.setImageResource(R.drawable.content_copy_24px);
         styliserBoutonBandeau(boutonCopierNode);
         boutonCopierNode.setOnClickListener(v -> canvasBlueprint.dupliquerNoeudSelectionne());
         bandeauHaut.addView(boutonCopierNode);

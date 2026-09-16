@@ -1,3 +1,4 @@
+
 // haut 1
 package com.ludexa.moteur;
 
@@ -112,6 +113,10 @@ public class CanvasEditeur extends View {
         this.couleurFondCanvas = couleur;
         setBackgroundColor(couleur);
         invalidate();
+    }
+
+    public float[] getCentreVisible() {
+        return new float[]{ (getWidth() / 2f) - cameraX, (getHeight() / 2f) - cameraY };
     }
 
     private void init() {
@@ -749,6 +754,7 @@ public class CanvasEditeur extends View {
         canvas.restore();
     }
 // bas 3
+        
 // haut 4
     @Override
     protected void onDraw(Canvas canvas) {
@@ -762,26 +768,28 @@ public class CanvasEditeur extends View {
         int h = getHeight();
         int limiteMax = (int) (Math.max(w, h) * 2 / niveauZoom);
 
-        float debutMondeX = -cameraX - limiteMax;
-        float finMondeX = -cameraX + limiteMax;
-        int idxDebutX = (int) Math.floor(debutMondeX / gridSize) - 1;
-        int idxFinX = (int) Math.ceil(finMondeX / gridSize) + 1;
+        if (snapActif) {
+            float debutMondeX = -cameraX - limiteMax;
+            float finMondeX = -cameraX + limiteMax;
+            int idxDebutX = (int) Math.floor(debutMondeX / gridSize) - 1;
+            int idxFinX = (int) Math.ceil(finMondeX / gridSize) + 1;
 
-        for (int idx = idxDebutX; idx <= idxFinX; idx++) {
-            float screenX = idx * gridSize + cameraX;
-            Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
-            canvas.drawLine(screenX, -limiteMax, screenX, limiteMax, p);
-        }
+            for (int idx = idxDebutX; idx <= idxFinX; idx++) {
+                float screenX = idx * gridSize + cameraX;
+                Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
+                canvas.drawLine(screenX, -limiteMax, screenX, limiteMax, p);
+            }
 
-        float debutMondeY = -cameraY - limiteMax;
-        float finMondeY = -cameraY + limiteMax;
-        int idxDebutY = (int) Math.floor(debutMondeY / gridSize) - 1;
-        int idxFinY = (int) Math.ceil(finMondeY / gridSize) + 1;
+            float debutMondeY = -cameraY - limiteMax;
+            float finMondeY = -cameraY + limiteMax;
+            int idxDebutY = (int) Math.floor(debutMondeY / gridSize) - 1;
+            int idxFinY = (int) Math.ceil(finMondeY / gridSize) + 1;
 
-        for (int idx = idxDebutY; idx <= idxFinY; idx++) {
-            float screenY = idx * gridSize + cameraY;
-            Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
-            canvas.drawLine(-limiteMax, screenY, limiteMax, screenY, p);
+            for (int idx = idxDebutY; idx <= idxFinY; idx++) {
+                float screenY = idx * gridSize + cameraY;
+                Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
+                canvas.drawLine(-limiteMax, screenY, limiteMax, screenY, p);
+            }
         }
 
         if (sceneActive != null) {
@@ -856,7 +864,12 @@ public class CanvasEditeur extends View {
             float objLargeur = ("scene_instance".equals(objet.type)) ? Math.max(50f, objet.largeur) : objet.largeur;
             float objHauteur = ("scene_instance".equals(objet.type)) ? Math.max(50f, getHauteurReelle(objet)) : getHauteurReelle(objet);
             
-            if (lx >= 0 && lx <= objLargeur && ly >= 0 && ly <= objHauteur) return objet;
+            float scaleXTol = Math.max(0.01f, Math.abs(objet.scaleX));
+            float scaleYTol = Math.max(0.01f, Math.abs(objet.scaleY));
+            float margeX = (20f / niveauZoom) / scaleXTol;
+            float margeY = (20f / niveauZoom) / scaleYTol;
+            
+            if (lx >= -margeX && lx <= objLargeur + margeX && ly >= -margeY && ly <= objHauteur + margeY) return objet;
         }
         return null;
     }
