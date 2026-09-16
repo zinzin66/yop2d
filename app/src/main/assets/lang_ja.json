@@ -580,7 +580,32 @@
   "insp_aucune_image": "画像が見つかりません。",
   "style_titre_select_texture": "テクスチャを選択",
   "valeur_aucune": "なし",
-  "insp_titre_select_couleur": "色を選択"
+  "insp_titre_select_couleur": "色を選択",
+    "langue_de": "Deutsch",
+  "langue_it": "Italiano",
+  "langue_zh": "中文",
+  "langue_ja": "日本語",
+  "titre_dialogue_assets": "アセット管理",
+  "titre_dossiers": "フォルダ",
+  "hint_rechercher_asset": "ファイルを検索...",
+  "erreur_lecture_son": "この音声ファイルを再生できません",
+  "cat_textes": "テキスト",
+  "panneau_ress_assets": "アセット",
+  "btn_gerer_animations": "アニメーション",
+  "cat_interactifs": "インタラクティブ",
+  "obj_prefix_barre_progression": "プログレスバー",
+  "btn_ouvrir_dialogues": "テキスト",
+  "btn_gerer_animations": "アニメーション",
+  "btn_gerer_styles": "タイトル",
+  "reglages_titre_menu": "設定",
+  "reglages_titre_grille": "グリッドサイズ",
+  "reglages_titre_resolution": "ゲーム解像度（幅 / 高さ）",
+  "reglages_titre_fond_canvas": "キャンバスの背景色",
+  "insp_sep_hitbox": "ヒットボックス（衝突エリア）",
+  "insp_cb_hitbox_personnalisee": "カスタムヒットボックス",
+  "insp_label_hitbox_dim": "ヒットボックスの幅 / 高さ",
+  "insp_label_hitbox_decalage": "オフセット X / Y"
+  
   
   
   
