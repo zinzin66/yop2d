@@ -946,7 +946,6 @@ public class InspecteurProprietes extends LinearLayout {
         blocProgression.addView(btnCouleurFondProg);
 
         blocProprietes.addView(blocProgression);
-        blocProprietes.addView(blocProgression);
 
         blocTilemap = new LinearLayout(context);
         blocTilemap.setOrientation(LinearLayout.VERTICAL);
