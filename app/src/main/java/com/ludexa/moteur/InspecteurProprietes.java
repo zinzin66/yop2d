@@ -92,6 +92,9 @@ public class InspecteurProprietes extends LinearLayout {
     private EditText champProgMin, champProgMax, champProgActuelle;
     private Button btnCouleurFondProg;
 
+    private LinearLayout blocTilemap;
+    private Button btnConfigurerTileset;
+
     private Scene sceneActive;
     private CanvasEditeur canvasEditeur;
     private ObjetBase objetCourant;
@@ -1858,6 +1861,7 @@ public class InspecteurProprietes extends LinearLayout {
                 blocJoystick.setVisibility(View.GONE);
                 blocSceneInstance.setVisibility(View.GONE); 
                 blocProgression.setVisibility(View.GONE);
+                blocTilemap.setVisibility(View.GONE);
                 
                 champContenu.setText(objet.contenuTexte);
                 champTaille.setText(String.valueOf(objet.tailleFonte));
@@ -1882,6 +1886,7 @@ public class InspecteurProprietes extends LinearLayout {
                 blocJoystick.setVisibility(View.GONE);
                 blocSceneInstance.setVisibility(View.VISIBLE);
                 blocProgression.setVisibility(View.GONE);
+                blocTilemap.setVisibility(View.GONE);
                 
                 String nomScene = Traducteur.get("valeur_aucune");
                 boolean aUneScene = false;
@@ -1971,15 +1976,26 @@ public class InspecteurProprietes extends LinearLayout {
                 blocBouton.setVisibility(View.GONE);
                 blocJoystick.setVisibility(View.GONE);
                 blocProgression.setVisibility(View.VISIBLE);
+                blocTilemap.setVisibility(View.GONE);
                 
                 champProgMin.setText(String.valueOf(objet.progressionMin));
                 champProgMax.setText(String.valueOf(objet.progressionMax));
                 champProgActuelle.setText(String.valueOf(objet.progressionActuelle));
                 
+            } else if ("tile_layer".equals(objet.type)) {
+                blocTexte.setVisibility(View.GONE);
+                blocSceneInstance.setVisibility(View.GONE);
+                blocImage.setVisibility(View.GONE);
+                blocBouton.setVisibility(View.GONE);
+                blocJoystick.setVisibility(View.GONE);
+                blocProgression.setVisibility(View.GONE);
+                blocTilemap.setVisibility(View.VISIBLE);
+
             } else {
                 blocTexte.setVisibility(View.GONE);
                 blocSceneInstance.setVisibility(View.GONE); 
                 blocProgression.setVisibility(View.GONE);
+                blocTilemap.setVisibility(View.GONE);
                 blocImage.setVisibility(View.VISIBLE);
 
                 if (objet.cheminImage != null) {
