@@ -578,7 +578,32 @@
   "insp_aucune_image": "Nenhuma imagem encontrada.",
   "style_titre_select_texture": "Selecionar uma textura",
   "valeur_aucune": "Nenhum",
-  "insp_titre_select_couleur": "Selecionar uma cor"
+  "insp_titre_select_couleur": "Selecionar uma cor",
+    "langue_de": "Deutsch",
+  "langue_it": "Italiano",
+  "langue_zh": "中文",
+  "langue_ja": "日本語",
+  "titre_dialogue_assets": "Gestão de Assets",
+  "titre_dossiers": "Pastas",
+  "hint_rechercher_asset": "Buscar um arquivo...",
+  "erreur_lecture_son": "Não é possível reproduzir este arquivo de áudio",
+  "cat_textes": "Textos",
+  "panneau_ress_assets": "Assets",
+  "btn_gerer_animations": "Animações",
+  "cat_interactifs": "Interativos",
+  "obj_prefix_barre_progression": "BarraProgresso",
+  "btn_ouvrir_dialogues": "Texto",
+  "btn_gerer_animations": "Animação",
+  "btn_gerer_styles": "Título",
+  "reglages_titre_menu": "Configurações",
+  "reglages_titre_grille": "Tamanho da grade",
+  "reglages_titre_resolution": "Resolução do jogo (largura / altura)",
+  "reglages_titre_fond_canvas": "Cor de fundo da tela",
+  "insp_sep_hitbox": "Hitbox (zona de colisão)",
+  "insp_cb_hitbox_personnalisee": "Hitbox personalizada",
+  "insp_label_hitbox_dim": "Largura / Altura da hitbox",
+  "insp_label_hitbox_decalage": "Deslocamento X / Y"
+  
   
   
   
