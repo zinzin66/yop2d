@@ -95,6 +95,13 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         s.setLayoutParams(lp);
         return s;
     }
+
+    private View espaceIcone() {
+        View s = new View(this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(38), dp(1));
+        s.setLayoutParams(lp);
+        return s;
+    }
     
     public void ouvrirHUD(Scene scene) {
         this.sceneHudActive = scene;
@@ -168,8 +175,6 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         });
         bandeauHaut.addView(boutonAjouterObjetGauche);
 
-        bandeauHaut.addView(separateurVertical());
-
         ImageButton boutonMenuScene = new ImageButton(this);
         boutonMenuScene.setImageResource(R.drawable.movie_24px);
         styliserBoutonBandeau(boutonMenuScene);
@@ -180,7 +185,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         });
         bandeauHaut.addView(boutonMenuScene);
 
-        bandeauHaut.addView(separateurVertical());
+        bandeauHaut.addView(espaceIcone());
 
         ImageButton boutonSauvegarde = new ImageButton(this);
         boutonSauvegarde.setImageResource(R.drawable.save_24px);
