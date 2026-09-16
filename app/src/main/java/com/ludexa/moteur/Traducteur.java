@@ -154,6 +154,17 @@ public class Traducteur {
         
         if (cle.equals("insp_couleur_aucune")) return "Aucune";
 
+        // --- NOUVELLES CLES : TILEMAP / DECOR EN TUILES ---
+        if (cle.equals("cat_decors")) return "Décors";
+        if (cle.equals("obj_prefix_tilemap")) return "Decor";
+        if (cle.equals("titre_dialogue_config_tileset")) return "Configurer le Décor en Tuiles";
+        if (cle.equals("insp_btn_configurer_tileset")) return "Configurer les tuiles";
+        if (cle.equals("tileset_choisir_image")) return "Choisir l'image du Tileset";
+        if (cle.equals("tileset_taille_tuile")) return "Taille d'une tuile (pixels)";
+        if (cle.equals("tileset_marquer_solide")) return "Coche les tuiles qui bloquent le joueur (murs, obstacles)";
+        if (cle.equals("tileset_tuile_solide")) return "Solide";
+        if (cle.equals("tileset_aucune_image")) return "Aucune image sélectionnée";
+
         return "[" + cle + "]";
     }
 
