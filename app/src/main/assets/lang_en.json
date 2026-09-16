@@ -578,7 +578,23 @@
   "insp_aucune_image": "No image found.",
   "style_titre_select_texture": "Select a texture",
   "valeur_aucune": "None",
-  "insp_titre_select_couleur": "Select a color"
+  "insp_titre_select_couleur": "Select a color",
+    "titre_dialogue_assets": "Asset Management",
+  "titre_dossiers": "Folders",
+  "hint_rechercher_asset": "Search for a file...",
+  "erreur_lecture_son": "Unable to play this audio file",
+  "cat_textes": "Texts",
+  "cat_interactifs": "Interactives",
+  "obj_prefix_barre_progression": "ProgressBar",
+  "reglages_titre_menu": "Settings",
+  "reglages_titre_grille": "Grid size",
+  "reglages_titre_resolution": "Game resolution (width / height)",
+  "reglages_titre_fond_canvas": "Canvas background color",
+  "insp_sep_hitbox": "Hitbox (collision zone)",
+  "insp_cb_hitbox_personnalisee": "Custom hitbox",
+  "insp_label_hitbox_dim": "Hitbox Width / Height",
+  "insp_label_hitbox_decalage": "Offset X / Y"
+  
   
   
   
