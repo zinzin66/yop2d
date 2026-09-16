@@ -164,6 +164,22 @@ public class Traducteur {
         if (cle.equals("tileset_marquer_solide")) return "Coche les tuiles qui bloquent le joueur (murs, obstacles)";
         if (cle.equals("tileset_tuile_solide")) return "Solide";
         if (cle.equals("tileset_aucune_image")) return "Aucune image sélectionnée";
+        if (cle.equals("tileset_section_image")) return "Image du Tileset";
+        if (cle.equals("tileset_section_decoupe")) return "Découpe des tuiles";
+        if (cle.equals("tileset_section_dimensions")) return "Taille du décor (en cases)";
+        if (cle.equals("tileset_section_solides")) return "Tuiles solides (bloquent le joueur)";
+        if (cle.equals("tileset_largeur_tuile")) return "Largeur d'une tuile (px)";
+        if (cle.equals("tileset_hauteur_tuile")) return "Hauteur d'une tuile (px)";
+        if (cle.equals("tileset_marge")) return "Marge entre les tuiles (px)";
+        if (cle.equals("tileset_decalage")) return "Décalage de bordure (px)";
+        if (cle.equals("tileset_recalculer")) return "Recalculer la grille";
+        if (cle.equals("tileset_largeur_grille")) return "Largeur (en cases)";
+        if (cle.equals("tileset_hauteur_grille")) return "Hauteur (en cases)";
+        if (cle.equals("tileset_tout_solide")) return "Tout marquer Solide";
+        if (cle.equals("tileset_tout_libre")) return "Tout marquer Libre";
+        if (cle.equals("tileset_nb_tuiles")) return "tuiles détectées";
+        if (cle.equals("tileset_valider")) return "Valider";
+        if (cle.equals("tileset_aucune_tuile")) return "Choisis d'abord une image pour voir les tuiles";
 
         return "[" + cle + "]";
     }
