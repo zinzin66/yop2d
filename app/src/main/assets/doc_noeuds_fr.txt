@@ -416,4 +416,3 @@ Cette documentation utilise un format visuel pour t'aider à comprendre comment 
      (Objet) ---> [ Au Sol ? ] ---> (Vrai / Faux)
 
 * RÔLE : Vérifie si l'objet soumis à la gravité est actuellement posé sur une surface solide (indispensable pour autoriser un saut).
-

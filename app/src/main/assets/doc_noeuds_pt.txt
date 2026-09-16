@@ -1,300 +1,418 @@
+================================================
+  DOCUMENTAÇÃO OFICIAL YOP2D - BLUEPRINT
+================================================
 
-================================================
-  DOCUMENTAÇÃO OFICIAL YOP.2D - BLUEPRINT
-================================================
+Esta documentação utiliza um formato visual para ajudar a entender como conectar seus blocos (nodos).
+( ) = O que você deve configurar ou conectar como entrada.
+[ ] = O bloco em si.
+---> = A direção da ação (o fluxo do programa).
 
 --- EVENTOS ---
-[Ao Iniciar]
-Executa automaticamente e apenas uma vez assim que a cena é carregada na tela.
 
-[A cada frame]
-Executa continuamente, a cada atualização da tela (framerate). Ideal para atualizações constantes.
+=========================================
+[ Ao Iniciar ]
+=========================================
+      (Início) ---> [ Executar ] --->
 
-[Fim de Clique]
-Dispara quando o jogador solta o dedo da tela, em qualquer lugar.
+* FUNÇÃO: É executado automaticamente e apenas uma vez assim que a cena é carregada na tela.
+* EXEMPLO: Colocar os inimigos em sua posição inicial, ou inicializar a vida do jogador em 100.
 
-[Ao Clicar no Objeto]
-Dispara quando o dedo do jogador toca no Objeto alvo.
+=========================================
+[ A Cada Quadro ]
+=========================================
+       (Loop) ---> [ Executar ] --->
 
-[Início de Arrastar] / [Fim de Arrastar]
-Disparam no momento em que o jogador começa a arrastar um objeto móvel e no momento em que o solta.
+* FUNÇÃO: É executado continuamente, a cada atualização da tela (framerate).
+* EXEMPLO: Fazer um objeto girar sobre si mesmo infinitamente, ou atualizar uma pontuação.
 
-[Colisão A/B]
-Dispara no exato momento em que o Objeto A entra em contato físico com o Objeto B.
+=========================================
+[ Ao Clicar no Objeto ]
+=========================================
+        (Alvo) ---> [ Clique! ] ---> (Executar)
 
-[Se o objeto tocar no Tag]
-Dispara no exato momento em que o objeto alvo entra em colisão com qualquer objeto que tenha a etiqueta (Tag) indicada.
+* FUNÇÃO: É acionado quando o dedo do jogador toca o Objeto alvo.
+* EXEMPLO: Abrir um baú, ativar um botão ou iniciar um diálogo.
 
-[Entrada de zona] / [Saída de zona]
-Ideal para gatilhos invisíveis. Ativa-se quando um objeto entra ou sai de uma zona definida.
+=========================================
+[ Fim do Clique ]
+=========================================
+        (Tela) ---> [ Solto ] ---> (Executar)
 
-[Ao Passar o Mouse] / [Fim de Passar o Mouse]
-Gerencia a passagem do dedo ou cursor sobre um objeto, sem precisar clicar.
+* FUNÇÃO: É acionado quando o jogador solta o dedo da tela, em qualquer lugar.
+* EXEMPLO: Parar de atirar quando o dedo é levantado.
 
-[Ao Impacto (Física)]
-Detecta quando o objeto quica ou atinge um elemento sólido com a gravidade ativada.
+=========================================
+[ Início / Fim de Arrastar ]
+=========================================
+      (Objeto) ---> [ Arrastar ] ---> (Executar)
 
-[Quando Variável Muda]
-Monitora continuamente uma Variável. Assim que seu valor é alterado, este nó inicia a sequência lógica.
+* FUNÇÃO: São acionados no momento em que o jogador começa a arrastar um objeto móvel e quando o solta.
+* EXEMPLO: Soltar uma chave sobre uma porta para abri-la.
 
-[Evento Local]
-Um evento personalizado que você pode disparar à distância usando o nó "Chamar Evento Local".
+=========================================
+[ Colisão A/B ]
+=========================================
+    (Objeto A) ---> [            ]
+    (Objeto B) ---> [ Colisão! ] ---> (Executar)
 
-[Ao Clicar Ação (Aventura)]
-Dispara especificamente quando o botão virtual "AÇÃO" da interface é pressionado.
+* FUNÇÃO: É acionado no momento exato em que o Objeto A entra em contato físico com o Objeto B.
+* EXEMPLO: Quando "Jogador" toca "Moeda" -> Tocar um som e destruir a moeda.
+
+=========================================
+[ Se o objeto tocar Tag ]
+=========================================
+      (Objeto) ---> [            ]
+   (Texto Tag) ---> [ Colisão! ] ---> (Executar)
+
+* FUNÇÃO: É acionado no momento exato em que o objeto alvo entra em colisão com qualquer objeto que tenha a etiqueta (Tag) indicada.
+* EXEMPLO: Quando "Míssil" toca um objeto com a tag "Inimigo" -> Explosão.
+
+=========================================
+[ Entrada / Saída de zona ]
+=========================================
+    (Objeto A) ---> [            ]
+      (Zona B) ---> [ Passagem ] ---> (Executar)
+
+* FUNÇÃO: É ativado quando um objeto entra ou sai de uma zona definida (Ideal para gatilhos invisíveis).
+* EXEMPLO: O jogador entra na zona "Armadilha" -> Espinhos saem do chão.
+
+=========================================
+[ Ao Passar o mouse / Fim ]
+=========================================
+        (Alvo) ---> [ Pairar ] ---> (Executar)
+
+* FUNÇÃO: Gerencia a passagem do dedo ou de um ponteiro sobre um objeto, sem precisar clicar.
+* EXEMPLO: Destacar um botão ao passar por ele.
+
+=========================================
+[ Ao Impacto (Física) ]
+=========================================
+      (Objeto) ---> [ Impacto! ] ---> (Executar)
+
+* FUNÇÃO: Detecta quando o objeto quica ou bate em um elemento sólido com a gravidade ativada.
+* EXEMPLO: Fazer barulho de pedra quando uma rocha cai no chão.
+
+=========================================
+[ Quando Variável Muda ]
+=========================================
+    (Variável) ---> [ Mudança ] ---> (Executar)
+
+* FUNÇÃO: Monitora continuamente uma Variável. Assim que seu valor é modificado, este nodo executa a sequência.
+* EXEMPLO: Se a vida mudar, a barra de vida visual é atualizada.
+
+=========================================
+[ Evento Local ]
+=========================================
+(Nome Evento) ---> [ Recepção ] ---> (Executar)
+
+* FUNÇÃO: Um evento personalizado que você pode ativar à distância através do nodo "Chamar Evento Local".
+* EXEMPLO: Agrupar a lógica de "Game Over" para chamá-la de vários lugares.
+
+=========================================
+[ Ao Clique Ação (Aventura) ]
+=========================================
+       (Botão) ---> [ Ação! ] ---> (Executar)
+
+* FUNÇÃO: É acionado especificamente quando o botão virtual "AÇÃO" da interface é pressionado.
+* EXEMPLO: Falar com um NPC ou ler uma placa.
 
 
 --- MOVIMENTOS E IA ---
-[Avançar continuamente]
-Aplica uma velocidade constante. O objeto avançará sozinho na direção de seu Ângulo de Rotação.
 
-[Perseguir um objeto]
-Faz o Objeto A avançar automaticamente em direção ao Objeto B (como um míssil guiado ou um inimigo).
+=========================================
+[ Avançar continuamente ]
+=========================================
+(Velocidade) ---> [ Avançar ] ---> 
 
-[Fugir de um objeto]
-O comportamento oposto da perseguição. O Objeto A afasta-se do Objeto B.
+* FUNÇÃO: Aplica uma velocidade constante. O objeto avançará automaticamente na direção de seu Ângulo de Rotação.
+* EXEMPLO: Um projétil disparado em linha reta ou um carro em movimento.
 
-[Parar movimentos]
-Cancela instantaneamente todos os comandos de perseguição, fuga ou avanço contínuo em um objeto.
+=========================================
+[ Perseguir / Fugir de objeto ]
+=========================================
+      (Alvo) ---> [ Seguir/Fugir ] ---> 
 
-[Parar o objeto]
-Para instantaneamente o movimento físico ou automático do objeto alvo.
+* FUNÇÃO: Faz avançar automaticamente o Objeto A em direção a (ou para longe de) Objeto B.
+* EXEMPLO: Um míssil teleguiado ou um fantasma que segue o jogador.
+
+=========================================
+[ Parar movimentos / Parar ]
+=========================================
+    (Objeto) ---> [ Parar ] ---> 
+
+* FUNÇÃO: Cancela instantaneamente todos os comandos de perseguição, fuga ou avanço contínuo sobre um objeto.
+* EXEMPLO: Congelar um inimigo quando atingido por um feitiço de gelo.
 
 
 --- LÓGICA ESPACIAL ---
-[Distância entre A e B]
-Calcula o espaço em pixels entre o Objeto A e o Objeto B. Possui duas saídas (Verdadeiro/Falso) dependendo se a distância atende à condição.
 
-[Orientar para (Look At)]
-Gira o Objeto A para que ele olhe para o Objeto B. O "Deslocamento de Ângulo" compensa se a imagem do seu objeto não foi desenhada voltada para a direita.
+=========================================
+[ Distância entre A e B ]
+=========================================
+    (Objeto A) ---> [            ] ---> (Verdadeiro)
+    (Objeto B) ---> [ Distância  ]
+   (Condição) ---> [            ] ---> (Falso)
 
-[Selecionar objeto mais próximo]
-Localiza e seleciona automaticamente o objeto mais próximo do alvo para usá-lo no resto do Blueprint.
+* FUNÇÃO: Calcula a distância em pixels entre o Objeto A e o Objeto B.
+* EXEMPLO: Verificar se o jogador está perto o suficiente para abrir uma porta.
 
-[Escolher um objeto aleatório]
-Seleciona aleatoriamente um objeto entre os presentes na cena ou que possuam uma Tag específica.
+=========================================
+[ Orientar para (Look At) ]
+=========================================
+      (Alvo) ---> [ Orientar ] ---> 
+
+* FUNÇÃO: Faz girar o Objeto A para que olhe para o Objeto B.
+* EXEMPLO: Uma torre de defesa mirando no jogador.
+
+=========================================
+[ Objeto mais próximo / Aleatório ]
+=========================================
+         (Tag) ---> [ Buscar ] ---> (Salvar na Variável)
+
+* FUNÇÃO: Localiza o objeto mais próximo ou um objeto aleatório para usá-lo depois.
+* EXEMPLO: Mirar automaticamente no inimigo mais próximo.
 
 
 --- LÓGICA E CONDIÇÕES ---
-[Condição]
-Compara o valor de uma Variável com um número ou texto. Saída Verdadeira ou Falsa.
 
-[Se objeto A toca zona B]
-Verifica instantaneamente se dois objetos se sobrepõem no momento exato em que o nó é chamado.
+=========================================
+[ Condição (Variável) ]
+=========================================
+    (Variável) ---> [            ] ---> (Verdadeiro)
+(Comparador) ---> [ Condição  ]
+       (Valor) ---> [            ] ---> (Falso)
 
-[Se Objeto Visível]
-Verifica se o objeto alvo está sendo exibido na tela.
+* FUNÇÃO: Compara o valor de uma Variável com um número ou texto.
+* EXEMPLO: Se (Pontos > 10) então (Próximo Nível) senão (Nada).
 
-[Se Objeto tem a Tag]
-Verifica se o objeto tem a etiqueta (Tag) solicitada (ex: "Inimigo", "Chave").
+=========================================
+[ Se objeto A tocar zona B ]
+=========================================
+    (Objeto A) ---> [            ] ---> (Verdadeiro)
+      (Zona B) ---> [ Sobrepõe?  ]
+                    [            ] ---> (Falso)
 
-[Condição Dupla (E/OU)]
-Permite verificar duas condições ao mesmo tempo.
+* FUNÇÃO: Verifica instantaneamente se dois objetos se sobrepõem neste momento exato.
 
-[Chamar Função]
-Executa um Blueprint externo salvo na pasta "funções". Ideal para mecânicas repetitivas.
+=========================================
+[ Condição Dupla (E/OU) ]
+=========================================
+ (Condição1) ---> [            ] ---> (Verdadeiro)
+      (E / OU) ---> [  Duplo?  ]
+ (Condição2) ---> [            ] ---> (Falso)
 
-[Chamar Evento Local]
-Dispara à distância um bloco "Evento Local" localizado em outro lugar no Blueprint atual.
+* FUNÇÃO: Permite verificar duas condições ao mesmo tempo.
+* EXEMPLO: Se (Jogador no chão) E (Botão Pular pressionado) -> Pular.
 
-[Se Joystick Ativo]
-Verifica se o jogador está atualmente manipulando o joystick virtual.
+=========================================
+[ Se Objeto Visível / Se Tag ]
+=========================================
+      (Objeto) ---> [ Verificar ] ---> (Verdadeiro / Falso)
 
-[Se Objeto em Movimento]
-Verifica se o objeto alvo está atualmente se movendo na tela.
+* FUNÇÃO: Verifica se o objeto está na tela, ou se possui a Tag solicitada.
+
+=========================================
+[ Chamar Função ]
+=========================================
+(Nome Arquivo) ---> [ Função ] ---> 
+
+* FUNÇÃO: Executa um Blueprint externo salvo na pasta "funcoes".
+* EXEMPLO: Criar uma função "GerarMonstros" reutilizável em todos os seus níveis.
+
+=========================================
+[ Sequência ]
+=========================================
+     (Entrada) ---> [ Sequência ] ---> (Ramo 1)
+                    [           ] ---> (Ramo 2)
+
+* FUNÇÃO: Divide a execução em vários ramos para estruturar e organizar a lógica do seu Blueprint.
+
+=========================================
+[ Cooldown (Tempo de recarga) ]
+=========================================
+     (Duração) ---> [ Cooldown ] ---> (Execução permitida)
+
+* FUNÇÃO: Bloqueia temporariamente a execução dos nodos seguintes por um tempo definido.
+* EXEMPLO: Limitar a cadência de tiro (esperar 1 seg entre cada bala).
+
+=========================================
+[ Outras verificações... ]
+=========================================
+(Se Joystick Ativo) | (Se em Movimento) | (Se Botão Pressionado) | (Se Fora da Tela)
+* FUNÇÃO: Blocos de teste rápido com saídas (Verdadeiro / Falso) dependendo do estado atual.
 
 
 --- CENA E HUD ---
-[Mudar de Cena]
-Carrega uma nova sala/nível. A cena atual é salva automaticamente.
 
-[Recarregar Cena atual]
-Reinicia o nível atual. Perfeito se o jogador falhar em um quebra-cabeça.
+=========================================
+[ Mudar / Recarregar Cena ]
+=========================================
+  (Nome Cena) ---> [ Mudar ] ---> 
 
-[Abrir HUD] / [Fechar HUD]
-Exibe uma Cena sobre o jogo sem pausá-lo. Ideal para um inventário ou um menu de configurações.
+* FUNÇÃO: Carrega uma nova sala/nível. A cena atual é salva automaticamente.
 
-[Mensagem Toast]
-Exibe uma mensagem de sistema curta e temporária na parte inferior da tela.
+=========================================
+[ Instanciar / Fechar Cena ]
+=========================================
+  (Nome Cena) ---> [ Instância ] ---> 
 
-[Fixar Câmera]
-Trava a câmera no Objeto alvo para segui-lo automaticamente em seus movimentos.
+* FUNÇÃO: Carrega um Prefab ou um elemento (como um popup) dentro da cena atual.
 
-[Tremor de Câmera]
-Sacode a tela. Útil para dar impacto a uma explosão ou a uma porta pesada.
+=========================================
+[ Fixar Câmera ]
+=========================================
+      (Objeto) ---> [ Seguir ] ---> 
 
-[Elasticidade da Câmera]
-Muda a velocidade (entre 0.01 e 1.0) com que a câmera segue seu alvo para um efeito mais fluido ou mais rígido.
+* FUNÇÃO: Fixa a câmera no Objeto alvo para segui-lo automaticamente.
 
-[Mostrar/Ocultar Joystick] / [Mostrar/Ocultar Ação]
-Controla a visibilidade das interfaces de movimento na tela (útil durante uma cinemática).
+=========================================
+[ Tremor / Elasticidade da Câmera ]
+=========================================
+    (Potência) ---> [ Tremor ] ---> 
 
-[Vibração]
-Faz o tablet vibrar pela duração indicada em milissegundos.
+* FUNÇÃO: Treme a tela ou modifica a fluidez do rastreamento da câmera.
+* EXEMPLO: Um tremor forte durante uma explosão.
 
 
 --- APARÊNCIA E OBJETOS ---
-[Mover Objeto]
-Teletransporta instantaneamente o objeto para as coordenadas X e Y indicadas.
 
-[Empurrar objeto]
-Desloca o objeto alvo em uma determinada direção de forma suave.
+=========================================
+[ Mover / Empurrar Objeto ]
+=========================================
+ (Coordenadas) ---> [ Mover ] ---> 
 
-[Modificar Cor]
-Muda a cor base do objeto (se não for uma imagem).
+* FUNÇÃO: Teletransporta ou empurra o objeto para novas coordenadas X e Y.
 
-[Visibilidade]
-Mostra ou oculta um objeto da cena.
+=========================================
+[ Gerar clone (Spawner) ]
+=========================================
+      (Modelo) ---> [ Aparição ] ---> 
 
-[Modificar Arrastável]
-Permite ou proíbe o jogador de arrastar este objeto com o dedo.
+* FUNÇÃO: Clona o objeto Modelo solicitado e o faz aparecer. Disponível anexado a um Alvo ou por Posição fixa (X, Y).
 
-[Modificar Bloqueio]
-Bloqueia um objeto no editor para evitar movê-lo acidentalmente ao criar o nível.
+=========================================
+[ Atirar ]
+=========================================
+   (Projétil) ---> [ Atirar ] ---> 
+      (Ângulo) --->
 
-[Mudar Z-Order]
-Altera a profundidade do objeto (move para o primeiro plano ou plano de fundo).
+* FUNÇÃO: Gera e impulsiona instantaneamente um objeto a partir do alvo em uma direção.
 
-[Mudar Imagem]
-Substitui o visual (Sprite) do objeto por outro arquivo.
+=========================================
+[ Destruir / Destruir por Tag ]
+=========================================
+      (Objeto) ---> [ Destruir ] ---> 
 
-[Rotação]
-Define instantaneamente o ângulo (em graus) do objeto.
+* FUNÇÃO: Exclui permanentemente o objeto ou todos os objetos com uma Tag da cena.
 
-[Definir tamanho (Scale)]
-Modifica a escala (zoom) do objeto em largura (X) e altura (Y).
+=========================================
+[ Modificar Progresso ]
+=========================================
+       (Valor) ---> [ Barra ] ---> 
 
-[Destruir Objeto]
-Exclui permanentemente o objeto da cena.
+* FUNÇÃO: Atualiza o preenchimento visual de uma barra de progresso (ex: barra de vida).
 
-[Gerar clone (Spawner)]
-Clona o objeto Modelo solicitado e faz ele aparecer no centro do Objeto Alvo (o ponto de surgimento).
+=========================================
+[ Modo de Exibição e Filtros ]
+=========================================
+* FUNÇÃO: Agrupa os nodos [Mudar Z-Order], [Mudar Imagem], [Filtro de Cor], [Opacidade] e [Modo de Mesclagem] para modificar a aparência dos seus sprites.
 
-[Definir a Tag]
-Atribui uma etiqueta (ex: "Projétil") ao objeto alvo.
-
-[Destruir por Tag]
-Exclui de uma só vez todos os objetos da cena que tenham a etiqueta solicitada.
-
-[Filtro de Cor]
-Aplica um efeito de matriz sobre o objeto (Sépia, Preto e Branco, Inversão).
-
-[Piscar (Blink)]
-Faz o objeto aparecer/desaparecer a uma determinada velocidade (em ms).
-
-[Brilho (Glow)]
-Envolve o objeto com um contorno luminoso colorido.
-
-[Saltitar]
-Faz o objeto dar pequenos pulos regulares para chamar a atenção (efeito visual).
-
-[Efeito Espelho / Inverter]
-Inverte visualmente a imagem do objeto (útil para fazer um personagem se virar).
-
-[Vincular dois objetos]
-Prende firmemente o Objeto A ao Objeto B para que se movam de forma sincronizada.
-
-[Modificar a Opacidade (Alpha)]
-Torna o objeto mais ou menos transparente instantaneamente.
-
-[Modo de mesclagem (Efeito)]
-Aplica um modo de renderização especial (Aditivo, Multiplicar...) para efeitos de luz ou sobreposição.
-
-[Fator de Paralaxe]
-Define a velocidade de rolagem do objeto em relação à câmera para criar um efeito de profundidade.
+=========================================
+[ Comportamentos de Tela ]
+=========================================
+* FUNÇÃO: Os nodos [Manter na tela] (parede invisível) e [Atravessar tela] (efeito Pac-Man) para controlar os limites do jogo.
 
 
 --- TEXTOS E DIÁLOGOS ---
-[Modificar Texto]
-Substitui inteiramente o conteúdo de um objeto Texto.
 
-[Adicionar ao Texto]
-Adiciona palavras ao final de um objeto Texto existente (concatenação).
+=========================================
+[ Modificar / Adicionar Texto ]
+=========================================
+       (Texto) ---> [ Escrever ] ---> 
 
-[Mostrar Diálogo]
-Lê uma frase do arquivo de diálogos por meio de sua Chave e a insere em um objeto Texto.
+* FUNÇÃO: Substitui completamente ou adiciona palavras ao final de um objeto Texto existente.
+
+=========================================
+[ Exibir Diálogo ]
+=========================================
+(Chave Dicio.) ---> [ Diálogo ] ---> 
+
+* FUNÇÃO: Lê uma frase do arquivo de diálogos e a exibe na tela.
 
 
 --- VARIÁVEIS E INVENTÁRIO ---
-[Operação Matemática]
-Realiza um cálculo (+, -, *, /) na Variável alvo com um valor fornecido.
 
-[Limitar Valor (Clamp)]
-Impede uma Variável de cair abaixo de um Mínimo ou exceder um Máximo.
+=========================================
+[ Modificar / Adicionar Variável ]
+=========================================
+       (Valor) ---> [ Matem. ] ---> (Variável atualizada)
 
-[Modificar Variável] / [Adicionar à Variável]
-Substitui ou adiciona um valor simples a uma Variável.
+* FUNÇÃO: Substitui ou soma um valor (ou um cálculo) a uma Variável.
 
-[Número Aleatório]
-Gera um número aleatório entre um Mínimo e um Máximo e armazena-o na Variável alvo.
-
-[Adicionar ao inventário] / [Remover do inventário]
-Gerencia a lista de objetos que o jogador possui.
-
-[Se no inventário]
-Verifica se o jogador possui um objeto específico. (Saída Verdadeira/Falsa).
-
-[Combinação de Objetos]
-Destrói o Objeto A e o Objeto B para gerar o "Modelo Resultado" (ex: Chave Quebrada + Fita = Chave Reparada).
-
-[Ponto de Salvar]
-Força imediatamente o salvamento do estado da cena e do inventário no banco de dados.
+=========================================
+[ Gestão de Inventário ]
+=========================================
+(Adicionar ao inventário) | (Remover) | (Se no inventário) | (Combinação)
+* FUNÇÃO: Gerencia a lista de objetos possuídos pelo jogador e suas interações.
 
 
 --- TEMPO ---
-[Temporizador]
-Inicia uma contagem regressiva autônoma. Não é afetada pelo resto do Blueprint.
 
-[Cronômetro]
-Inicia um cronômetro global para medir o tempo gasto em um nível.
+=========================================
+[ Esperar (ms) ]
+=========================================
+       (Tempo) ---> [ Pausa ] ---> (Próxima ação)
 
-[Aguardar (ms)]
-Faz uma pausa (Atraso) antes de continuar a execução dos próximos nós.
+* FUNÇÃO: Faz uma pausa antes de continuar a execução dos nodos seguintes.
 
 
 --- ÁUDIO ---
-[Tocar um Som]
-Toca um efeito sonoro curto. Pode se sobrepor a outros sons.
 
-[Gerenciar Música]
-Inicia uma faixa de áudio longa. Para automaticamente a música anterior.
+=========================================
+[ Tocar Som / Música ]
+=========================================
+ (Arquivo mp3) ---> [ Tocar ] ---> 
+
+* FUNÇÃO: Toca um efeito sonoro curto (pode se sobrepor) ou inicia uma faixa de áudio longa de fundo.
 
 
 --- ANIMAÇÕES ---
-[Esmaecer (Alpha)]
-Torna o objeto gradualmente transparente ou opaco.
 
-[Deslizar Para]
-Move o objeto para novas coordenadas suavemente, com uma duração definida.
+=========================================
+[ Iniciar / Parar Animação ]
+=========================================
+   (Nome Anim.) ---> [ Iniciar ] ---> 
 
-[Tocar Animação]
-Inicia uma sequência de imagens predefinida (Animação Sprite) no objeto.
+* FUNÇÃO: Inicia uma sequência de imagens predefinida (Sprite animation) no objeto, ou a interrompe.
 
-[Pausar a animação]
-Congela a animação do objeto no quadro (frame) atual.
+=========================================
+[ Deslizar Para ]
+=========================================
+         (X,Y) ---> [ Movimento ] ---> 
+     (Duração) ---> 
 
-[Retomar a animação]
-Reinicia a animação do objeto de onde foi pausada.
-
-[Velocidade da animação]
-Altera a velocidade de reprodução da sequência de imagens.
-
-[Se a imagem atual for...]
-Verifica se a animação em reprodução atingiu um frame específico. Ideal para sincronizar passos ou impactos.
+* FUNÇÃO: Move o objeto para novas coordenadas de forma suave (Tween).
 
 
 --- FÍSICA ---
-[Ativar Física (Queda)]
-Sujeita o objeto à gravidade do motor.
 
-[Aplicar Impulso (Pulo)]
-Dá uma força para cima em um objeto físico.
+=========================================
+[ Aplicar Impulso / Força ]
+=========================================
+       (Força) ---> [ Empurrar ] ---> 
 
-[Mudar Salto]
-Altera a restituição de energia do objeto (0 = bloco de chumbo, 1.0 = bola quicando).
+* FUNÇÃO: Dá uma força a um objeto submetido à gravidade terrestre do motor.
 
-[Se Objeto em Queda]
-Verifica se um objeto físico está caindo ou se está posado no chão.
+=========================================
+[ Definir Velocidade ]
+=========================================
+  (Velocidade) ---> [ Impor ] ---> 
 
-[Adicionar força (por Ângulo)]
-Impulsiona o objeto em uma direção precisa calculada em graus.
+* FUNÇÃO: Impõe uma velocidade de movimento instantânea a um objeto físico.
+
+=========================================
+[ Condição no Chão ]
+=========================================
+      (Objeto) ---> [ No Chão? ] ---> (Verdadeiro / Falso)
+
+* FUNÇÃO: Verifica se o objeto submetido à gravidade está apoiado atualmente sobre uma superfície sólida (indispensável para permitir pular).
