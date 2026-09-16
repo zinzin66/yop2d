@@ -578,7 +578,32 @@
   "insp_aucune_image": "Изображение не найдено.",
   "style_titre_select_texture": "Выберите текстуру",
   "valeur_aucune": "Нет",
-  "insp_titre_select_couleur": "Выберите цвет"
+  "insp_titre_select_couleur": "Выберите цвет",
+    "langue_de": "Deutsch",
+  "langue_it": "Italiano",
+  "langue_zh": "中文",
+  "langue_ja": "日本語",
+  "titre_dialogue_assets": "Управление ассетами",
+  "titre_dossiers": "Папки",
+  "hint_rechercher_asset": "Поиск файла...",
+  "erreur_lecture_son": "Невозможно воспроизвести этот аудиофайл",
+  "cat_textes": "Тексты",
+  "panneau_ress_assets": "Ассеты",
+  "btn_gerer_animations": "Анимации",
+  "cat_interactifs": "Интерактивные",
+  "obj_prefix_barre_progression": "ИндикаторПрогресса",
+  "btn_ouvrir_dialogues": "Текст",
+  "btn_gerer_animations": "Анимация",
+  "btn_gerer_styles": "Заголовок",
+  "reglages_titre_menu": "Настройки",
+  "reglages_titre_grille": "Размер сетки",
+  "reglages_titre_resolution": "Разрешение игры (ширина / высота)",
+  "reglages_titre_fond_canvas": "Цвет фона холста",
+  "insp_sep_hitbox": "Хитбокс (зона столкновения)",
+  "insp_cb_hitbox_personnalisee": "Пользовательский хитбокс",
+  "insp_label_hitbox_dim": "Ширина / Высота хитбокса",
+  "insp_label_hitbox_decalage": "Смещение X / Y"
+  
   
   
   
