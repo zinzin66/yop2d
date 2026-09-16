@@ -1196,6 +1196,17 @@ public class InspecteurProprietes extends LinearLayout {
             }
             Toast.makeText(context, Traducteur.get("insp_erreur_scene_introuvable"), Toast.LENGTH_SHORT).show();
         });
+
+        btnConfigurerTileset.setOnClickListener(v -> {
+            if (objetCourant == null) return;
+            if (cheminProjet == null) { Toast.makeText(context, Traducteur.get("erreur_chemin_projet"), Toast.LENGTH_SHORT).show(); return; }
+            DialogueConfigTileset dialogTileset = new DialogueConfigTileset(context, objetCourant, cheminProjet);
+            dialogTileset.setOnDismissListener(d -> {
+                canvasEditeur.invalidate();
+                afficherObjet(objetCourant);
+            });
+            dialogTileset.show();
+        });
 // bas 4
 
 // haut 5
