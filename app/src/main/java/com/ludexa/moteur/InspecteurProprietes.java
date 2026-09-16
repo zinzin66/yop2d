@@ -943,6 +943,23 @@ public class InspecteurProprietes extends LinearLayout {
         blocProgression.addView(btnCouleurFondProg);
 
         blocProprietes.addView(blocProgression);
+        blocProprietes.addView(blocProgression);
+
+        blocTilemap = new LinearLayout(context);
+        blocTilemap.setOrientation(LinearLayout.VERTICAL);
+        styliserSection(blocTilemap);
+
+        TextView sepTilemap = new TextView(context);
+        sepTilemap.setText(Traducteur.get("cat_decors"));
+        styliserSousTitre(sepTilemap);
+        blocTilemap.addView(sepTilemap);
+
+        btnConfigurerTileset = new Button(context);
+        btnConfigurerTileset.setText(Traducteur.get("insp_btn_configurer_tileset"));
+        styliserBouton(btnConfigurerTileset);
+        blocTilemap.addView(btnConfigurerTileset);
+
+        blocProprietes.addView(blocTilemap);
 // bas 3
 // haut 4
         btnAjouterVariable.setOnClickListener(v -> {
