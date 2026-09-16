@@ -579,7 +579,32 @@
   "insp_aucune_image": "未找到图像。",
   "style_titre_select_texture": "选择纹理",
   "valeur_aucune": "无",
-  "insp_titre_select_couleur": "选择颜色"
+  "insp_titre_select_couleur": "选择颜色",
+    "langue_de": "Deutsch",
+  "langue_it": "Italiano",
+  "langue_zh": "中文",
+  "langue_ja": "日本語",
+  "titre_dialogue_assets": "资产管理",
+  "titre_dossiers": "文件夹",
+  "hint_rechercher_asset": "搜索文件...",
+  "erreur_lecture_son": "无法播放此音频文件",
+  "cat_textes": "文本",
+  "panneau_ress_assets": "资产",
+  "btn_gerer_animations": "动画",
+  "cat_interactifs": "互动",
+  "obj_prefix_barre_progression": "进度条",
+  "btn_ouvrir_dialogues": "文本",
+  "btn_gerer_animations": "动画",
+  "btn_gerer_styles": "标题",
+  "reglages_titre_menu": "设置",
+  "reglages_titre_grille": "网格大小",
+  "reglages_titre_resolution": "游戏分辨率（宽 / 高）",
+  "reglages_titre_fond_canvas": "画布背景颜色",
+  "insp_sep_hitbox": "碰撞箱（碰撞区域）",
+  "insp_cb_hitbox_personnalisee": "自定义碰撞箱",
+  "insp_label_hitbox_dim": "碰撞箱宽度 / 高度",
+  "insp_label_hitbox_decalage": "偏移 X / Y"
+  
   
   
   
