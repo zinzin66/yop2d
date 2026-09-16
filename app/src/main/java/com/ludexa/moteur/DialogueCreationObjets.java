@@ -225,7 +225,10 @@ public class DialogueCreationObjets extends Dialog {
                 nouveau.type = "tile_layer";
                 nouveau.afficherFondColore = true;
                 nouveau.couleur = Color.argb(80, 150, 150, 150);
-                nouveau.tailleTuilePx = 32;
+                nouveau.largeurTuilePx = 32;
+                nouveau.hauteurTuilePx = 32;
+                nouveau.margeTuilePx = 0;
+                nouveau.decalageTuilePx = 0;
                 nouveau.largeurGrille = 10;
                 nouveau.hauteurGrille = 10;
                 break;
