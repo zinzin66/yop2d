@@ -291,6 +291,14 @@ public class DialogueConfigTileset extends Dialog {
         ligneGrille.addView(champHauteurGrille);
         blocDimensions.addView(ligneGrille);
 
+        Button btnRemplirTest = new Button(ctx);
+        btnRemplirTest.setText(Traducteur.get("tileset_remplir_test"));
+        styliserBouton(btnRemplirTest);
+        btnRemplirTest.setLayoutParams(new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        btnRemplirTest.setOnClickListener(v -> remplirGrilleTest());
+        blocDimensions.addView(btnRemplirTest);
+
         corps.addView(blocDimensions);
 
         // --- SECTION TUILES SOLIDES ---
@@ -515,6 +523,17 @@ public class DialogueConfigTileset extends Dialog {
         objetTileset.hauteur = nouvelleHauteur * (float) objetTileset.hauteurTuilePx;
     }
 
+    private void remplirGrilleTest() {
+        appliquerChampsDecoupe();
+        appliquerDimensionsCarte();
+        if (objetTileset.grilleTuiles == null) return;
+        for (int row = 0; row < objetTileset.grilleTuiles.length; row++) {
+            if (objetTileset.grilleTuiles[row] == null) continue;
+            java.util.Arrays.fill(objetTileset.grilleTuiles[row], 0);
+        }
+        Toast.makeText(ctx, Traducteur.get("tileset_remplir_test"), Toast.LENGTH_SHORT).show();
+    }
+    
     private void ouvrirSelecteurImage() {
         if (cheminProjet == null) return;
         File dossierImages = new File(cheminProjet, "assets_ludexa/Images");
