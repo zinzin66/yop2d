@@ -92,8 +92,6 @@ public class InspecteurProprietes extends LinearLayout {
     private EditText champProgMin, champProgMax, champProgActuelle;
     private Button btnCouleurFondProg;
 
-    private LinearLayout blocTilemap;
-    private Button btnConfigurerTileset;
     
     private LinearLayout blocTilemap;
     private Button btnConfigurerTileset;
