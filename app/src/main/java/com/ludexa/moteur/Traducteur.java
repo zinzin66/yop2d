@@ -181,7 +181,16 @@ public class Traducteur {
         if (cle.equals("tileset_valider")) return "Valider";
         if (cle.equals("tileset_aucune_tuile")) return "Choisis d'abord une image pour voir les tuiles";
         if (cle.equals("tileset_remplir_test")) return "Remplir avec la tuile n°0 (test d'aperçu)";
+        if (cle.equals("titre_dialogue_peinture_tuiles")) return "Peindre le Décor";
+        if (cle.equals("insp_btn_peindre_tileset")) return "Peindre";
+        if (cle.equals("peinture_outil_peindre")) return "Peindre";
+        if (cle.equals("peinture_outil_gomme")) return "Gomme";
+        if (cle.equals("peinture_annuler_action")) return "Annuler";
+        if (cle.equals("peinture_recentrer")) return "Recentrer la vue";
+        if (cle.equals("peinture_tuiles_label")) return "Tuiles";
+        if (cle.equals("peinture_aucune_tuile")) return "Configure d'abord une image dans \"Configurer les tuiles\"";
 
+        
         return "[" + cle + "]";
     }
 
