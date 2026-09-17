@@ -643,6 +643,8 @@ public class CanvasEditeur extends View {
             canvas.drawRect(0, 0, objet.largeur * ratio, objet.hauteur, paintObjet);
             
             dessinerImage(canvas, objet, cheminAAfficher);
+        } else if ("tile_layer".equals(objet.type)) {
+            dessinerTileLayer(canvas, objet, alphaVal);
         } else {
             if (objet.afficherFondColore || cheminAAfficher == null) {
                 paintObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
@@ -754,7 +756,7 @@ public class CanvasEditeur extends View {
         canvas.restore();
     }
 // bas 3
-        
+
 // haut 4
     @Override
     protected void onDraw(Canvas canvas) {
@@ -837,6 +839,71 @@ public class CanvasEditeur extends View {
         }
     }
 
+    private void dessinerTileLayer(Canvas canvas, ObjetBase objet, int alphaVal) {
+        if (objet.cheminTileset == null || cheminProjet == null) {
+            paintObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.argb(80, 150, 150, 150));
+            paintObjet.setAlpha(alphaVal);
+            canvas.drawRect(0, 0, objet.largeur, objet.hauteur, paintObjet);
+            return;
+        }
+
+        android.graphics.Bitmap bmpTileset = cacheImages.get(objet.cheminTileset);
+        if (bmpTileset == null) {
+            try {
+                java.io.File imgFile = new java.io.File(cheminProjet, objet.cheminTileset);
+                if (imgFile.exists()) {
+                    bmpTileset = android.graphics.BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    if (bmpTileset != null) {
+                        cacheImages.put(objet.cheminTileset, bmpTileset);
+                    }
+                }
+            } catch (Exception e) {}
+        }
+
+        if (bmpTileset == null) {
+            paintObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.argb(80, 150, 150, 150));
+            paintObjet.setAlpha(alphaVal);
+            canvas.drawRect(0, 0, objet.largeur, objet.hauteur, paintObjet);
+            return;
+        }
+
+        if (objet.grilleTuiles == null) return;
+
+        int lt = Math.max(1, objet.largeurTuilePx);
+        int ht = Math.max(1, objet.hauteurTuilePx);
+        int marge = Math.max(0, objet.margeTuilePx);
+        int decalage = Math.max(0, objet.decalageTuilePx);
+        int colonnesTileset = Math.max(1, (bmpTileset.getWidth() - decalage * 2 + marge) / (lt + marge));
+
+        paintObjet.setAlpha(alphaVal);
+
+        for (int row = 0; row < objet.grilleTuiles.length; row++) {
+            int[] ligne = objet.grilleTuiles[row];
+            if (ligne == null) continue;
+            for (int col = 0; col < ligne.length; col++) {
+                int indexTuile = ligne[col];
+                if (indexTuile < 0) continue;
+
+                int colSource = indexTuile % colonnesTileset;
+                int rowSource = indexTuile / colonnesTileset;
+                int xSource = decalage + colSource * (lt + marge);
+                int ySource = decalage + rowSource * (ht + marge);
+
+                int xSourceClamp = Math.max(0, Math.min(xSource, bmpTileset.getWidth() - 1));
+                int ySourceClamp = Math.max(0, Math.min(ySource, bmpTileset.getHeight() - 1));
+                int largeurClamp = Math.max(1, Math.min(lt, bmpTileset.getWidth() - xSourceClamp));
+                int hauteurClamp = Math.max(1, Math.min(ht, bmpTileset.getHeight() - ySourceClamp));
+
+                android.graphics.Rect rectSource = new android.graphics.Rect(xSourceClamp, ySourceClamp, xSourceClamp + largeurClamp, ySourceClamp + hauteurClamp);
+                float destX = col * (float) objet.largeurTuilePx;
+                float destY = row * (float) objet.hauteurTuilePx;
+                android.graphics.RectF rectDest = new android.graphics.RectF(destX, destY, destX + objet.largeurTuilePx, destY + objet.hauteurTuilePx);
+
+                canvas.drawBitmap(bmpTileset, rectSource, rectDest, paintObjet);
+            }
+        }
+    }
+
     private float[] ecranVersScene(float xEcran, float yEcran) {
         float cx = getWidth() / 2f, cy = getHeight() / 2f;
         float xZoom = cx + (xEcran - cx) / niveauZoom;
@@ -874,6 +941,8 @@ public class CanvasEditeur extends View {
         return null;
     }
 // bas 4
+    
+    
 
     // haut 5
     private int getTouchTarget(float xEcran, float yEcran) {
