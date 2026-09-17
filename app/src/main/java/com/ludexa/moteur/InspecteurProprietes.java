@@ -94,6 +94,10 @@ public class InspecteurProprietes extends LinearLayout {
 
     private LinearLayout blocTilemap;
     private Button btnConfigurerTileset;
+    
+    private LinearLayout blocTilemap;
+    private Button btnConfigurerTileset;
+    private Button btnPeindreTileset;
 
     private Scene sceneActive;
     private CanvasEditeur canvasEditeur;
@@ -960,6 +964,11 @@ public class InspecteurProprietes extends LinearLayout {
         btnConfigurerTileset.setText(Traducteur.get("insp_btn_configurer_tileset"));
         styliserBouton(btnConfigurerTileset);
         blocTilemap.addView(btnConfigurerTileset);
+
+        btnPeindreTileset = new Button(context);
+        btnPeindreTileset.setText(Traducteur.get("insp_btn_peindre_tileset"));
+        styliserBouton(btnPeindreTileset);
+        blocTilemap.addView(btnPeindreTileset);
 
         blocProprietes.addView(blocTilemap);
 // bas 3
