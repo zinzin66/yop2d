@@ -180,6 +180,7 @@ public class Traducteur {
         if (cle.equals("tileset_nb_tuiles")) return "tuiles détectées";
         if (cle.equals("tileset_valider")) return "Valider";
         if (cle.equals("tileset_aucune_tuile")) return "Choisis d'abord une image pour voir les tuiles";
+        if (cle.equals("tileset_remplir_test")) return "Remplir avec la tuile n°0 (test d'aperçu)";
 
         return "[" + cle + "]";
     }
