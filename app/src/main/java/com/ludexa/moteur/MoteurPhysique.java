@@ -62,12 +62,95 @@ public class MoteurPhysique {
                         }
                     }
                 }
+
+                // Phase 2bis : Résolution des collisions avec les Décors en tuiles (murs solides, 4 directions)
+                for (ObjetBase autreObjet : objets) {
+                    if (dynamique == autreObjet) continue;
+                    if ("tile_layer".equals(autreObjet.type)) {
+                        if (resoudreCollisionTuile(dynamique, autreObjet)) {
+                            aEuUnChoc = true;
+                        }
+                    }
+                }
+
                 if (aEuUnChoc) {
                     objetsEnChoc.add(dynamique);
                 }
             }
         }
         return objetsEnChoc;
+    }
+
+    // Teste et corrige la position d'un objet dynamique contre les cases solides d'un Décor en tuiles.
+    // Repousse l'objet hors du mur, du côté où le chevauchement est le plus faible (axe le moins pénétré).
+    private boolean resoudreCollisionTuile(ObjetBase dynamique, ObjetBase tileLayer) {
+        if (tileLayer.grilleTuiles == null || tileLayer.tuilesSolides == null) return false;
+
+        int lt = Math.max(1, tileLayer.largeurTuilePx);
+        int ht = Math.max(1, tileLayer.hauteurTuilePx);
+        boolean unChocDetecte = false;
+
+        float dynDemiLargeur = (dynamique.largeur * Math.abs(dynamique.scaleX)) / 2f;
+        float dynDemiHauteur = (dynamique.hauteur * Math.abs(dynamique.scaleY)) / 2f;
+
+        float dCentreX = dynamique.x + dynamique.largeur / 2f;
+        float dCentreY = dynamique.y + dynamique.hauteur / 2f;
+        float dGauche = dCentreX - dynDemiLargeur;
+        float dDroite = dCentreX + dynDemiLargeur;
+        float dHaut = dCentreY - dynDemiHauteur;
+        float dBas = dCentreY + dynDemiHauteur;
+
+        int colMin = Math.max(0, (int) Math.floor((dGauche - tileLayer.x) / lt) - 1);
+        int colMax = Math.min(tileLayer.largeurGrille - 1, (int) Math.floor((dDroite - tileLayer.x) / lt) + 1);
+        int rowMin = Math.max(0, (int) Math.floor((dHaut - tileLayer.y) / ht) - 1);
+        int rowMax = Math.min(tileLayer.hauteurGrille - 1, (int) Math.floor((dBas - tileLayer.y) / ht) + 1);
+
+        for (int row = rowMin; row <= rowMax; row++) {
+            if (row < 0 || row >= tileLayer.grilleTuiles.length || tileLayer.grilleTuiles[row] == null) continue;
+            for (int col = colMin; col <= colMax; col++) {
+                if (col < 0 || col >= tileLayer.grilleTuiles[row].length) continue;
+
+                int indexTuile = tileLayer.grilleTuiles[row][col];
+                if (indexTuile < 0) continue;
+                if (indexTuile >= tileLayer.tuilesSolides.length || !tileLayer.tuilesSolides[indexTuile]) continue;
+
+                float caseGauche = tileLayer.x + col * (float) lt;
+                float caseDroite = caseGauche + lt;
+                float caseHaut = tileLayer.y + row * (float) ht;
+                float caseBas = caseHaut + ht;
+
+                // Recalcul de l'AABB dynamique à chaque case (car la position a pu être corrigée par une case précédente)
+                dCentreX = dynamique.x + dynamique.largeur / 2f;
+                dCentreY = dynamique.y + dynamique.hauteur / 2f;
+                dGauche = dCentreX - dynDemiLargeur;
+                dDroite = dCentreX + dynDemiLargeur;
+                dHaut = dCentreY - dynDemiHauteur;
+                dBas = dCentreY + dynDemiHauteur;
+
+                if (dGauche < caseDroite && dDroite > caseGauche && dHaut < caseBas && dBas > caseHaut) {
+                    float chevauchementX = Math.min(dDroite, caseDroite) - Math.max(dGauche, caseGauche);
+                    float chevauchementY = Math.min(dBas, caseBas) - Math.max(dHaut, caseHaut);
+
+                    if (chevauchementX < chevauchementY) {
+                        if (dCentreX < caseGauche + lt / 2f) {
+                            dynamique.x -= chevauchementX;
+                        } else {
+                            dynamique.x += chevauchementX;
+                        }
+                        dynamique.vitesseX = 0f;
+                    } else {
+                        if (dCentreY < caseHaut + ht / 2f) {
+                            dynamique.y -= chevauchementY;
+                        } else {
+                            dynamique.y += chevauchementY;
+                        }
+                        dynamique.vitesseY = 0f;
+                    }
+                    unChocDetecte = true;
+                }
+            }
+        }
+        return unChocDetecte;
     }
 
     private boolean testerCollisionAABB(ObjetBase a, ObjetBase b) {
