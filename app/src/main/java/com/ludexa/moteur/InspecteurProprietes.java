@@ -1214,6 +1214,17 @@ public class InspecteurProprietes extends LinearLayout {
             });
             dialogTileset.show();
         });
+
+        btnPeindreTileset.setOnClickListener(v -> {
+            if (objetCourant == null) return;
+            if (objetCourant.cheminTileset == null) {
+                Toast.makeText(context, Traducteur.get("peinture_aucune_tuile"), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            DialoguePeintureTuiles dialoguePeinture = new DialoguePeintureTuiles(context, objetCourant, cheminProjet);
+            dialoguePeinture.setOnDismissListener(d -> canvasEditeur.invalidate());
+            dialoguePeinture.show();
+        });
 // bas 4
 
 // haut 5
