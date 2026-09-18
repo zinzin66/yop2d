@@ -25,6 +25,15 @@ public class ActionsMoteur {
             case "detruire": ActionsObjets.detruire(n); return null;
             case "detruire_par_tag": ActionsObjets.detruireParTag(n); return null;
             case "cloner": ActionsObjets.cloner(n); return null;
+            case "cloner_position": ActionsObjets.clonerPosition(n); return null;
+            case "tirer": ActionsObjets.tirer(n); return null;
+            case "definir_filtre": ActionsObjets.definirFiltre(n); return null;
+            case "miroir": ActionsObjets.miroir(n); return null;
+            case "verrouiller": ActionsObjets.verrouiller(n); return null;
+            case "definir_parallaxe": ActionsObjets.definirParallaxe(n); return null;
+            case "lier_objets": ActionsObjets.lierObjets(n); return null;
+            case "surbrillance": ActionsObjets.surbrillance(n); return null;
+            case "clignotement": ActionsObjets.clignotement(n); return null;  
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
