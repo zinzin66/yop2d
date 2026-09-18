@@ -58,7 +58,7 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_objet_hasard"), Traducteur.get("cat_logique_spatiale"), "NoeudActionObjetHasard")); 
 
         // LOGIQUE & CONDITIONS
-        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_condition"), Traducteur.get("cat_logique_conditions"), "NoeudConditionComparaison"));
+        
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_si_objet_a_touche_zone_b"), Traducteur.get("cat_logique_conditions"), "NoeudConditionSiObjetToucheZone"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_si_objet_visible"), Traducteur.get("cat_logique_conditions"), "NoeudConditionSiObjetVisible"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_si_objet_a_le_tag"), Traducteur.get("cat_logique_conditions"), "NoeudConditionTag"));
@@ -78,7 +78,7 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_fermer_hud"), Traducteur.get("cat_scene_hud"), "NoeudActionFermerHUD"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_instancier_scene"), Traducteur.get("cat_scene_hud"), "NoeudActionInstancierScene"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_fermer_instance"), Traducteur.get("cat_scene_hud"), "NoeudActionFermerInstance"));
-        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_toast"), Traducteur.get("cat_scene_hud"), "NoeudActionToast"));
+        
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_fixer_camera"), Traducteur.get("cat_scene_hud"), "NoeudActionFixerCamera"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_tremblement_camera"), Traducteur.get("cat_scene_hud"), "NoeudActionTremblement"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_elasticite_camera"), Traducteur.get("cat_scene_hud"), "NoeudActionParametresCamera"));
@@ -87,8 +87,8 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_vibration"), Traducteur.get("cat_scene_hud"), "NoeudActionVibration"));
 
         // APPARENCE & OBJETS
-        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_deplacer_objet"), Traducteur.get("cat_apparence_objets"), "NoeudActionDeplacer"));
-        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_pousser_objet"), Traducteur.get("cat_apparence_objets"), "NoeudActionPousser"));
+        
+        
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_modifier_couleur"), Traducteur.get("cat_apparence_objets"), "NoeudActionModifierCouleur"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_visibilite"), Traducteur.get("cat_apparence_objets"), "NoeudActionVisibilite"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_modifier_deplacable"), Traducteur.get("cat_apparence_objets"), "NoeudActionModifierVerrouillage"));
@@ -125,9 +125,9 @@ public class RegistreNoeuds {
 
         // VARIABLES & INVENTAIRE
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_extraire_propriete"), Traducteur.get("cat_variables_inventaire"), "NoeudActionExtrairePropriete"));
-        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_operation_mathematique"), Traducteur.get("cat_variables_inventaire"), "NoeudActionOperationMath"));
+        
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_limiter_valeur"), Traducteur.get("cat_variables_inventaire"), "NoeudActionClampVariable"));
-        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_modifier_variable"), Traducteur.get("cat_variables_inventaire"), "NoeudActionModifierVariable"));
+        
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_ajouter_a_variable"), Traducteur.get("cat_variables_inventaire"), "NoeudActionAjouterVariable"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_nombre_aleatoire"), Traducteur.get("cat_variables_inventaire"), "NoeudActionNombreAleatoire"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_ajouter_inventaire"), Traducteur.get("cat_variables_inventaire"), "NoeudActionAjouterInventaire"));
@@ -169,6 +169,10 @@ public class RegistreNoeuds {
     public static Map<String, List<InfoNoeud>> getNoeudsParCategorie() {
         if (REGISTRE.isEmpty()) {
             initialiser(); 
+            // NŒUDS DU CATALOGUE (décrits dans assets/catalogue_noeuds.json)
+        for (CatalogueNoeuds.Definition d : CatalogueNoeuds.toutes()) {
+            REGISTRE.add(new InfoNoeud(Traducteur.get(d.cleNom), Traducteur.get(d.categorie), "cle:" + d.cle));
+        }
         }
         Map<String, List<InfoNoeud>> map = new LinkedHashMap<>();
         for (InfoNoeud info : REGISTRE) {
