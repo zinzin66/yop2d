@@ -942,8 +942,6 @@ public class CanvasEditeur extends View {
     }
 // bas 4
     
-    
-
     // haut 5
     private int getTouchTarget(float xEcran, float yEcran) {
         float[] scenePos = ecranVersScene(xEcran, yEcran);
@@ -1009,6 +1007,42 @@ public class CanvasEditeur extends View {
 
     private float accrocherGrille(float valeur) {
         return Math.round(valeur / tailleGrille) * tailleGrille;
+    }
+
+    // Pour un Décor en tuiles (tile_layer) : convertit le scale obtenu par un redimensionnement à la poignée
+    // en un nombre de cases (arrondi au plus proche), puis remet le scale à 1. Le Décor "s'étire" donc par
+    // cases entières plutôt que par un zoom visuel continu, ce qui garde la collision et le rendu cohérents.
+    private void finaliserRedimensionnementTileLayer(ObjetBase objet) {
+        if (!"tile_layer".equals(objet.type)) return;
+        float scaleXAbs = Math.abs(objet.scaleX);
+        float scaleYAbs = Math.abs(objet.scaleY);
+        if (Math.abs(scaleXAbs - 1f) < 0.001f && Math.abs(scaleYAbs - 1f) < 0.001f) return;
+
+        int lt = Math.max(1, objet.largeurTuilePx);
+        int ht = Math.max(1, objet.hauteurTuilePx);
+
+        int nouvelleLargeurGrille = Math.max(1, Math.round((objet.largeur * scaleXAbs) / lt));
+        int nouvelleHauteurGrille = Math.max(1, Math.round((objet.hauteur * scaleYAbs) / ht));
+
+        int[][] ancienneGrille = objet.grilleTuiles;
+        int[][] nouvelleGrilleTableau = new int[nouvelleHauteurGrille][nouvelleLargeurGrille];
+        for (int[] ligne : nouvelleGrilleTableau) java.util.Arrays.fill(ligne, -1);
+        if (ancienneGrille != null) {
+            for (int ligneY = 0; ligneY < Math.min(ancienneGrille.length, nouvelleHauteurGrille); ligneY++) {
+                if (ancienneGrille[ligneY] == null) continue;
+                for (int colX = 0; colX < Math.min(ancienneGrille[ligneY].length, nouvelleLargeurGrille); colX++) {
+                    nouvelleGrilleTableau[ligneY][colX] = ancienneGrille[ligneY][colX];
+                }
+            }
+        }
+
+        objet.grilleTuiles = nouvelleGrilleTableau;
+        objet.largeurGrille = nouvelleLargeurGrille;
+        objet.hauteurGrille = nouvelleHauteurGrille;
+        objet.largeur = nouvelleLargeurGrille * (float) lt;
+        objet.hauteur = nouvelleHauteurGrille * (float) ht;
+        objet.scaleX = 1f;
+        objet.scaleY = 1f;
     }
 
     @Override
@@ -1180,6 +1214,11 @@ public class CanvasEditeur extends View {
                         }
                     }
                 }
+                if (((currentMode >= 4 && currentMode <= 7) || (currentMode >= 9 && currentMode <= 12)) && objetSelectionne != null) {
+                    finaliserRedimensionnementTileLayer(objetSelectionne);
+                    if (inspecteurLie != null) inspecteurLie.afficherObjet(objetSelectionne);
+                    invalidate();
+                }
                 currentMode = 0; return true;
         }
         return super.onTouchEvent(event);
@@ -1233,5 +1272,3 @@ public class CanvasEditeur extends View {
     }
 }
 // bas 5
-                                
-                        
