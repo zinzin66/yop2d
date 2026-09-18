@@ -659,7 +659,10 @@
 "insp_btn_couleur_fond_prog": "背景色",
 "noeud_modifier_progression": "進捗を設定",
 "param_nouvelle_valeur": "新しい値",
-"insp_couleur_aucune": "なし"
+"insp_couleur_aucune": "なし",
+  "noeud_extraire_propriete": "プロパティを抽出",
+"param_propriete": "抽出するプロパティ"
+  
   
   
   
