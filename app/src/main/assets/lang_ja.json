@@ -638,7 +638,28 @@
 "peinture_annuler_action": "元に戻す",
 "peinture_recentrer": "表示を中央に戻す",
 "peinture_tuiles_label": "タイル",
-"peinture_aucune_tuile": "先に「タイルを設定」で画像を設定してください"
+"peinture_aucune_tuile": "先に「タイルを設定」で画像を設定してください",
+  "dossier_images": "画像",
+"dossier_sons": "音声",
+"dossier_fonts": "フォント",
+"dossier_textes": "テキスト",
+"Suivre X": "X軸に追従",
+"Suivre Y": "Y軸に追従",
+"Intensite": "強度",
+"Duree": "持続時間（ms）",
+"Infini": "ループ／無限",
+"titre_dialogue_objets": "オブジェクトを追加",
+"cat_formes_base": "基本図形とビジュアル",
+"cat_ui_hud": "インターフェース、テキスト、HUD",
+"cat_prefabs": "ネストされたシーンとプレハブ",
+"insp_sep_progression": "プログレスバー",
+"insp_label_prog_min": "最小値",
+"insp_label_prog_max": "最大値",
+"insp_label_prog_actuelle": "現在値",
+"insp_btn_couleur_fond_prog": "背景色",
+"noeud_modifier_progression": "進捗を設定",
+"param_nouvelle_valeur": "新しい値",
+"insp_couleur_aucune": "なし"
   
   
   
