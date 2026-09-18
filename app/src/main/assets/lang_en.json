@@ -650,6 +650,8 @@
 "param_nouvelle_valeur": "New Value",
 "insp_couleur_aucune": "None",
   "noeud_extraire_propriete": "Extract Property",
+  "noeud_event_maintenu_objet": "Object Held Down",
+  "noeud_fin_clic_sur_objet": "Object Released",
 "param_propriete": "Property to extract"
   
   
