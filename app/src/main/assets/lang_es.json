@@ -657,7 +657,10 @@
 "insp_btn_couleur_fond_prog": "Color de fondo",
 "noeud_modifier_progression": "Definir el Progreso",
 "param_nouvelle_valeur": "Nuevo Valor",
-"insp_couleur_aucune": "Ninguno"
+"insp_couleur_aucune": "Ninguno",
+  "noeud_extraire_propriete": "Extraer propiedad",
+"param_propriete": "Propiedad a extraer"
+  
   
   
   
