@@ -659,6 +659,8 @@
 "param_nouvelle_valeur": "Новое значение",
 "insp_couleur_aucune": "Нет",
   "noeud_extraire_propriete": "Извлечь свойство",
+  "noeud_event_maintenu_objet": "Объект удерживается",
+  "noeud_fin_clic_sur_objet": "Конец клика по объекту",
 "param_propriete": "Свойство для извлечения"
   
   
