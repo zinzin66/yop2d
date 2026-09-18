@@ -59,6 +59,7 @@ public class Blueprint {
             NoeudDTO ndto = new NoeudDTO();
             ndto.id = n.id;
             ndto.classeType = n.getClass().getName();
+            if (n instanceof NoeudGenerique) ndto.cleNoeud = ((NoeudGenerique) n).cle;
             ndto.x = noeudsX.containsKey(n.id) ? noeudsX.get(n.id) : 0f;
             ndto.y = noeudsY.containsKey(n.id) ? noeudsY.get(n.id) : 0f;
 
@@ -151,8 +152,7 @@ public class Blueprint {
 
         for (NoeudDTO ndto : dto.noeuds) {
             try {
-                Class<?> clazz = Class.forName(ndto.classeType);
-                NoeudBase n = (NoeudBase) clazz.newInstance();
+                NoeudBase n = FabriqueNoeuds.creerDepuisSauvegarde(ndto.classeType, ndto.cleNoeud);
                 n.id = ndto.id;
 
                 if (ndto.parametres != null) {
@@ -331,6 +331,7 @@ public class Blueprint {
     private static class NoeudDTO {
         String id;
         String classeType;
+        String cleNoeud;
         float x;
         float y;
         List<PortDTO> portsEntree = new ArrayList<>();
