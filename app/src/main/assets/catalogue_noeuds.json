@@ -1,0 +1,70 @@
+// haut 1
+{
+  "noeuds": [
+    {
+      "cle": "deplacer",
+      "nomCle": "noeud_deplacer_objet",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "0", "nom": "X" },
+        { "cle": "y", "type": "formule", "defaut": "0", "nom": "Y" }
+      ]
+    },
+    {
+      "cle": "pousser",
+      "nomCle": "noeud_pousser_objet",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Ajout X", "en": "Add X", "es": "Añadir X", "pt": "Adicionar X", "de": "X hinzufügen", "it": "Aggiungi X", "ru": "Добавить X", "zh": "增加 X", "ja": "X を加算" } },
+        { "cle": "y", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Ajout Y", "en": "Add Y", "es": "Añadir Y", "pt": "Adicionar Y", "de": "Y hinzufügen", "it": "Aggiungi Y", "ru": "Добавить Y", "zh": "增加 Y", "ja": "Y を加算" } }
+      ]
+    },
+    {
+      "cle": "modifier_variable",
+      "nomCle": "noeud_modifier_variable",
+      "categorie": "cat_variables_inventaire",
+      "objet": true,
+      "variable": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "",
+          "nom": { "fr": "Valeur", "en": "Value", "es": "Valor", "pt": "Valor", "de": "Wert", "it": "Valore", "ru": "Значение", "zh": "值", "ja": "値" } }
+      ]
+    },
+    {
+      "cle": "toast",
+      "nomCle": "noeud_toast",
+      "categorie": "cat_scene_hud",
+      "champs": [
+        { "cle": "message", "type": "texte", "defaut": "",
+          "nom": { "fr": "Message", "en": "Message", "es": "Mensaje", "pt": "Mensagem", "de": "Nachricht", "it": "Messaggio", "ru": "Сообщение", "zh": "消息", "ja": "メッセージ" } }
+      ]
+    },
+    {
+      "cle": "condition",
+      "nomCle": "noeud_condition",
+      "categorie": "cat_logique_conditions",
+      "sorties": ["vrai", "faux"],
+      "champs": [
+        { "cle": "condition", "type": "formule", "defaut": "",
+          "nom": { "fr": "Condition", "en": "Condition", "es": "Condición", "pt": "Condição", "de": "Bedingung", "it": "Condizione", "ru": "Условие", "zh": "条件", "ja": "条件" } }
+      ]
+    },
+    {
+      "cle": "modifier_propriete",
+      "nom": { "fr": "Modifier une propriété", "en": "Set a property", "es": "Modificar una propiedad", "pt": "Modificar uma propriedade", "de": "Eigenschaft ändern", "it": "Modifica una proprietà", "ru": "Изменить свойство", "zh": "修改属性", "ja": "プロパティを変更" },
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "propriete", "type": "choix", "options": ["@proprietes"], "defaut": "x",
+          "nom": { "fr": "Propriété", "en": "Property", "es": "Propiedad", "pt": "Propriedade", "de": "Eigenschaft", "it": "Proprietà", "ru": "Свойство", "zh": "属性", "ja": "プロパティ" } },
+        { "cle": "valeur", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Valeur", "en": "Value", "es": "Valor", "pt": "Valor", "de": "Wert", "it": "Valore", "ru": "Значение", "zh": "值", "ja": "値" } }
+      ]
+    }
+  ]
+}
+// bas 1
