@@ -153,7 +153,50 @@ public class Traducteur {
         if (cle.equals("param_nouvelle_valeur")) return "Nouvelle Valeur";
         
         if (cle.equals("insp_couleur_aucune")) return "Aucune";
+        if (cle.equals("insp_sep_progression")) return "BARRE DE PROGRESSION";
+        if (cle.equals("insp_label_prog_min")) return "Valeur Minimum";
+        if (cle.equals("insp_label_prog_max")) return "Valeur Maximum";
+        if (cle.equals("insp_label_prog_actuelle")) return "Valeur Actuelle";
+        if (cle.equals("insp_btn_couleur_fond_prog")) return "Couleur du fond";
+        
 
+        // --- NOUVELLES CLES : TILEMAP / DECOR EN TUILES ---
+        if (cle.equals("cat_decors")) return "Décors";
+        if (cle.equals("obj_prefix_tilemap")) return "Decor";
+        if (cle.equals("titre_dialogue_config_tileset")) return "Configurer le Décor en Tuiles";
+        if (cle.equals("insp_btn_configurer_tileset")) return "Configurer les tuiles";
+        if (cle.equals("tileset_choisir_image")) return "Choisir l'image du Tileset";
+        if (cle.equals("tileset_taille_tuile")) return "Taille d'une tuile (pixels)";
+        if (cle.equals("tileset_marquer_solide")) return "Coche les tuiles qui bloquent le joueur (murs, obstacles)";
+        if (cle.equals("tileset_tuile_solide")) return "Solide";
+        if (cle.equals("tileset_aucune_image")) return "Aucune image sélectionnée";
+        if (cle.equals("tileset_section_image")) return "Image du Tileset";
+        if (cle.equals("tileset_section_decoupe")) return "Découpe des tuiles";
+        if (cle.equals("tileset_section_dimensions")) return "Taille du décor (en cases)";
+        if (cle.equals("tileset_section_solides")) return "Tuiles solides (bloquent le joueur)";
+        if (cle.equals("tileset_largeur_tuile")) return "Largeur d'une tuile (px)";
+        if (cle.equals("tileset_hauteur_tuile")) return "Hauteur d'une tuile (px)";
+        if (cle.equals("tileset_marge")) return "Marge entre les tuiles (px)";
+        if (cle.equals("tileset_decalage")) return "Décalage de bordure (px)";
+        if (cle.equals("tileset_recalculer")) return "Recalculer la grille";
+        if (cle.equals("tileset_largeur_grille")) return "Largeur (en cases)";
+        if (cle.equals("tileset_hauteur_grille")) return "Hauteur (en cases)";
+        if (cle.equals("tileset_tout_solide")) return "Tout marquer Solide";
+        if (cle.equals("tileset_tout_libre")) return "Tout marquer Libre";
+        if (cle.equals("tileset_nb_tuiles")) return "tuiles détectées";
+        if (cle.equals("tileset_valider")) return "Valider";
+        if (cle.equals("tileset_aucune_tuile")) return "Choisis d'abord une image pour voir les tuiles";
+        if (cle.equals("tileset_remplir_test")) return "Remplir avec la tuile n°0 (test d'aperçu)";
+        if (cle.equals("titre_dialogue_peinture_tuiles")) return "Peindre le Décor";
+        if (cle.equals("insp_btn_peindre_tileset")) return "Peindre";
+        if (cle.equals("peinture_outil_peindre")) return "Peindre";
+        if (cle.equals("peinture_outil_gomme")) return "Gomme";
+        if (cle.equals("peinture_annuler_action")) return "Annuler";
+        if (cle.equals("peinture_recentrer")) return "Recentrer la vue";
+        if (cle.equals("peinture_tuiles_label")) return "Tuiles";
+        if (cle.equals("peinture_aucune_tuile")) return "Configure d'abord une image dans \"Configurer les tuiles\"";
+
+        
         return "[" + cle + "]";
     }
 

@@ -62,12 +62,105 @@ public class MoteurPhysique {
                         }
                     }
                 }
+
+                // Phase 2bis : Résolution des collisions avec les Décors en tuiles (murs solides, 4 directions)
+                for (ObjetBase autreObjet : objets) {
+                    if (dynamique == autreObjet) continue;
+                    if ("tile_layer".equals(autreObjet.type)) {
+                        if (resoudreCollisionTuile(dynamique, autreObjet)) {
+                            aEuUnChoc = true;
+                        }
+                    }
+                }
+
                 if (aEuUnChoc) {
                     objetsEnChoc.add(dynamique);
                 }
             }
         }
         return objetsEnChoc;
+    }
+
+    // Teste et corrige la position d'un objet dynamique contre les cases solides d'un Décor en tuiles.
+    // Repousse l'objet hors du mur, du côté où le chevauchement est le plus faible (axe le moins pénétré),
+    // et applique un rebond (comme la collision objet-contre-objet) si la vitesse d'impact dépasse le seuil.
+    // Prend en compte le scaleX/scaleY du Décor pour que la collision reste juste même si le Décor est
+    // temporairement mis à l'échelle (l'éditeur remet normalement le scale à 1 après un redimensionnement).
+    private boolean resoudreCollisionTuile(ObjetBase dynamique, ObjetBase tileLayer) {
+        if (tileLayer.grilleTuiles == null || tileLayer.tuilesSolides == null) return false;
+
+        float ltMonde = Math.max(1, tileLayer.largeurTuilePx) * Math.max(0.01f, Math.abs(tileLayer.scaleX));
+        float htMonde = Math.max(1, tileLayer.hauteurTuilePx) * Math.max(0.01f, Math.abs(tileLayer.scaleY));
+        boolean unChocDetecte = false;
+
+        float dynDemiLargeur = (dynamique.largeur * Math.abs(dynamique.scaleX)) / 2f;
+        float dynDemiHauteur = (dynamique.hauteur * Math.abs(dynamique.scaleY)) / 2f;
+
+        float dCentreX = dynamique.x + dynamique.largeur / 2f;
+        float dCentreY = dynamique.y + dynamique.hauteur / 2f;
+        float dGauche = dCentreX - dynDemiLargeur;
+        float dDroite = dCentreX + dynDemiLargeur;
+        float dHaut = dCentreY - dynDemiHauteur;
+        float dBas = dCentreY + dynDemiHauteur;
+
+        int colMin = Math.max(0, (int) Math.floor((dGauche - tileLayer.x) / ltMonde) - 1);
+        int colMax = Math.min(tileLayer.largeurGrille - 1, (int) Math.floor((dDroite - tileLayer.x) / ltMonde) + 1);
+        int rowMin = Math.max(0, (int) Math.floor((dHaut - tileLayer.y) / htMonde) - 1);
+        int rowMax = Math.min(tileLayer.hauteurGrille - 1, (int) Math.floor((dBas - tileLayer.y) / htMonde) + 1);
+
+        for (int row = rowMin; row <= rowMax; row++) {
+            if (row < 0 || row >= tileLayer.grilleTuiles.length || tileLayer.grilleTuiles[row] == null) continue;
+            for (int col = colMin; col <= colMax; col++) {
+                if (col < 0 || col >= tileLayer.grilleTuiles[row].length) continue;
+
+                int indexTuile = tileLayer.grilleTuiles[row][col];
+                if (indexTuile < 0) continue;
+                if (indexTuile >= tileLayer.tuilesSolides.length || !tileLayer.tuilesSolides[indexTuile]) continue;
+
+                float caseGauche = tileLayer.x + col * ltMonde;
+                float caseDroite = caseGauche + ltMonde;
+                float caseHaut = tileLayer.y + row * htMonde;
+                float caseBas = caseHaut + htMonde;
+
+                dCentreX = dynamique.x + dynamique.largeur / 2f;
+                dCentreY = dynamique.y + dynamique.hauteur / 2f;
+                dGauche = dCentreX - dynDemiLargeur;
+                dDroite = dCentreX + dynDemiLargeur;
+                dHaut = dCentreY - dynDemiHauteur;
+                dBas = dCentreY + dynDemiHauteur;
+
+                if (dGauche < caseDroite && dDroite > caseGauche && dHaut < caseBas && dBas > caseHaut) {
+                    float chevauchementX = Math.min(dDroite, caseDroite) - Math.max(dGauche, caseGauche);
+                    float chevauchementY = Math.min(dBas, caseBas) - Math.max(dHaut, caseHaut);
+
+                    if (chevauchementX < chevauchementY) {
+                        if (dCentreX < caseGauche + ltMonde / 2f) {
+                            dynamique.x -= chevauchementX;
+                        } else {
+                            dynamique.x += chevauchementX;
+                        }
+                        if (Math.abs(dynamique.vitesseX) > SEUIL_MINIMUM_REBOND) {
+                            dynamique.vitesseX = -dynamique.vitesseX * dynamique.rebond;
+                        } else {
+                            dynamique.vitesseX = 0f;
+                        }
+                    } else {
+                        if (dCentreY < caseHaut + htMonde / 2f) {
+                            dynamique.y -= chevauchementY;
+                        } else {
+                            dynamique.y += chevauchementY;
+                        }
+                        if (Math.abs(dynamique.vitesseY) > SEUIL_MINIMUM_REBOND) {
+                            dynamique.vitesseY = -dynamique.vitesseY * dynamique.rebond;
+                        } else {
+                            dynamique.vitesseY = 0f;
+                        }
+                    }
+                    unChocDetecte = true;
+                }
+            }
+        }
+        return unChocDetecte;
     }
 
     private boolean testerCollisionAABB(ObjetBase a, ObjetBase b) {

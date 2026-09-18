@@ -1,299 +1,418 @@
 ================================================
-  DOCUMENTAZIONE UFFICIALE YOP.2D - BLUEPRINT
+  DOCUMENTAZIONE UFFICIALE YOP2D - BLUEPRINT
 ================================================
 
+Questa documentazione utilizza un formato visivo per aiutarti a capire come collegare i tuoi blocchi (nodi).
+( ) = Cosa devi configurare o collegare come ingresso.
+[ ] = Il blocco stesso.
+---> = La direzione dell'azione (il flusso del programma).
+
 --- EVENTI ---
-[All'Avvio]
-Viene eseguito automaticamente e una sola volta non appena la scena viene caricata sullo schermo.
 
-[Ogni frame]
-Viene eseguito continuamente, a ogni aggiornamento dello schermo (framerate). Ideale per aggiornamenti costanti.
+=========================================
+[ All'Avvio ]
+=========================================
+        (Inizio) ---> [ Esegui ] --->
 
-[Fine del Clic]
-Si attiva quando il giocatore solleva il dito dallo schermo, in qualsiasi punto.
+* RUOLO: Viene eseguito automaticamente e solo una volta non appena la scena viene caricata sullo schermo.
+* ESEMPIO: Posizionare i nemici nella loro posizione iniziale o impostare la salute del giocatore a 100.
 
-[Al Clic sull'Oggetto]
-Si attiva quando il dito del giocatore tocca l'Oggetto bersaglio.
+=========================================
+[ Ogni Frame ]
+=========================================
+         (Ciclo) ---> [ Esegui ] --->
 
-[Inizio Trascinamento] / [Fine Trascinamento]
-Si attivano nel momento in cui il giocatore inizia a trascinare un oggetto mobile e nel momento in cui lo rilascia.
+* RUOLO: Viene eseguito continuamente, ad ogni aggiornamento dello schermo (framerate).
+* ESEMPIO: Far girare un oggetto su se stesso all'infinito o aggiornare un punteggio.
 
-[Collisione A/B]
-Si attiva nel momento esatto in cui l'Oggetto A entra in contatto fisico con l'Oggetto B.
+=========================================
+[ Al Clic su Oggetto ]
+=========================================
+     (Bersaglio) ---> [ Clic! ] ---> (Esegui)
 
-[Se l'oggetto tocca il Tag]
-Si attiva nel momento esatto in cui l'oggetto bersaglio entra in collisione con qualsiasi oggetto che porta l'etichetta (Tag) indicata.
+* RUOLO: Si attiva quando il dito del giocatore tocca l'Oggetto bersaglio.
+* ESEMPIO: Aprire un forziere, attivare un pulsante o avviare un dialogo.
 
-[Entra nella Zona] / [Esci dalla Zona]
-Ideale per trigger invisibili. Si attiva quando un oggetto entra o esce da una zona definita.
+=========================================
+[ Fine Clic ]
+=========================================
+       (Schermo) ---> [ Rilasciato ] ---> (Esegui)
 
-[Al Passaggio del Mouse] / [Fine Passaggio del Mouse]
-Gestisce il passaggio del dito o del cursore sopra un oggetto, senza necessità di cliccare.
+* RUOLO: Si attiva quando il giocatore rilascia il dito dallo schermo, in qualsiasi punto.
+* ESEMPIO: Smettere di sparare quando si solleva il dito.
 
-[All'Impatto (Fisica)]
-Rileva quando l'oggetto rimbalza o colpisce un elemento solido con la gravità attivata.
+=========================================
+[ Inizio / Fine Trascinamento ]
+=========================================
+       (Oggetto) ---> [ Trascina ] ---> (Esegui)
 
-[Quando la Variabile Cambia]
-Monitora continuamente una Variabile. Non appena il suo valore viene modificato, questo nodo avvia la sequenza logica.
+* RUOLO: Si attivano nel momento in cui il giocatore inizia a trascinare un oggetto mobile e quando lo rilascia.
+* ESEMPIO: Rilasciare una chiave su una porta per aprirla.
 
-[Evento Locale]
-Un evento personalizzato che puoi attivare a distanza grazie al nodo "Chiama Evento Locale".
+=========================================
+[ Collisione A/B ]
+=========================================
+     (Oggetto A) ---> [              ]
+     (Oggetto B) ---> [ Collisione!  ] ---> (Esegui)
 
-[Al Clic Azione (Avventura)]
-Si attiva specificamente quando viene premuto il pulsante virtuale "AZIONE" dell'interfaccia.
+* RUOLO: Si attiva nel momento esatto in cui l'Oggetto A entra in contatto fisico con l'Oggetto B.
+* ESEMPIO: Quando "Giocatore" tocca "Moneta" -> Riprodurre un suono e distruggere la moneta.
+
+=========================================
+[ Se l'oggetto tocca Tag ]
+=========================================
+       (Oggetto) ---> [              ]
+     (Testo Tag) ---> [ Collisione!  ] ---> (Esegui)
+
+* RUOLO: Si attiva nel momento esatto in cui l'oggetto bersaglio entra in collisione con qualsiasi oggetto che porta l'etichetta (Tag) indicata.
+* ESEMPIO: Quando "Missile" tocca un oggetto con il tag "Nemico" -> Esplosione.
+
+=========================================
+[ Entrata / Uscita da zona ]
+=========================================
+     (Oggetto A) ---> [              ]
+        (Zona B) ---> [ Passaggio    ] ---> (Esegui)
+
+* RUOLO: Si attiva quando un oggetto entra o esce da una zona definita (Ideale per trigger invisibili).
+* ESEMPIO: Il giocatore entra nella zona "Trappola" -> Spuntoni escono dal terreno.
+
+=========================================
+[ Al Passaggio / Fine Passaggio ]
+=========================================
+     (Bersaglio) ---> [ Passaggio ] ---> (Esegui)
+
+* RUOLO: Gestisce il passaggio del dito o di un puntatore sopra un oggetto, senza bisogno di cliccare.
+* ESEMPIO: Evidenziare un pulsante quando ci si passa sopra.
+
+=========================================
+[ All'Impatto (Fisica) ]
+=========================================
+       (Oggetto) ---> [ Impatto! ] ---> (Esegui)
+
+* RUOLO: Rileva quando l'oggetto rimbalza o colpisce un elemento solido con la gravità attivata.
+* ESEMPIO: Fare rumore di pietra quando una roccia cade a terra.
+
+=========================================
+[ Quando Variabile Cambia ]
+=========================================
+     (Variabile) ---> [ Modifica ] ---> (Esegui)
+
+* RUOLO: Monitora continuamente una Variabile. Non appena il suo valore viene modificato, questo nodo esegue la sequenza.
+* ESEMPIO: Se la salute cambia, la barra della salute visiva viene aggiornata.
+
+=========================================
+[ Evento Locale ]
+=========================================
+   (Nome Evento) ---> [ Ricezione ] ---> (Esegui)
+
+* RUOLO: Un evento personalizzato che puoi attivare a distanza tramite il nodo "Chiama Evento Locale".
+* ESEMPIO: Raggruppare la logica di "Game Over" per richiamarla da più posizioni.
+
+=========================================
+[ Al Clic Azione (Avventura) ]
+=========================================
+      (Pulsante) ---> [ Azione! ] ---> (Esegui)
+
+* RUOLO: Si attiva specificamente quando viene premuto il pulsante virtuale "AZIONE" dell'interfaccia.
+* ESEMPIO: Parlare con un NPC o leggere un cartello davanti a sé.
 
 
 --- MOVIMENTI E IA ---
-[Avanza continuamente]
-Applica una velocità costante. L'oggetto avanzerà da solo nella direzione del suo Angolo di Rotazione.
 
-[Insegui un oggetto]
-Fa avanzare automaticamente l'Oggetto A verso l'Oggetto B (come un missile a ricerca o un nemico).
+=========================================
+[ Avanzare continuamente ]
+=========================================
+      (Velocità) ---> [ Avanzare ] ---> 
 
-[Fuggi da un oggetto]
-Il comportamento opposto all'inseguimento. L'Oggetto A si allontana dall'Oggetto B.
+* RUOLO: Applica una velocità costante. L'oggetto avanzerà automaticamente nella direzione del suo Angolo di Rotazione.
+* ESEMPIO: Un proiettile sparato dritto o un'auto in movimento.
 
-[Ferma i movimenti]
-Annulla istantaneamente tutti i comandi di inseguimento, fuga o avanzamento continuo su un oggetto.
+=========================================
+[ Inseguire / Fuggire da oggetto ]
+=========================================
+     (Bersaglio) ---> [ Seguire/Fuggire ] ---> 
 
-[Ferma l'oggetto]
-Arresta istantaneamente il movimento fisico o automatico dell'oggetto bersaglio.
+* RUOLO: Fa avanzare automaticamente l'Oggetto A verso (o in direzione opposta a) l'Oggetto B.
+* ESEMPIO: Un missile a ricerca o un fantasma che segue il giocatore.
+
+=========================================
+[ Fermare movimenti / Fermare ]
+=========================================
+       (Oggetto) ---> [ Stop ] ---> 
+
+* RUOLO: Annulla istantaneamente tutti i comandi di inseguimento, fuga o avanzamento continuo su un oggetto.
+* ESEMPIO: Congelare un nemico quando viene colpito da un incantesimo di ghiaccio.
 
 
 --- LOGICA SPAZIALE ---
-[Distanza tra A e B]
-Calcola la distanza in pixel tra l'Oggetto A e l'Oggetto B. Ha due uscite (Vero/Falso) a seconda che la distanza rispetti la condizione.
 
-[Orienta verso (Look At)]
-Ruota l'Oggetto A in modo che guardi l'Oggetto B. L'"Offset angolo" permette di compensare se l'immagine del tuo oggetto non è stata disegnata rivolta verso destra.
+=========================================
+[ Distanza tra A e B ]
+=========================================
+     (Oggetto A) ---> [              ] ---> (Vero)
+     (Oggetto B) ---> [   Distanza   ]
+    (Condizione) ---> [              ] ---> (Falso)
 
-[Seleziona oggetto più vicino]
-Trova e seleziona automaticamente l'oggetto più vicino al bersaglio per usarlo nel resto del Blueprint.
+* RUOLO: Calcola la distanza in pixel tra l'Oggetto A e l'Oggetto B.
+* ESEMPIO: Verificare se il giocatore è abbastanza vicino per aprire una porta.
 
-[Scegli un oggetto a caso]
-Seleziona casualmente un oggetto tra quelli presenti nella scena o che hanno un Tag specifico.
+=========================================
+[ Orientare verso (Look At) ]
+=========================================
+     (Bersaglio) ---> [ Orientare ] ---> 
+
+* RUOLO: Ruota l'Oggetto A in modo che guardi l'Oggetto B.
+* ESEMPIO: Una torretta di difesa che mira al giocatore.
+
+=========================================
+[ Oggetto più vicino / Casuale ]
+=========================================
+           (Tag) ---> [ Cerca ] ---> (Salva in Variabile)
+
+* RUOLO: Individua l'oggetto più vicino o un oggetto casuale per usarlo in seguito.
+* ESEMPIO: Mirare automaticamente al nemico più vicino.
 
 
 --- LOGICA E CONDIZIONI ---
-[Condizione]
-Confronta il valore di una Variabile con un numero o un testo. Uscita Vero o Falso.
 
-[Se l'oggetto A tocca la zona B]
-Verifica istantaneamente se due oggetti si sovrappongono nel momento esatto in cui viene chiamato il nodo.
+=========================================
+[ Condizione (Variabile) ]
+=========================================
+     (Variabile) ---> [              ] ---> (Vero)
+   (Comparatore) ---> [  Condizione  ]
+        (Valore) ---> [              ] ---> (Falso)
 
-[Se Oggetto Visibile]
-Verifica se l'oggetto bersaglio è attualmente visualizzato sullo schermo.
+* RUOLO: Confronta il valore di una Variabile con un numero o un testo.
+* ESEMPIO: Se (Punti > 10) allora (Livello Successivo) altrimenti (Niente).
 
-[Se l'Oggetto ha il Tag]
-Verifica se l'oggetto possiede l'etichetta (Tag) richiesta (es: "Nemico", "Chiave").
+=========================================
+[ Se oggetto A tocca zona B ]
+=========================================
+     (Oggetto A) ---> [              ] ---> (Vero)
+        (Zona B) ---> [Si sovrappone?]
+                      [              ] ---> (Falso)
 
-[Doppia Condizione (E/O)]
-Permette di verificare due condizioni contemporaneamente.
+* RUOLO: Verifica istantaneamente se due oggetti si sovrappongono in questo preciso momento.
 
-[Chiama Funzione]
-Esegue un Blueprint esterno salvato nella cartella "fonctions". Ideale per meccaniche ripetitive.
+=========================================
+[ Condizione Doppia (E/O) ]
+=========================================
+   (Condizione1) ---> [              ] ---> (Vero)
+         (E / O) ---> [   Doppio?    ]
+   (Condizione2) ---> [              ] ---> (Falso)
 
-[Chiama Evento Locale]
-Attiva a distanza un blocco "Evento Locale" situato altrove nel Blueprint attuale.
+* RUOLO: Permette di verificare due condizioni contemporaneamente.
+* ESEMPIO: Se (Giocatore a terra) E (Pulsante Salto premuto) -> Salta.
 
-[Se il Joystick è Attivo]
-Verifica se il giocatore sta attualmente manipolando il joystick virtuale.
+=========================================
+[ Se Oggetto Visibile / Se Tag ]
+=========================================
+       (Oggetto) ---> [ Verifica ] ---> (Vero / Falso)
 
-[Se l'Oggetto è in Movimento]
-Verifica se l'oggetto bersaglio si sta attualmente muovendo sullo schermo.
+* RUOLO: Verifica se l'oggetto è sullo schermo, o se ha il Tag richiesto.
+
+=========================================
+[ Chiama Funzione ]
+=========================================
+     (Nome File) ---> [ Funzione ] ---> 
+
+* RUOLO: Esegue un Blueprint esterno salvato nella cartella "functions".
+* ESEMPIO: Creare una funzione "SpawnMostri" riutilizzabile in tutti i tuoi livelli.
+
+=========================================
+[ Sequenza ]
+=========================================
+      (Ingresso) ---> [ Sequenza ] ---> (Ramo 1)
+                      [          ] ---> (Ramo 2)
+
+* RUOLO: Divide l'esecuzione in più rami per strutturare e organizzare la logica del tuo Blueprint.
+
+=========================================
+[ Cooldown (Tempo di ricarica) ]
+=========================================
+        (Durata) ---> [ Cooldown ] ---> (Esecuzione permessa)
+
+* RUOLO: Blocca temporaneamente l'esecuzione dei nodi successivi per un tempo definito.
+* ESEMPIO: Limitare la cadenza di fuoco (aspettare 1 sec tra ogni proiettile).
+
+=========================================
+[ Altre verifiche... ]
+=========================================
+(Se Joystick Attivo) | (Se in Movimento) | (Se Pulsante Premuto) | (Se Fuori Schermo)
+* RUOLO: Blocchi di test rapido con uscite (Vero / Falso) a seconda dello stato attuale.
 
 
 --- SCENA E HUD ---
-[Cambia Scena]
-Carica una nuova stanza/livello. La scena attuale viene salvata automaticamente.
 
-[Ricarica Scena attuale]
-Ripristina il livello in corso. Perfetto se il giocatore fallisce un enigma.
+=========================================
+[ Cambiare / Ricaricare Scena ]
+=========================================
+    (Nome Scena) ---> [ Cambia ] ---> 
 
-[Apri HUD] / [Chiudi HUD]
-Visualizza una Scena sopra il gioco senza metterlo in pausa. Ideale per un inventario o un menu delle impostazioni.
+* RUOLO: Carica una nuova stanza/livello. La scena attuale viene salvata automaticamente.
 
-[Toast]
-Mostra un breve messaggio di sistema effimero nella parte inferiore dello schermo.
+=========================================
+[ Istanziare / Chiudere Scena ]
+=========================================
+    (Nome Scena) ---> [ Istanza ] ---> 
 
-[Fissa Fotocamera]
-Aggancia la telecamera all'Oggetto bersaglio per seguirlo automaticamente nei suoi spostamenti.
+* RUOLO: Carica un Prefab o un elemento (come un popup) all'interno della scena attuale.
 
-[Tremore Fotocamera]
-Scuote lo schermo. Utile per dare impatto a un'esplosione o a una porta pesante.
+=========================================
+[ Fissare Telecamera ]
+=========================================
+       (Oggetto) ---> [ Segui ] ---> 
 
-[Elasticità Fotocamera]
-Modifica la velocità (tra 0.01 e 1.0) con cui la telecamera segue il suo bersaglio per un effetto più fluido o più rigido.
+* RUOLO: Aggancia la telecamera all'Oggetto bersaglio per seguirlo automaticamente.
 
-[Mostra/Nascondi Joystick] / [Mostra/Nascondi Azione]
-Controlla la visibilità delle interfacce di movimento sullo schermo (utile durante un filmato).
+=========================================
+[ Tremore / Elasticità Telecamera ]
+=========================================
+       (Potenza) ---> [ Scossa ] ---> 
 
-[Vibrazione]
-Fa vibrare il tablet per la durata indicata in millisecondi.
+* RUOLO: Scuote lo schermo o modifica la fluidità di tracciamento della telecamera.
+* ESEMPIO: Un forte tremore durante un'esplosione.
+
 
 --- ASPETTO E OGGETTI ---
-[Sposta Oggetto]
-Teletrasporta istantaneamente l'oggetto alle coordinate X e Y indicate.
 
-[Spingi l'oggetto]
-Sposta fluidamente l'oggetto bersaglio in una data direzione.
+=========================================
+[ Spostare / Spingere Oggetto ]
+=========================================
+     (Coordinate) ---> [ Muovi ] ---> 
 
-[Modifica Colore]
-Cambia la tinta di base dell'oggetto (se non è un'immagine).
+* RUOLO: Teletrasporta o spinge l'oggetto verso nuove coordinate X e Y.
 
-[Visibilità]
-Mostra o nasconde un oggetto della scena.
+=========================================
+[ Generare clone (Spawner) ]
+=========================================
+        (Modello) ---> [ Apparizione ] ---> 
 
-[Modifica Trascinabile]
-Autorizza o impedisce al giocatore di trascinare questo oggetto con il dito.
+* RUOLO: Clona l'oggetto Modello richiesto e lo fa apparire. Disponibile attaccato a un Bersaglio o per Posizione fissa (X, Y).
 
-[Modifica Blocco]
-Blocca un oggetto nell'editor per evitare di spostarlo per errore durante la creazione del livello.
+=========================================
+[ Sparare ]
+=========================================
+     (Proiettile) ---> [ Spara ] ---> 
+         (Angolo) --->
 
-[Cambia Z-Order]
-Modifica la profondità dell'oggetto (passa in primo piano o sullo sfondo).
+* RUOLO: Genera e spinge istantaneamente un oggetto dal bersaglio in una direzione.
 
-[Cambia Immagine]
-Sostituisce la grafica (Sprite) dell'oggetto con un altro file.
+=========================================
+[ Distruggere / Distruggere per Tag ]
+=========================================
+       (Oggetto) ---> [ Distruggi ] ---> 
 
-[Rotazione]
-Imposta istantaneamente l'angolo (in gradi) dell'oggetto.
+* RUOLO: Elimina definitivamente l'oggetto o tutti gli oggetti con un Tag dalla scena.
 
-[Imposta dimensione (Scala)]
-Modifica la scala (zoom) dell'oggetto in larghezza (X) e altezza (Y).
+=========================================
+[ Modificare Progresso ]
+=========================================
+        (Valore) ---> [ Barra ] ---> 
 
-[Distruggi Oggetto]
-Elimina definitivamente l'oggetto dalla scena.
+* RUOLO: Aggiorna il riempimento visivo di una barra di avanzamento (es: barra della salute).
 
-[Genera clone (Spawner)]
-Clona l'oggetto Modello richiesto e lo fa apparire al centro dell'Oggetto Bersaglio (il punto di spawn).
+=========================================
+[ Modalità di Visualizzazione e Filtri ]
+=========================================
+* RUOLO: Raggruppa i nodi [Cambia Z-Order], [Cambia Immagine], [Filtro Colore], [Opacità] e [Metodo di Fusione] per modificare l'aspetto dei tuoi sprite.
 
-[Imposta Tag]
-Assegna un'etichetta (es: "Proiettile") all'oggetto bersaglio.
-
-[Distruggi tramite Tag]
-Elimina in un colpo solo tutti gli oggetti della scena che portano l'etichetta richiesta.
-
-[Filtro Colore]
-Applica un effetto matrice sull'oggetto (Seppia, Bianco e Nero, Inversione).
-
-[Lampeggio (Blink)]
-Fa apparire/scomparire l'oggetto a una data velocità (in ms).
-
-[Bagliore (Glow)]
-Circonda l'oggetto con un contorno luminoso colorato.
-
-[Saltelli]
-Fa fare piccoli salti regolari all'oggetto per attirare l'attenzione (effetto visivo).
-
-[Effetto Specchio / Inverti]
-Inverte visivamente l'immagine dell'oggetto (utile per far girare un personaggio).
-
-[Collega due oggetti]
-Fissa saldamente l'Oggetto A all'Oggetto B affinché si muovano in modo sincronizzato.
-
-[Modifica l'Opacità (Alpha)]
-Rende istantaneamente l'oggetto più o meno trasparente.
-
-[Metodo di fusione (Effetto)]
-Applica un metodo di rendering speciale (Additivo, Moltiplica...) per effetti di luce o sovrapposizione.
-
-[Fattore di Parallasse]
-Imposta la velocità di scorrimento dell'oggetto rispetto alla telecamera per creare un effetto di profondità.
+=========================================
+[ Comportamenti di Schermo ]
+=========================================
+* RUOLO: I nodi [Mantieni nello schermo] (muro invisibile) e [Attraversa schermo] (effetto Pac-Man) per controllare i limiti del gioco.
 
 
 --- TESTI E DIALOGHI ---
-[Modifica Testo]
-Sostituisce interamente il contenuto di un oggetto Testo.
 
-[Aggiungi al Testo]
-Aggiunge parole alla fine di un oggetto Testo esistente (concatenazione).
+=========================================
+[ Modificare / Aggiungere Testo ]
+=========================================
+         (Testo) ---> [ Scrivi ] ---> 
 
-[Mostra Dialogo]
-Legge una frase dal file dei dialoghi tramite la sua Chiave, e la inserisce in un oggetto Testo.
+* RUOLO: Sostituisce completamente o aggiunge parole alla fine di un oggetto Testo esistente.
+
+=========================================
+[ Mostrare Dialogo ]
+=========================================
+   (Chiave Diz.) ---> [ Dialogo ] ---> 
+
+* RUOLO: Legge una frase dal file dei dialoghi e la mostra sullo schermo.
 
 
 --- VARIABILI E INVENTARIO ---
-[Operazione Matematica]
-Esegue un calcolo (+, -, *, /) sulla Variabile bersaglio con un valore dato.
 
-[Limita Valore (Clamp)]
-Impedisce a una Variabile di scendere sotto un Minimo o superare un Massimo.
+=========================================
+[ Modificare / Aggiungere Variabile ]
+=========================================
+        (Valore) ---> [ Matem. ] ---> (Variabile aggiornata)
 
-[Modifica Variabile] / [Aggiungi alla Variabile]
-Sostituisce o aggiunge un valore semplice a una Variabile.
+* RUOLO: Sostituisce o aggiunge un valore (o un calcolo) a una Variabile.
 
-[Numero Casuale]
-Genera un numero a caso tra un Minimo e un Massimo e lo memorizza nella Variabile bersaglio.
-
-[Aggiungi all'inventario] / [Rimuovi dall'inventario]
-Gestisce la lista degli oggetti posseduti dal giocatore.
-
-[Se nell'inventario]
-Verifica se un oggetto specifico è posseduto dal giocatore. (Uscita Vero/Falso).
-
-[Combina Oggetti]
-Distrugge l'Oggetto A e l'Oggetto B per far apparire il "Modello Risultato" (es: Chiave Rotta + Nastro = Chiave Riparata).
-
-[Punto di Salvataggio]
-Forza immediatamente il salvataggio dello stato della scena e dell'inventario nel database.
+=========================================
+[ Gestione Inventario ]
+=========================================
+(Aggiungi all'inventario) | (Rimuovi) | (Se nell'inventario) | (Combinazione)
+* RUOLO: Gestisce l'elenco degli oggetti posseduti dal giocatore e le loro interazioni.
 
 
 --- TEMPO ---
-[Timer]
-Avvia un conto alla rovescia autonomo. Non è influenzato dal resto del Blueprint.
 
-[Cronometro]
-Avvia un cronometro globale per misurare il tempo trascorso in un livello.
+=========================================
+[ Aspettare (ms) ]
+=========================================
+         (Tempo) ---> [ Pausa ] ---> (Azione successiva)
 
-[Attendi (ms)]
-Fa una pausa (Ritardo) prima di proseguire l'esecuzione dei nodi successivi.
+* RUOLO: Fa una pausa prima di continuare l'esecuzione dei nodi successivi.
 
 
 --- AUDIO ---
-[Riproduci Suono]
-Riproduce un breve effetto sonoro. Può sovrapporsi ad altri suoni.
 
-[Gestisci Musica]
-Avvia una traccia audio lunga. Interrompe automaticamente la musica precedente.
+=========================================
+[ Riprodurre Suono / Musica ]
+=========================================
+     (File mp3) ---> [ Riproduci ] ---> 
+
+* RUOLO: Riproduce un breve effetto sonoro (può sovrapporsi) o avvia una lunga traccia audio di sottofondo.
 
 
 --- ANIMAZIONI ---
-[Dissolvenza (Alpha)]
-Rende gradualmente l'oggetto trasparente o opaco.
 
-[Scivola Verso]
-Sposta fluidamente l'oggetto verso nuove coordinate, con una durata definita.
+=========================================
+[ Avviare / Fermare Animazione ]
+=========================================
+    (Nome Anim.) ---> [ Avvia ] ---> 
 
-[Riproduci Animazione]
-Avvia una sequenza di immagini predefinita (Animazione Sprite) sull'oggetto.
+* RUOLO: Avvia una sequenza di immagini predefinita (Sprite animation) sull'oggetto o la interrompe.
 
-[Metti in pausa l'animazione]
-Congela l'animazione dell'oggetto sul fotogramma (frame) attuale.
+=========================================
+[ Scivolare Verso ]
+=========================================
+          (X,Y) ---> [ Movimento ] ---> 
+       (Durata) ---> 
 
-[Riprendi l'animazione]
-Riavvia l'animazione dell'oggetto da dove era stata messa in pausa.
-
-[Velocità dell'animazione]
-Modifica la velocità di riproduzione della sequenza di immagini.
-
-[Se il fotogramma attuale è...]
-Verifica se l'animazione in esecuzione ha raggiunto un frame specifico. Ideale per sincronizzare passi o impatti.
+* RUOLO: Sposta l'oggetto verso nuove coordinate in modo fluido (Tween).
 
 
 --- FISICA ---
-[Abilita Fisica (Caduta)]
-Sottopone l'oggetto alla gravità terrestre del motore.
 
-[Applica Impulso (Salto)]
-Dà una forza verso l'alto a un oggetto fisico.
+=========================================
+[ Applicare Impulso / Forza ]
+=========================================
+         (Forza) ---> [ Spingi ] ---> 
 
-[Cambia Rimbalzo]
-Modifica la restituzione di energia dell'oggetto (0 = blocco di piombo, 1.0 = palla che rimbalza).
+* RUOLO: Dà una forza a un oggetto sottoposto alla gravità terrestre del motore.
 
-[Se l'Oggetto Cade]
-Verifica se un oggetto fisico sta cadendo o se è appoggiato a terra.
+=========================================
+[ Impostare Velocità ]
+=========================================
+     (Velocità) ---> [ Imponi ] ---> 
 
-[Aggiungi forza (per Angolo)]
-Spinge l'oggetto in una direzione precisa calcolata in gradi.
+* RUOLO: Impone una velocità di movimento istantanea a un oggetto fisico.
 
+=========================================
+[ Condizione a Terra ]
+=========================================
+       (Oggetto) ---> [ A terra? ] ---> (Vero / Falso)
+
+* RUOLO: Verifica se l'oggetto sottoposto a gravità è attualmente appoggiato su una superficie solida (indispensabile per permettere di saltare).

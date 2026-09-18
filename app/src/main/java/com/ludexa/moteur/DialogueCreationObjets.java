@@ -1,4 +1,3 @@
-// haut 1
 package com.ludexa.moteur;
 
 import android.app.Dialog;
@@ -83,7 +82,13 @@ public class DialogueCreationObjets extends Dialog {
 
         conteneurCategories.addView(creerSection(Traducteur.get("cat_ui_hud"), btnBarreProg));
 
-        // --- CATEGORIE 5 : PREFABS ---
+        // --- CATEGORIE 5 : DECORS ---
+        ImageButton btnTilemap = creerBouton(R.drawable.grid_4x4_24px);
+        btnTilemap.setOnClickListener(v -> creerObjet("tile_layer", Traducteur.get("obj_prefix_tilemap")));
+
+        conteneurCategories.addView(creerSection(Traducteur.get("cat_decors"), btnTilemap));
+
+        // --- CATEGORIE 6 : PREFABS ---
         ImageButton btnPrefab = creerBouton(R.drawable.display_add_24px);
         btnPrefab.setOnClickListener(v -> lancerCreationPrefab());
 
@@ -152,7 +157,7 @@ public class DialogueCreationObjets extends Dialog {
         editeur.sceneActive.ajouterObjet(nouveau);
         canvas.invalidate();
         panneau.rafraichirArborescence();
-        if ("scene_instance".equals(nouveau.type) || "titre_stylise".equals(nouveau.type) || "barre_progression".equals(nouveau.type)) {
+        if ("scene_instance".equals(nouveau.type) || "titre_stylise".equals(nouveau.type) || "barre_progression".equals(nouveau.type) || "tile_layer".equals(nouveau.type)) {
             canvas.setObjetSelectionne(nouveau);
         }
         this.dismiss();
@@ -215,9 +220,24 @@ public class DialogueCreationObjets extends Dialog {
                 nouveau.type = "barre_progression";
                 nouveau.couleur = Color.GREEN; 
                 break;
+            case "tile_layer":
+                nouveau = new ObjetBase(nomUnique, 0f, 0f, 320f, 320f);
+                nouveau.type = "tile_layer";
+                nouveau.afficherFondColore = true;
+                nouveau.couleur = Color.argb(80, 150, 150, 150);
+                nouveau.largeurTuilePx = 32;
+                nouveau.hauteurTuilePx = 32;
+                nouveau.margeTuilePx = 0;
+                nouveau.decalageTuilePx = 0;
+                nouveau.largeurGrille = 10;
+                nouveau.hauteurGrille = 10;
+                break;
         }
 
         if (nouveau != null) {
+            float[] centreVisible = canvas.getCentreVisible();
+            nouveau.x = centreVisible[0] - nouveau.largeur / 2f;
+            nouveau.y = centreVisible[1] - nouveau.hauteur / 2f;
             finaliserCreationObjet(nouveau);
         }
     }
@@ -291,7 +311,8 @@ public class DialogueCreationObjets extends Dialog {
                 float initLargeur = Math.max(50f, limites.right);
                 float initHauteur = Math.max(50f, limites.bottom);
                 
-                ObjetBase nouveau = new ObjetBase(nomUnique, 150f, 150f, initLargeur, initHauteur);
+                float[] centreVisible = canvas.getCentreVisible();
+                ObjetBase nouveau = new ObjetBase(nomUnique, centreVisible[0] - initLargeur / 2f, centreVisible[1] - initHauteur / 2f, initLargeur, initHauteur);
                 nouveau.type = "scene_instance";
                 nouveau.sceneLieeId = s.id;
                 nouveau.afficherFondColore = true;
@@ -350,5 +371,4 @@ public class DialogueCreationObjets extends Dialog {
         } while (existe);
         return nom;
     }
-}
-// bas 1
+            }

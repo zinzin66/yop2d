@@ -1,300 +1,418 @@
+================================================
+  YOP2D OFFICIAL DOCUMENTATION - BLUEPRINT
+================================================
 
-================================================
-  OFFICIAL DOCUMENTATION YOP.2D - BLUEPRINT
-================================================
+This documentation uses a visual format to help you understand how to connect your blocks (nodes).
+( ) = What you need to configure or connect as input.
+[ ] = The block itself.
+---> = The direction of the action (the flow of the program).
 
 --- EVENTS ---
-[On Start]
-Executes automatically and only once as soon as the scene is loaded on the screen.
 
-[Every frame]
-Executes continuously, on every screen refresh (framerate). Ideal for constant updates.
+=========================================
+[ On Start ]
+=========================================
+       (Start) ---> [ Execute ] --->
 
-[End of Click]
-Triggers when the player releases their finger from the screen, anywhere.
+* ROLE: Executes automatically and only once as soon as the scene is loaded on screen.
+* EXAMPLE: Place enemies at their starting position, or initialize player health to 100.
 
-[On Object Click]
-Triggers when the player's finger touches the targeted Object.
+=========================================
+[ Every Frame ]
+=========================================
+      (Loop) ---> [ Execute ] --->
 
-[Drag Start] / [Drag End]
-Trigger the moment the player starts dragging a movable object, and the moment they release it.
+* ROLE: Executes continuously, at every screen refresh (framerate).
+* EXAMPLE: Make an object rotate infinitely, or update a score.
 
-[Collision A/B]
-Triggers at the exact moment Object A comes into physical contact with Object B.
+=========================================
+[ On Click on Object ]
+=========================================
+       (Target) ---> [ Click ! ] ---> (Execute)
 
-[If object touches Tag]
-Triggers at the exact moment the target object collides with any object carrying the specified Tag.
+* ROLE: Triggers when the player's finger touches the targeted Object.
+* EXAMPLE: Open a chest, trigger a button, or start a dialogue.
 
-[Enter Zone] / [Exit Zone]
-Ideal for invisible triggers. Activates when an object enters or leaves a defined zone.
+=========================================
+[ On Click End ]
+=========================================
+       (Screen) ---> [ Released ] ---> (Execute)
 
-[On Hover] / [End of Hover]
-Handles the passage of a finger or pointer over an object, without needing to click.
+* ROLE: Triggers when the player releases their finger from the screen, anywhere.
+* EXAMPLE: Stop firing a weapon when the finger is lifted.
 
-[On Impact (Physics)]
-Detects when the object bounces or hits a solid element with gravity activated.
+=========================================
+[ Drag Start / End ]
+=========================================
+       (Object) ---> [ Drag ] ---> (Execute)
 
-[When Variable Changes]
-Continuously monitors a Variable. As soon as its value is modified, this node starts the logic sequence.
+* ROLE: Triggers when the player starts dragging a movable object, and when they release it.
+* EXAMPLE: Drop a key onto a door to open it.
 
-[Local Event]
-A custom event that you can trigger remotely using the "Call Local Event" node.
+=========================================
+[ Collision A/B ]
+=========================================
+     (Object A) ---> [            ]
+     (Object B) ---> [ Collision! ] ---> (Execute)
 
-[On Action Click (Adventure)]
-Triggers specifically when the virtual "ACTION" button of the interface is pressed.
+* ROLE: Triggers at the exact moment Object A comes into physical contact with Object B.
+* EXAMPLE: When "Player" touches "Coin" -> Play a sound and destroy the coin.
+
+=========================================
+[ If Object Touches Tag ]
+=========================================
+       (Object) ---> [            ]
+     (Tag Text) ---> [ Collision! ] ---> (Execute)
+
+* ROLE: Triggers at the exact moment the targeted object collides with any object bearing the indicated Tag.
+* EXAMPLE: When "Missile" touches an object with the "Enemy" tag -> Explosion.
+
+=========================================
+[ Area Enter / Exit ]
+=========================================
+     (Object A) ---> [            ]
+       (Area B) ---> [ Passage  ] ---> (Execute)
+
+* ROLE: Activates when an object enters or exits a defined area (Ideal for invisible triggers).
+* EXAMPLE: The player enters the "Trap" area -> Spikes emerge from the ground.
+
+=========================================
+[ On Hover / End Hover ]
+=========================================
+       (Target) ---> [ Hover ] ---> (Execute)
+
+* ROLE: Handles a finger or pointer hovering over an object, without needing to click.
+* EXAMPLE: Highlight a button when passing over it.
+
+=========================================
+[ On Impact (Physics) ]
+=========================================
+       (Object) ---> [ Impact ! ] ---> (Execute)
+
+* ROLE: Detects when the object bounces or hits a solid element while gravity is enabled.
+* EXAMPLE: Play a rock sound when a stone falls to the ground.
+
+=========================================
+[ When Variable Changes ]
+=========================================
+    (Variable) ---> [ Change ] ---> (Execute)
+
+* ROLE: Continuously monitors a Variable. As soon as its value is modified, this node runs the sequence.
+* EXAMPLE: If health changes, update the visual health bar.
+
+=========================================
+[ Local Event ]
+=========================================
+  (Event Name) ---> [ Receive ] ---> (Execute)
+
+* ROLE: A custom event that you can trigger remotely using the "Call Local Event" node.
+* EXAMPLE: Group "Game Over" logic together to call it from multiple places.
+
+=========================================
+[ On Action Click (Adventure) ]
+=========================================
+      (Button) ---> [ Action ! ] ---> (Execute)
+
+* ROLE: Triggers specifically when the virtual "ACTION" button on the interface is pressed.
+* EXAMPLE: Talk to an NPC or read a sign in front of you.
 
 
 --- MOVEMENTS & AI ---
-[Move forward continuously]
-Applies a constant velocity. The object will move on its own in the direction of its Rotation Angle.
 
-[Chase an object]
-Automatically moves Object A towards Object B (like a homing missile or an enemy).
+=========================================
+[ Move Continuously ]
+=========================================
+   (Speed) ---> [ Move forward ] ---> 
 
-[Flee an object]
-The opposite behavior of chasing. Object A moves away from Object B.
+* ROLE: Applies a constant velocity. The object will move automatically in the direction of its Rotation Angle.
+* EXAMPLE: A projectile shot straight ahead, or a driving car.
 
-[Stop movements]
-Instantly cancels all chase, flee, or continuous forward commands on an object.
+=========================================
+[ Pursue / Flee Object ]
+=========================================
+  (Target) ---> [ Follow/Flee ] ---> 
 
-[Stop the object]
-Instantly stops the physical or automatic movement of the target object.
+* ROLE: Automatically moves Object A towards (or away from) Object B.
+* EXAMPLE: A homing missile, or a ghost following the player.
+
+=========================================
+[ Stop Movements / Stop ]
+=========================================
+  (Object) ---> [ Stop ] ---> 
+
+* ROLE: Instantly cancels all pursue, flee, or continuous movement commands on an object.
+* EXAMPLE: Freeze an enemy when hit by an ice spell.
 
 
 --- SPATIAL LOGIC ---
-[Distance between A and B]
-Calculates the gap in pixels between Object A and Object B. Has two outputs (True/False) depending on whether the distance meets the condition.
 
-[Orient towards (Look At)]
-Rotates Object A so that it looks at Object B. The "Angle Offset" compensates if your object's image was not drawn facing right.
+=========================================
+[ Distance between A and B ]
+=========================================
+    (Object A) ---> [            ] ---> (True)
+    (Object B) ---> [  Distance  ]
+   (Condition) ---> [            ] ---> (False)
 
-[Select nearest object]
-Automatically finds and selects the object closest to the target for use in the rest of the Blueprint.
+* ROLE: Calculates the distance in pixels between Object A and Object B.
+* EXAMPLE: Check if the player is close enough to open a door.
 
-[Choose a random object]
-Randomly selects an object from those present in the scene or carrying a specific Tag.
+=========================================
+[ Look At ]
+=========================================
+      (Target) ---> [ Orient ] ---> 
+
+* ROLE: Rotates Object A so that it faces Object B.
+* EXAMPLE: A defense turret aiming at the player.
+
+=========================================
+[ Closest Object / Random ]
+=========================================
+         (Tag) ---> [ Search ] ---> (Save to Variable)
+
+* ROLE: Locates the closest object or a random object to use it afterward.
+* EXAMPLE: Automatically target the nearest enemy.
 
 
 --- LOGIC & CONDITIONS ---
-[Condition]
-Compares the value of a Variable with a number or text. True or False output.
 
-[If object A touches zone B]
-Instantly checks if two objects overlap at the exact moment the node is called.
+=========================================
+[ Condition (Variable) ]
+=========================================
+    (Variable) ---> [            ] ---> (True)
+  (Comparator) ---> [ Condition  ]
+       (Value) ---> [            ] ---> (False)
 
-[If Object is Visible]
-Checks if the targeted object is currently displayed on the screen.
+* ROLE: Compares the value of a Variable with a number or text.
+* EXAMPLE: If (Score > 10) then (Next Level) else (Nothing).
 
-[If Object has Tag]
-Checks if the object has the requested label (Tag) (e.g., "Enemy", "Key").
+=========================================
+[ If Object A touches Area B ]
+=========================================
+    (Object A) ---> [            ] ---> (True)
+      (Area B) ---> [ Overlaps?  ]
+                    [            ] ---> (False)
 
-[Double Condition (AND/OR)]
-Allows checking two conditions at the same time.
+* ROLE: Instantly checks if two objects overlap at this exact moment.
 
-[Call Function]
-Executes an external Blueprint saved in the "fonctions" folder. Ideal for repetitive mechanics.
+=========================================
+[ Double Condition (AND/OR) ]
+=========================================
+ (Condition1) ---> [            ] ---> (True)
+    (AND / OR) ---> [  Double ?  ]
+ (Condition2) ---> [            ] ---> (False)
 
-[Call Local Event]
-Remotely triggers a "Local Event" block located elsewhere in the current Blueprint.
+* ROLE: Allows checking two conditions at the same time.
+* EXAMPLE: If (Player grounded) AND (Jump button pressed) -> Jump.
 
-[If Joystick is Active]
-Checks if the player is currently manipulating the virtual joystick.
+=========================================
+[ If Object Visible / If Tag ]
+=========================================
+      (Object) ---> [ Check ] ---> (True / False)
 
-[If Object is Moving]
-Checks if the target object is currently moving on the screen.
+* ROLE: Checks if the object is on screen, or if it has the requested Tag.
+
+=========================================
+[ Call Function ]
+=========================================
+   (File Name) ---> [ Function ] ---> 
+
+* ROLE: Executes an external Blueprint saved in the "functions" folder.
+* EXAMPLE: Create a reusable "SpawnMonsters" function across all your levels.
+
+=========================================
+[ Sequence ]
+=========================================
+       (Input) ---> [ Sequence ] ---> (Branch 1)
+                    [          ] ---> (Branch 2)
+
+* ROLE: Divides execution into multiple branches to structure and organize your Blueprint logic.
+
+=========================================
+[ Cooldown ]
+=========================================
+    (Duration) ---> [ Cooldown ] ---> (Execution allowed)
+
+* ROLE: Temporarily blocks the execution of the following Blueprint nodes for a defined delay.
+* EXAMPLE: Limit firing rate (wait 1 sec between each bullet).
+
+=========================================
+[ Other checks... ]
+=========================================
+(If Joystick Active) | (If Moving) | (If Button Held) | (If Off Screen)
+* ROLE: Quick test blocks with outputs (True / False) depending on the current state.
 
 
 --- SCENE & HUD ---
-[Change Scene]
-Loads a new room/level. The current scene is automatically saved.
 
-[Reload current Scene]
-Resets the current level. Perfect if the player fails a puzzle.
+=========================================
+[ Change / Reload Scene ]
+=========================================
+  (Scene Name) ---> [ Change ] ---> 
 
-[Open HUD] / [Close HUD]
-Displays a Scene over the game without pausing it. Ideal for an inventory or a settings menu.
+* ROLE: Loads a new room/level. The current scene is saved.
 
-[Toast]
-Displays a short ephemeral system message at the bottom of the screen.
+=========================================
+[ Instantiate / Close Scene ]
+=========================================
+  (Scene Name) ---> [ Instance ] ---> 
 
-[Lock Camera]
-Attaches the camera to the targeted Object to follow it automatically as it moves.
+* ROLE: Loads a Prefab or an element (like a popup) inside the current scene.
 
-[Camera Shake]
-Shakes the screen. Useful to give impact to an explosion or a heavy door.
+=========================================
+[ Fix Camera ]
+=========================================
+      (Object) ---> [ Follow ] ---> 
 
-[Camera Elasticity]
-Changes the speed (between 0.01 and 1.0) at which the camera follows its target for a smoother or stiffer effect.
+* ROLE: Attaches the camera to the targeted Object to follow it automatically.
 
-[Show/Hide Joystick] / [Show/Hide Action]
-Controls the visibility of the on-screen movement interfaces (useful during a cutscene).
+=========================================
+[ Camera Shake / Elasticity ]
+=========================================
+       (Power) ---> [ Shake ] ---> 
 
-[Vibration]
-Vibrates the tablet for the duration indicated in milliseconds.
+* ROLE: Shakes the screen or modifies the camera's tracking smoothness.
+* EXAMPLE: A heavy shake during an explosion.
 
 
 --- APPEARANCE & OBJECTS ---
-[Move Object]
-Instantly teleports the object to the indicated X and Y coordinates.
 
-[Push object]
-Smoothly shifts the target object in a given direction.
+=========================================
+[ Move / Push Object ]
+=========================================
+ (Coordinates) ---> [ Move ] ---> 
 
-[Modify Color]
-Changes the base tint of the object (if it's not an image).
+* ROLE: Teleports or pushes the object to new X and Y coordinates.
 
-[Visibility]
-Shows or hides an object in the scene.
+=========================================
+[ Spawn Clone (Spawner) ]
+=========================================
+       (Model) ---> [ Spawn ] ---> 
 
-[Modify Draggable]
-Allows or prevents the player from dragging this object with their finger.
+* ROLE: Clones the requested Model object and makes it appear. Available as attached to a Target or by fixed Position (X, Y).
 
-[Modify Locked]
-Locks an object in the editor to avoid moving it by mistake when creating the level.
+=========================================
+[ Shoot ]
+=========================================
+  (Projectile) ---> [ Shoot ] ---> 
+       (Angle) --->
 
-[Change Z-Order]
-Modifies the depth of the object (moves to the foreground or background).
+* ROLE: Instantly generates and propels an object from the target in a given direction.
 
-[Change Image]
-Replaces the visual (Sprite) of the object with another file.
+=========================================
+[ Destroy / Destroy by Tag ]
+=========================================
+      (Object) ---> [ Destroy ] ---> 
 
-[Rotation]
-Instantly sets the angle (in degrees) of the object.
+* ROLE: Permanently deletes the object or all objects with a specific Tag from the scene.
 
-[Set size (Scale)]
-Modifies the scale (zoom) of the object in width (X) and height (Y).
+=========================================
+[ Modify Progress ]
+=========================================
+       (Value) ---> [ Gauge ] ---> 
 
-[Destroy Object]
-Permanently removes the object from the scene.
+* ROLE: Updates the visual fill of a progress bar (e.g., health bar).
 
-[Generate clone (Spawner)]
-Clones the requested Model object and makes it appear at the center of the Target Object (the spawn point).
+=========================================
+[ Display Mode & Filters ]
+=========================================
+* ROLE: Groups the [Change Z-Order], [Change Image], [Color Filter], [Opacity], and [Blend Mode] nodes to modify the visual appearance of your sprites.
 
-[Set Tag]
-Assigns a label (e.g., "Projectile") to the targeted object.
-
-[Destroy by Tag]
-Instantly removes all objects from the scene bearing the requested label.
-
-[Color Filter]
-Applies a matrix effect to the object (Sepia, Black & White, Inversion).
-
-[Blink]
-Makes the object appear/disappear at a given speed (in ms).
-
-[Glow]
-Surrounds the object with a colored glowing outline.
-
-[Bounce/Hop]
-Makes the object perform small, regular jumps to attract attention (visual effect).
-
-[Mirror Effect / Invert]
-Visually flips the object's image (useful for making a character turn around).
-
-[Link two objects]
-Firmly attaches Object A to Object B so they move synchronously.
-
-[Modify Opacity (Alpha)]
-Instantly makes the object more or less transparent.
-
-[Blend mode (Effect)]
-Applies a special rendering mode (Additive, Multiply...) for lighting or overlay effects.
-
-[Parallax Factor]
-Sets the object's scrolling speed relative to the camera to create a depth effect.
+=========================================
+[ Screen Behaviors ]
+=========================================
+* ROLE: The [Keep on screen] (invisible wall) and [Wrap around screen] (Pac-Man effect) nodes to control game boundaries.
 
 
 --- TEXTS & DIALOGUES ---
-[Modify Text]
-Entirely replaces the content of a Text object.
 
-[Append to Text]
-Adds words to the end of an existing Text object (concatenation).
+=========================================
+[ Modify / Append Text ]
+=========================================
+        (Text) ---> [ Write ] ---> 
 
-[Show Dialogue]
-Reads a sentence from the dialogues file via its Key, and injects it into a Text object.
+* ROLE: Completely replaces or adds words to the end of an existing Text object.
+
+=========================================
+[ Show Dialogue ]
+=========================================
+    (Dict Key) ---> [ Dialogue ] ---> 
+
+* ROLE: Reads a sentence from the dialogues file and displays it on screen.
 
 
 --- VARIABLES & INVENTORY ---
-[Math Operation]
-Performs a calculation (+, -, *, /) on the targeted Variable with a given value.
 
-[Limit Value (Clamp)]
-Prevents a Variable from dropping below a Minimum or exceeding a Maximum.
+=========================================
+[ Modify / Add Variable ]
+=========================================
+       (Value) ---> [ Math ] ---> (Updated Variable)
 
-[Modify Variable] / [Add to Variable]
-Replaces or adds a simple value to a Variable.
+* ROLE: Replaces or adds a value (or a calculation) to a Variable.
 
-[Random Number]
-Generates a random number between a Minimum and a Maximum and stores it in the target Variable.
-
-[Add to inventory] / [Remove from inventory]
-Manages the list of objects owned by the player.
-
-[If in inventory]
-Checks if a specific object is owned by the player. (True/False output).
-
-[Combine Objects]
-Destroys Object A and Object B to spawn the "Result Model" (e.g., Broken Key + Tape = Repaired Key).
-
-[Checkpoint]
-Immediately forces the saving of the scene and inventory state to the database.
+=========================================
+[ Inventory Management ]
+=========================================
+(Add to inventory) | (Remove) | (If in inventory) | (Combine)
+* ROLE: Manages the list of items owned by the player and their interactions.
 
 
 --- TIME ---
-[Timer]
-Triggers an autonomous countdown. Is not affected by the rest of the Blueprint.
 
-[Stopwatch]
-Starts a global stopwatch to measure the time spent in a level.
+=========================================
+[ Wait (ms) ]
+=========================================
+        (Time) ---> [ Pause ] ---> (Next action)
 
-[Wait (ms)]
-Pauses (Delay) before continuing the execution of the following nodes.
+* ROLE: Pauses before continuing the execution of the subsequent nodes.
 
 
 --- AUDIO ---
-[Play a Sound]
-Plays a short sound effect. Can overlap with other sounds.
 
-[Manage Music]
-Starts a long audio track. Automatically stops the previous music.
+=========================================
+[ Play Sound / Music ]
+=========================================
+    (mp3 File) ---> [ Play ] ---> 
+
+* ROLE: Plays a short sound effect (can overlap) or starts a long background audio track.
 
 
 --- ANIMATIONS ---
-[Fade (Alpha)]
-Makes the object gradually transparent or opaque.
 
-[Slide To]
-Smoothly moves the object to new coordinates, with a defined duration.
+=========================================
+[ Play / Stop Animation ]
+=========================================
+   (Anim Name) ---> [ Play ] ---> 
 
-[Play Animation]
-Starts a predefined sequence of images (Sprite animation) on the object.
+* ROLE: Starts a predefined sequence of images (Sprite animation) on the object, or stops it.
 
-[Pause animation]
-Freezes the object's animation on the current frame.
+=========================================
+[ Glide To ]
+=========================================
+         (X,Y) ---> [ Movement ] ---> 
+    (Duration) ---> 
 
-[Resume animation]
-Restarts the object's animation from where it was paused.
-
-[Animation speed]
-Changes the playback speed of the image sequence.
-
-[If current frame is...]
-Checks if the currently playing animation has reached a specific frame. Ideal for syncing footsteps or impacts.
+* ROLE: Moves the object to new coordinates smoothly (Tween).
 
 
 --- PHYSICS ---
-[Enable Physics (Fall)]
-Subjects the object to the engine's gravity.
 
-[Apply Impulse (Jump)]
-Gives an upward force to a physical object.
+=========================================
+[ Apply Impulse / Force ]
+=========================================
+       (Force) ---> [ Push ] ---> 
 
-[Change Bounce]
-Modifies the energy restitution of the object (0 = lead block, 1.0 = bouncing ball).
+* ROLE: Applies a force to an object subjected to the engine's terrestrial gravity.
 
-[If Object is Falling]
-Checks if a physical object is currently falling or resting on the ground.
+=========================================
+[ Set Velocity ]
+=========================================
+    (Velocity) ---> [ Impose ] ---> 
 
-[Add force (by Angle)]
-Propels the object in a precise direction calculated in degrees.
+* ROLE: Imposes an instantaneous movement speed on a physics object.
+
+=========================================
+[ Ground Condition ]
+=========================================
+      (Object) ---> [ Grounded? ] ---> (True / False)
+
+* ROLE: Checks if the object subjected to gravity is currently resting on a solid surface (essential to allow jumping).

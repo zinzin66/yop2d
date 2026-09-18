@@ -1,3 +1,4 @@
+
 // haut 1
 package com.ludexa.moteur;
 
@@ -18,13 +19,18 @@ import java.util.Comparator;
 import java.util.List;
 
 public class CanvasEditeur extends View {
-    private Paint paintGrille, paintCamera, paintObjet, paintSelection, paintTexte, paintPoignee;
+    private Paint paintGrille, paintGrilleMajeure, paintCamera, paintObjet, paintSelection, paintTexte, paintPoignee, paintPoigneeBordure, paintHitbox, paintPoigneeHitbox;
     private float cameraX = 0, cameraY = 0;
     private float lastTouchX, lastTouchY;
     private boolean isPanMode = false;
     private boolean isModeDeplacementObjet = false;
     private float niveauZoom = 1.0f;
 
+    private int tailleGrille = 50;
+    private boolean snapActif = false;
+    private float dragRawX, dragRawY;
+    private int couleurFondCanvas;
+    
     private Scene sceneActive;
     private ObjetBase objetSelectionne;
     private InspecteurProprietes inspecteurLie;
@@ -35,6 +41,7 @@ public class CanvasEditeur extends View {
     private int currentMode = 0; 
     private float dragStartX, dragStartY;
     private float initX, initY, initW, initH, initRot, initScaleX, initScaleY;
+    private float initHitboxLargeur, initHitboxHauteur, initHitboxDecalageX, initHitboxDecalageY;
     private Matrix initMatrix;
     
     private ScaleGestureDetector scaleGestureDetector;
@@ -95,15 +102,40 @@ public class CanvasEditeur extends View {
 
     public boolean isModeDeplacementObjet() { return isModeDeplacementObjet; }
 
+    public boolean isSnapActif() { return snapActif; }
+    public void setSnapActif(boolean actif) { this.snapActif = actif; invalidate(); }
+    public int getTailleGrille() { return tailleGrille; }
+    public void setTailleGrille(int taille) {
+        if (taille > 0) { this.tailleGrille = taille; invalidate(); }
+    }
+    public int getCouleurFondCanvas() { return couleurFondCanvas; }
+    public void setCouleurFondCanvas(int couleur) {
+        this.couleurFondCanvas = couleur;
+        setBackgroundColor(couleur);
+        invalidate();
+    }
+
+    public float[] getCentreVisible() {
+        return new float[]{ (getWidth() / 2f) - cameraX, (getHeight() / 2f) - cameraY };
+    }
+
     private void init() {
         paintGrille = new Paint();
         paintGrille.setColor(Palette.canvasGrille);
         paintGrille.setStyle(Paint.Style.STROKE);
         paintGrille.setStrokeWidth(1);
-        paintGrille.setAntiAlias(false);
-        paintGrille.setAlpha(180);
+        paintGrille.setAntiAlias(true);
+        paintGrille.setAlpha(255);
 
-        setBackgroundColor(Palette.canvasFond);
+        paintGrilleMajeure = new Paint();
+        paintGrilleMajeure.setColor(Palette.accentBleu);
+        paintGrilleMajeure.setStyle(Paint.Style.STROKE);
+        paintGrilleMajeure.setStrokeWidth(1.5f);
+        paintGrilleMajeure.setAntiAlias(true);
+        paintGrilleMajeure.setAlpha(110);
+
+        couleurFondCanvas = Palette.canvasFond;
+        setBackgroundColor(couleurFondCanvas);
 
         paintCamera = new Paint();
         paintCamera.setColor(Palette.texteSelectionne);
@@ -122,15 +154,31 @@ public class CanvasEditeur extends View {
         paintTexte.setSubpixelText(true);
 
         paintSelection = new Paint();
-        paintSelection.setColor(Palette.texteSelectionne);
+        paintSelection.setColor(Palette.accentTeal);
         paintSelection.setStyle(Paint.Style.STROKE);
         paintSelection.setAntiAlias(true);
         paintSelection.setStrokeCap(Paint.Cap.ROUND);
 
         paintPoignee = new Paint();
-        paintPoignee.setColor(Palette.boutonSurvol);
+        paintPoignee.setColor(Palette.accentTeal);
         paintPoignee.setStyle(Paint.Style.FILL);
         paintPoignee.setAntiAlias(true);
+
+        paintPoigneeBordure = new Paint();
+        paintPoigneeBordure.setColor(Color.WHITE);
+        paintPoigneeBordure.setStyle(Paint.Style.STROKE);
+        paintPoigneeBordure.setAntiAlias(true);
+
+        paintHitbox = new Paint();
+        paintHitbox.setColor(Palette.accentAmbre);
+        paintHitbox.setStyle(Paint.Style.STROKE);
+        paintHitbox.setAntiAlias(true);
+        paintHitbox.setPathEffect(new android.graphics.DashPathEffect(new float[]{10f, 6f}, 0f));
+
+        paintPoigneeHitbox = new Paint();
+        paintPoigneeHitbox.setColor(Palette.accentAmbre);
+        paintPoigneeHitbox.setStyle(Paint.Style.FILL);
+        paintPoigneeHitbox.setAntiAlias(true);
 
         scaleGestureDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
     }
@@ -254,6 +302,7 @@ public class CanvasEditeur extends View {
         return pts;
     }
 // bas 1
+             
 // haut 2
     private float getHauteurReelle(ObjetBase objet) {
         if (!"texte".equals(objet.type) && !"titre_stylise".equals(objet.type)) return objet.hauteur;
@@ -569,7 +618,7 @@ public class CanvasEditeur extends View {
                     paintSelection.setPathEffect(new android.graphics.DashPathEffect(new float[]{10f, 10f}, 0f));
                     canvas.drawRect(0, 0, largeurVisuelle, hauteurVisuelle, paintSelection);
                     paintSelection.setPathEffect(null);
-                    paintSelection.setColor(Palette.texteSelectionne);
+                    paintSelection.setColor(Palette.accentTeal);
                     
                     pilesRenduEnCours.remove(objet.sceneLieeId);
                 } else {
@@ -594,6 +643,8 @@ public class CanvasEditeur extends View {
             canvas.drawRect(0, 0, objet.largeur * ratio, objet.hauteur, paintObjet);
             
             dessinerImage(canvas, objet, cheminAAfficher);
+        } else if ("tile_layer".equals(objet.type)) {
+            dessinerTileLayer(canvas, objet, alphaVal);
         } else {
             if (objet.afficherFondColore || cheminAAfficher == null) {
                 paintObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.BLUE);
@@ -619,30 +670,92 @@ public class CanvasEditeur extends View {
             float b = dimHauteur + 4f / scaleFactorY;
             
             canvas.drawRect(l, t, r, b, paintSelection);
+
+            if (objet.hitboxPersonnalisee) {
+                float[] rectHitbox = objet.getRectangleHitboxLocal();
+                paintHitbox.setStrokeWidth(2f / maxScale);
+                canvas.drawRect(rectHitbox[0], rectHitbox[1], rectHitbox[2], rectHitbox[3], paintHitbox);
+            }
             
             if (!isModeDeplacementObjet) {
-                float hsX = 12f / scaleFactorX;
-                float hsY = 12f / scaleFactorY;
-                float rcX = 4f / scaleFactorX;
-                float rcY = 4f / scaleFactorY;
-                
-                canvas.drawRoundRect(new android.graphics.RectF(l - hsX, t - hsY, l + hsX, t + hsY), rcX, rcY, paintPoignee);
-                canvas.drawRoundRect(new android.graphics.RectF(r - hsX, t - hsY, r + hsX, t + hsY), rcX, rcY, paintPoignee);
-                canvas.drawRoundRect(new android.graphics.RectF(l - hsX, b - hsY, l + hsX, b + hsY), rcX, rcY, paintPoignee);
-                canvas.drawRoundRect(new android.graphics.RectF(r - hsX, b - hsY, r + hsX, b + hsY), rcX, rcY, paintPoignee);
+                float hsX = 10f / scaleFactorX;
+                float hsY = 10f / scaleFactorY;
+                float rcX = 5f / scaleFactorX;
+                float rcY = 5f / scaleFactorY;
+                float bordureLargeur = 1.5f / maxScale;
+                paintPoigneeBordure.setStrokeWidth(bordureLargeur);
                 
                 float cx = dimLargeur / 2f;
+                float cy = (t + b) / 2f;
+                
+                android.graphics.RectF poigneeHG = new android.graphics.RectF(l - hsX, t - hsY, l + hsX, t + hsY);
+                android.graphics.RectF poigneeHD = new android.graphics.RectF(r - hsX, t - hsY, r + hsX, t + hsY);
+                android.graphics.RectF poigneeBG = new android.graphics.RectF(l - hsX, b - hsY, l + hsX, b + hsY);
+                android.graphics.RectF poigneeBD = new android.graphics.RectF(r - hsX, b - hsY, r + hsX, b + hsY);
+                
+                canvas.drawRoundRect(poigneeHG, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeHG, rcX, rcY, paintPoigneeBordure);
+                canvas.drawRoundRect(poigneeHD, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeHD, rcX, rcY, paintPoigneeBordure);
+                canvas.drawRoundRect(poigneeBG, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeBG, rcX, rcY, paintPoigneeBordure);
+                canvas.drawRoundRect(poigneeBD, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeBD, rcX, rcY, paintPoigneeBordure);
+
+                android.graphics.RectF poigneeHaut = new android.graphics.RectF(cx - hsX, t - hsY, cx + hsX, t + hsY);
+                android.graphics.RectF poigneeBas = new android.graphics.RectF(cx - hsX, b - hsY, cx + hsX, b + hsY);
+                android.graphics.RectF poigneeGauche = new android.graphics.RectF(l - hsX, cy - hsY, l + hsX, cy + hsY);
+                android.graphics.RectF poigneeDroite = new android.graphics.RectF(r - hsX, cy - hsY, r + hsX, cy + hsY);
+
+                canvas.drawRoundRect(poigneeHaut, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeHaut, rcX, rcY, paintPoigneeBordure);
+                canvas.drawRoundRect(poigneeBas, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeBas, rcX, rcY, paintPoigneeBordure);
+                canvas.drawRoundRect(poigneeGauche, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeGauche, rcX, rcY, paintPoigneeBordure);
+                canvas.drawRoundRect(poigneeDroite, rcX, rcY, paintPoignee);
+                canvas.drawRoundRect(poigneeDroite, rcX, rcY, paintPoigneeBordure);
+                
                 float rotY = t - (50f / scaleFactorY);
                 canvas.drawLine(cx, t, cx, rotY, paintSelection);
                 
                 float scaleFactorAvg = (scaleFactorX + scaleFactorY) / 2f;
-                canvas.drawCircle(cx, rotY, 15f / scaleFactorAvg, paintPoignee);
+                float rayonRotation = 13f / scaleFactorAvg;
+                canvas.drawCircle(cx, rotY, rayonRotation, paintPoignee);
+                canvas.drawCircle(cx, rotY, rayonRotation, paintPoigneeBordure);
+
+                if (objet.hitboxPersonnalisee) {
+                    float[] rectHitbox = objet.getRectangleHitboxLocal();
+                    float hHsX = 8f / scaleFactorX;
+                    float hHsY = 8f / scaleFactorY;
+                    float hRcX = 4f / scaleFactorX;
+                    float hRcY = 4f / scaleFactorY;
+
+                    android.graphics.RectF hTL = new android.graphics.RectF(rectHitbox[0] - hHsX, rectHitbox[1] - hHsY, rectHitbox[0] + hHsX, rectHitbox[1] + hHsY);
+                    android.graphics.RectF hTR = new android.graphics.RectF(rectHitbox[2] - hHsX, rectHitbox[1] - hHsY, rectHitbox[2] + hHsX, rectHitbox[1] + hHsY);
+                    android.graphics.RectF hBL = new android.graphics.RectF(rectHitbox[0] - hHsX, rectHitbox[3] - hHsY, rectHitbox[0] + hHsX, rectHitbox[3] + hHsY);
+                    android.graphics.RectF hBR = new android.graphics.RectF(rectHitbox[2] - hHsX, rectHitbox[3] - hHsY, rectHitbox[2] + hHsX, rectHitbox[3] + hHsY);
+
+                    canvas.drawRoundRect(hTL, hRcX, hRcY, paintPoigneeHitbox);
+                    canvas.drawRoundRect(hTL, hRcX, hRcY, paintPoigneeBordure);
+                    canvas.drawRoundRect(hTR, hRcX, hRcY, paintPoigneeHitbox);
+                    canvas.drawRoundRect(hTR, hRcX, hRcY, paintPoigneeBordure);
+                    canvas.drawRoundRect(hBL, hRcX, hRcY, paintPoigneeHitbox);
+                    canvas.drawRoundRect(hBL, hRcX, hRcY, paintPoigneeBordure);
+                    canvas.drawRoundRect(hBR, hRcX, hRcY, paintPoigneeHitbox);
+                    canvas.drawRoundRect(hBR, hRcX, hRcY, paintPoigneeBordure);
+
+                    float centreHX = (rectHitbox[0] + rectHitbox[2]) / 2f;
+                    float centreHY = (rectHitbox[1] + rectHitbox[3]) / 2f;
+                    float rayonCentreH = 8f / scaleFactorAvg;
+                    canvas.drawCircle(centreHX, centreHY, rayonCentreH, paintPoigneeHitbox);
+                    canvas.drawCircle(centreHX, centreHY, rayonCentreH, paintPoigneeBordure);
+                }
             }
         }
         canvas.restore();
     }
 // bas 3
-                
 
 // haut 4
     @Override
@@ -652,19 +765,34 @@ public class CanvasEditeur extends View {
         canvas.save();
         canvas.scale(niveauZoom, niveauZoom, getWidth() / 2f, getHeight() / 2f);
 
-        int gridSize = 100;
+        int gridSize = tailleGrille;
         int w = getWidth();
         int h = getHeight();
         int limiteMax = (int) (Math.max(w, h) * 2 / niveauZoom);
 
-        for (int i = -limiteMax + (int) (cameraX % gridSize); i < limiteMax; i += gridSize) {
-            canvas.drawLine(i, -limiteMax, i, limiteMax, paintGrille);
-        }
-        for (int i = -limiteMax + (int) (cameraY % gridSize); i < limiteMax; i += gridSize) {
-            canvas.drawLine(-limiteMax, i, limiteMax, i, paintGrille);
-        }
+        if (snapActif) {
+            float debutMondeX = -cameraX - limiteMax;
+            float finMondeX = -cameraX + limiteMax;
+            int idxDebutX = (int) Math.floor(debutMondeX / gridSize) - 1;
+            int idxFinX = (int) Math.ceil(finMondeX / gridSize) + 1;
 
-        canvas.drawRect(0 + cameraX, 0 + cameraY, ConfigurationJeu.LARGEUR_JEU + cameraX, ConfigurationJeu.HAUTEUR_JEU + cameraY, paintCamera);
+            for (int idx = idxDebutX; idx <= idxFinX; idx++) {
+                float screenX = idx * gridSize + cameraX;
+                Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
+                canvas.drawLine(screenX, -limiteMax, screenX, limiteMax, p);
+            }
+
+            float debutMondeY = -cameraY - limiteMax;
+            float finMondeY = -cameraY + limiteMax;
+            int idxDebutY = (int) Math.floor(debutMondeY / gridSize) - 1;
+            int idxFinY = (int) Math.ceil(finMondeY / gridSize) + 1;
+
+            for (int idx = idxDebutY; idx <= idxFinY; idx++) {
+                float screenY = idx * gridSize + cameraY;
+                Paint p = (idx % 5 == 0) ? paintGrilleMajeure : paintGrille;
+                canvas.drawLine(-limiteMax, screenY, limiteMax, screenY, p);
+            }
+        }
 
         if (sceneActive != null) {
             List<ObjetBase> objetsTries = new ArrayList<>(sceneActive.objets);
@@ -675,6 +803,9 @@ public class CanvasEditeur extends View {
                 dessinerObjetBase(canvas, objet, sceneActive.objets, 255, true);
             }
         }
+
+        canvas.drawRect(0 + cameraX, 0 + cameraY, ConfigurationJeu.LARGEUR_JEU + cameraX, ConfigurationJeu.HAUTEUR_JEU + cameraY, paintCamera);
+
         canvas.restore();
     }
 
@@ -708,6 +839,71 @@ public class CanvasEditeur extends View {
         }
     }
 
+    private void dessinerTileLayer(Canvas canvas, ObjetBase objet, int alphaVal) {
+        if (objet.cheminTileset == null || cheminProjet == null) {
+            paintObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.argb(80, 150, 150, 150));
+            paintObjet.setAlpha(alphaVal);
+            canvas.drawRect(0, 0, objet.largeur, objet.hauteur, paintObjet);
+            return;
+        }
+
+        android.graphics.Bitmap bmpTileset = cacheImages.get(objet.cheminTileset);
+        if (bmpTileset == null) {
+            try {
+                java.io.File imgFile = new java.io.File(cheminProjet, objet.cheminTileset);
+                if (imgFile.exists()) {
+                    bmpTileset = android.graphics.BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    if (bmpTileset != null) {
+                        cacheImages.put(objet.cheminTileset, bmpTileset);
+                    }
+                }
+            } catch (Exception e) {}
+        }
+
+        if (bmpTileset == null) {
+            paintObjet.setColor(objet.couleur != 0 ? objet.couleur : Color.argb(80, 150, 150, 150));
+            paintObjet.setAlpha(alphaVal);
+            canvas.drawRect(0, 0, objet.largeur, objet.hauteur, paintObjet);
+            return;
+        }
+
+        if (objet.grilleTuiles == null) return;
+
+        int lt = Math.max(1, objet.largeurTuilePx);
+        int ht = Math.max(1, objet.hauteurTuilePx);
+        int marge = Math.max(0, objet.margeTuilePx);
+        int decalage = Math.max(0, objet.decalageTuilePx);
+        int colonnesTileset = Math.max(1, (bmpTileset.getWidth() - decalage * 2 + marge) / (lt + marge));
+
+        paintObjet.setAlpha(alphaVal);
+
+        for (int row = 0; row < objet.grilleTuiles.length; row++) {
+            int[] ligne = objet.grilleTuiles[row];
+            if (ligne == null) continue;
+            for (int col = 0; col < ligne.length; col++) {
+                int indexTuile = ligne[col];
+                if (indexTuile < 0) continue;
+
+                int colSource = indexTuile % colonnesTileset;
+                int rowSource = indexTuile / colonnesTileset;
+                int xSource = decalage + colSource * (lt + marge);
+                int ySource = decalage + rowSource * (ht + marge);
+
+                int xSourceClamp = Math.max(0, Math.min(xSource, bmpTileset.getWidth() - 1));
+                int ySourceClamp = Math.max(0, Math.min(ySource, bmpTileset.getHeight() - 1));
+                int largeurClamp = Math.max(1, Math.min(lt, bmpTileset.getWidth() - xSourceClamp));
+                int hauteurClamp = Math.max(1, Math.min(ht, bmpTileset.getHeight() - ySourceClamp));
+
+                android.graphics.Rect rectSource = new android.graphics.Rect(xSourceClamp, ySourceClamp, xSourceClamp + largeurClamp, ySourceClamp + hauteurClamp);
+                float destX = col * (float) objet.largeurTuilePx;
+                float destY = row * (float) objet.hauteurTuilePx;
+                android.graphics.RectF rectDest = new android.graphics.RectF(destX, destY, destX + objet.largeurTuilePx, destY + objet.hauteurTuilePx);
+
+                canvas.drawBitmap(bmpTileset, rectSource, rectDest, paintObjet);
+            }
+        }
+    }
+
     private float[] ecranVersScene(float xEcran, float yEcran) {
         float cx = getWidth() / 2f, cy = getHeight() / 2f;
         float xZoom = cx + (xEcran - cx) / niveauZoom;
@@ -735,12 +931,18 @@ public class CanvasEditeur extends View {
             float objLargeur = ("scene_instance".equals(objet.type)) ? Math.max(50f, objet.largeur) : objet.largeur;
             float objHauteur = ("scene_instance".equals(objet.type)) ? Math.max(50f, getHauteurReelle(objet)) : getHauteurReelle(objet);
             
-            if (lx >= 0 && lx <= objLargeur && ly >= 0 && ly <= objHauteur) return objet;
+            float scaleXTol = Math.max(0.01f, Math.abs(objet.scaleX));
+            float scaleYTol = Math.max(0.01f, Math.abs(objet.scaleY));
+            float margeX = (20f / niveauZoom) / scaleXTol;
+            float margeY = (20f / niveauZoom) / scaleYTol;
+            
+            if (lx >= -margeX && lx <= objLargeur + margeX && ly >= -margeY && ly <= objHauteur + margeY) return objet;
         }
         return null;
     }
 // bas 4
-// haut 5
+    
+    // haut 5
     private int getTouchTarget(float xEcran, float yEcran) {
         float[] scenePos = ecranVersScene(xEcran, yEcran);
         float sx = scenePos[0], sy = scenePos[1];
@@ -760,15 +962,33 @@ public class CanvasEditeur extends View {
             float dimHauteur = ("scene_instance".equals(objetSelectionne.type)) ? Math.max(50f, getHauteurReelle(objetSelectionne)) : getHauteurReelle(objetSelectionne);
 
             float midX = dimLargeur / 2f;
+            float midY = dimHauteur / 2f;
             float rotY = -50f / scaleY;
 
             if (!isModeDeplacementObjet) {
+                if (objetSelectionne.hitboxPersonnalisee) {
+                    float[] rectHitbox = objetSelectionne.getRectangleHitboxLocal();
+                    float centreHX = (rectHitbox[0] + rectHitbox[2]) / 2f;
+                    float centreHY = (rectHitbox[1] + rectHitbox[3]) / 2f;
+
+                    if (Math.abs(lx - rectHitbox[0]) < hitX && Math.abs(ly - rectHitbox[1]) < hitY) return 31;
+                    if (Math.abs(lx - rectHitbox[2]) < hitX && Math.abs(ly - rectHitbox[1]) < hitY) return 32;
+                    if (Math.abs(lx - rectHitbox[0]) < hitX && Math.abs(ly - rectHitbox[3]) < hitY) return 33;
+                    if (Math.abs(lx - rectHitbox[2]) < hitX && Math.abs(ly - rectHitbox[3]) < hitY) return 34;
+                    if (Math.abs(lx - centreHX) < hitX && Math.abs(ly - centreHY) < hitY) return 30;
+                }
+
                 if (Math.hypot(lx - midX, ly - rotY) < hitAvg) return 8; 
                 
                 if (Math.abs(lx) < hitX && Math.abs(ly) < hitY) return 4; 
                 if (Math.abs(lx - dimLargeur) < hitX && Math.abs(ly) < hitY) return 5; 
                 if (Math.abs(lx) < hitX && Math.abs(ly - dimHauteur) < hitY) return 6; 
                 if (Math.abs(lx - dimLargeur) < hitX && Math.abs(ly - dimHauteur) < hitY) return 7; 
+
+                if (Math.abs(lx - midX) < hitX && Math.abs(ly) < hitY) return 9; 
+                if (Math.abs(lx - midX) < hitX && Math.abs(ly - dimHauteur) < hitY) return 10; 
+                if (Math.abs(lx) < hitX && Math.abs(ly - midY) < hitY) return 11; 
+                if (Math.abs(lx - dimLargeur) < hitX && Math.abs(ly - midY) < hitY) return 12; 
             }
             
             if (lx >= 0 && lx <= dimLargeur && ly >= 0 && ly <= dimHauteur) return 2; 
@@ -783,6 +1003,46 @@ public class CanvasEditeur extends View {
         objetSelectionne = null;
         if (editeurLie != null) editeurLie.rafraichirArborescence(null);
         return 0; 
+    }
+
+    private float accrocherGrille(float valeur) {
+        return Math.round(valeur / tailleGrille) * tailleGrille;
+    }
+
+    // Pour un Décor en tuiles (tile_layer) : convertit le scale obtenu par un redimensionnement à la poignée
+    // en un nombre de cases (arrondi au plus proche), puis remet le scale à 1. Le Décor "s'étire" donc par
+    // cases entières plutôt que par un zoom visuel continu, ce qui garde la collision et le rendu cohérents.
+    private void finaliserRedimensionnementTileLayer(ObjetBase objet) {
+        if (!"tile_layer".equals(objet.type)) return;
+        float scaleXAbs = Math.abs(objet.scaleX);
+        float scaleYAbs = Math.abs(objet.scaleY);
+        if (Math.abs(scaleXAbs - 1f) < 0.001f && Math.abs(scaleYAbs - 1f) < 0.001f) return;
+
+        int lt = Math.max(1, objet.largeurTuilePx);
+        int ht = Math.max(1, objet.hauteurTuilePx);
+
+        int nouvelleLargeurGrille = Math.max(1, Math.round((objet.largeur * scaleXAbs) / lt));
+        int nouvelleHauteurGrille = Math.max(1, Math.round((objet.hauteur * scaleYAbs) / ht));
+
+        int[][] ancienneGrille = objet.grilleTuiles;
+        int[][] nouvelleGrilleTableau = new int[nouvelleHauteurGrille][nouvelleLargeurGrille];
+        for (int[] ligne : nouvelleGrilleTableau) java.util.Arrays.fill(ligne, -1);
+        if (ancienneGrille != null) {
+            for (int ligneY = 0; ligneY < Math.min(ancienneGrille.length, nouvelleHauteurGrille); ligneY++) {
+                if (ancienneGrille[ligneY] == null) continue;
+                for (int colX = 0; colX < Math.min(ancienneGrille[ligneY].length, nouvelleLargeurGrille); colX++) {
+                    nouvelleGrilleTableau[ligneY][colX] = ancienneGrille[ligneY][colX];
+                }
+            }
+        }
+
+        objet.grilleTuiles = nouvelleGrilleTableau;
+        objet.largeurGrille = nouvelleLargeurGrille;
+        objet.hauteurGrille = nouvelleHauteurGrille;
+        objet.largeur = nouvelleLargeurGrille * (float) lt;
+        objet.hauteur = nouvelleHauteurGrille * (float) ht;
+        objet.scaleX = 1f;
+        objet.scaleY = 1f;
     }
 
     @Override
@@ -807,6 +1067,11 @@ public class CanvasEditeur extends View {
                         initScaleX = objetSelectionne.scaleX; initScaleY = objetSelectionne.scaleY;
                         initMatrix = getAbsoluteMatrix(objetSelectionne);
                         dragStartX = objetSelectionne.x; dragStartY = objetSelectionne.y;
+                        dragRawX = objetSelectionne.x; dragRawY = objetSelectionne.y;
+                        initHitboxLargeur = objetSelectionne.hitboxLargeur;
+                        initHitboxHauteur = objetSelectionne.hitboxHauteur;
+                        initHitboxDecalageX = objetSelectionne.hitboxDecalageX;
+                        initHitboxDecalageY = objetSelectionne.hitboxDecalageY;
                     }
                     if (inspecteurLie != null) inspecteurLie.afficherObjet(objetSelectionne);
                     invalidate();
@@ -834,10 +1099,18 @@ public class CanvasEditeur extends View {
                         float[] lastTouchP = {ecranVersScene(lastTouchX, lastTouchY)[0], ecranVersScene(lastTouchX, lastTouchY)[1]};
                         
                         invParent.mapPoints(curTouchP); invParent.mapPoints(lastTouchP);
-                        objetSelectionne.x += (curTouchP[0] - lastTouchP[0]);
-                        objetSelectionne.y += (curTouchP[1] - lastTouchP[1]);
+                        dragRawX += (curTouchP[0] - lastTouchP[0]);
+                        dragRawY += (curTouchP[1] - lastTouchP[1]);
+
+                        if (snapActif) {
+                            objetSelectionne.x = accrocherGrille(dragRawX);
+                            objetSelectionne.y = accrocherGrille(dragRawY);
+                        } else {
+                            objetSelectionne.x = dragRawX;
+                            objetSelectionne.y = dragRawY;
+                        }
                     }
-                } else if (currentMode >= 4 && currentMode <= 7 && objetSelectionne != null) { 
+                } else if (((currentMode >= 4 && currentMode <= 7) || (currentMode >= 9 && currentMode <= 12)) && objetSelectionne != null) { 
                     if (!objetSelectionne.estVerrouille) {
                         Matrix invInit = new Matrix();
                         initMatrix.invert(invInit);
@@ -850,14 +1123,22 @@ public class CanvasEditeur extends View {
                         else if (currentMode == 5) { newSx = initScaleX * (lx / initW); newSy = initScaleY * ((initH - ly) / initH); }
                         else if (currentMode == 6) { newSx = initScaleX * ((initW - lx) / initW); newSy = initScaleY * (ly / initH); }
                         else if (currentMode == 7) { newSx = initScaleX * (lx / initW); newSy = initScaleY * (ly / initH); }
+                        else if (currentMode == 9) { newSy = initScaleY * ((initH - ly) / initH); }
+                        else if (currentMode == 10) { newSy = initScaleY * (ly / initH); }
+                        else if (currentMode == 11) { newSx = initScaleX * ((initW - lx) / initW); }
+                        else if (currentMode == 12) { newSx = initScaleX * (lx / initW); }
                         
                         if (Math.abs(newSx) < 0.05f) newSx = 0.05f * Math.signum(newSx);
                         if (Math.abs(newSy) < 0.05f) newSy = 0.05f * Math.signum(newSy);
                         
                         objetSelectionne.scaleX = newSx; objetSelectionne.scaleY = newSy;
                         
-                        float ancLocX = (currentMode == 4 || currentMode == 6) ? initW : 0;
-                        float ancLocY = (currentMode == 4 || currentMode == 5) ? initH : 0;
+                        float ancLocX = (currentMode == 4 || currentMode == 6 || currentMode == 11) ? initW
+                                : (currentMode == 5 || currentMode == 7 || currentMode == 12) ? 0
+                                : initW / 2f;
+                        float ancLocY = (currentMode == 4 || currentMode == 5 || currentMode == 9) ? initH
+                                : (currentMode == 6 || currentMode == 7 || currentMode == 10) ? 0
+                                : initH / 2f;
                         
                         float[] initAnchorWorld = {ancLocX, ancLocY};
                         initMatrix.mapPoints(initAnchorWorld);
@@ -876,6 +1157,37 @@ public class CanvasEditeur extends View {
                         
                         objetSelectionne.x += (initAncParent[0] - newAncParent[0]);
                         objetSelectionne.y += (initAncParent[1] - newAncParent[1]);
+                    }
+                } else if (currentMode >= 30 && currentMode <= 34 && objetSelectionne != null && objetSelectionne.hitboxPersonnalisee) {
+                    if (!objetSelectionne.estVerrouille) {
+                        float[] localPt = worldToLocal(objetSelectionne, sx, sy);
+                        float lxH = localPt[0], lyH = localPt[1];
+
+                        if (currentMode == 30) {
+                            objetSelectionne.hitboxDecalageX = lxH - objetSelectionne.largeur / 2f;
+                            objetSelectionne.hitboxDecalageY = lyH - objetSelectionne.hauteur / 2f;
+                        } else {
+                            float initGauche = (objetSelectionne.largeur - initHitboxLargeur) / 2f + initHitboxDecalageX;
+                            float initHaut = (objetSelectionne.hauteur - initHitboxHauteur) / 2f + initHitboxDecalageY;
+                            float initDroite = initGauche + initHitboxLargeur;
+                            float initBas = initHaut + initHitboxHauteur;
+
+                            float ancreX, ancreY;
+                            if (currentMode == 31) { ancreX = initDroite; ancreY = initBas; }
+                            else if (currentMode == 32) { ancreX = initGauche; ancreY = initBas; }
+                            else if (currentMode == 33) { ancreX = initDroite; ancreY = initHaut; }
+                            else { ancreX = initGauche; ancreY = initHaut; }
+
+                            float nouvelleLargeur = Math.max(4f, Math.abs(ancreX - lxH));
+                            float nouvelleHauteur = Math.max(4f, Math.abs(ancreY - lyH));
+                            float nouveauCentreX = (ancreX + lxH) / 2f;
+                            float nouveauCentreY = (ancreY + lyH) / 2f;
+
+                            objetSelectionne.hitboxLargeur = nouvelleLargeur;
+                            objetSelectionne.hitboxHauteur = nouvelleHauteur;
+                            objetSelectionne.hitboxDecalageX = nouveauCentreX - objetSelectionne.largeur / 2f;
+                            objetSelectionne.hitboxDecalageY = nouveauCentreY - objetSelectionne.hauteur / 2f;
+                        }
                     }
                 } else if (currentMode == 8 && objetSelectionne != null) { 
                     if (!objetSelectionne.estVerrouille) {
@@ -901,6 +1213,11 @@ public class CanvasEditeur extends View {
                             editeurLie.ajouterCommande(new CommandeDeplacement(objetSelectionne, dragStartX, dragStartY, objetSelectionne.x, objetSelectionne.y));
                         }
                     }
+                }
+                if (((currentMode >= 4 && currentMode <= 7) || (currentMode >= 9 && currentMode <= 12)) && objetSelectionne != null) {
+                    finaliserRedimensionnementTileLayer(objetSelectionne);
+                    if (inspecteurLie != null) inspecteurLie.afficherObjet(objetSelectionne);
+                    invalidate();
                 }
                 currentMode = 0; return true;
         }
@@ -955,19 +1272,3 @@ public class CanvasEditeur extends View {
     }
 }
 // bas 5
-
-
-
-
-
-    
-
-
-
-    
-
-    
-
-
-
-
