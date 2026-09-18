@@ -659,6 +659,8 @@
 "param_nouvelle_valeur": "Nuevo Valor",
 "insp_couleur_aucune": "Ninguno",
   "noeud_extraire_propriete": "Extraer propiedad",
+  "noeud_event_maintenu_objet": "Objeto Mantenido Pulsado",
+  "noeud_fin_clic_sur_objet": "Fin de Clic en Objeto",
 "param_propriete": "Propiedad a extraer"
   
   
