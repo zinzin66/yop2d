@@ -657,7 +657,10 @@
 "insp_btn_couleur_fond_prog": "Цвет фона",
 "noeud_modifier_progression": "Задать прогресс",
 "param_nouvelle_valeur": "Новое значение",
-"insp_couleur_aucune": "Нет"
+"insp_couleur_aucune": "Нет",
+  "noeud_extraire_propriete": "Извлечь свойство",
+"param_propriete": "Свойство для извлечения"
+  
   
   
   
