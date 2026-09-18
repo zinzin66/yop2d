@@ -627,7 +627,28 @@
 "peinture_annuler_action": "Undo",
 "peinture_recentrer": "Recenter View",
 "peinture_tuiles_label": "Tiles",
-"peinture_aucune_tuile": "Set up an image first in \"Configure Tiles\""
+"peinture_aucune_tuile": "Set up an image first in \"Configure Tiles\"",
+  "dossier_images": "Images",
+"dossier_sons": "Audio",
+"dossier_fonts": "Fonts",
+"dossier_textes": "Texts",
+"Suivre X": "Follow X axis",
+"Suivre Y": "Follow Y axis",
+"Intensite": "Intensity",
+"Duree": "Duration (ms)",
+"Infini": "Loop / Infinite",
+"titre_dialogue_objets": "Add an object",
+"cat_formes_base": "Basic Shapes & Visuals",
+"cat_ui_hud": "Interface, Texts & HUD",
+"cat_prefabs": "Nested Scenes & Prefabs",
+"insp_sep_progression": "PROGRESS BAR",
+"insp_label_prog_min": "Minimum Value",
+"insp_label_prog_max": "Maximum Value",
+"insp_label_prog_actuelle": "Current Value",
+"insp_btn_couleur_fond_prog": "Background Color",
+"noeud_modifier_progression": "Set Progress",
+"param_nouvelle_valeur": "New Value",
+"insp_couleur_aucune": "None"
   
   
   
