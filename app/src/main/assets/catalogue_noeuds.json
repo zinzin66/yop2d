@@ -64,6 +64,102 @@
         { "cle": "valeur", "type": "formule", "defaut": "0",
           "nom": { "fr": "Valeur", "en": "Value", "es": "Valor", "pt": "Valor", "de": "Wert", "it": "Valore", "ru": "Значение", "zh": "值", "ja": "値" } }
       ]
+    },
+    {
+      "cle": "rotation",
+      "nomCle": "noeud_rotation",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "rotation" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Angle (degrés)", "en": "Angle (degrees)", "es": "Ángulo (grados)", "pt": "Ângulo (graus)", "de": "Winkel (Grad)", "it": "Angolo (gradi)", "ru": "Угол (градусы)", "zh": "角度（度）", "ja": "角度（度）" } }
+      ]
+    },
+    {
+      "cle": "opacite",
+      "nomCle": "noeud_opacite",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "opacite" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "1",
+          "nom": { "fr": "Opacité (0 à 1)", "en": "Opacity (0 to 1)", "es": "Opacidad (0 a 1)", "pt": "Opacidade (0 a 1)", "de": "Deckkraft (0 bis 1)", "it": "Opacità (da 0 a 1)", "ru": "Непрозрачность (0–1)", "zh": "不透明度（0到1）", "ja": "不透明度（0〜1）" } }
+      ]
+    },
+    {
+      "cle": "visibilite",
+      "nomCle": "noeud_visibilite",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "visible" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "true",
+          "nom": { "fr": "Visible (true / false)", "en": "Visible (true / false)", "es": "Visible (true / false)", "pt": "Visível (true / false)", "de": "Sichtbar (true / false)", "it": "Visibile (true / false)", "ru": "Видимость (true / false)", "zh": "可见（true / false）", "ja": "表示（true / false）" } }
+      ]
+    },
+    {
+      "cle": "definir_tag",
+      "nomCle": "noeud_definir_tag",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "tag" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "texte", "defaut": "",
+          "nom": { "fr": "Tag", "en": "Tag", "es": "Etiqueta", "pt": "Tag", "de": "Tag", "it": "Tag", "ru": "Тег", "zh": "标签", "ja": "タグ" } }
+      ]
+    },
+    {
+      "cle": "changer_zorder",
+      "nomCle": "noeud_changer_zorder",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "z" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "0", "nom": "Z" }
+      ]
+    },
+    {
+      "cle": "modifier_texte",
+      "nomCle": "noeud_modifier_texte",
+      "categorie": "cat_textes_dialogues",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "texte" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "texte", "defaut": "",
+          "nom": { "fr": "Nouveau texte", "en": "New text", "es": "Texto nuevo", "pt": "Novo texto", "de": "Neuer Text", "it": "Nuovo testo", "ru": "Новый текст", "zh": "新文本", "ja": "新しいテキスト" } }
+      ]
+    },
+    {
+      "cle": "ajouter_variable",
+      "nomCle": "noeud_ajouter_a_variable",
+      "categorie": "cat_variables_inventaire",
+      "objet": true,
+      "variable": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "1",
+          "nom": { "fr": "Valeur à ajouter", "en": "Value to add", "es": "Valor a añadir", "pt": "Valor a adicionar", "de": "Hinzuzufügender Wert", "it": "Valore da aggiungere", "ru": "Добавляемое значение", "zh": "要增加的值", "ja": "加算する値" } }
+      ]
+    },
+    {
+      "cle": "limiter_valeur",
+      "nomCle": "noeud_limiter_valeur",
+      "action": "limiter_variable",
+      "categorie": "cat_variables_inventaire",
+      "objet": true,
+      "variable": true,
+      "champs": [
+        { "cle": "min", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Minimum", "en": "Minimum", "es": "Mínimo", "pt": "Mínimo", "de": "Minimum", "it": "Minimo", "ru": "Минимум", "zh": "最小值", "ja": "最小値" } },
+        { "cle": "max", "type": "formule", "defaut": "100",
+          "nom": { "fr": "Maximum", "en": "Maximum", "es": "Máximo", "pt": "Máximo", "de": "Maximum", "it": "Massimo", "ru": "Максимум", "zh": "最大值", "ja": "最大値" } }
+      ]
     }
   ]
 }
