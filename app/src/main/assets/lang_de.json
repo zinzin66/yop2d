@@ -638,7 +638,28 @@
 "peinture_annuler_action": "Rückgängig",
 "peinture_recentrer": "Ansicht zentrieren",
 "peinture_tuiles_label": "Kacheln",
-"peinture_aucune_tuile": "Richte zuerst ein Bild unter \"Kacheln konfigurieren\" ein"
+"peinture_aucune_tuile": "Richte zuerst ein Bild unter \"Kacheln konfigurieren\" ein",
+  "dossier_images": "Bilder",
+"dossier_sons": "Audio",
+"dossier_fonts": "Schriftarten",
+"dossier_textes": "Texte",
+"Suivre X": "X-Achse folgen",
+"Suivre Y": "Y-Achse folgen",
+"Intensite": "Intensität",
+"Duree": "Dauer (ms)",
+"Infini": "Schleife / Unendlich",
+"titre_dialogue_objets": "Objekt hinzufügen",
+"cat_formes_base": "Grundformen & Visuelles",
+"cat_ui_hud": "Interface, Texte & HUD",
+"cat_prefabs": "Verschachtelte Szenen & Prefabs",
+"insp_sep_progression": "FORTSCHRITTSBALKEN",
+"insp_label_prog_min": "Minimalwert",
+"insp_label_prog_max": "Maximalwert",
+"insp_label_prog_actuelle": "Aktueller Wert",
+"insp_btn_couleur_fond_prog": "Hintergrundfarbe",
+"noeud_modifier_progression": "Fortschritt festlegen",
+"param_nouvelle_valeur": "Neuer Wert",
+"insp_couleur_aucune": "Keine"
   
   
   
