@@ -126,13 +126,15 @@ public class Blueprint {
             ldto.portDepart = l.portSortieNom;
             ldto.idArrivee = l.noeudArrivee.id;
             ldto.portArrivee = l.portEntreeNom;
+            // NOUVEAU : on note aussi la position des ports, qui ne change jamais avec la langue
+            ldto.indexPortDepart = trouverIndexPort(l.noeudDepart.portsSortie, l.portSortieNom);
+            ldto.indexPortArrivee = trouverIndexPort(l.noeudArrivee.portsEntree, l.portEntreeNom);
             dto.liens.add(ldto);
         }
 
         return gson.toJson(dto);
     }
 // bas 1
-
 // haut 2
     public static Blueprint fromJson(String json, Scene scene) {
         Gson gson = new Gson();
@@ -281,13 +283,44 @@ public class Blueprint {
         for (LienDTO ldto : dto.liens) {
             NoeudBase dep = dictionnaireNoeuds.get(ldto.idDepart);
             NoeudBase arr = dictionnaireNoeuds.get(ldto.idArrivee);
-            if (dep != null && arr != null) bp.ajouterLien(dep, ldto.portDepart, arr, ldto.portArrivee);
+            if (dep != null && arr != null) {
+                // Les noms de ports peuvent etre traduits : on retrouve le vrai port meme si la langue a change
+                String portDep = resoudreNomPort(dep.portsSortie, ldto.portDepart, ldto.indexPortDepart);
+                String portArr = resoudreNomPort(arr.portsEntree, ldto.portArrivee, ldto.indexPortArrivee);
+                bp.ajouterLien(dep, portDep, arr, portArr);
+            }
         }
         return bp;
     }
 
     public static Blueprint fromJson(String json) {
         return fromJson(json, null);
+    }
+
+    // Position d'un port dans sa liste (retrouve par son nom actuel). null si introuvable.
+    private static Integer trouverIndexPort(List<Port> ports, String nom) {
+        if (ports == null || nom == null) return null;
+        for (int i = 0; i < ports.size(); i++) {
+            if (nom.equals(ports.get(i).nom)) return i;
+        }
+        return null;
+    }
+
+    // Retrouve le nom ACTUEL d'un port, meme si le nom sauvegarde est dans une autre langue :
+    // 1. par son nom exact (cas normal) ; 2. sinon par sa position sauvegardee ;
+    // 3. sinon, s'il n'y a qu'un seul port de ce cote, celui-la (anciens projets).
+    private static String resoudreNomPort(List<Port> ports, String nomSauvegarde, Integer indexSauvegarde) {
+        if (ports == null || ports.isEmpty()) return nomSauvegarde;
+        if (nomSauvegarde != null) {
+            for (Port p : ports) {
+                if (nomSauvegarde.equals(p.nom)) return nomSauvegarde;
+            }
+        }
+        if (indexSauvegarde != null && indexSauvegarde >= 0 && indexSauvegarde < ports.size()) {
+            return ports.get(indexSauvegarde).nom;
+        }
+        if (ports.size() == 1) return ports.get(0).nom;
+        return nomSauvegarde;
     }
 
     private static class BlueprintDTO {
@@ -318,6 +351,17 @@ public class Blueprint {
         String portDepart;
         String idArrivee;
         String portArrivee;
+        // NOUVEAU : positions des ports (Integer et non int : absent = null pour les anciens projets)
+        Integer indexPortDepart;
+        Integer indexPortArrivee;
     }
 }
 // bas 2
+
+
+
+
+
+
+
+
