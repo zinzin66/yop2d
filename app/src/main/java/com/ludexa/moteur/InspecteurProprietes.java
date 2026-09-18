@@ -909,14 +909,14 @@ public class InspecteurProprietes extends LinearLayout {
         blocProgression = new LinearLayout(context);
         blocProgression.setOrientation(LinearLayout.VERTICAL);
         styliserSection(blocProgression);
-
-        TextView sepProgression = new TextView(context);
-        sepProgression.setText("Barre de Progression");
+ // h1
+      TextView sepProgression = new TextView(context);
+        sepProgression.setText(Traducteur.get("insp_sep_progression"));
         styliserSousTitre(sepProgression);
         blocProgression.addView(sepProgression);
 
         champProgMin = new EditText(context);
-        champProgMin.setHint("Minimum");
+        champProgMin.setHint(Traducteur.get("insp_label_prog_min"));
         champProgMin.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
         styliserChamp(champProgMin);
         champProgMin.addTextChangedListener(creerWatcherSimple(texte -> {
@@ -925,7 +925,7 @@ public class InspecteurProprietes extends LinearLayout {
         blocProgression.addView(champProgMin);
 
         champProgMax = new EditText(context);
-        champProgMax.setHint("Maximum");
+        champProgMax.setHint(Traducteur.get("insp_label_prog_max"));
         champProgMax.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
         styliserChamp(champProgMax);
         champProgMax.addTextChangedListener(creerWatcherSimple(texte -> {
@@ -934,7 +934,7 @@ public class InspecteurProprietes extends LinearLayout {
         blocProgression.addView(champProgMax);
 
         champProgActuelle = new EditText(context);
-        champProgActuelle.setHint("Valeur Actuelle");
+        champProgActuelle.setHint(Traducteur.get("insp_label_prog_actuelle"));
         champProgActuelle.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
         styliserChamp(champProgActuelle);
         champProgActuelle.addTextChangedListener(creerWatcherSimple(texte -> {
@@ -943,9 +943,10 @@ public class InspecteurProprietes extends LinearLayout {
         blocProgression.addView(champProgActuelle);
 
         btnCouleurFondProg = new Button(context);
-        btnCouleurFondProg.setText("Couleur de fond (Progression)");
+        btnCouleurFondProg.setText(Traducteur.get("insp_btn_couleur_fond_prog"));
         styliserBouton(btnCouleurFondProg);
         blocProgression.addView(btnCouleurFondProg);
+        //h1
 
         blocProprietes.addView(blocProgression);
 
@@ -1436,8 +1437,9 @@ public class InspecteurProprietes extends LinearLayout {
             layoutMain.setOrientation(LinearLayout.VERTICAL);
             layoutMain.setPadding(dp(16), dp(16), dp(16), dp(16));
             
+            //61
             Button btnAucune = new Button(context);
-            btnAucune.setText("Aucune (Transparent)");
+            btnAucune.setText(Traducteur.get("insp_couleur_aucune"));
             styliserBouton(btnAucune);
             layoutMain.addView(btnAucune);
 
