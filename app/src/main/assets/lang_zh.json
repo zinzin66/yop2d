@@ -637,7 +637,28 @@
 "peinture_annuler_action": "撤销",
 "peinture_recentrer": "重新居中视图",
 "peinture_tuiles_label": "瓦片",
-"peinture_aucune_tuile": "请先在\"配置瓦片\"中设置图片"
+"peinture_aucune_tuile": "请先在\"配置瓦片\"中设置图片",
+  "dossier_images": "图片",
+"dossier_sons": "音频",
+"dossier_fonts": "字体",
+"dossier_textes": "文本",
+"Suivre X": "跟随X轴",
+"Suivre Y": "跟随Y轴",
+"Intensite": "强度",
+"Duree": "持续时间（毫秒）",
+"Infini": "循环／无限",
+"titre_dialogue_objets": "添加对象",
+"cat_formes_base": "基本形状与视觉效果",
+"cat_ui_hud": "界面、文本与HUD",
+"cat_prefabs": "嵌套场景与预制件",
+"insp_sep_progression": "进度条",
+"insp_label_prog_min": "最小值",
+"insp_label_prog_max": "最大值",
+"insp_label_prog_actuelle": "当前值",
+"insp_btn_couleur_fond_prog": "背景颜色",
+"noeud_modifier_progression": "设置进度",
+"param_nouvelle_valeur": "新值",
+"insp_couleur_aucune": "无"
   
   
   
