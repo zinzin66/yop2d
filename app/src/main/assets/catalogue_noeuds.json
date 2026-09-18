@@ -160,6 +160,61 @@
         { "cle": "max", "type": "formule", "defaut": "100",
           "nom": { "fr": "Maximum", "en": "Maximum", "es": "Máximo", "pt": "Máximo", "de": "Maximum", "it": "Massimo", "ru": "Максимум", "zh": "最大值", "ja": "最大値" } }
       ]
+    },
+    {
+      "cle": "modifier_taille",
+      "nomCle": "noeud_definir_taille",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_echelle",
+      "objet": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "1", "nom": "Scale X" },
+        { "cle": "y", "type": "formule", "defaut": "1", "nom": "Scale Y" }
+      ]
+    },
+    {
+      "cle": "detruire_objet",
+      "nomCle": "noeud_detruire_objet",
+      "categorie": "cat_apparence_objets",
+      "action": "detruire",
+      "objet": true
+    },
+    {
+      "cle": "detruire_par_tag",
+      "nomCle": "noeud_detruire_par_tag",
+      "categorie": "cat_apparence_objets",
+      "champs": [
+        { "cle": "tag", "type": "tag", "defaut": "Ennemi",
+          "nom": { "fr": "Tag à détruire", "en": "Tag to destroy", "es": "Etiqueta a destruir", "pt": "Tag a destruir", "de": "Zu zerstörender Tag", "it": "Tag da distruggere", "ru": "Тег для уничтожения", "zh": "要销毁的标签", "ja": "破棄するタグ" } }
+      ]
+    },
+    {
+      "cle": "changer_image",
+      "nomCle": "noeud_changer_image",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "image", "type": "image", "defaut": "",
+          "nom": { "fr": "Image", "en": "Image", "es": "Imagen", "pt": "Imagem", "de": "Bild", "it": "Immagine", "ru": "Изображение", "zh": "图像", "ja": "画像" } }
+      ]
+    },
+    {
+      "cle": "modifier_couleur",
+      "nomCle": "noeud_modifier_couleur",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "couleur", "type": "couleur", "defaut": "Noir",
+          "nom": { "fr": "Couleur", "en": "Color", "es": "Color", "pt": "Cor", "de": "Farbe", "it": "Colore", "ru": "Цвет", "zh": "颜色", "ja": "色" } }
+      ]
+    },
+    {
+      "cle": "generer_clone",
+      "nomCle": "noeud_generer_clone",
+      "categorie": "cat_apparence_objets",
+      "action": "cloner",
+      "objet": true,
+      "objetB": true
     }
   ]
 }
