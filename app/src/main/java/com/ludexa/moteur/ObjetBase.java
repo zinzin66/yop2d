@@ -113,6 +113,20 @@ public class ObjetBase {
     public float hitboxDecalageX = 0f;
     public float hitboxDecalageY = 0f;
 
+    // --- NOUVEAUX CHAMPS : TILE LAYER (tuiles) ---
+    // RENOMMAGE SIGNALÉ : l'ancien champ unique "tailleTuilePx" est remplacé par largeurTuilePx/hauteurTuilePx
+    // (tuiles pas toujours carrées). Ajout de margeTuilePx (espace entre tuiles) et decalageTuilePx (bordure
+    // extérieure avant la première tuile) pour découper correctement les tilesets réels téléchargés.
+    public String cheminTileset = null;
+    public int largeurTuilePx = 32;
+    public int hauteurTuilePx = 32;
+    public int margeTuilePx = 0;
+    public int decalageTuilePx = 0;
+    public int largeurGrille = 10;
+    public int hauteurGrille = 10;
+    public int[][] grilleTuiles = null;
+    public boolean[] tuilesSolides = null;
+
     public List<Variable> variablesLocales = new ArrayList<>();
     public transient String idCloneRacine = null;
 
@@ -232,6 +246,26 @@ public class ObjetBase {
         copie.hitboxHauteur = this.hitboxHauteur;
         copie.hitboxDecalageX = this.hitboxDecalageX;
         copie.hitboxDecalageY = this.hitboxDecalageY;
+
+        // --- COPIE DES CHAMPS TILE LAYER ---
+        copie.cheminTileset = this.cheminTileset;
+        copie.largeurTuilePx = this.largeurTuilePx;
+        copie.hauteurTuilePx = this.hauteurTuilePx;
+        copie.margeTuilePx = this.margeTuilePx;
+        copie.decalageTuilePx = this.decalageTuilePx;
+        copie.largeurGrille = this.largeurGrille;
+        copie.hauteurGrille = this.hauteurGrille;
+        if (this.grilleTuiles != null) {
+            copie.grilleTuiles = new int[this.grilleTuiles.length][];
+            for (int i = 0; i < this.grilleTuiles.length; i++) {
+                if (this.grilleTuiles[i] != null) {
+                    copie.grilleTuiles[i] = this.grilleTuiles[i].clone();
+                }
+            }
+        }
+        if (this.tuilesSolides != null) {
+            copie.tuilesSolides = this.tuilesSolides.clone();
+        }
 
         copie.variablesLocales = new ArrayList<>();
         if (this.variablesLocales != null) {

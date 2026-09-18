@@ -1,300 +1,418 @@
 ================================================
-  DOCUMENTACIÓN OFICIAL YOP.2D - BLUEPRINT
+  DOCUMENTACIÓN OFICIAL YOP2D - BLUEPRINT
 ================================================
 
+Esta documentación utiliza un formato visual para ayudarte a entender cómo conectar tus bloques (nodos).
+( ) = Lo que debes configurar o conectar como entrada.
+[ ] = El bloque en sí.
+---> = La dirección de la acción (el flujo del programa).
+
 --- EVENTOS ---
-[Al Iniciar]
-Se ejecuta automáticamente y solo una vez tan pronto como la escena se carga en la pantalla.
 
-[Cada fotograma]
-Se ejecuta continuamente, en cada actualización de la pantalla (framerate). Ideal para actualizaciones constantes.
+=========================================
+[ Al Iniciar ]
+=========================================
+      (Inicio) ---> [ Ejecutar ] --->
 
-[Fin de Clic]
-Se activa cuando el jugador levanta su dedo de la pantalla, en cualquier lugar.
+* ROL: Se ejecuta automáticamente y una sola vez en cuanto la escena se carga en pantalla.
+* EJEMPLO: Colocar a los enemigos en su posición inicial, o inicializar la vida del jugador a 100.
 
-[Al Clic en Objeto]
-Se activa cuando el dedo del jugador toca el Objeto objetivo.
+=========================================
+[ Cada Fotograma ]
+=========================================
+       (Bucle) ---> [ Ejecutar ] --->
 
-[Inicio de Arrastrar] / [Fin de Arrastrar]
-Se activan en el momento en que el jugador comienza a arrastrar un objeto movible y en el momento en que lo suelta.
+* ROL: Se ejecuta continuamente, en cada actualización de la pantalla (framerate).
+* EJEMPLO: Hacer que un objeto gire sobre sí mismo infinitamente, o actualizar un puntaje.
 
-[Colisión A/B]
-Se activa en el momento exacto en que el Objeto A entra en contacto físico con el Objeto B.
+=========================================
+[ Al Hacer Clic en Objeto ]
+=========================================
+    (Objetivo) ---> [ ¡Clic! ] ---> (Ejecutar)
 
-[Si el objeto toca el Tag]
-Se activa en el momento exacto en que el objeto objetivo choca con cualquier objeto que tenga la etiqueta (Tag) indicada.
+* ROL: Se activa cuando el dedo del jugador toca el Objeto objetivo.
+* EJEMPLO: Abrir un cofre, activar un botón o iniciar un diálogo.
 
-[Entrada de zona] / [Salida de zona]
-Ideal para activadores invisibles. Se activa cuando un objeto entra o sale de una zona definida.
+=========================================
+[ Fin de Clic ]
+=========================================
+    (Pantalla) ---> [ Soltado ] ---> (Ejecutar)
 
-[Al Pasar el Ratón] / [Fin de Pasar el Ratón]
-Maneja el paso del dedo o un cursor sobre un objeto, sin necesidad de hacer clic.
+* ROL: Se activa cuando el jugador suelta el dedo de la pantalla, en cualquier lugar.
+* EJEMPLO: Dejar de disparar cuando se levanta el dedo.
 
-[Al Impacto (Física)]
-Detecta cuando el objeto rebota o golpea un elemento sólido con la gravedad activada.
+=========================================
+[ Inicio / Fin de Arrastre ]
+=========================================
+      (Objeto) ---> [ Arrastrar ] ---> (Ejecutar)
 
-[Cuando Variable Cambia]
-Monitorea continuamente una Variable. Tan pronto como su valor se modifica, este nodo inicia la secuencia lógica.
+* ROL: Se activan en el momento en que el jugador comienza a arrastrar un objeto móvil, y cuando lo suelta.
+* EJEMPLO: Soltar una llave sobre una puerta para abrirla.
 
-[Evento Local]
-Un evento personalizado que puedes activar a distancia gracias al nodo "Llamar Evento Local".
+=========================================
+[ Colisión A/B ]
+=========================================
+    (Objeto A) ---> [            ]
+    (Objeto B) ---> [ ¡Colisión! ] ---> (Ejecutar)
 
-[Al Clic Acción (Aventura)]
-Se activa específicamente cuando se presiona el botón virtual "ACCIÓN" de la interfaz.
+* ROL: Se activa en el momento exacto en que el Objeto A entra en contacto físico con el Objeto B.
+* EJEMPLO: Cuando "Jugador" toca "Moneda" -> Reproducir un sonido y destruir la moneda.
+
+=========================================
+[ Si el objeto toca Tag ]
+=========================================
+      (Objeto) ---> [            ]
+   (Texto Tag) ---> [ ¡Colisión! ] ---> (Ejecutar)
+
+* ROL: Se activa en el momento exacto en que el objeto objetivo entra en colisión con cualquier objeto que tenga la etiqueta (Tag) indicada.
+* EJEMPLO: Cuando "Misil" toca un objeto con el tag "Enemigo" -> Explosión.
+
+=========================================
+[ Entrada / Salida de zona ]
+=========================================
+    (Objeto A) ---> [            ]
+      (Zona B) ---> [ Pasaje   ] ---> (Ejecutar)
+
+* ROL: Se activa cuando un objeto entra o sale de una zona definida (Ideal para activadores invisibles).
+* EJEMPLO: El jugador entra en la zona "Trampa" -> Salen pinchos del suelo.
+
+=========================================
+[ Al Pasar por encima / Fin ]
+=========================================
+    (Objetivo) ---> [ Sobrevolar ] ---> (Ejecutar)
+
+* ROL: Gestiona el paso del dedo o un puntero sobre un objeto, sin necesidad de hacer clic.
+* EJEMPLO: Resaltar un botón al pasar por encima.
+
+=========================================
+[ Al Impacto (Física) ]
+=========================================
+      (Objeto) ---> [ ¡Impacto! ] ---> (Ejecutar)
+
+* ROL: Detecta cuando el objeto rebota o golpea un elemento sólido con la gravedad activada.
+* EJEMPLO: Hacer ruido de piedra cuando una roca cae al suelo.
+
+=========================================
+[ Cuando Variable Cambia ]
+=========================================
+    (Variable) ---> [ Cambio ] ---> (Ejecutar)
+
+* ROL: Supervisa continuamente una Variable. En cuanto se modifica su valor, este nodo ejecuta la secuencia.
+* EJEMPLO: Si la vida cambia, se actualiza la barra de vida visual.
+
+=========================================
+[ Evento Local ]
+=========================================
+ (Nom. Evento) ---> [ Recepción ] ---> (Ejecutar)
+
+* ROL: Un evento personalizado que puedes activar a distancia mediante el nodo "Llamar Evento Local".
+* EJEMPLO: Agrupar la lógica de "Game Over" para llamarla desde varios lugares.
+
+=========================================
+[ Al Clic Acción (Aventura) ]
+=========================================
+       (Botón) ---> [ ¡Acción! ] ---> (Ejecutar)
+
+* ROL: Se activa específicamente cuando se presiona el botón virtual "ACCIÓN" de la interfaz.
+* EJEMPLO: Hablar con un NPC o leer un cartel.
 
 
 --- MOVIMIENTOS E IA ---
-[Avanzar continuamente]
-Aplica una velocidad constante. El objeto avanzará por sí solo en la dirección de su Ángulo de Rotación.
 
-[Perseguir un objeto]
-Hace avanzar automáticamente al Objeto A hacia el Objeto B (como un misil guiado o un enemigo).
+=========================================
+[ Avanzar continuamente ]
+=========================================
+ (Velocidad) ---> [ Avanzar ] ---> 
 
-[Huir de un objeto]
-El comportamiento opuesto a la persecución. El Objeto A se aleja del Objeto B.
+* ROL: Aplica una velocidad constante. El objeto avanzará automáticamente en la dirección de su Ángulo de Rotación.
+* EJEMPLO: Un proyectil disparado en línea recta o un coche en marcha.
 
-[Detener movimientos]
-Cancela instantáneamente todos los comandos de persecución, huida o avance continuo en un objeto.
+=========================================
+[ Perseguir / Huir de objeto ]
+=========================================
+  (Objetivo) ---> [ Seguir/Huir ] ---> 
 
-[Detener el objeto]
-Detiene instantáneamente el movimiento físico o automático del objeto objetivo.
+* ROL: Hace avanzar automáticamente el Objeto A hacia (o en dirección opuesta a) el Objeto B.
+* EJEMPLO: Un misil teledirigido o un fantasma que sigue al jugador.
+
+=========================================
+[ Detener movimientos / Parar ]
+=========================================
+    (Objeto) ---> [ Detener ] ---> 
+
+* ROL: Cancela instantáneamente todos los comandos de persecución, huida o avance continuo sobre un objeto.
+* EJEMPLO: Congelar a un enemigo cuando es golpeado por un hechizo de hielo.
 
 
 --- LÓGICA ESPACIAL ---
-[Distancia entre A y B]
-Calcula la separación en píxeles entre el Objeto A y el Objeto B. Tiene dos salidas (Verdadero/Falso) según si la distancia cumple la condición.
 
-[Orientar hacia (Look At)]
-Hace pivotar el Objeto A para que mire al Objeto B. El "Desplazamiento de ángulo" permite compensar si la imagen de tu objeto no fue dibujada mirando hacia la derecha.
+=========================================
+[ Distancia entre A y B ]
+=========================================
+    (Objeto A) ---> [            ] ---> (Verdadero)
+    (Objeto B) ---> [ Distancia  ]
+  (Condición) ---> [            ] ---> (Falso)
 
-[Seleccionar objeto más cercano]
-Localiza y selecciona automáticamente el objeto más cercano al objetivo para usarlo en el resto del Blueprint.
+* ROL: Calcula la distancia en píxeles entre el Objeto A y el Objeto B.
+* EJEMPLO: Comprobar si el jugador está lo suficientemente cerca para abrir una puerta.
 
-[Elegir un objeto al azar]
-Selecciona aleatoriamente un objeto entre los presentes en la escena o que tengan un Tag específico.
+=========================================
+[ Orientar hacia (Look At) ]
+=========================================
+  (Objetivo) ---> [ Orientar ] ---> 
+
+* ROL: Hace rotar el Objeto A para que mire al Objeto B.
+* EJEMPLO: Una torreta de defensa que apunta al jugador.
+
+=========================================
+[ Objeto más cercano / Al azar ]
+=========================================
+         (Tag) ---> [ Buscar ] ---> (Guardar en Variable)
+
+* ROL: Localiza el objeto más cercano o un objeto aleatorio para usarlo después.
+* EJEMPLO: Apuntar automáticamente al enemigo más cercano.
 
 
 --- LÓGICA Y CONDICIONES ---
-[Condición]
-Compara el valor de una Variable con un número o texto. Salida Verdadero o Falso.
 
-[Si objeto A toca zona B]
-Verifica instantáneamente si dos objetos se superponen en el momento exacto en que se llama al nodo.
+=========================================
+[ Condición (Variable) ]
+=========================================
+    (Variable) ---> [            ] ---> (Verdadero)
+ (Comparador) ---> [ Condición  ]
+       (Valor) ---> [            ] ---> (Falso)
 
-[Si Objeto Visible]
-Verifica si el objeto objetivo se muestra actualmente en la pantalla.
+* ROL: Compara el valor de una Variable con un número o texto.
+* EJEMPLO: Si (Puntos > 10) entonces (Siguiente Nivel) si no (Nada).
 
-[Si Objeto tiene el Tag]
-Verifica si el objeto tiene la etiqueta (Tag) solicitada (ej: "Enemigo", "Llave").
+=========================================
+[ Si objeto A toca zona B ]
+=========================================
+    (Objeto A) ---> [            ] ---> (Verdadero)
+      (Zona B) ---> [ ¿Se cruzan?]
+                    [            ] ---> (Falso)
 
-[Condición Doble (Y/O)]
-Permite verificar dos condiciones al mismo tiempo.
+* ROL: Comprueba instantáneamente si dos objetos se superponen en este momento exacto.
 
-[Llamar Función]
-Ejecuta un Blueprint externo guardado en la carpeta "fonctions". Ideal para mecánicas repetitivas.
+=========================================
+[ Condición Doble (Y/O) ]
+=========================================
+ (Condición1) ---> [            ] ---> (Verdadero)
+       (Y / O) ---> [  ¿Doble?   ]
+ (Condición2) ---> [            ] ---> (Falso)
 
-[Llamar Evento Local]
-Activa a distancia un bloque "Evento Local" ubicado en otro lugar dentro del Blueprint actual.
+* ROL: Permite comprobar dos condiciones al mismo tiempo.
+* EJEMPLO: Si (Jugador en el suelo) Y (Botón Saltar pulsado) -> Saltar.
 
-[Si Joystick Activo]
-Verifica si el jugador está actualmente manipulando el joystick virtual.
+=========================================
+[ Si Objeto Visible / Si Tag ]
+=========================================
+      (Objeto) ---> [ Comprobar ] ---> (Verdadero / Falso)
 
-[Si el Objeto está en Movimiento]
-Comprueba si el objeto objetivo se está moviendo actualmente en la pantalla.
+* ROL: Comprueba si el objeto está en pantalla, o si tiene el Tag solicitado.
+
+=========================================
+[ Llamar Función ]
+=========================================
+ (Nom Archivo) ---> [ Función ] ---> 
+
+* ROL: Ejecuta un Blueprint externo guardado en la carpeta "funciones".
+* EJEMPLO: Crear una función "GenerarMonstruos" reutilizable en todos tus niveles.
+
+=========================================
+[ Secuencia ]
+=========================================
+     (Entrada) ---> [ Secuencia ] ---> (Rama 1)
+                    [           ] ---> (Rama 2)
+
+* ROL: Divide la ejecución en varias ramas para estructurar y organizar la lógica de tu Blueprint.
+
+=========================================
+[ Cooldown (Tiempo de recarga) ]
+=========================================
+    (Duración) ---> [ Cooldown ] ---> (Ejecución permitida)
+
+* ROL: Bloquea temporalmente la ejecución de los siguientes nodos durante un tiempo definido.
+* EJEMPLO: Limitar la cadencia de tiro (esperar 1 seg entre cada bala).
+
+=========================================
+[ Otras comprobaciones... ]
+=========================================
+(Si Joystick Activo) | (Si en Movimiento) | (Si Botón Mantenido) | (Si Fuera de Pantalla)
+* ROL: Bloques de prueba rápida con salidas (Verdadero / Falso) según el estado actual.
 
 
 --- ESCENA Y HUD ---
-[Cambiar de Escena]
-Carga una nueva habitación/nivel. La escena actual se guarda automáticamente.
 
-[Recargar Escena actual]
-Reinicia el nivel actual. Perfecto si el jugador falla un rompecabezas.
+=========================================
+[ Cambiar / Recargar Escena ]
+=========================================
+ (Nom Escena) ---> [ Cambiar ] ---> 
 
-[Abrir HUD] / [Cerrar HUD]
-Muestra una Escena por encima del juego sin pausarlo. Ideal para un inventario o un menú de configuración.
+* ROL: Carga una nueva sala/nivel. La escena actual se guarda automáticamente.
 
-[Toast]
-Muestra un pequeño mensaje de sistema efímero en la parte inferior de la pantalla.
+=========================================
+[ Instanciar / Cerrar Escena ]
+=========================================
+ (Nom Escena) ---> [ Instancia ] ---> 
 
-[Fijar Cámara]
-Engancha la cámara al Objeto objetivo para seguirlo automáticamente en sus movimientos.
+* ROL: Carga un Prefab o un elemento (como un popup) dentro de la escena actual.
 
-[Temblor de Cámara]
-Sacude la pantalla. Útil para dar impacto a una explosión o una puerta pesada.
+=========================================
+[ Fijar Cámara ]
+=========================================
+      (Objeto) ---> [ Seguir ] ---> 
 
-[Elasticidad Cámara]
-Modifica la velocidad (entre 0.01 y 1.0) a la que la cámara sigue a su objetivo para un efecto más fluido o más rígido.
+* ROL: Engancha la cámara al Objeto objetivo para seguirlo automáticamente.
 
-[Mostrar/Ocultar Joystick] / [Mostrar/Ocultar Acción]
-Controla la visibilidad de las interfaces de movimiento en la pantalla (útil durante una cinemática).
+=========================================
+[ Temblor / Elasticidad Cámara ]
+=========================================
+    (Potencia) ---> [ Sacudida ] ---> 
 
-[Vibración]
-Hace vibrar la tablet durante la duración indicada en milisegundos.
+* ROL: Sacude la pantalla o modifica la fluidez de seguimiento de la cámara.
+* EJEMPLO: Un temblor fuerte durante una explosión.
 
 
 --- APARIENCIA Y OBJETOS ---
-[Mover Objeto]
-Teletransporta instantáneamente el objeto a las coordenadas X e Y indicadas.
 
-[Empujar objeto]
-Desplaza suavemente el objeto objetivo en una dirección dada.
+=========================================
+[ Mover / Empujar Objeto ]
+=========================================
+ (Coordenadas) ---> [ Mover ] ---> 
 
-[Modificar Color]
-Cambia el tono base del objeto (si no es una imagen).
+* ROL: Teletransporta o empuja el objeto a nuevas coordenadas X e Y.
 
-[Visibilidad]
-Muestra u oculta un objeto de la escena.
+=========================================
+[ Generar clon (Spawner) ]
+=========================================
+      (Modelo) ---> [ Aparición ] ---> 
 
-[Modificar Movible]
-Autoriza o prohíbe al jugador arrastrar este objeto con su dedo.
+* ROL: Clona el objeto Modelo solicitado y lo hace aparecer. Disponible unido a un Objetivo o por Posición fija (X, Y).
 
-[Modificar Bloqueo]
-Bloquea un objeto en el editor para evitar moverlo por error al crear el nivel.
+=========================================
+[ Disparar ]
+=========================================
+  (Proyectil) ---> [ Disparar ] ---> 
+      (Ángulo) --->
 
-[Cambiar Z-Order]
-Modifica la profundidad del objeto (pasa al primer plano o al fondo).
+* ROL: Genera y propulsa instantáneamente un objeto desde el objetivo en una dirección.
 
-[Cambiar Imagen]
-Reemplaza el visual (Sprite) del objeto por otro archivo.
+=========================================
+[ Destruir / Destruir por Tag ]
+=========================================
+      (Objeto) ---> [ Destruir ] ---> 
 
-[Rotación]
-Define instantáneamente el ángulo (en grados) del objeto.
+* ROL: Elimina permanentemente el objeto o todos los objetos con un Tag de la escena.
 
-[Definir tamaño (Scale)]
-Modifica la escala (zoom) del objeto en ancho (X) y alto (Y).
+=========================================
+[ Modificar Progreso ]
+=========================================
+       (Valor) ---> [ Barra ] ---> 
 
-[Destruir Objeto]
-Elimina definitivamente el objeto de la escena.
+* ROL: Actualiza el llenado visual de una barra de progreso (ej: barra de vida).
 
-[Generar clon (Spawner)]
-Clona el objeto Modelo solicitado y lo hace aparecer en el centro del Objeto Objetivo (el punto de aparición).
+=========================================
+[ Modo de Visualización y Filtros ]
+=========================================
+* ROL: Agrupa los nodos [Cambiar Z-Order], [Cambiar Imagen], [Filtro de Color], [Opacidad] y [Modo de fusión] para modificar el aspecto de tus sprites.
 
-[Definir el Tag]
-Asigna una etiqueta (ej: "Proyectil") al objeto objetivo.
-
-[Destruir por Tag]
-Elimina de una sola vez todos los objetos de la escena que lleven la etiqueta solicitada.
-
-[Filtro Color]
-Aplica un efecto matricial sobre el objeto (Sepia, Blanco y Negro, Inversión).
-
-[Parpadeo (Blink)]
-Hace aparecer/desaparecer el objeto a una velocidad dada (en ms).
-
-[Resplandor (Glow)]
-Rodea el objeto con un contorno luminoso coloreado.
-
-[Saltitos]
-Hace que el objeto dé pequeños saltos regulares para llamar la atención (efecto visual).
-
-[Efecto Espejo / Invertir]
-Invierte visualmente la imagen del objeto (útil para hacer que un personaje se dé la vuelta).
-
-[Vincular dos objetos]
-Fija firmemente el Objeto A al Objeto B para que se muevan de forma sincronizada.
-
-[Modificar la Opacidad (Alpha)]
-Hace que el objeto sea más o menos transparente de forma instantánea.
-
-[Modo de fusión (Efecto)]
-Aplica un modo de renderizado especial (Aditivo, Multiplicar...) para efectos de luz o superposición.
-
-[Factor de Paralaje]
-Establece la velocidad de desplazamiento del objeto en relación con la cámara para crear un efecto de profundidad.
+=========================================
+[ Comportamientos de Pantalla ]
+=========================================
+* ROL: Los nodos [Mantener en pantalla] (muro invisible) y [Atravesar pantalla] (efecto Pac-Man) para controlar los límites del juego.
 
 
 --- TEXTOS Y DIÁLOGOS ---
-[Modificar Texto]
-Reemplaza completamente el contenido de un objeto Texto.
 
-[Añadir al Texto]
-Añade palabras al final de un objeto Texto existente (concatenación).
+=========================================
+[ Modificar / Añadir Texto ]
+=========================================
+       (Texto) ---> [ Escribir ] ---> 
 
-[Mostrar Diálogo]
-Lee una frase desde el archivo de diálogos a través de su Clave, y la inyecta en un objeto Texto.
+* ROL: Reemplaza por completo o añade palabras al final de un objeto Texto existente.
+
+=========================================
+[ Mostrar Diálogo ]
+=========================================
+ (Clave Dicc.) ---> [ Diálogo ] ---> 
+
+* ROL: Lee una frase desde el archivo de diálogos y la muestra en pantalla.
 
 
 --- VARIABLES E INVENTARIO ---
-[Operación Matemática]
-Realiza un cálculo (+, -, *, /) sobre la Variable objetivo con un valor dado.
 
-[Limitar Valor (Clamp)]
-Evita que una Variable baje de un Mínimo o supere un Máximo.
+=========================================
+[ Modificar / Añadir Variable ]
+=========================================
+       (Valor) ---> [ Mates ] ---> (Variable actualizada)
 
-[Modificar Variable] / [Añadir a Variable]
-Reemplaza o suma un valor simple a una Variable.
+* ROL: Reemplaza o suma un valor (o un cálculo) a una Variable.
 
-[Número Aleatorio]
-Genera un número al azar entre un Mínimo y un Máximo y lo guarda en la Variable objetivo.
-
-[Añadir al inventario] / [Quitar del inventario]
-Maneja la lista de objetos que posee el jugador.
-
-[Si en el inventario]
-Verifica si un objeto específico es poseído por el jugador. (Salida Verdadero/Falso).
-
-[Combinación de Objetos]
-Destruye el Objeto A y el Objeto B para que aparezca el "Modelo Resultado" (ej: Llave Rota + Cinta = Llave Reparada).
-
-[Punto de Guardado]
-Fuerza inmediatamente el guardado del estado de la escena y el inventario en la base de datos.
+=========================================
+[ Gestión de Inventario ]
+=========================================
+(Añadir a inventario) | (Quitar) | (Si en inventario) | (Combinación)
+* ROL: Gestiona la lista de objetos poseídos por el jugador y sus interacciones.
 
 
 --- TIEMPO ---
-[Timer]
-Inicia una cuenta regresiva autónoma. No es afectada por el resto del Blueprint.
 
-[Cronómetro]
-Inicia un cronómetro global para medir el tiempo pasado en un nivel.
+=========================================
+[ Esperar (ms) ]
+=========================================
+      (Tiempo) ---> [ Pausa ] ---> (Siguiente acción)
 
-[Esperar (ms)]
-Hace una pausa (Retraso) antes de continuar la ejecución de los siguientes nodos.
+* ROL: Hace una pausa antes de continuar la ejecución de los siguientes nodos.
 
 
 --- AUDIO ---
-[Reproducir un Sonido]
-Reproduce un efecto de sonido corto. Puede superponerse a otros sonidos.
 
-[Gestionar Música]
-Inicia una pista de audio larga. Detiene automáticamente la música anterior.
+=========================================
+[ Reproducir Sonido / Música ]
+=========================================
+ (Archivo mp3) ---> [ Reprod. ] ---> 
+
+* ROL: Reproduce un efecto de sonido corto (puede superponerse) o inicia una pista de audio larga de fondo.
 
 
 --- ANIMACIONES ---
-[Fundido (Alpha)]
-Hace que el objeto sea gradualmente transparente u opaco.
 
-[Deslizar Hacia]
-Mueve el objeto a nuevas coordenadas de manera fluida, con una duración definida.
+=========================================
+[ Iniciar / Detener Animación ]
+=========================================
+  (Nom Anim.) ---> [ Iniciar ] ---> 
 
-[Reproducir Animación]
-Inicia una secuencia de imágenes predefinida (Animación Sprite) en el objeto.
+* ROL: Inicia una secuencia de imágenes predefinida (Sprite animation) en el objeto, o la detiene.
 
-[Pausar la animación]
-Congela la animación del objeto en el fotograma (frame) actual.
+=========================================
+[ Deslizar Hacia ]
+=========================================
+         (X,Y) ---> [ Movimiento ] ---> 
+    (Duración) ---> 
 
-[Reanudar la animación]
-Reinicia la animación del objeto desde donde se pausó.
-
-[Velocidad de la animación]
-Cambia la velocidad de reproducción de la secuencia de imágenes.
-
-[Si el fotograma actual es...]
-Comprueba si la animación en reproducción ha alcanzado un frame específico. Ideal para sincronizar pasos o impactos.
+* ROL: Mueve el objeto a nuevas coordenadas de forma fluida (Tween).
 
 
 --- FÍSICA ---
-[Activar Física (Caída)]
-Somete al objeto a la gravedad terrestre del motor.
 
-[Aplicar Impulso (Salto)]
-Da una fuerza hacia arriba a un objeto físico.
+=========================================
+[ Aplicar Impulso / Fuerza ]
+=========================================
+      (Fuerza) ---> [ Empujar ] ---> 
 
-[Cambiar Rebote]
-Modifica la restitución de energía del objeto (0 = bloque de plomo, 1.0 = pelota rebotando).
+* ROL: Da una fuerza a un objeto sometido a la gravedad terrestre del motor.
 
-[Si Objeto en Caída]
-Verifica si un objeto físico está cayendo o si está apoyado en el suelo.
+=========================================
+[ Definir Velocidad ]
+=========================================
+   (Velocidad) ---> [ Imponer ] ---> 
 
-[Añadir fuerza (por Ángulo)]
-Impulsa el objeto en una dirección precisa calculada en grados.
+* ROL: Impone una velocidad de movimiento instantánea a un objeto físico.
 
+=========================================
+[ Condición en Suelo ]
+=========================================
+      (Objeto) ---> [ ¿En suelo? ] ---> (Verdadero / Falso)
+
+* ROL: Comprueba si el objeto sometido a gravedad está apoyado actualmente sobre una superficie sólida (indispensable para permitir saltar).

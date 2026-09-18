@@ -1,299 +1,418 @@
 ================================================
-  OFFIZIELLE DOKUMENTATION YOP.2D - BLUEPRINT
+  OFFIZIELLE YOP2D-DOKUMENTATION - BLUEPRINT
 ================================================
 
+Diese Dokumentation verwendet ein visuelles Format, um dir zu helfen, wie du deine Blöcke (Knoten) verbindest.
+( ) = Was du konfigurieren oder als Eingang verbinden musst.
+[ ] = Der Block selbst.
+---> = Die Richtung der Aktion (der Programmablauf).
+
 --- EREIGNISSE ---
-[Beim Start]
-Wird automatisch und nur einmal ausgeführt, sobald die Szene auf dem Bildschirm geladen ist.
 
-[Jeden Frame]
-Wird kontinuierlich bei jeder Bildschirmaktualisierung (Framerate) ausgeführt. Ideal für ständige Updates.
+=========================================
+[ Beim Start ]
+=========================================
+        (Start) ---> [ Ausführen ] --->
 
-[Ende des Klicks]
-Wird ausgelöst, wenn der Spieler seinen Finger irgendwo vom Bildschirm nimmt.
+* FUNKTION: Wird automatisch und nur einmal ausgeführt, sobald die Szene auf dem Bildschirm geladen ist.
+* BEISPIEL: Feinde an ihrer Startposition platzieren oder die Spielergesundheit auf 100 setzen.
 
-[Bei Objektklick]
-Wird ausgelöst, wenn der Finger des Spielers das Zielobjekt berührt.
+=========================================
+[ Jeden Frame ]
+=========================================
+      (Schleife) ---> [ Ausführen ] --->
 
-[Drag Start] / [Drag Ende]
-Werden in dem Moment ausgelöst, in dem der Spieler beginnt, ein bewegliches Objekt zu ziehen, und in dem Moment, in dem er es loslässt.
+* FUNKTION: Wird kontinuierlich ausgeführt, bei jeder Bildschirmaktualisierung (Framerate).
+* BEISPIEL: Ein Objekt endlos um sich selbst drehen lassen oder einen Punktestand aktualisieren.
 
-[Kollision A/B]
-Wird genau in dem Moment ausgelöst, in dem Objekt A in physischen Kontakt mit Objekt B kommt.
+=========================================
+[ Bei Klick auf Objekt ]
+=========================================
+          (Ziel) ---> [ Klick! ] ---> (Ausführen)
 
-[Wenn Objekt Tag berührt]
-Wird genau in dem Moment ausgelöst, in dem das Zielobjekt mit einem beliebigen Objekt kollidiert, das den angegebenen Tag trägt.
+* FUNKTION: Wird ausgelöst, wenn der Finger des Spielers das Zielobjekt berührt.
+* BEISPIEL: Eine Truhe öffnen, eine Schaltfläche auslösen oder einen Dialog starten.
 
-[Zone betreten] / [Zone verlassen]
-Ideal für unsichtbare Auslöser (Triggers). Aktiviert sich, wenn ein Objekt eine definierte Zone betritt oder verlässt.
+=========================================
+[ Klick-Ende ]
+=========================================
+    (Bildschirm) ---> [ Losgelassen ] ---> (Ausführen)
 
-[Beim Hovern] / [Hover Ende]
-Verwaltet das Bewegen eines Fingers oder Mauszeigers über ein Objekt, ohne dass geklickt werden muss.
+* FUNKTION: Wird ausgelöst, wenn der Spieler seinen Finger vom Bildschirm nimmt, egal wo.
+* BEISPIEL: Das Schießen stoppen, wenn der Finger angehoben wird.
 
-[Bei Aufprall (Physik)]
-Erkennt, wenn das Objekt abprallt oder auf ein festes Element trifft (bei aktivierter Schwerkraft).
+=========================================
+[ Ziehen Start / Ende ]
+=========================================
+        (Objekt) ---> [ Ziehen ] ---> (Ausführen)
 
-[Wenn Variable ändert]
-Überwacht kontinuierlich eine Variable. Sobald ihr Wert geändert wird, startet dieser Knoten die Logiksequenz.
+* FUNKTION: Wird in dem Moment ausgelöst, in dem der Spieler beginnt, ein bewegliches Objekt zu ziehen, und wenn er es loslässt.
+* BEISPIEL: Einen Schlüssel auf eine Tür fallen lassen, um sie zu öffnen.
 
-[Lokales Ereignis]
-Ein benutzerdefiniertes Ereignis, das mit dem Knoten "Lokales Ereignis aufrufen" fernausgelöst werden kann.
+=========================================
+[ Kollision A/B ]
+=========================================
+      (Objekt A) ---> [              ]
+      (Objekt B) ---> [ Kollision!   ] ---> (Ausführen)
 
-[Bei Klick auf Aktion (Adventure)]
-Wird speziell ausgelöst, wenn die virtuelle "AKTION"-Taste der Benutzeroberfläche gedrückt wird.
+* FUNKTION: Wird genau in dem Moment ausgelöst, in dem Objekt A in physischen Kontakt mit Objekt B kommt.
+* BEISPIEL: Wenn "Spieler" "Münze" berührt -> Einen Ton abspielen und die Münze zerstören.
+
+=========================================
+[ Wenn Objekt Tag berührt ]
+=========================================
+        (Objekt) ---> [              ]
+      (Tag-Text) ---> [ Kollision!   ] ---> (Ausführen)
+
+* FUNKTION: Wird genau in dem Moment ausgelöst, in dem das Zielobjekt mit einem beliebigen Objekt kollidiert, das den angegebenen Tag trägt.
+* BEISPIEL: Wenn "Rakete" ein Objekt mit dem Tag "Feind" berührt -> Explosion.
+
+=========================================
+[ Zone betreten / verlassen ]
+=========================================
+      (Objekt A) ---> [              ]
+        (Zone B) ---> [ Durchgang    ] ---> (Ausführen)
+
+* FUNKTION: Wird aktiviert, wenn ein Objekt eine definierte Zone betritt oder verlässt (Ideal für unsichtbare Auslöser).
+* BEISPIEL: Der Spieler betritt die Zone "Falle" -> Stacheln kommen aus dem Boden.
+
+=========================================
+[ Beim Darüberfahren / Ende ]
+=========================================
+          (Ziel) ---> [ Schweben ] ---> (Ausführen)
+
+* FUNKTION: Behandelt das Bewegen eines Fingers oder Zeigers über ein Objekt, ohne dass geklickt werden muss.
+* BEISPIEL: Eine Schaltfläche hervorheben, wenn man darüberfährt.
+
+=========================================
+[ Bei Aufprall (Physik) ]
+=========================================
+        (Objekt) ---> [ Aufprall! ] ---> (Ausführen)
+
+* FUNKTION: Erkennt, wenn das Objekt bei aktivierter Schwerkraft abprallt oder auf ein festes Element trifft.
+* BEISPIEL: Ein Steingeräusch erzeugen, wenn ein Fels zu Boden fällt.
+
+=========================================
+[ Wenn Variable sich ändert ]
+=========================================
+      (Variable) ---> [ Änderung ] ---> (Ausführen)
+
+* FUNKTION: Überwacht kontinuierlich eine Variable. Sobald sich ihr Wert ändert, führt dieser Knoten die Sequenz aus.
+* BEISPIEL: Wenn sich die Gesundheit ändert, wird der visuelle Gesundheitsbalken aktualisiert.
+
+=========================================
+[ Lokales Ereignis ]
+=========================================
+(Ereignis-Name) ---> [ Empfang ] ---> (Ausführen)
+
+* FUNKTION: Ein benutzerdefiniertes Ereignis, das du über den Knoten "Lokales Ereignis aufrufen" fernauslösen kannst.
+* BEISPIEL: "Game Over"-Logik gruppieren, um sie von mehreren Orten aufzurufen.
+
+=========================================
+[ Bei Aktionsklick (Abenteuer) ]
+=========================================
+        (Button) ---> [ Aktion! ] ---> (Ausführen)
+
+* FUNKTION: Wird speziell ausgelöst, wenn die virtuelle "AKTION"-Schaltfläche der Benutzeroberfläche gedrückt wird.
+* BEISPIEL: Mit einem NPC sprechen oder ein Schild lesen.
 
 
---- BEWEGUNG & KI ---
-[Kontinuierlich vorwärts]
-Wendet eine konstante Geschwindigkeit an. Das Objekt bewegt sich von selbst in Richtung seines Rotationswinkels.
+--- BEWEGUNGEN & KI ---
 
-[Objekt verfolgen]
-Bewegt Objekt A automatisch auf Objekt B zu (wie eine Zielsuchrakete oder ein Feind).
+=========================================
+[ Kontinuierlich vorrücken ]
+=========================================
+ (Geschwindigkeit) ---> [ Vorrücken ] ---> 
 
-[Vor Objekt fliehen]
-Das gegenteilige Verhalten zur Verfolgung. Objekt A bewegt sich von Objekt B weg.
+* FUNKTION: Wendet eine konstante Geschwindigkeit an. Das Objekt bewegt sich automatisch in Richtung seines Rotationswinkels.
+* BEISPIEL: Ein geradeaus abgefeuertes Projektil oder ein fahrendes Auto.
 
-[Bewegungen stoppen]
-Bricht sofort alle Verfolgungs-, Flucht- oder Vorwärtsbefehle für ein Objekt ab.
+=========================================
+[ Objekt verfolgen / fliehen ]
+=========================================
+          (Ziel) ---> [ Folgen/Fliehen ] ---> 
 
-[Objekt stoppen]
-Stoppt sofort die physische oder automatische Bewegung des Zielobjekts.
+* FUNKTION: Bewegt Objekt A automatisch auf Objekt B zu (oder von ihm weg).
+* BEISPIEL: Eine zielsuchende Rakete oder ein Geist, der dem Spieler folgt.
+
+=========================================
+[ Bewegungen stoppen / Anhalten ]
+=========================================
+        (Objekt) ---> [ Stopp ] ---> 
+
+* FUNKTION: Bricht sofort alle Befehle zum Verfolgen, Fliehen oder kontinuierlichen Bewegen eines Objekts ab.
+* BEISPIEL: Einen Feind einfrieren, wenn er von einem Eiszauber getroffen wird.
 
 
 --- RÄUMLICHE LOGIK ---
-[Distanz zwischen A und B]
-Berechnet den Abstand in Pixeln zwischen Objekt A und Objekt B. Hat zwei Ausgänge (Wahr/Falsch), je nachdem, ob die Entfernung die Bedingung erfüllt.
 
-[Ausrichten nach (Look At)]
-Dreht Objekt A so, dass es auf Objekt B schaut. Der "Winkel-Versatz" gleicht aus, falls das Bild deines Objekts nicht nach rechts gezeichnet wurde.
+=========================================
+[ Abstand zwischen A und B ]
+=========================================
+      (Objekt A) ---> [              ] ---> (Wahr)
+      (Objekt B) ---> [   Abstand    ]
+     (Bedingung) ---> [              ] ---> (Falsch)
 
-[Nächstes Objekt wählen]
-Findet und wählt automatisch das dem Ziel am nächsten gelegene Objekt aus, um es im restlichen Blueprint zu verwenden.
+* FUNKTION: Berechnet den Abstand in Pixeln zwischen Objekt A und Objekt B.
+* BEISPIEL: Prüfen, ob der Spieler nah genug ist, um eine Tür zu öffnen.
 
-[Zufälliges Objekt wählen]
-Wählt zufällig ein Objekt aus den in der Szene vorhandenen oder denen mit einem spezifischen Tag aus.
+=========================================
+[ Ausrichten auf (Look At) ]
+=========================================
+          (Ziel) ---> [ Ausrichten ] ---> 
+
+* FUNKTION: Dreht Objekt A so, dass es Objekt B ansieht.
+* BEISPIEL: Ein Verteidigungsturm, der auf den Spieler zielt.
+
+=========================================
+[ Nächstes Objekt / Zufall ]
+=========================================
+           (Tag) ---> [ Suchen ] ---> (In Variable speichern)
+
+* FUNKTION: Findet das nächstgelegene Objekt oder ein zufälliges Objekt zur späteren Verwendung.
+* BEISPIEL: Automatisch den nächsten Feind anvisieren.
 
 
 --- LOGIK & BEDINGUNGEN ---
-[Bedingung]
-Vergleicht den Wert einer Variablen mit einer Zahl oder einem Text. Ausgang Wahr oder Falsch.
 
-[Wenn A Zone B berührt]
-Prüft sofort, ob sich zwei Objekte in genau dem Moment überschneiden, in dem der Knoten aufgerufen wird.
+=========================================
+[ Bedingung (Variable) ]
+=========================================
+      (Variable) ---> [              ] ---> (Wahr)
+     (Vergleich) ---> [  Bedingung   ]
+          (Wert) ---> [              ] ---> (Falsch)
 
-[Wenn Objekt sichtbar ist]
-Prüft, ob das Zielobjekt aktuell auf dem Bildschirm angezeigt wird.
+* FUNKTION: Vergleicht den Wert einer Variablen mit einer Zahl oder einem Text.
+* BEISPIEL: Wenn (Punkte > 10) dann (Nächstes Level) sonst (Nichts).
 
-[Wenn Objekt Tag hat]
-Prüft, ob das Objekt den angeforderten Tag (Etikett) hat (z.B. "Feind", "Schlüssel").
+=========================================
+[ Wenn Objekt A Zone B berührt ]
+=========================================
+      (Objekt A) ---> [              ] ---> (Wahr)
+        (Zone B) ---> [Überlappung?]
+                      [              ] ---> (Falsch)
 
-[Doppelte Bedingung (UND/ODER)]
-Erlaubt die gleichzeitige Überprüfung von zwei Bedingungen.
+* FUNKTION: Prüft sofort, ob sich zwei Objekte genau in diesem Moment überschneiden.
 
-[Funktion aufrufen]
-Führt einen externen Blueprint aus, der im Ordner "fonctions" gespeichert ist. Ideal für sich wiederholende Mechaniken.
+=========================================
+[ Doppelbedingung (UND/ODER) ]
+=========================================
+    (Bedingung1) ---> [              ] ---> (Wahr)
+      (UND/ODER) ---> [   Doppelt?   ]
+    (Bedingung2) ---> [              ] ---> (Falsch)
 
-[Lokales Ereignis aufrufen]
-Löst aus der Ferne einen "Lokales Ereignis"-Block aus, der sich an anderer Stelle im aktuellen Blueprint befindet.
+* FUNKTION: Ermöglicht die gleichzeitige Überprüfung von zwei Bedingungen.
+* BEISPIEL: Wenn (Spieler auf dem Boden) UND (Sprungtaste gedrückt) -> Springen.
 
-[Wenn Joystick aktiv ist]
-Prüft, ob der Spieler aktuell den virtuellen Joystick bedient.
+=========================================
+[ Wenn Objekt sichtbar / Wenn Tag ]
+=========================================
+        (Objekt) ---> [ Prüfen ] ---> (Wahr / Falsch)
 
-[Wenn Objekt sich bewegt]
-Prüft, ob sich das Zielobjekt aktuell auf dem Bildschirm bewegt.
+* FUNKTION: Prüft, ob sich das Objekt auf dem Bildschirm befindet oder ob es den angeforderten Tag hat.
+
+=========================================
+[ Funktion aufrufen ]
+=========================================
+     (Dateiname) ---> [ Funktion ] ---> 
+
+* FUNKTION: Führt ein externes Blueprint aus, das im Ordner "functions" gespeichert ist.
+* BEISPIEL: Eine wiederverwendbare "SpawnMonsters"-Funktion für alle deine Level erstellen.
+
+=========================================
+[ Sequenz ]
+=========================================
+       (Eingang) ---> [ Sequenz ] ---> (Zweig 1)
+                      [         ] ---> (Zweig 2)
+
+* FUNÇÃO: Teilt die Ausführung in mehrere Zweige auf, um die Logik deines Blueprints zu strukturieren.
+
+=========================================
+[ Cooldown (Abklingzeit) ]
+=========================================
+         (Dauer) ---> [ Cooldown ] ---> (Ausführung erlaubt)
+
+* FUNKTION: Blockiert vorübergehend die Ausführung der folgenden Knoten für eine definierte Zeit.
+* BEISPIEL: Die Feuerrate begrenzen (1 Sek. zwischen jeder Kugel warten).
+
+=========================================
+[ Andere Prüfungen... ]
+=========================================
+(Wenn Joystick Aktiv) | (Wenn in Bewegung) | (Wenn Taste gedrückt) | (Wenn außerhalb des Bildschirms)
+* FUNKTION: Schnelle Testblöcke mit Ausgängen (Wahr / Falsch) je nach aktuellem Status.
 
 
 --- SZENE & HUD ---
-[Szene wechseln]
-Lädt einen neuen Raum/Level. Die aktuelle Szene wird automatisch gespeichert.
 
-[Aktuelle Szene neu laden]
-Setzt das aktuelle Level zurück. Perfekt, wenn der Spieler ein Rätsel nicht schafft.
+=========================================
+[ Szene wechseln / neu laden ]
+=========================================
+    (Szenenname) ---> [ Wechseln ] ---> 
 
-[HUD öffnen] / [HUD schließen]
-Zeigt eine Szene über dem Spiel an, ohne es zu pausieren. Ideal für ein Inventar oder ein Einstellungsmenü.
+* FUNKTION: Lädt einen neuen Raum / ein neues Level. Die aktuelle Szene wird gespeichert.
 
-[Toast]
-Zeigt eine kurze flüchtige Systemmeldung am unteren Bildschirmrand an.
+=========================================
+[ Szene instanziieren / schließen ]
+=========================================
+    (Szenenname) ---> [ Instanz ] ---> 
 
-[Kamera anheften]
-Heftet die Kamera an das Zielobjekt, um ihm bei seinen Bewegungen automatisch zu folgen.
+* FUNKTION: Lädt ein Prefab oder ein Element (wie ein Popup) innerhalb der aktuellen Szene.
 
-[Kamera-Erschütterung]
-Lässt den Bildschirm wackeln. Nützlich, um einer Explosion oder einer schweren Tür Wucht zu verleihen.
+=========================================
+[ Kamera fixieren ]
+=========================================
+        (Objekt) ---> [ Folgen ] ---> 
 
-[Kamera-Elastizität]
-Ändert die Geschwindigkeit (zwischen 0.01 und 1.0), mit der die Kamera ihrem Ziel folgt, für einen flüssigeren oder starreren Effekt.
+* FUNKTION: Verbindet die Kamera mit dem Zielobjekt, um ihm automatisch zu folgen.
 
-[Joystick zeigen/verbergen] / [Aktion zeigen/verbergen]
-Steuert die Sichtbarkeit der Bewegungs-Schnittstellen auf dem Bildschirm (nützlich während einer Zwischensequenz).
+=========================================
+[ Kamerawackeln / Elastizität ]
+=========================================
+         (Stärke) ---> [ Wackeln ] ---> 
 
-[Vibration]
-Lässt das Tablet für die angegebene Dauer in Millisekunden vibrieren.
+* FUNKTION: Erschüttert den Bildschirm oder ändert die Fließfähigkeit der Kameraverfolgung.
+* BEISPIEL: Ein starkes Wackeln bei einer Explosion.
 
 
 --- AUSSEHEN & OBJEKTE ---
-[Objekt bewegen]
-Teleportiert das Objekt sofort zu den angegebenen X- und Y-Koordinaten.
 
-[Objekt schieben]
-Verschiebt das Zielobjekt sanft in eine bestimmte Richtung.
+=========================================
+[ Objekt bewegen / schieben ]
+=========================================
+   (Koordinaten) ---> [ Bewegen ] ---> 
 
-[Farbe ändern]
-Ändert die Grundfarbe des Objekts (sofern es kein Bild ist).
+* FUNKTION: Teleportiert oder schiebt das Objekt an neue X- und Y-Koordinaten.
 
-[Sichtbarkeit]
-Blendet ein Objekt in der Szene ein oder aus.
+=========================================
+[ Klon erzeugen (Spawner) ]
+=========================================
+        (Modell) ---> [ Spawnen ] ---> 
 
-[Beweglichkeit ändern]
-Erlaubt oder verbietet dem Spieler, dieses Objekt mit dem Finger zu ziehen.
+* FUNKTION: Klont das angeforderte Modell und lässt es erscheinen. Verfügbar als an ein Ziel gebunden oder durch feste Position (X, Y).
 
-[Sperre ändern]
-Sperrt ein Objekt im Editor, um zu verhindern, dass es bei der Levelerstellung versehentlich verschoben wird.
+=========================================
+[ Schießen ]
+=========================================
+      (Projektil) ---> [ Schießen ] ---> 
+         (Winkel) --->
 
-[Z-Order ändern]
-Ändert die Tiefe des Objekts (verschiebt in den Vorder- oder Hintergrund).
+* FUNKTION: Erzeugt sofort ein Objekt vom Ziel in eine Richtung und treibt es an.
 
-[Bild ändern]
-Ersetzt die Grafik (Sprite) des Objekts durch eine andere Datei.
+=========================================
+[ Zerstören / Zerstören nach Tag ]
+=========================================
+        (Objekt) ---> [ Zerstören ] ---> 
 
-[Rotation]
-Legt sofort den Winkel (in Grad) des Objekts fest.
+* FUNKTION: Löscht das Objekt oder alle Objekte mit einem Tag dauerhaft aus der Szene.
 
-[Größe festlegen (Scale)]
-Ändert die Skalierung (Zoom) des Objekts in der Breite (X) und Höhe (Y).
+=========================================
+[ Fortschritt ändern ]
+=========================================
+          (Wert) ---> [ Balken ] ---> 
 
-[Objekt zerstören]
-Löscht das Objekt dauerhaft aus der Szene.
+* FUNKTION: Aktualisiert die visuelle Füllung eines Fortschrittsbalkens (z. B. Gesundheitsbalken).
 
-[Klon erzeugen (Spawner)]
-Klont das angeforderte Modell-Objekt und lässt es in der Mitte des Zielobjekts (Spawnpunkt) erscheinen.
+=========================================
+[ Anzeigemodus & Filter ]
+=========================================
+* FUNKTION: Gruppiert die Knoten [Z-Order ändern], [Bild ändern], [Farbfilter], [Deckkraft] und [Mischmodus], um das Aussehen deiner Sprites zu ändern.
 
-[Tag setzen]
-Weist dem Zielobjekt ein Etikett (z.B. "Projektil") zu.
-
-[Zerstören nach Tag]
-Löscht auf einen Schlag alle Objekte der Szene, die den angeforderten Tag tragen.
-
-[Farbfilter]
-Wendet einen Matrixeffekt auf das Objekt an (Sepia, Schwarz-Weiß, Inversion).
-
-[Blinken (Blink)]
-Lässt das Objekt in einer bestimmten Geschwindigkeit (in ms) aufblinken/verschwinden.
-
-[Leuchten (Glow)]
-Umrandet das Objekt mit einer farbigen Leuchtkontur.
-
-[Hüpfen/Wippen]
-Lässt das Objekt kleine, regelmäßige Sprünge machen, um Aufmerksamkeit zu erregen (visueller Effekt).
-
-[Spiegeleffekt / Umkehren]
-Spiegelt das Bild des Objekts visuell (nützlich, um eine Figur umdrehen zu lassen).
-
-[Zwei Objekte verknüpfen]
-Bindet Objekt A fest an Objekt B, sodass sie sich synchron bewegen.
-
-[Deckkraft ändern (Alpha)]
-Macht das Objekt sofort mehr oder weniger transparent.
-
-[Mischmodus (Effekt)]
-Wendet einen speziellen Render-Modus (Additiv, Multiplizieren...) für Licht- oder Überlagerungseffekte an.
-
-[Parallaxen-Faktor]
-Legt die Scroll-Geschwindigkeit des Objekts relativ zur Kamera fest, um einen Tiefeneffekt zu erzeugen.
+=========================================
+[ Bildschirmverhalten ]
+=========================================
+* FUNKTION: Die Knoten [Im Bildschirm halten] (unsichtbare Wand) und [Bildschirm durchqueren] (Pac-Man-Effekt) zur Steuerung der Spielgrenzen.
 
 
 --- TEXTE & DIALOGE ---
-[Text ändern]
-Ersetzt den gesamten Inhalt eines Text-Objekts.
 
-[Zu Text hinzufügen]
-Fügt Wörter an das Ende eines bestehenden Text-Objekts an (Verkettung).
+=========================================
+[ Text ändern / hinzufügen ]
+=========================================
+          (Text) ---> [ Schreiben ] ---> 
 
-[Dialog anzeigen]
-Liest einen Satz aus der Dialogdatei anhand seines Schlüssels und fügt ihn in ein Text-Objekt ein.
+* FUNKTION: Ersetzt vollständig ein vorhandenes Textobjekt oder fügt Wörter an das Ende an.
+
+=========================================
+[ Dialog anzeigen ]
+=========================================
+   (Wörterbuch-Key) ---> [ Dialog ] ---> 
+
+* FUNKTION: Liest einen Satz aus der Dialogdatei und zeigt ihn auf dem Bildschirm an.
 
 
 --- VARIABLEN & INVENTAR ---
-[Mathematische Operation]
-Führt eine Berechnung (+, -, *, /) an der Zielvariablen mit einem gegebenen Wert durch.
 
-[Wert begrenzen (Clamp)]
-Verhindert, dass eine Variable unter ein Minimum fällt oder ein Maximum überschreitet.
+=========================================
+[ Variable ändern / hinzufügen ]
+=========================================
+          (Wert) ---> [ Mathe ] ---> (Aktualisierte Variable)
 
-[Variable ändern] / [Zu Variable hinzufügen]
-Ersetzt oder addiert einen einfachen Wert zu einer Variablen.
+* FUNKTION: Ersetzt oder addiert einen Wert (oder eine Berechnung) zu einer Variablen.
 
-[Zufallszahl]
-Generiert eine Zufallszahl zwischen einem Minimum und einem Maximum und speichert sie in der Zielvariablen.
-
-[Zum Inventar hinzufügen] / [Aus Inventar entfernen]
-Verwaltet die Liste der Gegenstände, die der Spieler besitzt.
-
-[Wenn im Inventar]
-Prüft, ob der Spieler einen bestimmten Gegenstand besitzt. (Ausgang Wahr/Falsch).
-
-[Objekte kombinieren]
-Zerstört Objekt A und Objekt B, um das "Ergebnis-Modell" erscheinen zu lassen (z.B. Kaputter Schlüssel + Klebeband = Reparierter Schlüssel).
-
-[Speicherpunkt (Checkpoint)]
-Erzwingt sofort das Speichern des Szenen- und Inventarstatus in der Datenbank.
+=========================================
+[ Inventarverwaltung ]
+=========================================
+(Zum Inventar hinzufügen) | (Entfernen) | (Wenn im Inventar) | (Kombination)
+* FUNKTION: Verwaltet die Liste der Gegenstände des Spielers und deren Interaktionen.
 
 
 --- ZEIT ---
-[Timer]
-Startet einen eigenständigen Countdown. Wird vom restlichen Blueprint nicht beeinflusst.
 
-[Stoppuhr]
-Startet eine globale Stoppuhr, um die in einem Level verbrachte Zeit zu messen.
+=========================================
+[ Warten (ms) ]
+=========================================
+          (Zeit) ---> [ Pause ] ---> (Nächste Aktion)
 
-[Warten (ms)]
-Macht eine Pause (Verzögerung), bevor die Ausführung der nachfolgenden Knoten fortgesetzt wird.
+* FUNKTION: Pausiert, bevor die Ausführung der folgenden Knoten fortgesetzt wird.
 
 
 --- AUDIO ---
-[Sound abspielen]
-Spielt einen kurzen Soundeffekt ab. Kann andere Sounds überlagern.
 
-[Musik verwalten]
-Startet einen langen Audiotrack. Stoppt automatisch die vorherige Musik.
+=========================================
+[ Ton / Musik abspielen ]
+=========================================
+      (mp3-Datei) ---> [ Abspielen ] ---> 
+
+* FUNKTION: Spielt einen kurzen Soundeffekt ab (kann überlappen) oder startet einen langen Hintergrund-Audiotrack.
 
 
 --- ANIMATIONEN ---
-[Verblassen (Alpha)]
-Macht das Objekt allmählich transparent oder undurchsichtig.
 
-[Gleiten nach]
-Bewegt das Objekt fließend zu neuen Koordinaten, mit definierter Dauer.
+=========================================
+[ Animation starten / stoppen ]
+=========================================
+     (Anim-Name) ---> [ Starten ] ---> 
 
-[Animation abspielen]
-Startet eine vordefinierte Bildsequenz (Sprite-Animation) auf dem Objekt.
+* FUNKTION: Startet eine vordefinierte Bildsequenz (Sprite-Animation) auf dem Objekt oder stoppt sie.
 
-[Animation pausieren]
-Friert die Animation des Objekts beim aktuellen Bild (Frame) ein.
+=========================================
+[ Gleiten nach ]
+=========================================
+           (X,Y) ---> [ Bewegung ] ---> 
+         (Dauer) ---> 
 
-[Animation fortsetzen]
-Setzt die Animation des Objekts dort fort, wo sie pausiert wurde.
-
-[Animationsgeschwindigkeit]
-Ändert die Abspielgeschwindigkeit der Bildsequenz.
-
-[Wenn das aktuelle Bild...]
-Prüft, ob die laufende Animation einen bestimmten Frame erreicht hat. Ideal zum Synchronisieren von Schritten oder Treffern.
+* FUNKTION: Bewegt das Objekt reibungslos an neue Koordinaten (Tween).
 
 
 --- PHYSIK ---
-[Physik aktivieren (Fall)]
-Unterwirft das Objekt der Schwerkraft der Engine.
 
-[Impuls anwenden (Sprung)]
-Verleiht einem physischen Objekt eine nach oben gerichtete Kraft.
+=========================================
+[ Impuls / Kraft anwenden ]
+=========================================
+         (Kraft) ---> [ Schieben ] ---> 
 
-[Sprungkraft ändern]
-Ändert die Energierückgabe des Objekts (0 = Bleiblock, 1.0 = hüpfender Ball).
+* FUNKTION: Übt eine Kraft auf ein Objekt aus, das der terrestrischen Schwerkraft der Engine unterliegt.
 
-[Wenn Objekt fällt]
-Prüft, ob ein physisches Objekt gerade fällt oder auf dem Boden ruht.
+=========================================
+[ Geschwindigkeit festlegen ]
+=========================================
+(Geschwindigkeit) ---> [ Festlegen ] ---> 
 
-[Kraft hinzufügen (nach Winkel)]
-Treibt das Objekt in eine exakte Richtung an, berechnet in Grad.
+* FUNKTION: Erzwingt eine augenblickliche Bewegungsgeschwindigkeit für ein physisches Objekt.
+
+=========================================
+[ Boden-Bedingung ]
+=========================================
+        (Objekt) ---> [ Am Boden? ] ---> (Wahr / Falsch)
+
+* FUNKTION: Prüft, ob das der Schwerkraft ausgesetzte Objekt gerade auf einer festen Oberfläche ruht (unerlässlich, um Springen zu ermöglichen).

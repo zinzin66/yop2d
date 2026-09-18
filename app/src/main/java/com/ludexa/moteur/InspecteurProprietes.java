@@ -92,6 +92,11 @@ public class InspecteurProprietes extends LinearLayout {
     private EditText champProgMin, champProgMax, champProgActuelle;
     private Button btnCouleurFondProg;
 
+    
+    private LinearLayout blocTilemap;
+    private Button btnConfigurerTileset;
+    private Button btnPeindreTileset;
+
     private Scene sceneActive;
     private CanvasEditeur canvasEditeur;
     private ObjetBase objetCourant;
@@ -904,14 +909,14 @@ public class InspecteurProprietes extends LinearLayout {
         blocProgression = new LinearLayout(context);
         blocProgression.setOrientation(LinearLayout.VERTICAL);
         styliserSection(blocProgression);
-
-        TextView sepProgression = new TextView(context);
-        sepProgression.setText("Barre de Progression");
+ // h1
+      TextView sepProgression = new TextView(context);
+        sepProgression.setText(Traducteur.get("insp_sep_progression"));
         styliserSousTitre(sepProgression);
         blocProgression.addView(sepProgression);
 
         champProgMin = new EditText(context);
-        champProgMin.setHint("Minimum");
+        champProgMin.setHint(Traducteur.get("insp_label_prog_min"));
         champProgMin.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
         styliserChamp(champProgMin);
         champProgMin.addTextChangedListener(creerWatcherSimple(texte -> {
@@ -920,7 +925,7 @@ public class InspecteurProprietes extends LinearLayout {
         blocProgression.addView(champProgMin);
 
         champProgMax = new EditText(context);
-        champProgMax.setHint("Maximum");
+        champProgMax.setHint(Traducteur.get("insp_label_prog_max"));
         champProgMax.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
         styliserChamp(champProgMax);
         champProgMax.addTextChangedListener(creerWatcherSimple(texte -> {
@@ -929,7 +934,7 @@ public class InspecteurProprietes extends LinearLayout {
         blocProgression.addView(champProgMax);
 
         champProgActuelle = new EditText(context);
-        champProgActuelle.setHint("Valeur Actuelle");
+        champProgActuelle.setHint(Traducteur.get("insp_label_prog_actuelle"));
         champProgActuelle.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
         styliserChamp(champProgActuelle);
         champProgActuelle.addTextChangedListener(creerWatcherSimple(texte -> {
@@ -938,11 +943,33 @@ public class InspecteurProprietes extends LinearLayout {
         blocProgression.addView(champProgActuelle);
 
         btnCouleurFondProg = new Button(context);
-        btnCouleurFondProg.setText("Couleur de fond (Progression)");
+        btnCouleurFondProg.setText(Traducteur.get("insp_btn_couleur_fond_prog"));
         styliserBouton(btnCouleurFondProg);
         blocProgression.addView(btnCouleurFondProg);
+        //h1
 
         blocProprietes.addView(blocProgression);
+
+        blocTilemap = new LinearLayout(context);
+        blocTilemap.setOrientation(LinearLayout.VERTICAL);
+        styliserSection(blocTilemap);
+
+        TextView sepTilemap = new TextView(context);
+        sepTilemap.setText(Traducteur.get("cat_decors"));
+        styliserSousTitre(sepTilemap);
+        blocTilemap.addView(sepTilemap);
+
+        btnConfigurerTileset = new Button(context);
+        btnConfigurerTileset.setText(Traducteur.get("insp_btn_configurer_tileset"));
+        styliserBouton(btnConfigurerTileset);
+        blocTilemap.addView(btnConfigurerTileset);
+
+        btnPeindreTileset = new Button(context);
+        btnPeindreTileset.setText(Traducteur.get("insp_btn_peindre_tileset"));
+        styliserBouton(btnPeindreTileset);
+        blocTilemap.addView(btnPeindreTileset);
+
+        blocProprietes.addView(blocTilemap);
 // bas 3
 // haut 4
         btnAjouterVariable.setOnClickListener(v -> {
@@ -1177,6 +1204,28 @@ public class InspecteurProprietes extends LinearLayout {
             }
             Toast.makeText(context, Traducteur.get("insp_erreur_scene_introuvable"), Toast.LENGTH_SHORT).show();
         });
+
+        btnConfigurerTileset.setOnClickListener(v -> {
+            if (objetCourant == null) return;
+            if (cheminProjet == null) { Toast.makeText(context, Traducteur.get("erreur_chemin_projet"), Toast.LENGTH_SHORT).show(); return; }
+            DialogueConfigTileset dialogTileset = new DialogueConfigTileset(context, objetCourant, cheminProjet);
+            dialogTileset.setOnDismissListener(d -> {
+                canvasEditeur.invalidate();
+                afficherObjet(objetCourant);
+            });
+            dialogTileset.show();
+        });
+
+        btnPeindreTileset.setOnClickListener(v -> {
+            if (objetCourant == null) return;
+            if (objetCourant.cheminTileset == null) {
+                Toast.makeText(context, Traducteur.get("peinture_aucune_tuile"), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            DialoguePeintureTuiles dialoguePeinture = new DialoguePeintureTuiles(context, objetCourant, cheminProjet);
+            dialoguePeinture.setOnDismissListener(d -> canvasEditeur.invalidate());
+            dialoguePeinture.show();
+        });
 // bas 4
 
 // haut 5
@@ -1388,8 +1437,9 @@ public class InspecteurProprietes extends LinearLayout {
             layoutMain.setOrientation(LinearLayout.VERTICAL);
             layoutMain.setPadding(dp(16), dp(16), dp(16), dp(16));
             
+            //61
             Button btnAucune = new Button(context);
-            btnAucune.setText("Aucune (Transparent)");
+            btnAucune.setText(Traducteur.get("insp_couleur_aucune"));
             styliserBouton(btnAucune);
             layoutMain.addView(btnAucune);
 
@@ -1841,6 +1891,7 @@ public class InspecteurProprietes extends LinearLayout {
                 blocJoystick.setVisibility(View.GONE);
                 blocSceneInstance.setVisibility(View.GONE); 
                 blocProgression.setVisibility(View.GONE);
+                blocTilemap.setVisibility(View.GONE);
                 
                 champContenu.setText(objet.contenuTexte);
                 champTaille.setText(String.valueOf(objet.tailleFonte));
@@ -1865,6 +1916,7 @@ public class InspecteurProprietes extends LinearLayout {
                 blocJoystick.setVisibility(View.GONE);
                 blocSceneInstance.setVisibility(View.VISIBLE);
                 blocProgression.setVisibility(View.GONE);
+                blocTilemap.setVisibility(View.GONE);
                 
                 String nomScene = Traducteur.get("valeur_aucune");
                 boolean aUneScene = false;
@@ -1954,15 +2006,26 @@ public class InspecteurProprietes extends LinearLayout {
                 blocBouton.setVisibility(View.GONE);
                 blocJoystick.setVisibility(View.GONE);
                 blocProgression.setVisibility(View.VISIBLE);
+                blocTilemap.setVisibility(View.GONE);
                 
                 champProgMin.setText(String.valueOf(objet.progressionMin));
                 champProgMax.setText(String.valueOf(objet.progressionMax));
                 champProgActuelle.setText(String.valueOf(objet.progressionActuelle));
                 
+            } else if ("tile_layer".equals(objet.type)) {
+                blocTexte.setVisibility(View.GONE);
+                blocSceneInstance.setVisibility(View.GONE);
+                blocImage.setVisibility(View.GONE);
+                blocBouton.setVisibility(View.GONE);
+                blocJoystick.setVisibility(View.GONE);
+                blocProgression.setVisibility(View.GONE);
+                blocTilemap.setVisibility(View.VISIBLE);
+
             } else {
                 blocTexte.setVisibility(View.GONE);
                 blocSceneInstance.setVisibility(View.GONE); 
                 blocProgression.setVisibility(View.GONE);
+                blocTilemap.setVisibility(View.GONE);
                 blocImage.setVisibility(View.VISIBLE);
 
                 if (objet.cheminImage != null) {
