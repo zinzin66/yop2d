@@ -15,6 +15,9 @@ public class Traducteur {
     private static final String TAG = "Traducteur";
     private static final Map<String, String> dictionnaire = new HashMap<>();
     private static String langueActuelle = "fr";
+    // Textes de secours fournis par le catalogue de nœuds (jamais effacés par initialiser()) :
+    // clé -> (langue -> texte). Le fichier de langue reste prioritaire s'il contient la clé.
+    private static final Map<String, Map<String, String>> secours = new java.util.concurrent.ConcurrentHashMap<>();
 
     public static void initialiser(Context context, String langue) {
         langueActuelle = langue;
@@ -44,10 +47,21 @@ public class Traducteur {
         }
     }
 
+    public static void ajouterSecours(String cle, Map<String, String> parLangue) {
+        if (cle != null && parLangue != null) secours.put(cle, parLangue);
+    }
     public static String get(String cle) {
         if (cle == null) return "";
         if (dictionnaire.containsKey(cle)) {
             return dictionnaire.get(cle);
+        }
+
+        Map<String, String> textesSecours = secours.get(cle);
+        if (textesSecours != null) {
+            String t = textesSecours.get(langueActuelle);
+            if (t == null) t = textesSecours.get("en");
+            if (t == null) t = textesSecours.get("fr");
+            if (t != null) return t;
         }
         
         // Securités (Fallbacks) au cas où le JSON n'est pas encore à jour
