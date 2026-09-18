@@ -17,6 +17,8 @@ public class ActionsMoteur {
             case "toast": toast(n); return null;
             case "condition": return n.booleen("condition") ? "port_vrai" : "port_faux";
             case "modifier_propriete": modifierPropriete(n); return null;
+                case "ajouter_variable": ajouterVariable(n); return null;
+            case "limiter_variable": limiterVariable(n); return null;
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
@@ -62,6 +64,38 @@ public class ActionsMoteur {
                 return; // liste d'inventaire : pas modifiable par un nœud "Modifier variable"
         }
         variable.valeur = Evaluateur.convertirPourVariable(variable, valeur);
+    }
+
+    // Ajoute la valeur à la variable (addition pour un nombre, ajout à la suite pour un texte).
+    private static void ajouterVariable(NoeudGenerique n) {
+        Variable variable = n.getCibleVariable();
+        if (variable == null) return;
+        String type = variable.type == null ? "" : variable.type;
+        Object resultat;
+        switch (type) {
+            case "CHIFFRE":
+            case "ENTIER":
+                resultat = Evaluateur.enNombre(Evaluateur.valeurDe(variable)) + n.nombre("valeur");
+                break;
+            case "TEXTE":
+                resultat = Evaluateur.enTexte(Evaluateur.valeurDe(variable)) + n.texte("valeur");
+                break;
+            default:
+                return;
+        }
+        variable.valeur = Evaluateur.convertirPourVariable(variable, resultat);
+    }
+
+    // Garde la variable (nombre) entre un minimum et un maximum.
+    private static void limiterVariable(NoeudGenerique n) {
+        Variable variable = n.getCibleVariable();
+        if (variable == null) return;
+        String type = variable.type == null ? "" : variable.type;
+        if (!type.equals("CHIFFRE") && !type.equals("ENTIER")) return;
+        double valeur = Evaluateur.enNombre(Evaluateur.valeurDe(variable));
+        double min = n.nombre("min");
+        double max = n.nombre("max");
+        variable.valeur = Evaluateur.convertirPourVariable(variable, Math.max(min, Math.min(max, valeur)));
     }
 
     private static void toast(NoeudGenerique n) {
