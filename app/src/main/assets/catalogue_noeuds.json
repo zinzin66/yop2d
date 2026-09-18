@@ -327,10 +327,8 @@
           "nom": {"fr": "Direction", "en": "Direction", "es": "Dirección", "pt": "Direção", "de": "Richtung", "it": "Direzione", "ru": "Направление", "zh": "方向", "ja": "方向"} },
         { "cle": "vitesse", "type": "formule", "defaut": "10",
           "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
-        },
-    { "cle": "vitesse", "type": "formule", "defaut": "10",
-          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
       ]
+    }
+  ]
 }
-  
 // bas 1
