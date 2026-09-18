@@ -29,6 +29,7 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_chaque_image"), Traducteur.get("cat_evenements"), "NoeudEventChaqueImage"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_fin_de_clic"), Traducteur.get("cat_evenements"), "NoeudEventFinClic"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_au_clic_sur_objet"), Traducteur.get("cat_evenements"), "NoeudEventClicObjet"));
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_fin_clic_sur_objet"), Traducteur.get("cat_evenements"), "NoeudEventFinClicObjet"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_debut_de_glisser"), Traducteur.get("cat_evenements"), "NoeudEventDebutGlisser"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_fin_de_glisser"), Traducteur.get("cat_evenements"), "NoeudEventFinGlisser"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_collision_ab"), Traducteur.get("cat_evenements"), "NoeudEventCollisionAB"));
@@ -122,6 +123,7 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_afficher_dialogue"), Traducteur.get("cat_textes_dialogues"), "NoeudActionAfficherDialogue"));
 
         // VARIABLES & INVENTAIRE
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_extraire_propriete"), Traducteur.get("cat_variables_inventaire"), "NoeudActionExtrairePropriete"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_operation_mathematique"), Traducteur.get("cat_variables_inventaire"), "NoeudActionOperationMath"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_limiter_valeur"), Traducteur.get("cat_variables_inventaire"), "NoeudActionClampVariable"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_modifier_variable"), Traducteur.get("cat_variables_inventaire"), "NoeudActionModifierVariable"));
@@ -132,8 +134,6 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_si_dans_inventaire"), Traducteur.get("cat_variables_inventaire"), "NoeudConditionSiDansInventaire"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_combinaison_objets"), Traducteur.get("cat_variables_inventaire"), "NoeudActionCombinaison"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_point_de_sauvegarde"), Traducteur.get("cat_variables_inventaire"), "NoeudActionCheckpoint"));
-        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_extraire_propriete"), Traducteur.get("cat_variables_inventaire"), "NoeudActionExtrairePropriete"));
-        
 
         // TEMPS
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_timer"), Traducteur.get("cat_temps"), "NoeudActionTimer"));
@@ -180,4 +180,4 @@ public class RegistreNoeuds {
     }
 }
 // bas 1
-                                   
+                                                  
