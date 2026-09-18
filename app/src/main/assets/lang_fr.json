@@ -632,7 +632,28 @@
 "peinture_annuler_action": "Annuler",
 "peinture_recentrer": "Recentrer la vue",
 "peinture_tuiles_label": "Tuiles",
-"peinture_aucune_tuile": "Configure d'abord une image dans \"Configurer les tuiles\""
+"peinture_aucune_tuile": "Configure d'abord une image dans \"Configurer les tuiles\"",
+  "dossier_images": "Images",
+"dossier_sons": "Audio",
+"dossier_fonts": "Polices",
+"dossier_textes": "Textes",
+"Suivre X": "Suivre l'axe X",
+"Suivre Y": "Suivre l'axe Y",
+"Intensite": "Intensité",
+"Duree": "Durée (ms)",
+"Infini": "En Boucle / Infini",
+"titre_dialogue_objets": "Ajouter un objet",
+"cat_formes_base": "Formes de base & Visuels",
+"cat_ui_hud": "Interface, Textes & HUD",
+"cat_prefabs": "Scènes Imbriquées & Prefabs",
+"insp_sep_progression": "BARRE DE PROGRESSION",
+"insp_label_prog_min": "Valeur Minimum",
+"insp_label_prog_max": "Valeur Maximum",
+"insp_label_prog_actuelle": "Valeur Actuelle",
+"insp_btn_couleur_fond_prog": "Couleur du fond",
+"noeud_modifier_progression": "Définir la Progression",
+"param_nouvelle_valeur": "Nouvelle Valeur",
+"insp_couleur_aucune": "Aucune"
   
   
   
