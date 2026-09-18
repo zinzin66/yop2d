@@ -661,6 +661,8 @@
 "param_nouvelle_valeur": "新しい値",
 "insp_couleur_aucune": "なし",
   "noeud_extraire_propriete": "プロパティを抽出",
+  "noeud_event_maintenu_objet": "オブジェクトを押している間",
+  "noeud_fin_clic_sur_objet": "オブジェクトを離した時",
 "param_propriete": "抽出するプロパティ"
   
   
