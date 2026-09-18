@@ -19,6 +19,12 @@ public class ActionsMoteur {
             case "modifier_propriete": modifierPropriete(n); return null;
                 case "ajouter_variable": ajouterVariable(n); return null;
             case "limiter_variable": limiterVariable(n); return null;
+                case "definir_echelle": ActionsObjets.definirEchelle(n); return null;
+            case "changer_image": ActionsObjets.changerImage(n); return null;
+            case "modifier_couleur": ActionsObjets.modifierCouleur(n); return null;
+            case "detruire": ActionsObjets.detruire(n); return null;
+            case "detruire_par_tag": ActionsObjets.detruireParTag(n); return null;
+            case "cloner": ActionsObjets.cloner(n); return null;
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
