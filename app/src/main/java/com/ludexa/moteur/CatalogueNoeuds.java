@@ -44,6 +44,7 @@ public class CatalogueNoeuds {
         public String categorie;     // clé de traduction de la catégorie
         public String action;
         public boolean objet, objetB, variable;
+        public Map<String, String> constantes = new LinkedHashMap<>();   // champs
         public List<String> sorties = new ArrayList<>();   // noms des ports de sortie, ex : "port_suivant"
         public List<Champ> champs = new ArrayList<>();
     }
