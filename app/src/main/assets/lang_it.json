@@ -662,6 +662,8 @@
 "param_nouvelle_valeur": "Nuovo Valore",
 "insp_couleur_aucune": "Nessuno",
   "noeud_extraire_propriete": "Estrai proprietà",
+  "noeud_event_maintenu_objet": "Oggetto Tenuto Premuto",
+  "noeud_fin_clic_sur_objet": "Fine del Clic su Oggetto",
 "param_propriete": "Proprietà da estrarre"
   
   
