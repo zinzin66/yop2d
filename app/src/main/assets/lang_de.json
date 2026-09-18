@@ -660,9 +660,11 @@
 "noeud_modifier_progression": "Fortschritt festlegen",
 "param_nouvelle_valeur": "Neuer Wert",
 "insp_couleur_aucune": "Keine",
-  "noeud_extraire_propriete": "Extraire une propriété",
-"param_propriete": "Propriété à extraire"
-  
+  "noeud_extraire_propriete": "Eigenschaft extrahieren",
+"param_propriete": "Zu extrahierende Eigenschaft",
+"noeud_extraire_propriete": "Eigenschaft extrahieren",
+"param_propriete": "Zu extrahierende Eigenschaft"
+
   
   
   
