@@ -27,6 +27,7 @@ public class RegistreNoeuds {
         // ÉVÉNEMENTS
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_au_demarrage"), Traducteur.get("cat_evenements"), "NoeudEventStart"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_chaque_image"), Traducteur.get("cat_evenements"), "NoeudEventChaqueImage"));
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_event_maintenu_objet"), Traducteur.get("cat_evenements"), "NoeudEventMaintenuObjet"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_fin_de_clic"), Traducteur.get("cat_evenements"), "NoeudEventFinClic"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_au_clic_sur_objet"), Traducteur.get("cat_evenements"), "NoeudEventClicObjet"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_fin_clic_sur_objet"), Traducteur.get("cat_evenements"), "NoeudEventFinClicObjet"));
