@@ -153,6 +153,12 @@ public class Traducteur {
         if (cle.equals("param_nouvelle_valeur")) return "Nouvelle Valeur";
         
         if (cle.equals("insp_couleur_aucune")) return "Aucune";
+        if (cle.equals("insp_sep_progression")) return "BARRE DE PROGRESSION";
+        if (cle.equals("insp_label_prog_min")) return "Valeur Minimum";
+        if (cle.equals("insp_label_prog_max")) return "Valeur Maximum";
+        if (cle.equals("insp_label_prog_actuelle")) return "Valeur Actuelle";
+        if (cle.equals("insp_btn_couleur_fond_prog")) return "Couleur du fond";
+        
 
         // --- NOUVELLES CLES : TILEMAP / DECOR EN TUILES ---
         if (cle.equals("cat_decors")) return "Décors";
