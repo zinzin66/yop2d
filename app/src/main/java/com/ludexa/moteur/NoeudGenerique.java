@@ -57,6 +57,8 @@ public class NoeudGenerique extends NoeudBase {
     // ------------------------------------------------------------------
 
     public String texteBrut(String champ) {
+        String constante = definition.constantes.get(champ);
+        if (constante != null) return constante;
         String v = valeurs.get(definition.cle + "." + champ);
         return v != null ? v : "";
     }
