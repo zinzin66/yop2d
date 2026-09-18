@@ -636,7 +636,28 @@
 "peinture_annuler_action": "Desfazer",
 "peinture_recentrer": "Recentralizar a visão",
 "peinture_tuiles_label": "Tiles",
-"peinture_aucune_tuile": "Configure primeiro uma imagem em \"Configurar tiles\""
+"peinture_aucune_tuile": "Configure primeiro uma imagem em \"Configurar tiles\"",
+  "dossier_images": "Imagens",
+"dossier_sons": "Áudio",
+"dossier_fonts": "Fontes",
+"dossier_textes": "Textos",
+"Suivre X": "Seguir eixo X",
+"Suivre Y": "Seguir eixo Y",
+"Intensite": "Intensidade",
+"Duree": "Duração (ms)",
+"Infini": "Loop / Infinito",
+"titre_dialogue_objets": "Adicionar um objeto",
+"cat_formes_base": "Formas básicas e Visuais",
+"cat_ui_hud": "Interface, Textos e HUD",
+"cat_prefabs": "Cenas aninhadas e Prefabs",
+"insp_sep_progression": "BARRA DE PROGRESSO",
+"insp_label_prog_min": "Valor Mínimo",
+"insp_label_prog_max": "Valor Máximo",
+"insp_label_prog_actuelle": "Valor Atual",
+"insp_btn_couleur_fond_prog": "Cor de fundo",
+"noeud_modifier_progression": "Definir o Progresso",
+"param_nouvelle_valeur": "Novo Valor",
+"insp_couleur_aucune": "Nenhuma"
   
   
   
