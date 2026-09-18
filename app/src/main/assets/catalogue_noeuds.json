@@ -215,7 +215,122 @@
       "action": "cloner",
       "objet": true,
       "objetB": true
-    }
-  ]
+    },
+    {
+      "cle": "filtre_couleur",
+      "nomCle": "noeud_filtre_couleur",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_filtre",
+      "objet": true,
+      "champs": [
+        { "cle": "filtre", "type": "choix", "options": ["Aucun", "Noir et Blanc", "Sepia", "Inversion"], "defaut": "Noir et Blanc",
+          "nom": {"fr": "Filtre", "en": "Filter", "es": "Filtro", "pt": "Filtro", "de": "Filter", "it": "Filtro", "ru": "Фильтр", "zh": "滤镜", "ja": "フィルター"} }
+      ]
+    },
+    {
+      "cle": "mode_affichage",
+      "nomCle": "noeud_mode_affichage",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_filtre",
+      "objet": true,
+      "champs": [
+        { "cle": "filtre", "type": "choix", "options": ["Aucun", "Additif", "Multiplicatif", "Ecran", "Inversion"], "defaut": "Aucun",
+          "nom": {"fr": "Filtre", "en": "Filter", "es": "Filtro", "pt": "Filtro", "de": "Filter", "it": "Filtro", "ru": "Фильтр", "zh": "滤镜", "ja": "フィルター"} }
+      ]
+    },
+    {
+      "cle": "miroir",
+      "nomCle": "noeud_miroir",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "axe", "type": "choix", "options": ["Horizontal", "Vertical"], "defaut": "Horizontal",
+          "nom": {"fr": "Axe", "en": "Axis", "es": "Eje", "pt": "Eixo", "de": "Achse", "it": "Asse", "ru": "Ось", "zh": "轴", "ja": "軸"} }
+      ]
+    },
+    {
+      "cle": "modifier_verrouillage",
+      "nomCle": "noeud_modifier_deplacable",
+      "categorie": "cat_apparence_objets",
+      "action": "verrouiller",
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "true",
+          "nom": {"fr": "Verrouillé (true / false)", "en": "Locked (true / false)", "es": "Bloqueado (true / false)", "pt": "Bloqueado (true / false)", "de": "Gesperrt (true / false)", "it": "Bloccato (true / false)", "ru": "Заблокирован (true / false)", "zh": "锁定（true / false）", "ja": "ロック（true / false）"} }
+      ]
+    },
+    {
+      "cle": "parallaxe",
+      "nomCle": "noeud_parallaxe",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_parallaxe",
+      "objet": true,
+      "champs": [
+        { "cle": "facteur", "type": "formule", "defaut": "1",
+          "nom": {"fr": "Facteur (ex : 0.5)", "en": "Factor (e.g. 0.5)", "es": "Factor (p. ej. 0.5)", "pt": "Fator (ex.: 0.5)", "de": "Faktor (z. B. 0.5)", "it": "Fattore (es. 0.5)", "ru": "Коэффициент (напр. 0.5)", "zh": "系数（如 0.5）", "ja": "係数（例：0.5）"} }
+      ]
+    },
+    {
+      "cle": "lier_objets",
+      "nomCle": "noeud_lier_objets",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "objetB": true
+    },
+    {
+      "cle": "surbrillance",
+      "nomCle": "noeud_surbrillance",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "etat", "type": "choix", "options": ["Activer", "Désactiver"], "defaut": "Activer",
+          "nom": {"fr": "État", "en": "State", "es": "Estado", "pt": "Estado", "de": "Zustand", "it": "Stato", "ru": "Состояние", "zh": "状态", "ja": "状態"} },
+        { "cle": "couleur", "type": "couleur", "defaut": "Jaune",
+          "nom": {"fr": "Couleur", "en": "Color", "es": "Color", "pt": "Cor", "de": "Farbe", "it": "Colore", "ru": "Цвет", "zh": "颜色", "ja": "色"} }
+      ]
+    },
+    {
+      "cle": "clignotement",
+      "nomCle": "noeud_clignotement",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "etat", "type": "choix", "options": ["Activer", "Désactiver"], "defaut": "Activer",
+          "nom": {"fr": "État", "en": "State", "es": "Estado", "pt": "Estado", "de": "Zustand", "it": "Stato", "ru": "Состояние", "zh": "状态", "ja": "状態"} },
+        { "cle": "vitesse", "type": "formule", "defaut": "500",
+          "nom": {"fr": "Vitesse (ms)", "en": "Speed (ms)", "es": "Velocidad (ms)", "pt": "Velocidade (ms)", "de": "Geschwindigkeit (ms)", "it": "Velocità (ms)", "ru": "Скорость (мс)", "zh": "速度（毫秒）", "ja": "速度（ms）"} },
+        { "cle": "duree", "type": "formule", "defaut": "0",
+          "nom": {"fr": "Durée (ms, 0 = infini)", "en": "Duration (ms, 0 = infinite)", "es": "Duración (ms, 0 = infinito)", "pt": "Duração (ms, 0 = infinito)", "de": "Dauer (ms, 0 = unendlich)", "it": "Durata (ms, 0 = infinito)", "ru": "Длительность (мс, 0 = бесконечно)", "zh": "持续时间（毫秒，0 = 无限）", "ja": "継続時間（ms、0 = 無限）"} }
+      ]
+    },
+    {
+      "cle": "generer_clone_position",
+      "nomCle": "noeud_generer_clone_position",
+      "categorie": "cat_apparence_objets",
+      "action": "cloner_position",
+      "objetB": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "0", "nom": "X" },
+        { "cle": "y", "type": "formule", "defaut": "0", "nom": "Y" }
+      ]
+    },
+    {
+      "cle": "tirer",
+      "nomCle": "noeud_tirer_nom",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "objetB": true,
+      "champs": [
+        { "cle": "modele", "type": "texte", "defaut": "",
+          "nom": {"fr": "Nom du modèle", "en": "Model name", "es": "Nombre del modelo", "pt": "Nome do modelo", "de": "Modellname", "it": "Nome del modello", "ru": "Имя модели", "zh": "模型名称", "ja": "モデル名"} },
+        { "cle": "direction", "type": "choix", "options": ["Angle de départ", "Vers la cible"], "defaut": "Angle de départ",
+          "nom": {"fr": "Direction", "en": "Direction", "es": "Dirección", "pt": "Direção", "de": "Richtung", "it": "Direzione", "ru": "Направление", "zh": "方向", "ja": "方向"} },
+        { "cle": "vitesse", "type": "formule", "defaut": "10",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+        },
+    { "cle": "vitesse", "type": "formule", "defaut": "10",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+      ]
 }
+  
 // bas 1
