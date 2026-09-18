@@ -67,6 +67,8 @@ public class Traducteur {
         if (cle.equals("noeud_si_mouvement")) return "Si Objet en Mouvement";
         
         if (cle.equals("noeud_chaque_image")) return "À chaque image";
+        if (cle.equals("noeud_event_maintenu_objet")) return "Maintenu sur Objet";
+        if (cle.equals("noeud_fin_clic_sur_objet")) return "Fin de Clic sur Objet";
         if (cle.equals("noeud_arreter")) return "Arrêter l'objet";
         if (cle.equals("noeud_miroir")) return "Effet Miroir / Inverser";
         if (cle.equals("noeud_force_angle")) return "Ajouter force (par Angle)";
