@@ -60,6 +60,7 @@ public class Blueprint {
             ndto.id = n.id;
             ndto.classeType = n.getClass().getName();
             if (n instanceof NoeudGenerique) ndto.cleNoeud = ((NoeudGenerique) n).cle;
+            if (n instanceof NoeudGenerique) ndto.cleNoeud = ((NoeudGenerique) n).cle;
             ndto.x = noeudsX.containsKey(n.id) ? noeudsX.get(n.id) : 0f;
             ndto.y = noeudsY.containsKey(n.id) ? noeudsY.get(n.id) : 0f;
 
@@ -331,6 +332,7 @@ public class Blueprint {
     private static class NoeudDTO {
         String id;
         String classeType;
+        String cleNoeud;
         String cleNoeud;
         float x;
         float y;
