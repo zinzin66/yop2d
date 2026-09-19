@@ -219,8 +219,7 @@ public class CanvasBlueprint extends View {
     public void dupliquerNoeudSelectionne() {
         if (noeudSelectionne != null && blueprintActuel != null) {
             try {
-                Class<?> clazz = noeudSelectionne.getClass();
-                NoeudBase nouveauNoeud = (NoeudBase) clazz.newInstance();
+                NoeudBase nouveauNoeud = FabriqueNoeuds.copierVide(noeudSelectionne);
 
                 nouveauNoeud.nom = noeudSelectionne.nom;
 
