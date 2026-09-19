@@ -2,11 +2,37 @@
 package com.ludexa.moteur;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // Mise en forme du script exporté (fenêtre "Résumé du Blueprint") : titres, champs et sorties des nœuds
 // du catalogue affichés dans la langue de l'application. Les anciens nœuds gardent leur affichage.
 public class ExportBlueprint {
+
+    // Titre de chaque événement : les classes d'événements écrivent leur titre en dur (souvent en français) ;
+    // on l'affiche donc d'après la clé de traduction que la palette utilise pour la même classe.
+    private static final Map<String, String> TITRES_EVENEMENTS = new HashMap<>();
+    static {
+        TITRES_EVENEMENTS.put("NoeudEventStart", "noeud_au_demarrage");
+        TITRES_EVENEMENTS.put("NoeudEventChaqueImage", "noeud_chaque_image");
+        TITRES_EVENEMENTS.put("NoeudEventFinClic", "noeud_fin_de_clic");
+        TITRES_EVENEMENTS.put("NoeudEventClicObjet", "noeud_au_clic_sur_objet");
+        TITRES_EVENEMENTS.put("NoeudEventFinClicObjet", "noeud_fin_clic_sur_objet");
+        TITRES_EVENEMENTS.put("NoeudEventMaintenuObjet", "noeud_event_maintenu_objet");
+        TITRES_EVENEMENTS.put("NoeudEventDebutGlisser", "noeud_debut_de_glisser");
+        TITRES_EVENEMENTS.put("NoeudEventFinGlisser", "noeud_fin_de_glisser");
+        TITRES_EVENEMENTS.put("NoeudEventCollisionAB", "noeud_collision_ab");
+        TITRES_EVENEMENTS.put("NoeudEventEntreeZone", "noeud_entree_de_zone");
+        TITRES_EVENEMENTS.put("NoeudEventSortieZone", "noeud_sortie_de_zone");
+        TITRES_EVENEMENTS.put("NoeudEventSurvolObjet", "noeud_au_survol");
+        TITRES_EVENEMENTS.put("NoeudEventFinSurvol", "noeud_fin_de_survol");
+        TITRES_EVENEMENTS.put("NoeudEventChoc", "noeud_au_choc_physique");
+        TITRES_EVENEMENTS.put("NoeudEventVariableChange", "noeud_quand_variable_change");
+        TITRES_EVENEMENTS.put("NoeudEventPersonnalise", "noeud_evenement_local");
+        TITRES_EVENEMENTS.put("NoeudEventBoutonAction", "noeud_au_clic_action_aventure");
+        TITRES_EVENEMENTS.put("NoeudEventCollisionTag", "noeud_si_objet_touche_tag");
+    }
 
     // Traduit une clé ; si elle n'existe pas dans les fichiers de langue (texte déjà traduit, ancien nœud),
     // la garde telle quelle.
@@ -16,9 +42,16 @@ public class ExportBlueprint {
         return t.equals("[" + cle + "]") ? cle : t;
     }
 
+    // Titre à afficher pour un nœud : celui de son événement, ou son nom traduit.
+    public static String titre(NoeudBase noeud) {
+        String cle = TITRES_EVENEMENTS.get(noeud.getClass().getSimpleName());
+        if (cle != null) return Traducteur.get(cle);
+        return traduireOuBrut(noeud.nom);
+    }
+
     public static String formaterNoeud(NoeudBase noeud) {
         StringBuilder sb = new StringBuilder();
-        sb.append("[").append(traduireOuBrut(noeud.nom)).append("]");
+        sb.append("[").append(titre(noeud)).append("]");
 
         List<String> details = new ArrayList<>();
 
