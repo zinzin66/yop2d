@@ -1,5 +1,20 @@
 // haut 1
 {
+  "libelles": {
+    "Aucun": { "fr": "Aucun", "en": "None", "es": "Ninguno", "pt": "Nenhum", "de": "Keiner", "it": "Nessuno", "ru": "Нет", "zh": "无", "ja": "なし" },
+    "Noir et Blanc": { "fr": "Noir et Blanc", "en": "Black and White", "es": "Blanco y negro", "pt": "Preto e branco", "de": "Schwarzweiß", "it": "Bianco e nero", "ru": "Чёрно-белый", "zh": "黑白", "ja": "白黒" },
+    "Sepia": { "fr": "Sepia", "en": "Sepia", "es": "Sepia", "pt": "Sépia", "de": "Sepia", "it": "Seppia", "ru": "Сепия", "zh": "棕褐色", "ja": "セピア" },
+    "Inversion": { "fr": "Inversion", "en": "Invert", "es": "Invertir", "pt": "Inverter", "de": "Invertieren", "it": "Inverti", "ru": "Инверсия", "zh": "反色", "ja": "反転" },
+    "Additif": { "fr": "Additif", "en": "Additive", "es": "Aditivo", "pt": "Aditivo", "de": "Additiv", "it": "Additivo", "ru": "Аддитивный", "zh": "叠加", "ja": "加算" },
+    "Multiplicatif": { "fr": "Multiplicatif", "en": "Multiply", "es": "Multiplicar", "pt": "Multiplicar", "de": "Multiplizieren", "it": "Moltiplica", "ru": "Умножение", "zh": "正片叠底", "ja": "乗算" },
+    "Ecran": { "fr": "Écran", "en": "Screen", "es": "Pantalla", "pt": "Tela", "de": "Bildschirm", "it": "Scherma", "ru": "Экран", "zh": "滤色", "ja": "スクリーン" },
+    "Horizontal": { "fr": "Horizontal", "en": "Horizontal", "es": "Horizontal", "pt": "Horizontal", "de": "Horizontal", "it": "Orizzontale", "ru": "По горизонтали", "zh": "水平", "ja": "水平" },
+    "Vertical": { "fr": "Vertical", "en": "Vertical", "es": "Vertical", "pt": "Vertical", "de": "Vertikal", "it": "Verticale", "ru": "По вертикали", "zh": "垂直", "ja": "垂直" },
+    "Activer": { "fr": "Activer", "en": "Enable", "es": "Activar", "pt": "Ativar", "de": "Aktivieren", "it": "Attiva", "ru": "Включить", "zh": "启用", "ja": "有効にする" },
+    "Désactiver": { "fr": "Désactiver", "en": "Disable", "es": "Desactivar", "pt": "Desativar", "de": "Deaktivieren", "it": "Disattiva", "ru": "Отключить", "zh": "禁用", "ja": "無効にする" },
+    "Angle de départ": { "fr": "Angle de départ", "en": "Start angle", "es": "Ángulo inicial", "pt": "Ângulo inicial", "de": "Startwinkel", "it": "Angolo iniziale", "ru": "Начальный угол", "zh": "起始角度", "ja": "開始角度" },
+    "Vers la cible": { "fr": "Vers la cible", "en": "Toward target", "es": "Hacia el objetivo", "pt": "Em direção ao alvo", "de": "Zum Ziel", "it": "Verso il bersaglio", "ru": "К цели", "zh": "朝向目标", "ja": "ターゲットへ" }
+  },
   "noeuds": [
     {
       "cle": "deplacer",
