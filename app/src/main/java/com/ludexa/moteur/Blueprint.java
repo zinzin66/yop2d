@@ -333,7 +333,6 @@ public class Blueprint {
         String id;
         String classeType;
         String cleNoeud;
-        String cleNoeud;
         float x;
         float y;
         List<PortDTO> portsEntree = new ArrayList<>();
