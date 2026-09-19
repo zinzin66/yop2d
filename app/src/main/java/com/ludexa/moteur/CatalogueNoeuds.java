@@ -101,6 +101,15 @@ public class CatalogueNoeuds {
     public static synchronized void analyser(String texte) throws Exception {
         definitions.clear();
         JSONObject racine = new JSONObject(texte);
+        // Libellés traduits des options de listes : { "Sepia": { "fr": "...", "en": "..." }, ... }
+        JSONObject libelles = racine.optJSONObject("libelles");
+        if (libelles != null) {
+            Iterator<String> valeurs = libelles.keys();
+            while (valeurs.hasNext()) {
+                String valeur = valeurs.next();
+                enregistrerTraductions("option." + valeur, libelles.opt(valeur));
+            }
+        }
         JSONArray noeuds = racine.getJSONArray("noeuds");
         for (int i = 0; i < noeuds.length(); i++) {
             JSONObject n = noeuds.getJSONObject(i);
