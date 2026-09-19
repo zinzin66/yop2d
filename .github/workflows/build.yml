@@ -31,7 +31,7 @@ jobs:
         run: find app/src/main/java/com/ludexa/moteur -name "Noeud*.java" -type f -exec sed -i 's/InterfaceEditeur/RunnerActivity/g' {} +
 
       - name: 2. Compiler la coquille vide (Runner en Release)
-        run: gradle assembleRunnerRelease
+        run: gradle assembleRunnerRelease -PbuildNumber=${{ github.run_number }}
 
       - name: 2b. Signer le Runner
         uses: r0adkll/sign-android-release@v1
@@ -53,7 +53,7 @@ jobs:
         run: cp ${{steps.sign_runner.outputs.signedReleaseFile}} app/src/main/assets/modele_runner.apk
 
       - name: 6. Compiler l'Éditeur Yop2D (APK et AAB en Release)
-        run: gradle assembleEditeurRelease bundleEditeurRelease
+        run: gradle assembleEditeurRelease bundleEditeurRelease -PbuildNumber=${{ github.run_number }}
 
       - name: 7. Signer l'Éditeur (APK)
         uses: r0adkll/sign-android-release@v1
