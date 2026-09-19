@@ -26,6 +26,7 @@ import java.util.Map;
 //   "nom"        titre : un texte, ou {"fr": "...", "en": "..."}
 //   "objet", "objetB", "variable"   true = le nœud a un bouton "Cible objet A / B / variable"
 //   "sorties"    ["suivant"] par défaut ; ["vrai","faux"] pour une condition
+//   "constantes" champs fixes, non modifiables, ex : {"propriete": "rotation"}
 //   "champs"     [{"cle","type","defaut","nom","options"}]
 //                type : "formule" (calcul), "texte" (texte libre, ou calcul s'il commence par =), "choix" (liste)
 public class CatalogueNoeuds {
@@ -44,7 +45,7 @@ public class CatalogueNoeuds {
         public String categorie;     // clé de traduction de la catégorie
         public String action;
         public boolean objet, objetB, variable;
-        public Map<String, String> constantes = new LinkedHashMap<>();   // champs
+        public Map<String, String> constantes = new LinkedHashMap<>();   // champs fixes (non modifiables), ex : propriete = rotation
         public List<String> sorties = new ArrayList<>();   // noms des ports de sortie, ex : "port_suivant"
         public List<Champ> champs = new ArrayList<>();
     }
@@ -121,6 +122,14 @@ public class CatalogueNoeuds {
             d.objet = n.optBoolean("objet", false);
             d.objetB = n.optBoolean("objetB", false);
             d.variable = n.optBoolean("variable", false);
+            JSONObject constantes = n.optJSONObject("constantes");
+            if (constantes != null) {
+                Iterator<String> noms = constantes.keys();
+                while (noms.hasNext()) {
+                    String k = noms.next();
+                    d.constantes.put(k, constantes.optString(k, ""));
+                }
+            }
 
             String nomCle = n.optString("nomCle", "");
             if (!nomCle.isEmpty()) {
