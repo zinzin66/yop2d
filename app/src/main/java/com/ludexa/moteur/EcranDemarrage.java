@@ -342,6 +342,19 @@ public class EcranDemarrage extends Activity {
         }
     }
 
+     // Numéro de version de cette installation (versionName et versionCode du build)
+    @SuppressWarnings("deprecation")
+    private String texteVersion() {
+        try {
+            android.content.pm.PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+            long code = (android.os.Build.VERSION.SDK_INT >= 28) ? info.getLongVersionCode() : info.versionCode;
+            return "v" + info.versionName + " (" + code + ")";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    
     private View construireColonneGauche() {
         LinearLayout colonneGauche = new LinearLayout(this);
         colonneGauche.setOrientation(LinearLayout.VERTICAL);
@@ -436,6 +449,14 @@ public class EcranDemarrage extends Activity {
 
         colonneGauche.addView(rangeeReseaux, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
+      TextView version = new TextView(this);
+        version.setText(texteVersion());
+        version.setTextSize(12f);
+        version.setGravity(Gravity.CENTER);
+        version.setPadding(0, dp(14), 0, 0);
+        version.setTextColor(couleurTexteSecondaire());
+        colonneGauche.addView(version);
+        
         return colonneGauche;
     }
 
