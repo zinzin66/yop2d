@@ -13,6 +13,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -214,6 +216,8 @@ public class EditeurNoeudDialog extends Dialog {
         if (window != null) {
             DisplayMetrics metrics = context.getResources().getDisplayMetrics();
             window.setLayout((int) (metrics.widthPixels * 0.95), (int) (metrics.heightPixels * 0.90));
+            // le clavier ne s'ouvre qu'au toucher du champ, et la fenêtre se redimensionne autour de lui
+            window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         }
 
         // ----- champs et comportement
@@ -236,6 +240,9 @@ public class EditeurNoeudDialog extends Dialog {
         champSaisie.setOnClickListener(v -> {
             if (champActif != null) ouvrirSelecteur(noeud.getTypeEditeurParametre(champActif));
         });
+        champSaisie.setOnFocusChangeListener((v, aLeFocus) -> {
+            if (aLeFocus && clavierNatifAutorise()) afficherClavierNatif();
+        });
 
         List<String> params = noeud.getNomsParametres();
         if (params != null && !params.isEmpty()) {
@@ -246,6 +253,37 @@ public class EditeurNoeudDialog extends Dialog {
             mettreAJourAideChamp();
         }
         mettreAJourResume();
+    }
+
+    // Le champ est préparé avant l'affichage de la fenêtre ; on le recharge une fois la fenêtre affichée,
+    // pour que le curseur, le focus et le clavier soient dans le même état que lorsqu'on change de champ.
+    @Override
+    protected void onStart() {
+        super.onStart();
+        champSaisie.post(() -> {
+            if (champActif != null) chargerChamp(champActif, false);
+        });
+    }
+
+    private boolean clavierNatifAutorise() {
+        if (champActif == null) return false;
+        String type = noeud.getTypeEditeurParametre(champActif);
+        if (estSelecteur(type) || "TYPE_BOOLEEN".equals(type)) return false;
+        return NoeudBase.TYPE_TEXTE_ALPHABETIQUE.equals(type) || noeud.utiliseClavierTexte();
+    }
+
+    private void afficherClavierNatif() {
+        Object service = context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (service instanceof InputMethodManager) ((InputMethodManager) service).showSoftInput(champSaisie, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    // Position d'écriture : le curseur si le champ est actif, sinon la fin du texte.
+    private int[] positionEcriture() {
+        int longueur = champSaisie.getText().length();
+        int debut = champSaisie.getSelectionStart();
+        int fin = champSaisie.getSelectionEnd();
+        if (!champSaisie.hasFocus() || debut < 0 || fin < 0) return new int[]{longueur, longueur};
+        return new int[]{Math.min(debut, fin), Math.max(debut, fin)};
     }
 
     // ------------------------------------------------------------------
@@ -275,8 +313,9 @@ public class EditeurNoeudDialog extends Dialog {
     // Affiche le champ demandé ; si c'est une liste (couleur, image, tag...), l'ouvre quand c'est l'utilisateur qui l'a touché.
     private void chargerChamp(String paramName, boolean parUtilisateur) {
         champActif = paramName;
+        appliquerTypeEditeur();   // d'abord le type de champ (il peut replacer le curseur)...
         champSaisie.setText(AideSaisie.texteAffiche(noeud, paramName));
-        champSaisie.setSelection(champSaisie.getText().length());
+        champSaisie.setSelection(champSaisie.getText().length());   // ...puis le texte, avec le curseur à la fin
         for (int i = 0; i < barreParams.getChildCount(); i++) {
             View enfant = barreParams.getChildAt(i);
             if (enfant instanceof Button && enfant.getTag() != null) {
@@ -284,7 +323,6 @@ public class EditeurNoeudDialog extends Dialog {
                 enfant.setBackground(fond(actif ? Color.parseColor("#4CAF50") : Palette.boutonNormal, Palette.bordure, 8));
             }
         }
-        appliquerTypeEditeur();
         champSaisie.setHint(AideSaisie.champTexte(noeud, champActif) ? Traducteur.get("editeur_astuce_texte") : "");
         mettreAJourAideChamp();
         if (parUtilisateur && estSelecteur(noeud.getTypeEditeurParametre(champActif))) champSaisie.performClick();
@@ -320,9 +358,8 @@ public class EditeurNoeudDialog extends Dialog {
     private void inserer(String insertion) {
         if (champActif == null) return;
         if (estSelecteur(noeud.getTypeEditeurParametre(champActif))) return;
-        int debut = Math.max(champSaisie.getSelectionStart(), 0);
-        int fin = Math.max(champSaisie.getSelectionEnd(), 0);
-        AideSaisie.Modification m = AideSaisie.inserer(champSaisie.getText().toString(), debut, fin, insertion, AideSaisie.champTexte(noeud, champActif));
+        int[] position = positionEcriture();
+        AideSaisie.Modification m = AideSaisie.inserer(champSaisie.getText().toString(), position[0], position[1], insertion, AideSaisie.champTexte(noeud, champActif));
         champSaisie.setText(m.texte);
         champSaisie.setSelection(Math.min(m.curseur, champSaisie.getText().length()));
     }
@@ -720,7 +757,6 @@ public class EditeurNoeudDialog extends Dialog {
     }
 // bas 2
 
-
 // haut 3
     // ------------------------------------------------------------------
     // PAVÉ DE CODE ET VRAI/FAUX
@@ -762,12 +798,9 @@ public class EditeurNoeudDialog extends Dialog {
                 } else {
                     if (touche.equals("DEL")) btn.setBackground(fond(Color.parseColor("#5c2323"), Palette.bordure, 8));
                     btn.setOnClickListener(v -> {
-                        int debut = champSaisie.getSelectionStart();
-                        int fin = champSaisie.getSelectionEnd();
-                        if (debut < 0 || fin < 0) {
-                            debut = champSaisie.getText().length();
-                            fin = debut;
-                        }
+                        int[] position = positionEcriture();
+                        int debut = position[0];
+                        int fin = position[1];
                         if (touche.equals("DEL")) {
                             if (debut > 0 && debut == fin) champSaisie.getText().delete(debut - 1, debut);
                             else if (debut != fin) champSaisie.getText().delete(Math.min(debut, fin), Math.max(debut, fin));
@@ -875,31 +908,33 @@ public class EditeurNoeudDialog extends Dialog {
         });
     }
 
+    // Un objet ouvre un sous-menu (son nom, ses propriétés, ses variables) ; les autres éléments s'insèrent directement.
     private void ajouterElement(LinearLayout parent, final AideSaisie.Element element) {
-        final boolean depliable = modeFormule && !element.enfants.isEmpty();
-        final Button bouton = boutonPanneau((depliable ? "▸ " : "") + element.libelle, Palette.texteNormal, 0);
-        parent.addView(bouton);
-        if (!depliable) {
-            bouton.setOnClickListener(v -> inserer(modeFormule ? element.insertion : element.libelle));
-            return;
-        }
-        final LinearLayout enfants = new LinearLayout(context);
-        enfants.setOrientation(LinearLayout.VERTICAL);
-        enfants.setVisibility(View.GONE);
-        Button nomSeul = boutonPanneau(element.insertion, Color.parseColor("#FFD700"), 14);
-        nomSeul.setOnClickListener(v -> inserer(element.insertion));
-        enfants.addView(nomSeul);
-        for (final AideSaisie.Element enfant : element.enfants) {
-            Button b = boutonPanneau(enfant.libelle, Palette.texteNormal, 14);
-            b.setOnClickListener(v -> inserer(enfant.insertion));
-            enfants.addView(b);
-        }
-        parent.addView(enfants);
+        final boolean sousMenu = modeFormule && !element.enfants.isEmpty();
+        Button bouton = boutonPanneau(element.libelle + (sousMenu ? "  ›" : ""), Palette.texteNormal, 0);
         bouton.setOnClickListener(v -> {
-            boolean ouvert = enfants.getVisibility() == View.VISIBLE;
-            enfants.setVisibility(ouvert ? View.GONE : View.VISIBLE);
-            bouton.setText((ouvert ? "▸ " : "▾ ") + element.libelle);
+            if (sousMenu) afficherSousMenu(element);
+            else inserer(modeFormule ? element.insertion : element.brut);
         });
+        if (sousMenu) {
+            bouton.setOnLongClickListener(v -> {
+                afficherSousMenu(element);
+                return true;
+            });
+        }
+        parent.addView(bouton);
+    }
+
+    private void afficherSousMenu(AideSaisie.Element element) {
+        final List<String> libelles = new ArrayList<>();
+        final List<String> insertions = new ArrayList<>();
+        libelles.add(element.insertion);
+        insertions.add(element.insertion);
+        for (AideSaisie.Element enfant : element.enfants) {
+            libelles.add(enfant.libelle);
+            insertions.add(enfant.insertion);
+        }
+        afficherChoix(element.libelle, libelles.toArray(new String[0]), which -> inserer(insertions.get(which)));
     }
 
     private Button boutonPanneau(String texte, int couleurTexte, int retraitDp) {
@@ -982,8 +1017,3 @@ public class EditeurNoeudDialog extends Dialog {
     }
 }
 // bas 3
-
-    
-
-
-
