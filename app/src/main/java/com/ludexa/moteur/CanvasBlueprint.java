@@ -161,10 +161,9 @@ public class CanvasBlueprint extends View {
                         NoeudBase nouveauNoeud = null;
                         
                         try {
-                            Class<?> clazz = Class.forName("com.ludexa.moteur." + typeNoeud);
-                            nouveauNoeud = (NoeudBase) clazz.newInstance();
+                            nouveauNoeud = FabriqueNoeuds.creer(typeNoeud);
                         } catch (Exception e) {
-                            Toast.makeText(getContext(), Traducteur.get("erreur_creation_noeud") + " : " + typeNoeud, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), Traducteur.get("erreur_creation_noeud") + " : " + typeNoeud + "\n" + e, Toast.LENGTH_LONG).show();
                         }
                         
                         if (nouveauNoeud != null) {
