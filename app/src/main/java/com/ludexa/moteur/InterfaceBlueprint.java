@@ -345,6 +345,11 @@ public class InterfaceBlueprint extends Activity {
     }
 
     private String formaterNoeud(NoeudBase noeud) {
+        return ExportBlueprint.formaterNoeud(noeud);
+    }
+
+    // Ancienne version, plus utilisée (à supprimer un jour)
+    private String formaterNoeudAncien(NoeudBase noeud) {
         StringBuilder sb = new StringBuilder();
         sb.append("[").append(noeud.nom).append("]");
         
@@ -402,10 +407,7 @@ public class InterfaceBlueprint extends Activity {
                 if (noeudSuivant != null) {
                     noeudsVisites.add(noeudSuivant.id);
                     
-                    String prefixe = indentation + "-> ";
-                    if (!portDeclencheur.equals("Suivant") && !portDeclencheur.equals("Sortie")) {
-                        prefixe = indentation + "(" + Traducteur.get("blueprint_si") + " " + portDeclencheur + ") -> ";
-                    }
+                    String prefixe = ExportBlueprint.prefixe(indentation, portDeclencheur);
                     
                     res.append(prefixe).append(formaterNoeud(noeudSuivant)).append("\n");
                     
