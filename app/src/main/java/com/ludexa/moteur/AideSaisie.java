@@ -17,9 +17,13 @@ public class AideSaisie {
         public final String insertion;
         public final List<Element> enfants = new ArrayList<>();
 
+        public final List<Element> enfants = new ArrayList<>();
+        public String brut;   // nom seul, inséré tel quel dans les champs des anciens nœuds
+
         public Element(String libelle, String insertion) {
             this.libelle = libelle;
             this.insertion = insertion;
+            this.brut = libelle;
         }
     }
 
@@ -122,13 +126,25 @@ public class AideSaisie {
         }
         sections.add(variables);
 
-        Section variablesGlobales = new Section("noeud_vars_globales_insertion", false);
-        if (globales != null) {
-            for (Variable v : globales) {
-                if (v.nom != null && !v.nom.isEmpty()) variablesGlobales.elements.add(new Element(v.nom, nomPourFormule(v.nom)));
+        // Variables de la scène, puis variables propres à chaque objet (insérées sous la forme objet.variable)
+        Section variables = new Section("noeud_vars_locales_insertion", true);
+        if (scene != null && scene.variablesLocales != null) {
+            for (Variable v : scene.variablesLocales) {
+                if (v.nom != null && !v.nom.isEmpty()) variables.elements.add(new Element(v.nom, nomPourFormule(v.nom)));
             }
         }
-        sections.add(variablesGlobales);
+        if (scene != null && scene.objets != null) {
+            for (ObjetBase o : scene.objets) {
+                if (o.nom == null || o.nom.isEmpty() || o.variablesLocales == null) continue;
+                for (Variable v : o.variablesLocales) {
+                    if (v.nom == null || v.nom.isEmpty()) continue;
+                    Element e = new Element(v.nom + " (" + o.nom + ")", nomPourFormule(o.nom) + "." + nomPourFormule(v.nom));
+                    e.brut = v.nom;
+                    variables.elements.add(e);
+                }
+            }
+        }
+        sections.add(variables);
 
         Section tags = new Section("noeud_tags_insertion", false);
         if (scene != null && scene.objets != null) {
