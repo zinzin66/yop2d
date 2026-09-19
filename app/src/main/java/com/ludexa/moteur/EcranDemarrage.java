@@ -354,38 +354,45 @@ public class EcranDemarrage extends Activity {
         }
     }
 
+    //ici
     
     private View construireColonneGauche() {
+        // Sur un petit écran (téléphone en paysage), tout doit tenir : logo réduit, phrase d'accroche masquée,
+        // et la colonne défile si l'écran est encore plus petit.
+        int hauteurEcranDp = (int) (getResources().getDisplayMetrics().heightPixels / getResources().getDisplayMetrics().density);
+        boolean petitEcran = hauteurEcranDp < 500;
+
         LinearLayout colonneGauche = new LinearLayout(this);
         colonneGauche.setOrientation(LinearLayout.VERTICAL);
         colonneGauche.setGravity(Gravity.CENTER);
-        colonneGauche.setPadding(dp(24), dp(24), dp(24), dp(24));
-        colonneGauche.setLayoutParams(new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.MATCH_PARENT, 0.9f));
+        colonneGauche.setPadding(dp(petitEcran ? 12 : 24), dp(petitEcran ? 10 : 24), dp(petitEcran ? 12 : 24), dp(petitEcran ? 10 : 24));
 
         ImageView logo = new ImageView(this);
         logo.setImageResource(R.drawable.logo_ludexa);
         logo.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        LinearLayout.LayoutParams pLogo = new LinearLayout.LayoutParams(dp(140), dp(140));
+        int tailleLogo = petitEcran ? 64 : 140;
+        LinearLayout.LayoutParams pLogo = new LinearLayout.LayoutParams(dp(tailleLogo), dp(tailleLogo));
         pLogo.gravity = Gravity.CENTER;
         colonneGauche.addView(logo, pLogo);
 
         TextView titre = new TextView(this);
         titre.setText(Traducteur.get("app_nom"));
-        titre.setTextSize(28f);
+        titre.setTextSize(petitEcran ? 20f : 28f);
         titre.setGravity(Gravity.CENTER);
         titre.setLetterSpacing(0.12f);
-        titre.setPadding(0, dp(14), 0, 0);
+        titre.setPadding(0, dp(petitEcran ? 6 : 14), 0, dp(petitEcran ? 6 : 0));
         titre.setTextColor(Palette.texteNormal);
         colonneGauche.addView(titre);
 
-        TextView baseline = new TextView(this);
-        baseline.setText(Traducteur.get("demarrage_baseline"));
-        baseline.setTextSize(13f);
-        baseline.setGravity(Gravity.CENTER);
-        baseline.setPadding(0, dp(6), 0, dp(20));
-        baseline.setTextColor(couleurTexteSecondaire());
-        colonneGauche.addView(baseline);
+        if (!petitEcran) {
+            TextView baseline = new TextView(this);
+            baseline.setText(Traducteur.get("demarrage_baseline"));
+            baseline.setTextSize(13f);
+            baseline.setGravity(Gravity.CENTER);
+            baseline.setPadding(0, dp(6), 0, dp(20));
+            baseline.setTextColor(couleurTexteSecondaire());
+            colonneGauche.addView(baseline);
+        }
 
         LinearLayout rangeeLangue = new LinearLayout(this);
         rangeeLangue.setOrientation(LinearLayout.HORIZONTAL);
@@ -414,7 +421,7 @@ public class EcranDemarrage extends Activity {
         btnMaj.setOnClickListener(v -> verifierMiseAJour());
         
         LinearLayout.LayoutParams lpMaj = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lpMaj.setMargins(0, dp(30), 0, dp(10));
+        lpMaj.setMargins(0, dp(petitEcran ? 12 : 30), 0, dp(10));
         colonneGauche.addView(btnMaj, lpMaj);
 
         LinearLayout rangeeReseaux = new LinearLayout(this);
@@ -449,17 +456,22 @@ public class EcranDemarrage extends Activity {
 
         colonneGauche.addView(rangeeReseaux, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-      TextView version = new TextView(this);
+        TextView version = new TextView(this);
         version.setText(texteVersion());
         version.setTextSize(12f);
         version.setGravity(Gravity.CENTER);
-        version.setPadding(0, dp(14), 0, 0);
+        version.setPadding(0, dp(petitEcran ? 8 : 14), 0, 0);
         version.setTextColor(couleurTexteSecondaire());
         colonneGauche.addView(version);
-        
-        return colonneGauche;
-    }
 
+        // La colonne défile si elle est plus haute que l'écran ; elle garde sa largeur de 0,9 dans la mise en page
+        ScrollView defilement = new ScrollView(this);
+        defilement.setFillViewport(true);
+        defilement.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 0.9f));
+        defilement.addView(colonneGauche);
+        return defilement;
+    }
+// ici
     private void afficherDialogueLangue() {
         try {
             String[] fichiersAssets = getAssets().list("");
