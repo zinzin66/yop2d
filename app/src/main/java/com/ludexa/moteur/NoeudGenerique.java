@@ -1,8 +1,6 @@
 // haut 1
 package com.ludexa.moteur;
 
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,10 +17,6 @@ public class NoeudGenerique extends NoeudBase {
     private final CatalogueNoeuds.Definition definition;
     private final Map<String, String> valeurs = new LinkedHashMap<>();
     private static long dernierSignalement = 0;
-
-    // Pendant un test dans l'éditeur, le nœud montre à l'écran quand il s'exécute (▶) et ce qui l'empêche
-    // de fonctionner (⚠ objet introuvable, formule fausse...). Mettre false pour désactiver.
-    public static boolean traceEnTest = true;
     private long derniereTrace = 0;
     private long derniereAlerte = 0;
 
@@ -45,7 +39,7 @@ public class NoeudGenerique extends NoeudBase {
     public void executer() {
         Evaluateur.derniereErreur = null;
         verifierCibles();
-        trace("▶ " + Traducteur.get(definition.cleNom));
+        trace();
         String sortie = null;
         try {
             sortie = ActionsMoteur.executer(definition.action, this);
@@ -62,50 +56,54 @@ public class NoeudGenerique extends NoeudBase {
         long maintenant = System.currentTimeMillis();
         if (maintenant - dernierSignalement < 500) return;
         dernierSignalement = maintenant;
-        if (cheminProjetCourant != null) DiagLogger.log(cheminProjetCourant, "NOEUD erreur cle=" + cle + " : " + e);
+        String chemin = cheminJournal();
+        if (chemin != null) DiagLogger.log(chemin, "NOEUD erreur cle=" + cle + " : " + e);
     }
 
     // ------------------------------------------------------------------
-    // MESSAGES DE TEST (visibles seulement quand le jeu tourne depuis l'éditeur)
+    // DIAGNOSTIC : le journal de la fenêtre de debug reçoit une ligne EXEC (le nœud s'exécute) et une ligne
+    // ALERTE (quelque chose l'en empêche : objet ou variable introuvable, formule fausse...).
     // ------------------------------------------------------------------
 
-    private boolean enTestDansEditeur() {
-        return traceEnTest && contexteApplication instanceof InterfaceEditeur;
+    private boolean dansEditeur() {
+        return contexteApplication instanceof InterfaceEditeur;
     }
 
-    private void afficher(String message) {
-        try {
-            Toast.makeText(contexteApplication, message, Toast.LENGTH_SHORT).show();
-        } catch (RuntimeException e) {
-            // pas d'affichage possible à cet instant
-        }
+    // Dossier du projet où écrire le journal (celui du moteur, sinon celui de l'éditeur).
+    private static String cheminJournal() {
+        if (cheminProjetCourant != null) return cheminProjetCourant;
+        if (contexteApplication instanceof InterfaceEditeur) return ((InterfaceEditeur) contexteApplication).cheminProjet;
+        return null;
     }
 
-    // ▶ : le nœud s'exécute (au plus un message toutes les 1,5 seconde par nœud)
-    private void trace(String message) {
-        if (!enTestDansEditeur()) return;
+    // EXEC : le nœud s'exécute (au plus une ligne toutes les 1,5 seconde par nœud)
+    private void trace() {
         long maintenant = System.currentTimeMillis();
         if (maintenant - derniereTrace < 1500) return;
         derniereTrace = maintenant;
-        afficher(message);
+        String chemin = cheminJournal();
+        if (chemin != null) {
+            DiagLogger.log(chemin, "EXEC " + cle + " cible=" + nomCibleObjet
+                    + " objet_trouve=" + (definition.objet && getCibleObjet() != null));
+        }
     }
 
-    // ⚠ : quelque chose empêche le nœud de faire son travail (au plus un message toutes les 2,5 secondes par nœud)
+    // ALERTE : quelque chose empêche le nœud de faire son travail (au plus une ligne toutes les 2,5 secondes par nœud)
     private void alerte(String message) {
-        if (!enTestDansEditeur()) return;
         long maintenant = System.currentTimeMillis();
         if (maintenant - derniereAlerte < 2500) return;
         derniereAlerte = maintenant;
-        afficher("⚠ " + Traducteur.get(definition.cleNom) + " : " + message);
+        String chemin = cheminJournal();
+        if (chemin != null) DiagLogger.log(chemin, "ALERTE " + cle + " : " + message);
     }
 
     private static boolean cibleChoisie(String nom) {
         return nom != null && !nom.isEmpty();
     }
 
-    // Signale une cible non choisie ou introuvable dans la scène qui tourne.
+    // Signale une cible non choisie ou introuvable dans la scène qui tourne (test dans l'éditeur seulement).
     private void verifierCibles() {
-        if (!enTestDansEditeur()) return;
+        if (!dansEditeur()) return;
         if (definition.objet) {
             if (!cibleChoisie(nomCibleObjet)) {
                 if (!definition.variable) alerte("aucun objet choisi (bouton jaune de cible A)");
