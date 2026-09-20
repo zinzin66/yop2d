@@ -343,6 +343,7 @@ public class EditeurNoeudDialog extends Dialog {
 
     // Bouton "Passer en formule", aperçu du résultat sous le champ.
     private void mettreAJourAideChamp() {
+        if (champActif == null) return;   // nœud sans champ : rien à mettre à jour
         String texte = champSaisie.getText().toString();
         btnFormule.setVisibility(champActif != null && AideSaisie.peutPasserEnFormule(noeud, champActif, texte) ? View.VISIBLE : View.GONE);
 
