@@ -1,6 +1,9 @@
 // haut 1
 {
   "app_nom": "Yop2D",
+  "reglages_titre_cadence": "Game speed (steps per second)",
+"reglages_cadence_auto": "Auto",
+"reglages_cadence_aide": "60: same speed on every screen. Auto: follows the screen (faster on a 90 or 120 Hz display).",
   "menu_jouer": "Play",
   "menu_editeur": "Editor",
   "bouton_ok": "OK",

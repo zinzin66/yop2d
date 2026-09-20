@@ -42,6 +42,12 @@ public class ActionsMoteur {
             case "traverser_ecran": ActionsMouvements.traverserEcran(n); return null;
             case "garder_dans_ecran": ActionsMouvements.garderDansEcran(n); return null;
             case "journaliser": ActionsOutils.journaliser(n); return null;
+            case "attendre": return ActionsTemps.attendre(n);
+            case "repeter": return ActionsTemps.repeter(n);
+            case "compte_a_rebours": return ActionsTemps.compteARebours(n);
+            case "arreter_minuteur": return ActionsTemps.arreterMinuteur(n);
+            case "vitesse_jeu": return ActionsTemps.vitesseJeu(n);
+            case "pause": return ActionsTemps.pause(n);
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }

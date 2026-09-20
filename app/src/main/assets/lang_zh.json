@@ -1,5 +1,8 @@
 {
   "app_nom": "Yop2D",
+  "reglages_titre_cadence": "游戏节奏（每秒步数）",
+"reglages_cadence_auto": "自动",
+"reglages_cadence_aide": "60：所有屏幕速度一致。自动：跟随屏幕（90 或 120 Hz 屏幕上更快）。",
   "menu_jouer": "运行",
   "menu_editeur": "编辑器",
   "bouton_ok": "确定",
