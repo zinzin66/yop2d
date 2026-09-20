@@ -34,6 +34,13 @@ public class ActionsMoteur {
             case "lier_objets": ActionsObjets.lierObjets(n); return null;
             case "surbrillance": ActionsObjets.surbrillance(n); return null;
             case "clignotement": ActionsObjets.clignotement(n); return null;  
+            case "arreter_objet": ActionsMouvements.arreter(n); return null;
+            case "stopper_mouvements": ActionsMouvements.stopperMouvements(n); return null;
+            case "avancer_continu": ActionsMouvements.avancerContinu(n); return null;
+            case "poursuivre": ActionsMouvements.poursuivre(n); return null;
+            case "definir_progression": ActionsMouvements.definirProgression(n); return null;
+            case "traverser_ecran": ActionsMouvements.traverserEcran(n); return null;
+            case "garder_dans_ecran": ActionsMouvements.garderDansEcran(n); return null;
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
