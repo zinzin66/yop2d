@@ -48,6 +48,15 @@ public class ActionsMoteur {
             case "arreter_minuteur": return ActionsTemps.arreterMinuteur(n);
             case "vitesse_jeu": return ActionsTemps.vitesseJeu(n);
             case "pause": return ActionsTemps.pause(n);
+            case "changer_scene": return ActionsScene.changerScene(n);
+            case "aller_scene_nom": return ActionsScene.allerSceneNom(n);
+            case "scene_relative": return ActionsScene.sceneRelative(n);
+            case "recommencer_scene": return ActionsScene.recommencerScene(n);
+            case "ouvrir_hud": return ActionsScene.ouvrirHud(n);
+            case "fermer_hud": return ActionsScene.fermerHud(n);
+            case "placer_copie_scene": return ActionsScene.placerCopieScene(n);
+            case "detruire_copies_scene": return ActionsScene.detruireCopiesScene(n);
+            case "quitter_jeu": return ActionsScene.quitterJeu(n);
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
