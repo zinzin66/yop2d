@@ -34,6 +34,16 @@ public class TextesEditeur {
                 "Benutzerdefiniert (#RRGGBB)…", "Personalizzato (#RRGGBB)…", "Свой цвет (#RRGGBB)…", "自定义 (#RRGGBB)…", "カスタム (#RRGGBB)…");
         ajouter("editeur_couleur_perso_titre",
                 "Code couleur", "Color code", "Código de color", "Código de cor", "Farbcode", "Codice colore", "Код цвета", "颜色代码", "カラーコード");
+        ajouter("editeur_aucun_champ",
+                "Ce nœud n'a aucune valeur à saisir : choisis simplement sa cible.",
+                "This node has no value to enter: just choose its target.",
+                "Este nodo no tiene ningún valor que introducir: elige solo su objetivo.",
+                "Este nó não tem nenhum valor a preencher: escolha apenas o alvo.",
+                "Dieser Knoten hat keinen Wert zum Eingeben: Wähle nur sein Ziel.",
+                "Questo nodo non ha valori da inserire: scegli solo il suo bersaglio.",
+                "У этого узла нет значений для ввода: просто выберите цель.",
+                "此节点没有需要输入的值：只需选择目标。",
+                "このノードには入力する値がありません。ターゲットを選ぶだけです。");
     }
 
     // Ordre des langues : fr, en, es, pt, de, it, ru, zh, ja
