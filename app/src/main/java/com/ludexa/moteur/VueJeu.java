@@ -67,6 +67,7 @@ public class VueJeu extends View {
         NoeudBase.sceneActiveCourante = this.sceneActive;
         NoeudBase.sceneHudActiveCourante = this.sceneHudActive;
         GestionnaireEtat.viderCache();
+        GestionnaireEtat.memoriserEtatInitial(scene);   // état de départ de la scène, pour « Recommencer la scène »
 
         if (scene != null) chargerAnimationsGlobales(scene.objets);
         if (sceneHud != null) chargerAnimationsGlobales(sceneHud.objets);
@@ -212,6 +213,8 @@ public class VueJeu extends View {
 
         this.sceneActive = nouvelleScene;
         NoeudBase.sceneActiveCourante = this.sceneActive;
+        GestionnaireControles.reinitialiserCamera();   // la caméra repart de zéro : la nouvelle scène la règle à son démarrage
+        GestionnaireEtat.memoriserEtatInitial(nouvelleScene);   // premier passage : on garde l'état de départ
         GestionnaireEtat.restaurerEtat(this.sceneActive);
         chargerAnimationsGlobales(nouvelleScene.objets);
 
@@ -240,6 +243,17 @@ public class VueJeu extends View {
         } else {
             this.moteur = null; 
         }
+    }
+
+    // Recommencer la scène : ses objets, leurs positions et ses variables reviennent à leur état de départ,
+    // puis la scène redémarre. Les variables globales ne sont pas touchées.
+    public void recommencerScene() {
+        if (this.sceneActive == null) return;
+        if (!GestionnaireEtat.reinitialiserScene(this.sceneActive)) {
+            logDiag("ALERTE Recommencer la scène : état de départ introuvable, la scène est seulement relancée");
+        }
+        HorlogeJeu.reinitialiser();   // minuteurs, pause et vitesse repartent aussi de zéro
+        chargerNouvelleScene(this.sceneActive);
     }
 
     private java.util.Set<String> pilesInstanciationEnCours = new java.util.HashSet<>();
