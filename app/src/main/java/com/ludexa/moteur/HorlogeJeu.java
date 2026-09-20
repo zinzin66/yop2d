@@ -33,6 +33,7 @@ public class HorlogeJeu {
     private static double accumulateur = 0;
     private static long derniereImageNs = 0;
     private static long derniereAlerteMs = 0;
+    private static double dtLisse = 0;      // durée d'une image, lissée : une image un peu irrégulière ne saute ni ne double un pas
     private static Scene sceneConnue = null;
 
     // Tout remettre à zéro : plus de minuteur, temps à 0, vitesse normale, pas de pause.
@@ -44,6 +45,7 @@ public class HorlogeJeu {
         enPause = false;
         accumulateur = 0;
         derniereImageNs = 0;
+        dtLisse = 0;
         sceneConnue = NoeudBase.sceneActiveCourante;
     }
 
@@ -65,7 +67,8 @@ public class HorlogeJeu {
 
     // Appelée une fois par image. Fait avancer le temps du jeu, déclenche les minuteurs arrivés à échéance,
     // et retourne le nombre de "pas de jeu" à jouer à cette image :
-    // 0 en pause ou en ralenti, 1 normalement, 2 ou plus si le jeu est accéléré.
+    // 0 en pause (ou si l'écran va plus vite que la cadence), 1 normalement, 2 ou plus si l'écran est plus lent
+    // que la cadence ou si le jeu est accéléré.
     public static int imageSuivante() {
         return imageSuivante(System.nanoTime());
     }
@@ -75,15 +78,19 @@ public class HorlogeJeu {
         double dt = (derniereImageNs == 0) ? 0 : (maintenantNs - derniereImageNs) / 1e9;
         derniereImageNs = maintenantNs;
         if (dt > 0.1) dt = 0.1;               // après une interruption (téléphone en veille...), pas de grand saut
+        if (dt > 0) dtLisse = (dtLisse == 0) ? dt : dtLisse + (dt - dtLisse) * 0.05;
         if (enPause) return 0;
         tempsJeu += dt * vitesse;
         declencherMinuteurs();
         if (enPause) return 0;
-        accumulateur += vitesse;
-        int pas = (int) accumulateur;
+        // Pas de jeu à jouer : la cadence choisie dans les réglages (60 par seconde par défaut), quel que soit l'écran.
+        // Cadence automatique (0) : un pas par image de l'écran.
+        if (ConfigurationJeu.CADENCE > 0) accumulateur += dtLisse * ConfigurationJeu.CADENCE * vitesse;
+        else accumulateur += vitesse;
+        int pas = (int) Math.floor(accumulateur + 0.3);   // petite tolérance : une image un peu en avance ou en retard ne saute pas de pas
         accumulateur -= pas;
-        if (pas > 4) {
-            pas = 4;
+        if (pas > 8) {
+            pas = 8;
             accumulateur = 0;
         }
         return pas;
