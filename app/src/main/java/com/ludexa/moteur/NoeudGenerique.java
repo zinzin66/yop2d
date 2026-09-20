@@ -17,7 +17,6 @@ public class NoeudGenerique extends NoeudBase {
     private final CatalogueNoeuds.Definition definition;
     private final Map<String, String> valeurs = new LinkedHashMap<>();
     private static long dernierSignalement = 0;
-    private long derniereTrace = 0;
     private long derniereAlerte = 0;
 
     public NoeudGenerique(String cle) {
@@ -39,7 +38,6 @@ public class NoeudGenerique extends NoeudBase {
     public void executer() {
         Evaluateur.derniereErreur = null;
         verifierCibles();
-        trace();
         String sortie = null;
         try {
             sortie = ActionsMoteur.executer(definition.action, this);
@@ -61,8 +59,8 @@ public class NoeudGenerique extends NoeudBase {
     }
 
     // ------------------------------------------------------------------
-    // DIAGNOSTIC : le journal de la fenêtre de debug reçoit une ligne EXEC (le nœud s'exécute) et une ligne
-    // ALERTE (quelque chose l'en empêche : objet ou variable introuvable, formule fausse...).
+    // DIAGNOSTIC : le journal de la fenêtre de debug reçoit une ligne ALERTE quand quelque chose empêche le nœud
+    // de travailler (objet ou variable introuvable, formule fausse...).
     // ------------------------------------------------------------------
 
     private boolean dansEditeur() {
@@ -74,18 +72,6 @@ public class NoeudGenerique extends NoeudBase {
         if (cheminProjetCourant != null) return cheminProjetCourant;
         if (contexteApplication instanceof InterfaceEditeur) return ((InterfaceEditeur) contexteApplication).cheminProjet;
         return null;
-    }
-
-    // EXEC : le nœud s'exécute (au plus une ligne toutes les 1,5 seconde par nœud)
-    private void trace() {
-        long maintenant = System.currentTimeMillis();
-        if (maintenant - derniereTrace < 1500) return;
-        derniereTrace = maintenant;
-        String chemin = cheminJournal();
-        if (chemin != null) {
-            DiagLogger.log(chemin, "EXEC " + cle + " cible=" + nomCibleObjet
-                    + " objet_trouve=" + (definition.objet && getCibleObjet() != null));
-        }
     }
 
     // ALERTE : quelque chose empêche le nœud de faire son travail (au plus une ligne toutes les 2,5 secondes par nœud)
