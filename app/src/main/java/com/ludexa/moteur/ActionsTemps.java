@@ -2,7 +2,8 @@
 package com.ludexa.moteur;
 
 // Ce que font les nœuds de la catégorie Temps : Attendre, Répéter, Compte à rebours, Arrêter un minuteur,
-// Vitesse du jeu (ralenti), Pause et Reprendre. Les minuteurs eux-mêmes vivent dans HorlogeJeu.
+// Vitesse du jeu (ralenti), Pause et Reprendre. Ils sont décrits dans assets/catalogue_noeuds.json ;
+// les minuteurs eux-mêmes vivent dans HorlogeJeu.
 //
 // Une action retourne le nom du port de sortie à suivre, ou null pour la sortie normale.
 public class ActionsTemps {
@@ -86,8 +87,9 @@ public class ActionsTemps {
         return null;
     }
 
-    static String pause(boolean enPause) {
-        HorlogeJeu.mettreEnPause(enPause);
+    // Pause et Reprendre sont deux nœuds du catalogue qui partagent cette fonction : la constante "etat" les distingue.
+    static String pause(NoeudGenerique n) {
+        HorlogeJeu.mettreEnPause(n.texteBrut("etat").equals("pause"));
         return null;
     }
 }
