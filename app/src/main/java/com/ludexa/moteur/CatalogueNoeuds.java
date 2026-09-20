@@ -25,10 +25,15 @@ import java.util.Map;
 //   "nomCle"     clé de traduction déjà existante du titre       (sinon "nom" ci-dessous)
 //   "nom"        titre : un texte, ou {"fr": "...", "en": "..."}
 //   "objet", "objetB", "variable"   true = le nœud a un bouton "Cible objet A / B / variable"
-//   "sorties"    ["suivant"] par défaut ; ["vrai","faux"] pour une condition
+//   "sorties"    ["suivant"] par défaut ; ["vrai","faux"] pour une condition. Une sortie peut aussi porter
+//                sa traduction : {"cle": "termine", "nom": {"fr": "Terminé", "en": "Finished"}}
 //   "constantes" champs fixes, non modifiables, ex : {"propriete": "rotation"}
 //   "champs"     [{"cle","type","defaut","nom","options"}]
 //                type : "formule" (calcul), "texte" (texte libre, ou calcul s'il commence par =), "choix" (liste)
+//
+// En tête du fichier, deux tables de traductions facultatives :
+//   "libelles"    options de listes : { "Sepia": { "fr": "...", "en": "..." } }
+//   "categories"  titres de catégories : { "cat_temps": { "fr": "Temps", "en": "Time" } }
 public class CatalogueNoeuds {
 
     public static class Champ {
@@ -111,6 +116,15 @@ public class CatalogueNoeuds {
                 enregistrerTraductions("option." + valeur, libelles.opt(valeur));
             }
         }
+        // Titres traduits des catégories : { "cat_temps": { "fr": "Temps", "en": "Time" }, ... }
+        JSONObject categories = racine.optJSONObject("categories");
+        if (categories != null) {
+            Iterator<String> cles = categories.keys();
+            while (cles.hasNext()) {
+                String cle = cles.next();
+                enregistrerTraductions(cle, categories.opt(cle));
+            }
+        }
         JSONArray noeuds = racine.getJSONArray("noeuds");
         for (int i = 0; i < noeuds.length(); i++) {
             JSONObject n = noeuds.getJSONObject(i);
@@ -143,7 +157,17 @@ public class CatalogueNoeuds {
             if (sorties == null || sorties.length() == 0) {
                 d.sorties.add("port_suivant");
             } else {
-                for (int k = 0; k < sorties.length(); k++) d.sorties.add("port_" + sorties.getString(k));
+                for (int k = 0; k < sorties.length(); k++) {
+                    Object sortie = sorties.get(k);
+                    if (sortie instanceof JSONObject) {
+                        JSONObject so = (JSONObject) sortie;
+                        String nomPort = "port_" + so.getString("cle");
+                        d.sorties.add(nomPort);
+                        enregistrerTraductions(nomPort, so.opt("nom"));
+                    } else {
+                        d.sorties.add("port_" + sorties.getString(k));
+                    }
+                }
             }
 
             JSONArray champs = n.optJSONArray("champs");
