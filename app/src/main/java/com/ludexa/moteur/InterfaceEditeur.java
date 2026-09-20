@@ -229,8 +229,8 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         bandeauHaut.addView(separateurVertical());
 // bas 1
-
 // haut 2
+        ConfigurationJeu.charger(cheminProjet);   // résolution et cadence de CE projet (reglages.json)
         listeScenes = new ArrayList<>();
         if (cheminProjet != null) {
             try {
@@ -574,6 +574,55 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         layoutDialog.addView(ligneRes);
 
+        TextView titreCadence = new TextView(this);
+        titreCadence.setText(Traducteur.get("reglages_titre_cadence"));
+        titreCadence.setTextColor(Palette.texteSelectionne);
+        titreCadence.setTextSize(14f);
+        titreCadence.setPadding(0, 0, 0, dp(6));
+        layoutDialog.addView(titreCadence);
+
+        final int[] cadenceChoisie = {ConfigurationJeu.CADENCE};
+        final int[] valeursCadence = {0, 30, 60, 90, 120};
+        LinearLayout ligneCadence = new LinearLayout(this);
+        ligneCadence.setOrientation(LinearLayout.HORIZONTAL);
+        final List<TextView> boutonsCadence = new ArrayList<>();
+        for (int valeurCadence : valeursCadence) {
+            TextView boutonCadence = new TextView(this);
+            boutonCadence.setText(valeurCadence == 0 ? Traducteur.get("reglages_cadence_auto") : String.valueOf(valeurCadence));
+            boutonCadence.setTextColor(Palette.texteNormal);
+            boutonCadence.setTextSize(14f);
+            boutonCadence.setGravity(Gravity.CENTER);
+            boutonCadence.setPadding(dp(8), dp(10), dp(8), dp(10));
+            LinearLayout.LayoutParams lpCadence = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+            lpCadence.setMargins(0, 0, dp(6), 0);
+            boutonCadence.setLayoutParams(lpCadence);
+            boutonsCadence.add(boutonCadence);
+            ligneCadence.addView(boutonCadence);
+        }
+        final Runnable majCadence = () -> {
+            for (int i = 0; i < boutonsCadence.size(); i++) {
+                boolean selectionne = (valeursCadence[i] == cadenceChoisie[0]);
+                boutonsCadence.get(i).setBackground(fond(selectionne ? Palette.boutonSurvol : Palette.boutonNormal, 8,
+                        selectionne ? Palette.texteSelectionne : Palette.bordure, selectionne ? 2 : 1));
+            }
+        };
+        for (int i = 0; i < boutonsCadence.size(); i++) {
+            final int valeurChoisie = valeursCadence[i];
+            boutonsCadence.get(i).setOnClickListener(vb -> {
+                cadenceChoisie[0] = valeurChoisie;
+                majCadence.run();
+            });
+        }
+        majCadence.run();
+        layoutDialog.addView(ligneCadence);
+
+        TextView aideCadence = new TextView(this);
+        aideCadence.setText(Traducteur.get("reglages_cadence_aide"));
+        aideCadence.setTextColor(Palette.texteNormal);
+        aideCadence.setTextSize(12f);
+        aideCadence.setPadding(0, dp(6), 0, dp(14));
+        layoutDialog.addView(aideCadence);
+
         TextView titreFond = new TextView(this);
         titreFond.setText(Traducteur.get("reglages_titre_fond_canvas"));
         titreFond.setTextColor(Palette.texteSelectionne);
@@ -641,6 +690,9 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
                 }
             } catch (Exception ignored) {}
 
+            ConfigurationJeu.CADENCE = cadenceChoisie[0];
+            ConfigurationJeu.sauvegarder(cheminProjet);   // résolution et cadence suivent le projet (reglages.json)
+
             canvasEditeur.setCouleurFondCanvas(couleurChoisie[0]);
             dialogue.dismiss();
         });
@@ -669,7 +721,6 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         }
     }
 // bas 2
-    
 // haut 3
     // ici
     private void afficherMenuScene(View ancre) {
