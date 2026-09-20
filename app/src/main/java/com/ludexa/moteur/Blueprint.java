@@ -1,7 +1,6 @@
 // haut 1
 package com.ludexa.moteur;
 
-import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -53,12 +52,13 @@ public class Blueprint {
     public String toJson() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         BlueprintDTO dto = new BlueprintDTO();
-        String cheminLog = NoeudBase.cheminProjetCourant;
 
         for (NoeudBase n : noeuds) {
             NoeudDTO ndto = new NoeudDTO();
             ndto.id = n.id;
             ndto.classeType = n.getClass().getName();
+            
+            if (n instanceof NoeudGenerique) ndto.cleNoeud = ((NoeudGenerique) n).cle;
             ndto.x = noeudsX.containsKey(n.id) ? noeudsX.get(n.id) : 0f;
             ndto.y = noeudsY.containsKey(n.id) ? noeudsY.get(n.id) : 0f;
 
@@ -102,9 +102,6 @@ public class Blueprint {
                 } else if (n.getCibleVariable() != null) {
                     ndto.cibleVariableNom = n.getCibleVariable().nom;
                 }
-                DiagLogger.log(cheminLog, "SAVE_VAR noeud=" + n.nom + " id=" + n.id
-                        + " nomCibleVariable(champ)=" + n.nomCibleVariable
-                        + " -> ecrit_dans_json=" + ndto.cibleVariableNom);
             }
 
             if (n.requiertCibleScene() && n.getCibleScene() != null) ndto.cibleSceneNom = n.getCibleScene().nom;
@@ -126,6 +123,9 @@ public class Blueprint {
             ldto.portDepart = l.portSortieNom;
             ldto.idArrivee = l.noeudArrivee.id;
             ldto.portArrivee = l.portEntreeNom;
+            // NOUVEAU : on note aussi la position des ports, qui ne change jamais avec la langue
+            ldto.indexPortDepart = trouverIndexPort(l.noeudDepart.portsSortie, l.portSortieNom);
+            ldto.indexPortArrivee = trouverIndexPort(l.noeudArrivee.portsEntree, l.portEntreeNom);
             dto.liens.add(ldto);
         }
 
@@ -141,7 +141,7 @@ public class Blueprint {
         String cheminLog = NoeudBase.cheminProjetCourant;
 
         if (dto == null) {
-            if (NoeudBase.contexteApplication != null) Toast.makeText(NoeudBase.contexteApplication, Traducteur.get("erreur_json_invalide"), Toast.LENGTH_LONG).show();
+            DiagLogger.log(cheminLog, "ERREUR script illisible (JSON invalide)");
             return bp;
         }
 
@@ -149,8 +149,7 @@ public class Blueprint {
 
         for (NoeudDTO ndto : dto.noeuds) {
             try {
-                Class<?> clazz = Class.forName(ndto.classeType);
-                NoeudBase n = (NoeudBase) clazz.newInstance();
+                NoeudBase n = FabriqueNoeuds.creerDepuisSauvegarde(ndto.classeType, ndto.cleNoeud);
                 n.id = ndto.id;
 
                 if (ndto.parametres != null) {
@@ -247,11 +246,6 @@ public class Blueprint {
                         // setCibleVariable() réécrit nomCibleVariable avec cibleTrouvee.nom,
                         // ce qui est sans danger ici car c'est censé être la même valeur.
                     }
-
-                    DiagLogger.log(cheminLog, "LOAD_VAR noeud=" + n.nom + " id=" + n.id
-                            + " nom_json=" + ndto.cibleVariableNom
-                            + " objet_trouve=" + (cibleTrouvee != null)
-                            + " nomCibleVariable_final=" + n.nomCibleVariable);
                 }
                 
                 if (ndto.cibleSceneNom != null && NoeudBase.contexteApplication != null) {
@@ -274,20 +268,51 @@ public class Blueprint {
                 bp.ajouterNoeud(n, ndto.x, ndto.y);
                 dictionnaireNoeuds.put(n.id, n);
             } catch (Exception e) {
-                if (NoeudBase.contexteApplication != null) Toast.makeText(NoeudBase.contexteApplication, Traducteur.get("erreur_creation_noeud") + " : " + ndto.classeType, Toast.LENGTH_LONG).show();
+                DiagLogger.log(cheminLog, "ERREUR creation du noeud " + ndto.classeType + " : " + e);
             }
         }
 
         for (LienDTO ldto : dto.liens) {
             NoeudBase dep = dictionnaireNoeuds.get(ldto.idDepart);
             NoeudBase arr = dictionnaireNoeuds.get(ldto.idArrivee);
-            if (dep != null && arr != null) bp.ajouterLien(dep, ldto.portDepart, arr, ldto.portArrivee);
+            if (dep != null && arr != null) {
+                // Les noms de ports peuvent etre traduits : on retrouve le vrai port meme si la langue a change
+                String portDep = resoudreNomPort(dep.portsSortie, ldto.portDepart, ldto.indexPortDepart);
+                String portArr = resoudreNomPort(arr.portsEntree, ldto.portArrivee, ldto.indexPortArrivee);
+                bp.ajouterLien(dep, portDep, arr, portArr);
+            }
         }
         return bp;
     }
 
     public static Blueprint fromJson(String json) {
         return fromJson(json, null);
+    }
+
+    // Position d'un port dans sa liste (retrouve par son nom actuel). null si introuvable.
+    private static Integer trouverIndexPort(List<Port> ports, String nom) {
+        if (ports == null || nom == null) return null;
+        for (int i = 0; i < ports.size(); i++) {
+            if (nom.equals(ports.get(i).nom)) return i;
+        }
+        return null;
+    }
+
+    // Retrouve le nom ACTUEL d'un port, meme si le nom sauvegarde est dans une autre langue :
+    // 1. par son nom exact (cas normal) ; 2. sinon par sa position sauvegardee ;
+    // 3. sinon, s'il n'y a qu'un seul port de ce cote, celui-la (anciens projets).
+    private static String resoudreNomPort(List<Port> ports, String nomSauvegarde, Integer indexSauvegarde) {
+        if (ports == null || ports.isEmpty()) return nomSauvegarde;
+        if (nomSauvegarde != null) {
+            for (Port p : ports) {
+                if (nomSauvegarde.equals(p.nom)) return nomSauvegarde;
+            }
+        }
+        if (indexSauvegarde != null && indexSauvegarde >= 0 && indexSauvegarde < ports.size()) {
+            return ports.get(indexSauvegarde).nom;
+        }
+        if (ports.size() == 1) return ports.get(0).nom;
+        return nomSauvegarde;
     }
 
     private static class BlueprintDTO {
@@ -298,6 +323,7 @@ public class Blueprint {
     private static class NoeudDTO {
         String id;
         String classeType;
+        String cleNoeud;
         float x;
         float y;
         List<PortDTO> portsEntree = new ArrayList<>();
@@ -318,6 +344,11 @@ public class Blueprint {
         String portDepart;
         String idArrivee;
         String portArrivee;
+        // NOUVEAU : positions des ports (Integer et non int : absent = null pour les anciens projets)
+        Integer indexPortDepart;
+        Integer indexPortArrivee;
     }
 }
 // bas 2
+
+

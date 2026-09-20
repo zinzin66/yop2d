@@ -658,7 +658,12 @@
 "insp_btn_couleur_fond_prog": "背景颜色",
 "noeud_modifier_progression": "设置进度",
 "param_nouvelle_valeur": "新值",
-"insp_couleur_aucune": "无"
+"insp_couleur_aucune": "无",
+  "noeud_extraire_propriete": "提取属性",
+  "noeud_event_maintenu_objet": "按住物体",
+  "noeud_fin_clic_sur_objet": "松开物体",
+"param_propriete": "要提取的属性"
+  
   
   
   

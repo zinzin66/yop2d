@@ -630,7 +630,8 @@ public class VueJeu extends View {
         return m;
     }
 // bas 3
-// haut 4
+
+  // haut 4
     private boolean pointDansObjet(float xVue, float yVue, float xMonde, float yMonde, ObjetBase obj) {
         boolean isHud = (sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(obj));
         List<ObjetBase> contexte = isHud ? sceneHudActive.objets : sceneActive.objets;
@@ -846,6 +847,14 @@ public class VueJeu extends View {
             
             if (objetEnGlissement != null) {
                 MoteurLogique.dernierObjetImplique = objetEnGlissement;
+
+                // --- MODIFICATION : DÉCLENCHEMENT DU CLIC IMMÉDIAT (APPUI) ---
+                if (sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(objetEnGlissement) && this.moteurHud != null) {
+                    this.moteurHud.executerEvenementSurObjet(NoeudEventClicObjet.class, objetEnGlissement);
+                } else if (sceneActive != null && sceneActive.objets != null && sceneActive.objets.contains(objetEnGlissement) && this.moteur != null) {
+                    this.moteur.executerEvenementSurObjet(NoeudEventClicObjet.class, objetEnGlissement);
+                }
+                
                 if (sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(objetEnGlissement) && this.moteurHud != null) {
                     this.moteurHud.executerEvenementSurObjet(NoeudEventDebutGlisser.class, objetEnGlissement);
                     lastXJeu = xVue; lastYJeu = yVue; 
@@ -892,10 +901,11 @@ public class VueJeu extends View {
             ObjetBase objClick = trouverObjetSousPoint(xVue, yVue, false);
             if (objClick != null && !objClick.estDesactive) {
                 MoteurLogique.dernierObjetImplique = objClick;
+                // --- MODIFICATION : DÉCLENCHEMENT DE LA FIN DE CLIC (RELÂCHEMENT) ---
                 if (sceneHudActive != null && sceneHudActive.objets.contains(objClick) && this.moteurHud != null) {
-                    this.moteurHud.executerEvenementSurObjet(NoeudEventClicObjet.class, objClick);
+                    this.moteurHud.executerEvenementSurObjet(NoeudEventFinClicObjet.class, objClick);
                 } else if (sceneActive != null && sceneActive.objets.contains(objClick) && this.moteur != null) {
-                    this.moteur.executerEvenementSurObjet(NoeudEventClicObjet.class, objClick);
+                    this.moteur.executerEvenementSurObjet(NoeudEventFinClicObjet.class, objClick);
                 }
             }
             if (this.moteur != null) this.moteur.executerEvenement(NoeudEventFinClic.class);
@@ -914,6 +924,8 @@ public class VueJeu extends View {
         return true;
     }
 // bas 4
+                                   
+        
 // haut 5
     private void dessinerImage(Canvas canvas, ObjetBase objet, String cheminAAfficher) {
         if (cheminAAfficher != null && cheminProjet != null) {

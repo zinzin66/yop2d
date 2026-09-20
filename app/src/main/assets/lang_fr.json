@@ -653,7 +653,10 @@
 "insp_btn_couleur_fond_prog": "Couleur du fond",
 "noeud_modifier_progression": "Définir la Progression",
 "param_nouvelle_valeur": "Nouvelle Valeur",
-"insp_couleur_aucune": "Aucune"
+"insp_couleur_aucune": "Aucune",
+  "noeud_extraire_propriete": "Extraire une propriété",
+"param_propriete": "Propriété à extraire"
+  
   
   
   

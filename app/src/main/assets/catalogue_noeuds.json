@@ -1,0 +1,435 @@
+// haut 1
+{
+  "libelles": {
+    "Aucun": { "fr": "Aucun", "en": "None", "es": "Ninguno", "pt": "Nenhum", "de": "Keiner", "it": "Nessuno", "ru": "Нет", "zh": "无", "ja": "なし" },
+    "Noir et Blanc": { "fr": "Noir et Blanc", "en": "Black and White", "es": "Blanco y negro", "pt": "Preto e branco", "de": "Schwarzweiß", "it": "Bianco e nero", "ru": "Чёрно-белый", "zh": "黑白", "ja": "白黒" },
+    "Sepia": { "fr": "Sepia", "en": "Sepia", "es": "Sepia", "pt": "Sépia", "de": "Sepia", "it": "Seppia", "ru": "Сепия", "zh": "棕褐色", "ja": "セピア" },
+    "Inversion": { "fr": "Inversion", "en": "Invert", "es": "Invertir", "pt": "Inverter", "de": "Invertieren", "it": "Inverti", "ru": "Инверсия", "zh": "反色", "ja": "反転" },
+    "Additif": { "fr": "Additif", "en": "Additive", "es": "Aditivo", "pt": "Aditivo", "de": "Additiv", "it": "Additivo", "ru": "Аддитивный", "zh": "叠加", "ja": "加算" },
+    "Multiplicatif": { "fr": "Multiplicatif", "en": "Multiply", "es": "Multiplicar", "pt": "Multiplicar", "de": "Multiplizieren", "it": "Moltiplica", "ru": "Умножение", "zh": "正片叠底", "ja": "乗算" },
+    "Ecran": { "fr": "Écran", "en": "Screen", "es": "Pantalla", "pt": "Tela", "de": "Bildschirm", "it": "Scherma", "ru": "Экран", "zh": "滤色", "ja": "スクリーン" },
+    "Horizontal": { "fr": "Horizontal", "en": "Horizontal", "es": "Horizontal", "pt": "Horizontal", "de": "Horizontal", "it": "Orizzontale", "ru": "По горизонтали", "zh": "水平", "ja": "水平" },
+    "Vertical": { "fr": "Vertical", "en": "Vertical", "es": "Vertical", "pt": "Vertical", "de": "Vertikal", "it": "Verticale", "ru": "По вертикали", "zh": "垂直", "ja": "垂直" },
+    "Activer": { "fr": "Activer", "en": "Enable", "es": "Activar", "pt": "Ativar", "de": "Aktivieren", "it": "Attiva", "ru": "Включить", "zh": "启用", "ja": "有効にする" },
+    "Désactiver": { "fr": "Désactiver", "en": "Disable", "es": "Desactivar", "pt": "Desativar", "de": "Deaktivieren", "it": "Disattiva", "ru": "Отключить", "zh": "禁用", "ja": "無効にする" },
+    "Angle de départ": { "fr": "Angle de départ", "en": "Start angle", "es": "Ángulo inicial", "pt": "Ângulo inicial", "de": "Startwinkel", "it": "Angolo iniziale", "ru": "Начальный угол", "zh": "起始角度", "ja": "開始角度" },
+    "Vers la cible": { "fr": "Vers la cible", "en": "Toward target", "es": "Hacia el objetivo", "pt": "Em direção ao alvo", "de": "Zum Ziel", "it": "Verso il bersaglio", "ru": "К цели", "zh": "朝向目标", "ja": "ターゲットへ" }
+  },
+  "noeuds": [
+    {
+      "cle": "deplacer",
+      "nomCle": "noeud_deplacer_objet",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "0", "nom": "X" },
+        { "cle": "y", "type": "formule", "defaut": "0", "nom": "Y" }
+      ]
+    },
+    {
+      "cle": "pousser",
+      "nomCle": "noeud_pousser_objet",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Ajout X", "en": "Add X", "es": "Añadir X", "pt": "Adicionar X", "de": "X hinzufügen", "it": "Aggiungi X", "ru": "Добавить X", "zh": "增加 X", "ja": "X を加算" } },
+        { "cle": "y", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Ajout Y", "en": "Add Y", "es": "Añadir Y", "pt": "Adicionar Y", "de": "Y hinzufügen", "it": "Aggiungi Y", "ru": "Добавить Y", "zh": "增加 Y", "ja": "Y を加算" } }
+      ]
+    },
+    {
+      "cle": "modifier_variable",
+      "nomCle": "noeud_modifier_variable",
+      "categorie": "cat_variables_inventaire",
+      "objet": true,
+      "variable": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "",
+          "nom": { "fr": "Valeur", "en": "Value", "es": "Valor", "pt": "Valor", "de": "Wert", "it": "Valore", "ru": "Значение", "zh": "值", "ja": "値" } }
+      ]
+    },
+    {
+      "cle": "toast",
+      "nomCle": "noeud_toast",
+      "categorie": "cat_scene_hud",
+      "champs": [
+        { "cle": "message", "type": "texte", "defaut": "",
+          "nom": { "fr": "Message", "en": "Message", "es": "Mensaje", "pt": "Mensagem", "de": "Nachricht", "it": "Messaggio", "ru": "Сообщение", "zh": "消息", "ja": "メッセージ" } }
+      ]
+    },
+    {
+      "cle": "condition",
+      "nomCle": "noeud_condition",
+      "categorie": "cat_logique_conditions",
+      "sorties": ["vrai", "faux"],
+      "champs": [
+        { "cle": "condition", "type": "formule", "defaut": "",
+          "nom": { "fr": "Condition", "en": "Condition", "es": "Condición", "pt": "Condição", "de": "Bedingung", "it": "Condizione", "ru": "Условие", "zh": "条件", "ja": "条件" } }
+      ]
+    },
+    {
+      "cle": "modifier_propriete",
+      "nom": { "fr": "Modifier une propriété", "en": "Set a property", "es": "Modificar una propiedad", "pt": "Modificar uma propriedade", "de": "Eigenschaft ändern", "it": "Modifica una proprietà", "ru": "Изменить свойство", "zh": "修改属性", "ja": "プロパティを変更" },
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "propriete", "type": "choix", "options": ["@proprietes"], "defaut": "x",
+          "nom": { "fr": "Propriété", "en": "Property", "es": "Propiedad", "pt": "Propriedade", "de": "Eigenschaft", "it": "Proprietà", "ru": "Свойство", "zh": "属性", "ja": "プロパティ" } },
+        { "cle": "valeur", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Valeur", "en": "Value", "es": "Valor", "pt": "Valor", "de": "Wert", "it": "Valore", "ru": "Значение", "zh": "值", "ja": "値" } }
+      ]
+    },
+    {
+      "cle": "rotation",
+      "nomCle": "noeud_rotation",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "rotation" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Angle (degrés)", "en": "Angle (degrees)", "es": "Ángulo (grados)", "pt": "Ângulo (graus)", "de": "Winkel (Grad)", "it": "Angolo (gradi)", "ru": "Угол (градусы)", "zh": "角度（度）", "ja": "角度（度）" } }
+      ]
+    },
+    {
+      "cle": "opacite",
+      "nomCle": "noeud_opacite",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "opacite" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "1",
+          "nom": { "fr": "Opacité (0 à 1)", "en": "Opacity (0 to 1)", "es": "Opacidad (0 a 1)", "pt": "Opacidade (0 a 1)", "de": "Deckkraft (0 bis 1)", "it": "Opacità (da 0 a 1)", "ru": "Непрозрачность (0–1)", "zh": "不透明度（0到1）", "ja": "不透明度（0〜1）" } }
+      ]
+    },
+    {
+      "cle": "visibilite",
+      "nomCle": "noeud_visibilite",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "visible" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "true",
+          "nom": { "fr": "Visible (true / false)", "en": "Visible (true / false)", "es": "Visible (true / false)", "pt": "Visível (true / false)", "de": "Sichtbar (true / false)", "it": "Visibile (true / false)", "ru": "Видимость (true / false)", "zh": "可见（true / false）", "ja": "表示（true / false）" } }
+      ]
+    },
+    {
+      "cle": "definir_tag",
+      "nomCle": "noeud_definir_tag",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "tag" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "texte", "defaut": "",
+          "nom": { "fr": "Tag", "en": "Tag", "es": "Etiqueta", "pt": "Tag", "de": "Tag", "it": "Tag", "ru": "Тег", "zh": "标签", "ja": "タグ" } }
+      ]
+    },
+    {
+      "cle": "changer_zorder",
+      "nomCle": "noeud_changer_zorder",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "z" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "0", "nom": "Z" }
+      ]
+    },
+    {
+      "cle": "modifier_texte",
+      "nomCle": "noeud_modifier_texte",
+      "categorie": "cat_textes_dialogues",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "texte" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "texte", "defaut": "",
+          "nom": { "fr": "Nouveau texte", "en": "New text", "es": "Texto nuevo", "pt": "Novo texto", "de": "Neuer Text", "it": "Nuovo testo", "ru": "Новый текст", "zh": "新文本", "ja": "新しいテキスト" } }
+      ]
+    },
+    {
+      "cle": "ajouter_variable",
+      "nomCle": "noeud_ajouter_a_variable",
+      "categorie": "cat_variables_inventaire",
+      "objet": true,
+      "variable": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "1",
+          "nom": { "fr": "Valeur à ajouter", "en": "Value to add", "es": "Valor a añadir", "pt": "Valor a adicionar", "de": "Hinzuzufügender Wert", "it": "Valore da aggiungere", "ru": "Добавляемое значение", "zh": "要增加的值", "ja": "加算する値" } }
+      ]
+    },
+    {
+      "cle": "limiter_valeur",
+      "nomCle": "noeud_limiter_valeur",
+      "action": "limiter_variable",
+      "categorie": "cat_variables_inventaire",
+      "objet": true,
+      "variable": true,
+      "champs": [
+        { "cle": "min", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Minimum", "en": "Minimum", "es": "Mínimo", "pt": "Mínimo", "de": "Minimum", "it": "Minimo", "ru": "Минимум", "zh": "最小值", "ja": "最小値" } },
+        { "cle": "max", "type": "formule", "defaut": "100",
+          "nom": { "fr": "Maximum", "en": "Maximum", "es": "Máximo", "pt": "Máximo", "de": "Maximum", "it": "Massimo", "ru": "Максимум", "zh": "最大值", "ja": "最大値" } }
+      ]
+    },
+    {
+      "cle": "modifier_taille",
+      "nomCle": "noeud_definir_taille",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_echelle",
+      "objet": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "1", "nom": "Scale X" },
+        { "cle": "y", "type": "formule", "defaut": "1", "nom": "Scale Y" }
+      ]
+    },
+    {
+      "cle": "detruire_objet",
+      "nomCle": "noeud_detruire_objet",
+      "categorie": "cat_apparence_objets",
+      "action": "detruire",
+      "objet": true
+    },
+    {
+      "cle": "detruire_par_tag",
+      "nomCle": "noeud_detruire_par_tag",
+      "categorie": "cat_apparence_objets",
+      "champs": [
+        { "cle": "tag", "type": "tag", "defaut": "Ennemi",
+          "nom": { "fr": "Tag à détruire", "en": "Tag to destroy", "es": "Etiqueta a destruir", "pt": "Tag a destruir", "de": "Zu zerstörender Tag", "it": "Tag da distruggere", "ru": "Тег для уничтожения", "zh": "要销毁的标签", "ja": "破棄するタグ" } }
+      ]
+    },
+    {
+      "cle": "changer_image",
+      "nomCle": "noeud_changer_image",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "image", "type": "image", "defaut": "",
+          "nom": { "fr": "Image", "en": "Image", "es": "Imagen", "pt": "Imagem", "de": "Bild", "it": "Immagine", "ru": "Изображение", "zh": "图像", "ja": "画像" } }
+      ]
+    },
+    {
+      "cle": "modifier_couleur",
+      "nomCle": "noeud_modifier_couleur",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "couleur", "type": "couleur", "defaut": "Noir",
+          "nom": { "fr": "Couleur", "en": "Color", "es": "Color", "pt": "Cor", "de": "Farbe", "it": "Colore", "ru": "Цвет", "zh": "颜色", "ja": "色" } }
+      ]
+    },
+    {
+      "cle": "generer_clone",
+      "nomCle": "noeud_generer_clone",
+      "categorie": "cat_apparence_objets",
+      "action": "cloner",
+      "objet": true,
+      "objetB": true
+    },
+    {
+      "cle": "filtre_couleur",
+      "nomCle": "noeud_filtre_couleur",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_filtre",
+      "objet": true,
+      "champs": [
+        { "cle": "filtre", "type": "choix", "options": ["Aucun", "Noir et Blanc", "Sepia", "Inversion"], "defaut": "Noir et Blanc",
+          "nom": {"fr": "Filtre", "en": "Filter", "es": "Filtro", "pt": "Filtro", "de": "Filter", "it": "Filtro", "ru": "Фильтр", "zh": "滤镜", "ja": "フィルター"} }
+      ]
+    },
+    {
+      "cle": "mode_affichage",
+      "nomCle": "noeud_mode_affichage",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_filtre",
+      "objet": true,
+      "champs": [
+        { "cle": "filtre", "type": "choix", "options": ["Aucun", "Additif", "Multiplicatif", "Ecran", "Inversion"], "defaut": "Aucun",
+          "nom": {"fr": "Filtre", "en": "Filter", "es": "Filtro", "pt": "Filtro", "de": "Filter", "it": "Filtro", "ru": "Фильтр", "zh": "滤镜", "ja": "フィルター"} }
+      ]
+    },
+    {
+      "cle": "miroir",
+      "nomCle": "noeud_miroir",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "axe", "type": "choix", "options": ["Horizontal", "Vertical"], "defaut": "Horizontal",
+          "nom": {"fr": "Axe", "en": "Axis", "es": "Eje", "pt": "Eixo", "de": "Achse", "it": "Asse", "ru": "Ось", "zh": "轴", "ja": "軸"} }
+      ]
+    },
+    {
+      "cle": "modifier_verrouillage",
+      "nomCle": "noeud_modifier_deplacable",
+      "categorie": "cat_apparence_objets",
+      "action": "verrouiller",
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "true",
+          "nom": {"fr": "Verrouillé (true / false)", "en": "Locked (true / false)", "es": "Bloqueado (true / false)", "pt": "Bloqueado (true / false)", "de": "Gesperrt (true / false)", "it": "Bloccato (true / false)", "ru": "Заблокирован (true / false)", "zh": "锁定（true / false）", "ja": "ロック（true / false）"} }
+      ]
+    },
+    {
+      "cle": "parallaxe",
+      "nomCle": "noeud_parallaxe",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_parallaxe",
+      "objet": true,
+      "champs": [
+        { "cle": "facteur", "type": "formule", "defaut": "1",
+          "nom": {"fr": "Facteur (ex : 0.5)", "en": "Factor (e.g. 0.5)", "es": "Factor (p. ej. 0.5)", "pt": "Fator (ex.: 0.5)", "de": "Faktor (z. B. 0.5)", "it": "Fattore (es. 0.5)", "ru": "Коэффициент (напр. 0.5)", "zh": "系数（如 0.5）", "ja": "係数（例：0.5）"} }
+      ]
+    },
+    {
+      "cle": "lier_objets",
+      "nomCle": "noeud_lier_objets",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "objetB": true
+    },
+    {
+      "cle": "surbrillance",
+      "nomCle": "noeud_surbrillance",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "etat", "type": "choix", "options": ["Activer", "Désactiver"], "defaut": "Activer",
+          "nom": {"fr": "État", "en": "State", "es": "Estado", "pt": "Estado", "de": "Zustand", "it": "Stato", "ru": "Состояние", "zh": "状态", "ja": "状態"} },
+        { "cle": "couleur", "type": "couleur", "defaut": "Jaune",
+          "nom": {"fr": "Couleur", "en": "Color", "es": "Color", "pt": "Cor", "de": "Farbe", "it": "Colore", "ru": "Цвет", "zh": "颜色", "ja": "色"} }
+      ]
+    },
+    {
+      "cle": "clignotement",
+      "nomCle": "noeud_clignotement",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "etat", "type": "choix", "options": ["Activer", "Désactiver"], "defaut": "Activer",
+          "nom": {"fr": "État", "en": "State", "es": "Estado", "pt": "Estado", "de": "Zustand", "it": "Stato", "ru": "Состояние", "zh": "状态", "ja": "状態"} },
+        { "cle": "vitesse", "type": "formule", "defaut": "500",
+          "nom": {"fr": "Vitesse (ms)", "en": "Speed (ms)", "es": "Velocidad (ms)", "pt": "Velocidade (ms)", "de": "Geschwindigkeit (ms)", "it": "Velocità (ms)", "ru": "Скорость (мс)", "zh": "速度（毫秒）", "ja": "速度（ms）"} },
+        { "cle": "duree", "type": "formule", "defaut": "0",
+          "nom": {"fr": "Durée (ms, 0 = infini)", "en": "Duration (ms, 0 = infinite)", "es": "Duración (ms, 0 = infinito)", "pt": "Duração (ms, 0 = infinito)", "de": "Dauer (ms, 0 = unendlich)", "it": "Durata (ms, 0 = infinito)", "ru": "Длительность (мс, 0 = бесконечно)", "zh": "持续时间（毫秒，0 = 无限）", "ja": "継続時間（ms、0 = 無限）"} }
+      ]
+    },
+    {
+      "cle": "generer_clone_position",
+      "nomCle": "noeud_generer_clone_position",
+      "categorie": "cat_apparence_objets",
+      "action": "cloner_position",
+      "objetB": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "0", "nom": "X" },
+        { "cle": "y", "type": "formule", "defaut": "0", "nom": "Y" }
+      ]
+    },
+    {
+      "cle": "tirer",
+      "nomCle": "noeud_tirer_nom",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "objetB": true,
+      "champs": [
+        { "cle": "modele", "type": "texte", "defaut": "",
+          "nom": {"fr": "Nom du modèle", "en": "Model name", "es": "Nombre del modelo", "pt": "Nome do modelo", "de": "Modellname", "it": "Nome del modello", "ru": "Имя модели", "zh": "模型名称", "ja": "モデル名"} },
+        { "cle": "direction", "type": "choix", "options": ["Angle de départ", "Vers la cible"], "defaut": "Angle de départ",
+          "nom": {"fr": "Direction", "en": "Direction", "es": "Dirección", "pt": "Direção", "de": "Richtung", "it": "Direzione", "ru": "Направление", "zh": "方向", "ja": "方向"} },
+        { "cle": "vitesse", "type": "formule", "defaut": "10",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+      ]
+    },
+    {
+      "cle": "arreter",
+      "nomCle": "noeud_arreter",
+      "categorie": "cat_mouvements_ia",
+      "action": "arreter_objet",
+      "objet": true
+    },
+    {
+      "cle": "stopper_mouvements",
+      "nomCle": "noeud_stopper_mouvements",
+      "categorie": "cat_mouvements_ia",
+      "objet": true
+    },
+    {
+      "cle": "avancer_continu",
+      "nomCle": "noeud_avancer_en_continu",
+      "categorie": "cat_mouvements_ia",
+      "objet": true,
+      "champs": [
+        { "cle": "vitesse", "type": "formule", "defaut": "5",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+      ]
+    },
+    {
+      "cle": "poursuivre",
+      "nomCle": "noeud_poursuivre_un_objet",
+      "categorie": "cat_mouvements_ia",
+      "action": "poursuivre",
+      "constantes": { "fuite": "false" },
+      "objet": true,
+      "objetB": true,
+      "champs": [
+        { "cle": "vitesse", "type": "formule", "defaut": "5",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+      ]
+    },
+    {
+      "cle": "fuir",
+      "nomCle": "noeud_fuir_un_objet",
+      "categorie": "cat_mouvements_ia",
+      "action": "poursuivre",
+      "constantes": { "fuite": "true" },
+      "objet": true,
+      "objetB": true,
+      "champs": [
+        { "cle": "vitesse", "type": "formule", "defaut": "5",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+      ]
+    },
+    {
+      "cle": "modifier_progression",
+      "nomCle": "noeud_modifier_progression",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_progression",
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "100",
+          "nom": {"fr": "Nouvelle progression", "en": "New progress", "es": "Nuevo progreso", "pt": "Novo progresso", "de": "Neuer Fortschritt", "it": "Nuovo progresso", "ru": "Новый прогресс", "zh": "新进度", "ja": "新しい進捗"} }
+      ]
+    },
+    {
+      "cle": "traverser_ecran",
+      "nomCle": "noeud_traverser_ecran",
+      "categorie": "cat_apparence_objets",
+      "objet": true
+    },
+    {
+      "cle": "garder_dans_ecran",
+      "nomCle": "noeud_garder_ecran",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "marge", "type": "formule", "defaut": "0",
+          "nom": {"fr": "Marge", "en": "Margin", "es": "Margen", "pt": "Margem", "de": "Rand", "it": "Margine", "ru": "Отступ", "zh": "边距", "ja": "余白"} }
+      ]
+    },
+    {
+      "cle": "journal",
+      "nom": { "fr": "Écrire dans le journal", "en": "Write to log", "es": "Escribir en el registro", "pt": "Escrever no registo", "de": "In das Protokoll schreiben", "it": "Scrivi nel registro", "ru": "Записать в журнал", "zh": "写入日志", "ja": "ログに書き込む" },
+      "categorie": "cat_scene_hud",
+      "action": "journaliser",
+      "champs": [
+        { "cle": "message", "type": "texte", "defaut": "",
+          "nom": {"fr": "Message", "en": "Message", "es": "Mensaje", "pt": "Mensagem", "de": "Nachricht", "it": "Messaggio", "ru": "Сообщение", "zh": "消息", "ja": "メッセージ"} }
+      ]
+    }
+  ]
+}
+// bas 1

@@ -224,6 +224,19 @@ public class InterfaceBlueprint extends Activity {
         boutonCode.setOnClickListener(v -> afficherFenetreCode());
         bandeauHaut.addView(boutonCode);
 
+        Button boutonJson = new Button(this);
+        boutonJson.setText("{ }");
+        boutonJson.setTextSize(14f);
+        boutonJson.setTextColor(Palette.texteNormal);
+        boutonJson.setBackground(fond(Palette.boutonNormal, 6, Palette.bordure, 1));
+        boutonJson.setPadding(0, 0, 0, 0);
+        LinearLayout.LayoutParams lpJson = new LinearLayout.LayoutParams(dp(44), dp(38));
+        lpJson.setMargins(0, 0, dp(6), 0);
+        lpJson.gravity = Gravity.CENTER_VERTICAL;
+        boutonJson.setLayoutParams(lpJson);
+        boutonJson.setOnClickListener(v -> afficherImportJson());
+        bandeauHaut.addView(boutonJson);
+        
         Button boutonAide = new Button(this);
         boutonAide.setText("?");
         boutonAide.setTextSize(18f);
@@ -269,6 +282,28 @@ public class InterfaceBlueprint extends Activity {
 // bas 2
 
 // haut 3
+
+    // Colle un script au format JSON (celui que produit le bouton Sauvegarder) : il REMPLACE le script de la scène.
+    private void afficherImportJson() {
+        final android.widget.EditText saisie = new android.widget.EditText(this);
+        saisie.setHint("{ \"noeuds\": [ ... ], \"liens\": [ ... ] }");
+        saisie.setMinLines(8);
+        saisie.setGravity(Gravity.TOP | Gravity.START);
+        new android.app.AlertDialog.Builder(this)
+                .setTitle("Importer un script (JSON)")
+                .setView(saisie)
+                .setPositiveButton("OK", (d, w) -> {
+                    String texte = saisie.getText().toString().trim();
+                    if (texte.isEmpty()) return;
+                    blueprintActif = Blueprint.fromJson(texte, canvasBlueprint.sceneActive);
+                    canvasBlueprint.setBlueprint(blueprintActif);
+                    canvasBlueprint.invalidate();
+                    sauvegarderBlueprintLocal();
+                })
+                .setNegativeButton(Traducteur.get("bouton_annuler"), null)
+                .show();
+    }
+    
     private void sauvegarderBlueprintLocal() {
         try {
             File file;
@@ -345,6 +380,11 @@ public class InterfaceBlueprint extends Activity {
     }
 
     private String formaterNoeud(NoeudBase noeud) {
+        return ExportBlueprint.formaterNoeud(noeud);
+    }
+
+    // Ancienne version, plus utilisée (à supprimer un jour)
+    private String formaterNoeudAncien(NoeudBase noeud) {
         StringBuilder sb = new StringBuilder();
         sb.append("[").append(noeud.nom).append("]");
         
@@ -402,10 +442,7 @@ public class InterfaceBlueprint extends Activity {
                 if (noeudSuivant != null) {
                     noeudsVisites.add(noeudSuivant.id);
                     
-                    String prefixe = indentation + "-> ";
-                    if (!portDeclencheur.equals("Suivant") && !portDeclencheur.equals("Sortie")) {
-                        prefixe = indentation + "(" + Traducteur.get("blueprint_si") + " " + portDeclencheur + ") -> ";
-                    }
+                    String prefixe = ExportBlueprint.prefixe(indentation, portDeclencheur);
                     
                     res.append(prefixe).append(formaterNoeud(noeudSuivant)).append("\n");
                     
