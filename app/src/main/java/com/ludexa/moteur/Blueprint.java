@@ -1,7 +1,6 @@
 // haut 1
 package com.ludexa.moteur;
 
-import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -53,7 +52,6 @@ public class Blueprint {
     public String toJson() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         BlueprintDTO dto = new BlueprintDTO();
-        String cheminLog = NoeudBase.cheminProjetCourant;
 
         for (NoeudBase n : noeuds) {
             NoeudDTO ndto = new NoeudDTO();
@@ -104,9 +102,6 @@ public class Blueprint {
                 } else if (n.getCibleVariable() != null) {
                     ndto.cibleVariableNom = n.getCibleVariable().nom;
                 }
-                DiagLogger.log(cheminLog, "SAVE_VAR noeud=" + n.nom + " id=" + n.id
-                        + " nomCibleVariable(champ)=" + n.nomCibleVariable
-                        + " -> ecrit_dans_json=" + ndto.cibleVariableNom);
             }
 
             if (n.requiertCibleScene() && n.getCibleScene() != null) ndto.cibleSceneNom = n.getCibleScene().nom;
@@ -137,6 +132,7 @@ public class Blueprint {
         return gson.toJson(dto);
     }
 // bas 1
+
 // haut 2
     public static Blueprint fromJson(String json, Scene scene) {
         Gson gson = new Gson();
@@ -145,7 +141,7 @@ public class Blueprint {
         String cheminLog = NoeudBase.cheminProjetCourant;
 
         if (dto == null) {
-            if (NoeudBase.contexteApplication != null) Toast.makeText(NoeudBase.contexteApplication, Traducteur.get("erreur_json_invalide"), Toast.LENGTH_LONG).show();
+            DiagLogger.log(cheminLog, "ERREUR script illisible (JSON invalide)");
             return bp;
         }
 
@@ -250,11 +246,6 @@ public class Blueprint {
                         // setCibleVariable() réécrit nomCibleVariable avec cibleTrouvee.nom,
                         // ce qui est sans danger ici car c'est censé être la même valeur.
                     }
-
-                    DiagLogger.log(cheminLog, "LOAD_VAR noeud=" + n.nom + " id=" + n.id
-                            + " nom_json=" + ndto.cibleVariableNom
-                            + " objet_trouve=" + (cibleTrouvee != null)
-                            + " nomCibleVariable_final=" + n.nomCibleVariable);
                 }
                 
                 if (ndto.cibleSceneNom != null && NoeudBase.contexteApplication != null) {
@@ -277,7 +268,7 @@ public class Blueprint {
                 bp.ajouterNoeud(n, ndto.x, ndto.y);
                 dictionnaireNoeuds.put(n.id, n);
             } catch (Exception e) {
-                if (NoeudBase.contexteApplication != null) Toast.makeText(NoeudBase.contexteApplication, Traducteur.get("erreur_creation_noeud") + " : " + ndto.classeType, Toast.LENGTH_LONG).show();
+                DiagLogger.log(cheminLog, "ERREUR creation du noeud " + ndto.classeType + " : " + e);
             }
         }
 
@@ -359,11 +350,5 @@ public class Blueprint {
     }
 }
 // bas 2
-
-
-
-
-
-
 
 
