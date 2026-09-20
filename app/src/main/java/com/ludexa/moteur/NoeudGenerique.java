@@ -18,6 +18,8 @@ public class NoeudGenerique extends NoeudBase {
     private final Map<String, String> valeurs = new LinkedHashMap<>();
     private static long dernierSignalement = 0;
     private long derniereAlerte = 0;
+    private transient Scene cibleSceneResolue;   // la scène choisie dans le nœud (Changer de scène, Ouvrir un HUD...)
+    private String nomCibleScene;
 
     public NoeudGenerique(String cle) {
         super(genererId(), "?", "Action");
@@ -45,8 +47,8 @@ public class NoeudGenerique extends NoeudBase {
             signaler(e);
         }
         if (Evaluateur.derniereErreur != null) alerte(Evaluateur.derniereErreur);
-        if (sortie == null) sortie = definition.sorties.get(0);
-        propagerExecution(sortie);
+        if (sortie == null && !definition.sorties.isEmpty()) sortie = definition.sorties.get(0);
+        if (sortie != null) propagerExecution(sortie);   // un nœud sans sortie termine le script
     }
 
     private void signaler(RuntimeException e) {
@@ -234,6 +236,24 @@ public class NoeudGenerique extends NoeudBase {
         if (nomCibleObjetB == null || nomCibleObjetB.isEmpty()) return null;
         ObjetBase o = Evaluateur.trouverObjet(nomCibleObjetB);
         return (o != null) ? o : super.getCibleObjetB();
+    }
+
+    @Override
+    public boolean requiertCibleScene() {
+        return definition.scene;
+    }
+
+    @Override
+    public void setCibleScene(Scene scene) {
+        this.cibleSceneResolue = scene;
+        this.nomCibleScene = (scene != null) ? scene.nom : null;
+    }
+
+    // La scène choisie ; si elle n'est pas encore résolue, on la retrouve par son nom dans les scènes du projet.
+    @Override
+    public Scene getCibleScene() {
+        if (cibleSceneResolue == null && nomCibleScene != null) cibleSceneResolue = ActionsScene.trouverScene(nomCibleScene);
+        return cibleSceneResolue;
     }
 
     // Toujours retrouvée par son nom (pas de mémoire) : les clones d'un prefab ne se mélangent pas.
