@@ -31,6 +31,12 @@ public class GestionnaireControles {
         joyDirY = 0f;
         isActionPressed = false;
         isActionJustPressed = false;
+        reinitialiserCamera();
+    }
+
+    // Caméra à zéro : au lancement du Play, et à chaque changement ou redémarrage de scène
+    // (la nouvelle scène règle elle-même sa caméra à son démarrage).
+    public static void reinitialiserCamera() {
         cameraCibleId = null;
         cameraX = 0f;
         cameraY = 0f;
