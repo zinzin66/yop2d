@@ -41,6 +41,7 @@ public class ActionsMoteur {
             case "definir_progression": ActionsMouvements.definirProgression(n); return null;
             case "traverser_ecran": ActionsMouvements.traverserEcran(n); return null;
             case "garder_dans_ecran": ActionsMouvements.garderDansEcran(n); return null;
+            case "journaliser": ActionsOutils.journaliser(n); return null;
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
