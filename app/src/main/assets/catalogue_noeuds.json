@@ -343,6 +343,82 @@
         { "cle": "vitesse", "type": "formule", "defaut": "10",
           "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
       ]
+    },
+    {
+      "cle": "arreter",
+      "nomCle": "noeud_arreter",
+      "categorie": "cat_mouvements_ia",
+      "action": "arreter_objet",
+      "objet": true
+    },
+    {
+      "cle": "stopper_mouvements",
+      "nomCle": "noeud_stopper_mouvements",
+      "categorie": "cat_mouvements_ia",
+      "objet": true
+    },
+    {
+      "cle": "avancer_continu",
+      "nomCle": "noeud_avancer_en_continu",
+      "categorie": "cat_mouvements_ia",
+      "objet": true,
+      "champs": [
+        { "cle": "vitesse", "type": "formule", "defaut": "5",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+      ]
+    },
+    {
+      "cle": "poursuivre",
+      "nomCle": "noeud_poursuivre_un_objet",
+      "categorie": "cat_mouvements_ia",
+      "action": "poursuivre",
+      "constantes": { "fuite": "false" },
+      "objet": true,
+      "objetB": true,
+      "champs": [
+        { "cle": "vitesse", "type": "formule", "defaut": "5",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+      ]
+    },
+    {
+      "cle": "fuir",
+      "nomCle": "noeud_fuir_un_objet",
+      "categorie": "cat_mouvements_ia",
+      "action": "poursuivre",
+      "constantes": { "fuite": "true" },
+      "objet": true,
+      "objetB": true,
+      "champs": [
+        { "cle": "vitesse", "type": "formule", "defaut": "5",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+      ]
+    },
+    {
+      "cle": "modifier_progression",
+      "nomCle": "noeud_modifier_progression",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_progression",
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "100",
+          "nom": {"fr": "Nouvelle progression", "en": "New progress", "es": "Nuevo progreso", "pt": "Novo progresso", "de": "Neuer Fortschritt", "it": "Nuovo progresso", "ru": "Новый прогресс", "zh": "新进度", "ja": "新しい進捗"} }
+      ]
+    },
+    {
+      "cle": "traverser_ecran",
+      "nomCle": "noeud_traverser_ecran",
+      "categorie": "cat_apparence_objets",
+      "objet": true
+    },
+    {
+      "cle": "garder_dans_ecran",
+      "nomCle": "noeud_garder_ecran",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "marge", "type": "formule", "defaut": "0",
+          "nom": {"fr": "Marge", "en": "Margin", "es": "Margen", "pt": "Margem", "de": "Rand", "it": "Margine", "ru": "Отступ", "zh": "边距", "ja": "余白"} }
+      ]
     }
   ]
 }
