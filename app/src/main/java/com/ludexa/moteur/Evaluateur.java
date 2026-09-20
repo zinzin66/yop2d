@@ -595,7 +595,12 @@ public class Evaluateur {
         if (bas.equals("implique")) return objetImplique();
         ObjetBase o = trouverObjet(nom, 1);
         if (o != null) return o;
-        if (!crochets && bas.equals("pi")) return Math.PI;
+        if (!crochets) {
+            if (bas.equals("pi")) return Math.PI;
+            // valeurs du jeu : elles passent après les variables et les objets (une variable "temps" reste prioritaire)
+            if (bas.equals("temps")) return HorlogeJeu.tempsJeu;
+            if (bas.equals("vitesse")) return (double) HorlogeJeu.vitesse;
+        }
         v = trouverVariable(nom, ctx, 2);
         if (v != null) return valeurDe(v);
         o = trouverObjet(nom, 2);
@@ -609,7 +614,18 @@ public class Evaluateur {
         return o;
     }
 
+    // ecran.largeur et ecran.hauteur : la taille de l'écran de jeu (réglée dans le menu Réglages)
+    private static Object lireProprieteEcran(String propriete) {
+        String p = normaliser(propriete);
+        if (p.equals("largeur")) return (double) ConfigurationJeu.LARGEUR_JEU;
+        if (p.equals("hauteur")) return (double) ConfigurationJeu.HAUTEUR_JEU;
+        throw new ErreurFormule("« ecran » n'a pas de « " + propriete + " » : utilise ecran.largeur ou ecran.hauteur");
+    }
+
     private static Object lireProprieteObjet(String nomObjet, String propriete) {
+        if (normaliser(nomObjet).equals("ecran") && trouverObjet(nomObjet, 1) == null) {
+            return lireProprieteEcran(propriete);
+        }
         ObjetBase o = normaliser(nomObjet).equals("implique") ? objetImplique() : trouverObjet(nomObjet);
         if (o == null) throw new ErreurFormule("Objet introuvable : « " + nomObjet + " »");
         Object valeur = ProprietesObjet.lire(o, propriete);
@@ -743,13 +759,3 @@ public class Evaluateur {
     }
 }
 // bas 3
-
-
-
-
-
-
-
-  
-
-
