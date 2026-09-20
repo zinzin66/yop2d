@@ -15,7 +15,91 @@
     "Angle de départ": { "fr": "Angle de départ", "en": "Start angle", "es": "Ángulo inicial", "pt": "Ângulo inicial", "de": "Startwinkel", "it": "Angolo iniziale", "ru": "Начальный угол", "zh": "起始角度", "ja": "開始角度" },
     "Vers la cible": { "fr": "Vers la cible", "en": "Toward target", "es": "Hacia el objetivo", "pt": "Em direção ao alvo", "de": "Zum Ziel", "it": "Verso il bersaglio", "ru": "К цели", "zh": "朝向目标", "ja": "ターゲットへ" }
   },
+ "categories": {
+    "cat_temps": {"fr": "Temps", "en": "Time", "es": "Tiempo", "pt": "Tempo", "de": "Zeit", "it": "Tempo", "ru": "Время", "zh": "时间", "ja": "時間"}
+  },
   "noeuds": [
+    {
+      "cle": "attendre",
+      "nom": {"fr": "Attendre", "en": "Wait", "es": "Esperar", "pt": "Esperar", "de": "Warten", "it": "Attendere", "ru": "Ждать", "zh": "等待", "ja": "待つ"},
+      "categorie": "cat_temps",
+      "action": "attendre",
+      "champs": [
+        { "cle": "duree", "type": "formule", "defaut": "1",
+          "nom": {"fr": "Durée (secondes)", "en": "Duration (seconds)", "es": "Duración (segundos)", "pt": "Duração (segundos)", "de": "Dauer (Sekunden)", "it": "Durata (secondi)", "ru": "Длительность (секунды)", "zh": "时长（秒）", "ja": "時間（秒）"} }
+      ]
+    },
+    {
+      "cle": "repeter",
+      "nom": {"fr": "Répéter", "en": "Repeat", "es": "Repetir", "pt": "Repetir", "de": "Wiederholen", "it": "Ripetere", "ru": "Повторять", "zh": "重复", "ja": "繰り返す"},
+      "categorie": "cat_temps",
+      "action": "repeter",
+      "sorties": [
+        {"cle": "tout_de_suite", "nom": {"fr": "Tout de suite", "en": "Right away", "es": "Enseguida", "pt": "Imediato", "de": "Sofort", "it": "Subito", "ru": "Сразу", "zh": "立即", "ja": "すぐに"}},
+        {"cle": "a_chaque_fois", "nom": {"fr": "À chaque fois", "en": "Each time", "es": "Cada vez", "pt": "A cada vez", "de": "Jedes Mal", "it": "Ogni volta", "ru": "Каждый раз", "zh": "每次", "ja": "毎回"}},
+        {"cle": "termine", "nom": {"fr": "Terminé", "en": "Finished", "es": "Terminado", "pt": "Concluído", "de": "Fertig", "it": "Terminato", "ru": "Готово", "zh": "完成", "ja": "終了"}}
+      ],
+      "champs": [
+        { "cle": "delai", "type": "formule", "defaut": "1",
+          "nom": {"fr": "Toutes les (secondes)", "en": "Every (seconds)", "es": "Cada (segundos)", "pt": "A cada (segundos)", "de": "Alle (Sekunden)", "it": "Ogni (secondi)", "ru": "Каждые (секунды)", "zh": "每隔（秒）", "ja": "間隔（秒）"} },
+        { "cle": "repetitions", "type": "formule", "defaut": "0",
+          "nom": {"fr": "Nombre de fois (0 = sans fin)", "en": "Number of times (0 = endless)", "es": "Número de veces (0 = sin fin)", "pt": "Número de vezes (0 = sem fim)", "de": "Anzahl (0 = endlos)", "it": "Numero di volte (0 = senza fine)", "ru": "Сколько раз (0 = бесконечно)", "zh": "次数（0 = 无限）", "ja": "回数（0 = 無限）"} },
+        { "cle": "nom", "type": "texte", "defaut": "",
+          "nom": {"fr": "Nom du minuteur (facultatif)", "en": "Timer name (optional)", "es": "Nombre del temporizador (opcional)", "pt": "Nome do temporizador (opcional)", "de": "Name des Timers (optional)", "it": "Nome del timer (facoltativo)", "ru": "Имя таймера (необязательно)", "zh": "计时器名称（可选）", "ja": "タイマー名（省略可）"} }
+      ]
+    },
+    {
+      "cle": "compte_a_rebours",
+      "nom": {"fr": "Compte à rebours", "en": "Countdown", "es": "Cuenta atrás", "pt": "Contagem regressiva", "de": "Countdown", "it": "Conto alla rovescia", "ru": "Обратный отсчёт", "zh": "倒计时", "ja": "カウントダウン"},
+      "categorie": "cat_temps",
+      "action": "compte_a_rebours",
+      "objet": true,
+      "variable": true,
+      "sorties": [
+        {"cle": "chaque_seconde", "nom": {"fr": "Chaque seconde", "en": "Every second", "es": "Cada segundo", "pt": "A cada segundo", "de": "Jede Sekunde", "it": "Ogni secondo", "ru": "Каждую секунду", "zh": "每秒", "ja": "毎秒"}},
+        {"cle": "termine", "nom": {"fr": "Terminé", "en": "Finished", "es": "Terminado", "pt": "Concluído", "de": "Fertig", "it": "Terminato", "ru": "Готово", "zh": "完成", "ja": "終了"}}
+      ],
+      "champs": [
+        { "cle": "depart", "type": "formule", "defaut": "",
+          "nom": {"fr": "Départ (facultatif)", "en": "Start value (optional)", "es": "Valor inicial (opcional)", "pt": "Valor inicial (opcional)", "de": "Startwert (optional)", "it": "Valore iniziale (facoltativo)", "ru": "Начальное значение (необязательно)", "zh": "起始值（可选）", "ja": "開始値（省略可）"} },
+        { "cle": "nom", "type": "texte", "defaut": "",
+          "nom": {"fr": "Nom du minuteur (facultatif)", "en": "Timer name (optional)", "es": "Nombre del temporizador (opcional)", "pt": "Nome do temporizador (opcional)", "de": "Name des Timers (optional)", "it": "Nome del timer (facoltativo)", "ru": "Имя таймера (необязательно)", "zh": "计时器名称（可选）", "ja": "タイマー名（省略可）"} }
+      ]
+    },
+    {
+      "cle": "arreter_minuteur",
+      "nom": {"fr": "Arrêter un minuteur", "en": "Stop a timer", "es": "Detener un temporizador", "pt": "Parar um temporizador", "de": "Timer stoppen", "it": "Ferma un timer", "ru": "Остановить таймер", "zh": "停止计时器", "ja": "タイマーを止める"},
+      "categorie": "cat_temps",
+      "action": "arreter_minuteur",
+      "champs": [
+        { "cle": "nom", "type": "texte", "defaut": "",
+          "nom": {"fr": "Nom du minuteur (vide = tous)", "en": "Timer name (empty = all)", "es": "Nombre (vacío = todos)", "pt": "Nome (vazio = todos)", "de": "Name (leer = alle)", "it": "Nome (vuoto = tutti)", "ru": "Имя (пусто = все)", "zh": "名称（留空 = 全部）", "ja": "名前（空 = すべて）"} }
+      ]
+    },
+    {
+      "cle": "vitesse_jeu",
+      "nom": {"fr": "Vitesse du jeu (ralenti)", "en": "Game speed (slow motion)", "es": "Velocidad del juego (cámara lenta)", "pt": "Velocidade do jogo (câmera lenta)", "de": "Spielgeschwindigkeit (Zeitlupe)", "it": "Velocità del gioco (rallentatore)", "ru": "Скорость игры (замедление)", "zh": "游戏速度（慢动作）", "ja": "ゲーム速度（スロー）"},
+      "categorie": "cat_temps",
+      "action": "vitesse_jeu",
+      "champs": [
+        { "cle": "vitesse", "type": "formule", "defaut": "1",
+          "nom": {"fr": "Vitesse (1 = normal, 0.5 = ralenti)", "en": "Speed (1 = normal, 0.5 = slow)", "es": "Velocidad (1 = normal, 0.5 = lento)", "pt": "Velocidade (1 = normal, 0.5 = lento)", "de": "Tempo (1 = normal, 0.5 = langsam)", "it": "Velocità (1 = normale, 0.5 = lenta)", "ru": "Скорость (1 = обычная, 0.5 = медленно)", "zh": "速度（1 = 正常，0.5 = 慢）", "ja": "速度（1 = 通常、0.5 = スロー）"} }
+      ]
+    },
+    {
+      "cle": "pause_jeu",
+      "nom": {"fr": "Mettre le jeu en pause", "en": "Pause the game", "es": "Pausar el juego", "pt": "Pausar o jogo", "de": "Spiel pausieren", "it": "Metti in pausa il gioco", "ru": "Поставить игру на паузу", "zh": "暂停游戏", "ja": "ゲームを一時停止"},
+      "categorie": "cat_temps",
+      "action": "pause",
+      "constantes": {"etat": "pause"}
+    },
+    {
+      "cle": "reprendre_jeu",
+      "nom": {"fr": "Reprendre le jeu", "en": "Resume the game", "es": "Reanudar el juego", "pt": "Retomar o jogo", "de": "Spiel fortsetzen", "it": "Riprendi il gioco", "ru": "Продолжить игру", "zh": "继续游戏", "ja": "ゲームを再開"},
+      "categorie": "cat_temps",
+      "action": "pause",
+      "constantes": {"etat": "reprise"}
+    },
     {
       "cle": "deplacer",
       "nomCle": "noeud_deplacer_objet",
