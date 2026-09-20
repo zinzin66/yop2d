@@ -1,5 +1,8 @@
 {
   "app_nom": "Yop2D",
+  "reglages_titre_cadence": "ゲームの刻み（毎秒ステップ数）",
+"reglages_cadence_auto": "自動",
+"reglages_cadence_aide": "60：どの画面でも同じ速度。自動：画面に合わせる（90/120Hz画面では速くなります）。",
   "menu_jouer": "プレイ",
   "menu_editeur": "エディター",
   "bouton_ok": "OK",
