@@ -249,8 +249,14 @@ public class EditeurNoeudDialog extends Dialog {
             construireBarreParams(params);
             chargerChamp(params.get(0), false);
         } else {
-            appliquerTypeEditeur();
-            mettreAJourAideChamp();
+            // Nœud sans champ à remplir (ex : Traverser l'écran) : seule sa cible compte
+            champSaisie.setVisibility(View.GONE);
+            conteneurClavier.setVisibility(View.GONE);
+            conteneurBooleen.setVisibility(View.GONE);
+            btnFormule.setVisibility(View.GONE);
+            txtApercu.setText(Traducteur.get("editeur_aucun_champ"));
+            txtApercu.setTextColor(Palette.texteNormal);
+            txtApercu.setVisibility(View.VISIBLE);
         }
         mettreAJourResume();
     }
