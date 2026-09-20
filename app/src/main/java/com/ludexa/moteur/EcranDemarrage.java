@@ -1331,12 +1331,12 @@ public class EcranDemarrage extends Activity {
         File dossier = dossierSelectionne();
         if (dossier == null) return;
 
-        String contenu = DiagLogger.lire(dossier.getAbsolutePath());
-        if (contenu.isEmpty()) {
-            contenu = "Aucun log pour ce projet pour l'instant.\n\nLancez une partie depuis l'éditeur, puis revenez ici.";
-        }
+        final String cheminDossier = dossier.getAbsolutePath();
+        final String messageVide = "Aucun log pour ce projet pour l'instant.\n\nLancez une partie depuis l'éditeur, puis revenez ici.";
+        String contenu = DiagLogger.lire(cheminDossier);
+        if (contenu.isEmpty()) contenu = messageVide;
 
-        TextView texteLog = new TextView(this);
+        final TextView texteLog = new TextView(this);
         texteLog.setText(contenu);
         texteLog.setTextSize(12f);
         texteLog.setTextColor(Palette.texteNormal);
@@ -1347,17 +1347,29 @@ public class EcranDemarrage extends Activity {
         scroll.setBackground(fond(couleurFondListe(), 6, couleurBordure(), 1));
         scroll.addView(texteLog);
 
-        final File dossierFinal = dossier;
         AlertDialog dialogue = new AlertDialog.Builder(this)
                 .setTitle("Journal de debug")
                 .setView(scroll)
                 .setPositiveButton(Traducteur.get("bouton_fermer"), null)
-                .setNeutralButton("Effacer", (d, w) -> {
-                    DiagLogger.effacer(dossierFinal.getAbsolutePath());
-                    Toast.makeText(this, "Journal effacé", Toast.LENGTH_SHORT).show();
-                })
+                .setNegativeButton("Copier", null)
+                .setNeutralButton("Effacer", null)
                 .create();
         dialogue.show();
+
+        // Copier et Effacer laissent la fenêtre ouverte (le comportement par défaut d'un bouton la fermerait)
+        final android.widget.Button boutonCopier = dialogue.getButton(AlertDialog.BUTTON_NEGATIVE);
+        boutonCopier.setOnClickListener(v -> {
+            String journal = DiagLogger.lire(cheminDossier);
+            android.content.ClipboardManager presse = (android.content.ClipboardManager) getSystemService(android.content.Context.CLIPBOARD_SERVICE);
+            if (presse == null || journal.isEmpty()) return;
+            presse.setPrimaryClip(android.content.ClipData.newPlainText("journal", journal));
+            boutonCopier.setText("Copié ✓");
+            boutonCopier.postDelayed(() -> boutonCopier.setText("Copier"), 1500);
+        });
+        dialogue.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> {
+            DiagLogger.effacer(cheminDossier);
+            texteLog.setText(messageVide);
+        });
 
         android.view.Window window = dialogue.getWindow();
         if (window != null) {
