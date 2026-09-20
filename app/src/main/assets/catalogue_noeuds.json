@@ -419,6 +419,16 @@
         { "cle": "marge", "type": "formule", "defaut": "0",
           "nom": {"fr": "Marge", "en": "Margin", "es": "Margen", "pt": "Margem", "de": "Rand", "it": "Margine", "ru": "Отступ", "zh": "边距", "ja": "余白"} }
       ]
+    },
+    {
+      "cle": "journal",
+      "nom": { "fr": "Écrire dans le journal", "en": "Write to log", "es": "Escribir en el registro", "pt": "Escrever no registo", "de": "In das Protokoll schreiben", "it": "Scrivi nel registro", "ru": "Записать в журнал", "zh": "写入日志", "ja": "ログに書き込む" },
+      "categorie": "cat_scene_hud",
+      "action": "journaliser",
+      "champs": [
+        { "cle": "message", "type": "texte", "defaut": "",
+          "nom": {"fr": "Message", "en": "Message", "es": "Mensaje", "pt": "Mensagem", "de": "Nachricht", "it": "Messaggio", "ru": "Сообщение", "zh": "消息", "ja": "メッセージ"} }
+      ]
     }
   ]
 }
