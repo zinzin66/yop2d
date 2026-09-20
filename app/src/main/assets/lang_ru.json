@@ -1,6 +1,9 @@
 // haut 1
 {
   "app_nom": "Yop2D",
+  "reglages_titre_cadence": "Частота игры (шагов в секунду)",
+"reglages_cadence_auto": "Авто",
+"reglages_cadence_aide": "60: одинаковая скорость на любом экране. Авто: следует за экраном (быстрее при 90 или 120 Гц).",
   "menu_jouer": "Играть",
   "menu_editeur": "Редактор",
   "bouton_ok": "ОК",
