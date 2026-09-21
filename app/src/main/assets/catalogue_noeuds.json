@@ -853,7 +853,7 @@
   "champs": [
     {"cle": "evenement", "type": "texte", "defaut": "", "nom": {"fr": "Nom de l'événement", "en": "Event name", "es": "Nombre del evento", "pt": "Nome do evento", "de": "Ereignisname", "it": "Nome dell'evento", "ru": "Имя события", "zh": "事件名称", "ja": "イベント名"}}
   ]
-}'
+},
     {
   "cle": "nombre_aleatoire",
   "nom": {"fr": "Nombre aléatoire", "en": "Random number", "es": "Número aleatorio", "pt": "Número aleatório", "de": "Zufallszahl", "it": "Numero casuale", "ru": "Случайное число", "zh": "随机数", "ja": "ランダムな数"},
