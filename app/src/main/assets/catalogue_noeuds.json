@@ -827,5 +827,33 @@
   "action": "arreter_musique"
 }
   ]
+},
+{
+  "cle": "afficher_dialogue",
+  "nom": {"fr": "Afficher un dialogue", "en": "Show dialogue", "es": "Mostrar diálogo", "pt": "Mostrar diálogo", "de": "Dialog anzeigen", "it": "Mostra dialogo", "ru": "Показать диалог", "zh": "显示对话", "ja": "ダイアログを表示"},
+  "categorie": "cat_textes_dialogues",
+  "action": "afficher_dialogue",
+  "objet": true,
+  "champs": [
+    {"cle": "cle", "type": "dialogue", "defaut": "", "nom": {"fr": "Clé du dialogue", "en": "Dialogue key", "es": "Clave del diálogo", "pt": "Chave do diálogo", "de": "Dialogschlüssel", "it": "Chiave del dialogo", "ru": "Ключ диалога", "zh": "对话键", "ja": "ダイアログのキー"}}
+  ]
+},
+{
+  "cle": "appeler_fonction",
+  "nom": {"fr": "Appeler une fonction", "en": "Call function", "es": "Llamar función", "pt": "Chamar função", "de": "Funktion aufrufen", "it": "Chiama funzione", "ru": "Вызвать функцию", "zh": "调用函数", "ja": "関数を呼ぶ"},
+  "categorie": "cat_logique_conditions",
+  "action": "appeler_fonction",
+  "champs": [
+    {"cle": "fonction", "type": "fonction", "defaut": "", "nom": {"fr": "Fonction", "en": "Function", "es": "Función", "pt": "Função", "de": "Funktion", "it": "Funzione", "ru": "Функция", "zh": "函数", "ja": "関数"}}
+  ]
+},
+{
+  "cle": "appeler_evenement",
+  "nom": {"fr": "Appeler un événement", "en": "Call event", "es": "Llamar evento", "pt": "Chamar evento", "de": "Ereignis aufrufen", "it": "Chiama evento", "ru": "Вызвать событие", "zh": "调用事件", "ja": "イベントを呼ぶ"},
+  "categorie": "cat_logique_conditions",
+  "action": "appeler_evenement",
+  "champs": [
+    {"cle": "evenement", "type": "texte", "defaut": "", "nom": {"fr": "Nom de l'événement", "en": "Event name", "es": "Nombre del evento", "pt": "Nome do evento", "de": "Ereignisname", "it": "Nome dell'evento", "ru": "Имя события", "zh": "事件名称", "ja": "イベント名"}}
+  ]
 }
 // bas 1
