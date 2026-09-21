@@ -578,6 +578,7 @@ public class Evaluateur {
 
 // bas 2
 
+
 // haut 3
     // ------------------------------------------------------------------
     // CALCULS
@@ -622,9 +623,21 @@ public class Evaluateur {
         throw new ErreurFormule("« ecran » n'a pas de « " + propriete + " » : utilise ecran.largeur ou ecran.hauteur");
     }
 
+    // doigt.x, doigt.y et doigt.appuye : le premier doigt posé sur l'écran de jeu (0,0 = coin en haut à gauche)
+    private static Object lireProprieteDoigt(String propriete) {
+        String p = normaliser(propriete);
+        if (p.equals("x")) return (double) GestionnaireControles.doigtX;
+        if (p.equals("y")) return (double) GestionnaireControles.doigtY;
+        if (p.equals("appuye")) return GestionnaireControles.doigtAppuye ? Boolean.TRUE : Boolean.FALSE;
+        throw new ErreurFormule("« doigt » n'a pas de « " + propriete + " » : utilise doigt.x, doigt.y ou doigt.appuye");
+    }
+
     private static Object lireProprieteObjet(String nomObjet, String propriete) {
         if (normaliser(nomObjet).equals("ecran") && trouverObjet(nomObjet, 1) == null) {
             return lireProprieteEcran(propriete);
+        }
+        if (normaliser(nomObjet).equals("doigt") && trouverObjet(nomObjet, 1) == null) {
+            return lireProprieteDoigt(propriete);
         }
         ObjetBase o = normaliser(nomObjet).equals("implique") ? objetImplique() : trouverObjet(nomObjet);
         if (o == null) throw new ErreurFormule("Objet introuvable : « " + nomObjet + " »");
@@ -759,3 +772,4 @@ public class Evaluateur {
     }
 }
 // bas 3
+    
