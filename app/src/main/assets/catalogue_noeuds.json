@@ -724,28 +724,6 @@
   ]
 },
     {
-  "cle": "si_au_sol",
-  "nom": {"fr": "Si au sol", "en": "If on ground", "es": "Si está en el suelo", "pt": "Se está no chão", "de": "Wenn am Boden", "it": "Se è a terra", "ru": "Если на земле", "zh": "如果在地面", "ja": "地面にいるなら"},
-  "categorie": "cat_logique_conditions",
-  "action": "si_au_sol",
-  "objet": true,
-  "sorties": [
-    {"cle": "vrai", "nom": {"fr": "Vrai", "en": "True", "es": "Verdadero", "pt": "Verdadeiro", "de": "Wahr", "it": "Vero", "ru": "Да", "zh": "是", "ja": "はい"}},
-    {"cle": "faux", "nom": {"fr": "Faux", "en": "False", "es": "Falso", "pt": "Falso", "de": "Falsch", "it": "Falso", "ru": "Нет", "zh": "否", "ja": "いいえ"}}
-  ]
-},
-{
-  "cle": "si_en_mouvement",
-  "nom": {"fr": "Si en mouvement", "en": "If moving", "es": "Si se mueve", "pt": "Se está em movimento", "de": "Wenn in Bewegung", "it": "Se in movimento", "ru": "Если движется", "zh": "如果在移动", "ja": "動いているなら"},
-  "categorie": "cat_logique_conditions",
-  "action": "si_en_mouvement",
-  "objet": true,
-  "sorties": [
-    {"cle": "vrai", "nom": {"fr": "Vrai", "en": "True", "es": "Verdadero", "pt": "Verdadeiro", "de": "Wahr", "it": "Vero", "ru": "Да", "zh": "是", "ja": "はい"}},
-    {"cle": "faux", "nom": {"fr": "Faux", "en": "False", "es": "Falso", "pt": "Falso", "de": "Falsch", "it": "Falso", "ru": "Нет", "zh": "否", "ja": "いいえ"}}
-  ]
-},
-    {
   "cle": "glisser_vers",
   "nom": {"fr": "Glisser vers", "en": "Glide to", "es": "Deslizar hacia", "pt": "Deslizar para", "de": "Gleiten nach", "it": "Scivola verso", "ru": "Скользить к", "zh": "滑向", "ja": "スライド移動"},
   "categorie": "cat_mouvements_ia",
