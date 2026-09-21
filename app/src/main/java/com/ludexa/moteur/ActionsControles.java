@@ -1,6 +1,11 @@
 // haut 1
 package com.ludexa.moteur;
 
+import android.content.Context;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+
 // Ce que font les nœuds liés aux commandes tactiles (joystick, bouton d'action) et à la caméra.
 // Ils sont décrits dans assets/catalogue_noeuds.json.
 //
@@ -33,6 +38,42 @@ public class ActionsControles {
         GestionnaireControles.cameraSuitAxeX = n.booleen("suivre_x");
         GestionnaireControles.cameraSuitAxeY = n.booleen("suivre_y");
         GestionnaireControles.parallaxeUniquementX = n.booleen("parallaxe_x");
+        return null;
+    }
+
+    // Nœud « Élasticité de la caméra » : vitesse à laquelle la caméra rattrape sa cible (0.01 = très souple, 1 = collée).
+    static String elasticiteCamera(NoeudGenerique n) {
+        double v = n.nombre("vitesse");
+        if (v < 0.001) v = 0.001;
+        if (v > 1.0) v = 1.0;
+        VueJeu.vitesseSuiviCamera = (float) v;
+        return null;
+    }
+
+    // Nœud « Tremblement de caméra » : secoue l'écran pendant une durée (en millisecondes).
+    static String tremblementCamera(NoeudGenerique n) {
+        double intensite = n.nombre("intensite");
+        double duree = n.nombre("duree");
+        if (intensite < 0) intensite = 0;
+        if (duree < 0) duree = 0;
+        VueJeu.tremblementIntensite = (float) intensite;
+        VueJeu.tremblementFin = System.currentTimeMillis() + (long) duree;
+        return null;
+    }
+
+    // Nœud « Vibration » : fait vibrer l'appareil pendant une durée (en millisecondes).
+    // Sans moteur de vibration, il ne se passe rien.
+    static String vibration(NoeudGenerique n) {
+        Context contexte = NoeudBase.contexteApplication;
+        long duree = (long) n.nombre("duree");
+        if (contexte == null || duree <= 0) return null;
+        Vibrator vibreur = (Vibrator) contexte.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibreur == null || !vibreur.hasVibrator()) return null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibreur.vibrate(VibrationEffect.createOneShot(duree, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            vibreur.vibrate(duree);
+        }
         return null;
     }
 }
