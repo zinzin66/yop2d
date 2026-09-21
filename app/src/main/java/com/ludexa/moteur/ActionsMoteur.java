@@ -83,6 +83,8 @@ public class ActionsMoteur {
             case "afficher_dialogue": return ActionsAppels.afficherDialogue(n);
             case "appeler_fonction": return ActionsAppels.appelerFonction(n);
             case "appeler_evenement": return ActionsAppels.appelerEvenement(n);
+            case "sequence": return ActionsLogique.sequence(n);
+            case "cooldown": return ActionsLogique.cooldown(n);
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
