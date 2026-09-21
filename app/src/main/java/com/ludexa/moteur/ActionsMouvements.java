@@ -155,6 +155,17 @@ public class ActionsMouvements {
         a.rotation = (float) (angle + n.nombre("decalage"));
     }
 
+    // Fait glisser l'objet jusqu'à (x, y) pendant la durée donnée (secondes de jeu : pause et ralenti compris).
+    // Le nœud ne bloque pas la suite : pour attendre l'arrivée, ajoute un « Attendre » de la même durée.
+    static void glisserVers(NoeudGenerique n) {
+        ObjetBase objet = n.getCibleObjet();
+        if (objet == null) return;
+        float x = (float) n.nombre("x");
+        float y = (float) n.nombre("y");
+        double duree = n.nombre("duree");
+        DeplacementsGlisses.demarrer(objet, x, y, duree);
+    }
+
     // ------------------------------------------------------------------
     // CONDITIONS : elles retournent le nom de la sortie à suivre
     // ------------------------------------------------------------------
