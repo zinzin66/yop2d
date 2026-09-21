@@ -154,5 +154,40 @@ public class ActionsMouvements {
         double angle = Math.toDegrees(Math.atan2(dy, dx));
         a.rotation = (float) (angle + n.nombre("decalage"));
     }
+
+    // ------------------------------------------------------------------
+    // CONDITIONS : elles retournent le nom de la sortie à suivre
+    // ------------------------------------------------------------------
+
+    // Nœud « Si au sol » : vrai quand le bas de l'objet touche le haut d'un objet fixe et visible (un sol, une plateforme).
+    static String siAuSol(NoeudGenerique n) {
+        ObjetBase objet = n.getCibleObjet();
+        Scene scene = NoeudBase.sceneActiveCourante;
+        boolean auSol = false;
+        if (objet != null && scene != null && scene.objets != null) {
+            float basObjet = objet.y + objet.hauteur;
+            float tolerance = 5f; // marge pour considérer que l'objet est "posé"
+            for (ObjetBase autre : scene.objets) {
+                if (autre == objet || !autre.visible || !autre.estStatique) continue;
+                boolean auDessus = (objet.x < autre.x + autre.largeur) && (objet.x + objet.largeur > autre.x);
+                boolean toucheLeHaut = (basObjet >= autre.y - tolerance) && (basObjet <= autre.y + tolerance);
+                if (auDessus && toucheLeHaut) {
+                    auSol = true;
+                    break;
+                }
+            }
+        }
+        return auSol ? "port_vrai" : "port_faux";
+    }
+
+    // Nœud « Si en mouvement » : vrai quand l'objet a bougé depuis l'image précédente.
+    static String siEnMouvement(NoeudGenerique n) {
+        ObjetBase objet = n.getCibleObjet();
+        boolean enMouvement = false;
+        if (objet != null) {
+            enMouvement = Math.abs(objet.x - objet.ancienneX) > 0.5f || Math.abs(objet.y - objet.ancienneY) > 0.5f;
+        }
+        return enMouvement ? "port_vrai" : "port_faux";
+    }
 }
 // bas 1
