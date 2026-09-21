@@ -16,7 +16,8 @@
     "Vers la cible": { "fr": "Vers la cible", "en": "Toward target", "es": "Hacia el objetivo", "pt": "Em direção ao alvo", "de": "Zum Ziel", "it": "Verso il bersaglio", "ru": "К цели", "zh": "朝向目标", "ja": "ターゲットへ" }
   },
  "categories": {
-    "cat_temps": {"fr": "Temps", "en": "Time", "es": "Tiempo", "pt": "Tempo", "de": "Zeit", "it": "Tempo", "ru": "Время", "zh": "时间", "ja": "時間"}
+    "cat_temps": {"fr": "Temps", "en": "Time", "es": "Tiempo", "pt": "Tempo", "de": "Zeit", "it": "Tempo", "ru": "Время", "zh": "时间", "ja": "時間"},
+   "cat_audio": {"fr": "Audio", "en": "Audio", "es": "Audio", "pt": "Áudio", "de": "Audio", "it": "Audio", "ru": "Звук", "zh": "音频", "ja": "オーディオ"}
   },
   "noeuds": [
     {
@@ -799,6 +800,31 @@
   "champs": [
     {"cle": "vitesse", "type": "formule", "defaut": "8", "nom": {"fr": "Vitesse (images/seconde)", "en": "Speed (frames/second)", "es": "Velocidad (cuadros/segundo)", "pt": "Velocidade (quadros/segundo)", "de": "Tempo (Bilder/Sekunde)", "it": "Velocità (fotogrammi/secondo)", "ru": "Скорость (кадров/сек)", "zh": "速度（帧/秒）", "ja": "速さ（コマ/秒）"}}
   ]
+},
+    {
+  "cle": "jouer_son",
+  "nom": {"fr": "Jouer un son", "en": "Play sound", "es": "Reproducir sonido", "pt": "Tocar som", "de": "Sound abspielen", "it": "Riproduci suono", "ru": "Воспроизвести звук", "zh": "播放音效", "ja": "効果音を再生"},
+  "categorie": "cat_audio",
+  "action": "jouer_son",
+  "champs": [
+    {"cle": "fichier", "type": "son", "defaut": "", "nom": {"fr": "Fichier son", "en": "Sound file", "es": "Archivo de sonido", "pt": "Arquivo de som", "de": "Sounddatei", "it": "File audio", "ru": "Звуковой файл", "zh": "音效文件", "ja": "音声ファイル"}}
+  ]
+},
+{
+  "cle": "jouer_musique",
+  "nom": {"fr": "Jouer la musique", "en": "Play music", "es": "Reproducir música", "pt": "Tocar música", "de": "Musik abspielen", "it": "Riproduci musica", "ru": "Включить музыку", "zh": "播放音乐", "ja": "音楽を再生"},
+  "categorie": "cat_audio",
+  "action": "jouer_musique",
+  "champs": [
+    {"cle": "fichier", "type": "son", "defaut": "", "nom": {"fr": "Fichier musique", "en": "Music file", "es": "Archivo de música", "pt": "Arquivo de música", "de": "Musikdatei", "it": "File musicale", "ru": "Музыкальный файл", "zh": "音乐文件", "ja": "音楽ファイル"}},
+    {"cle": "boucle", "type": "formule", "defaut": "true", "nom": {"fr": "En boucle (true / false)", "en": "Loop (true / false)", "es": "En bucle (true / false)", "pt": "Em loop (true / false)", "de": "Wiederholen (true / false)", "it": "In loop (true / false)", "ru": "По кругу (true / false)", "zh": "循环（true / false）", "ja": "ループ（true / false）"}}
+  ]
+},
+{
+  "cle": "arreter_musique",
+  "nom": {"fr": "Arrêter la musique", "en": "Stop music", "es": "Detener música", "pt": "Parar música", "de": "Musik stoppen", "it": "Ferma la musica", "ru": "Остановить музыку", "zh": "停止音乐", "ja": "音楽を停止"},
+  "categorie": "cat_audio",
+  "action": "arreter_musique"
 }
   ]
 }
