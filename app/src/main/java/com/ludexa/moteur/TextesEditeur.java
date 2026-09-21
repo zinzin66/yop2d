@@ -1,3 +1,5 @@
+
+// bas 1
 // haut 1
 package com.ludexa.moteur;
 
@@ -44,6 +46,9 @@ public class TextesEditeur {
                 "У этого узла нет значений для ввода: просто выберите цель.",
                 "此节点没有需要输入的值：只需选择目标。",
                 "このノードには入力する値がありません。ターゲットを選ぶだけです。");
+        ajouter("noeud_event_doigt_appuye",
+                "Rester appuyé", "Hold down", "Mantener pulsado", "Manter pressionado", "Gedrückt halten",
+                "Tieni premuto", "Удерживать", "按住", "押し続ける");
     }
 
     // Ordre des langues : fr, en, es, pt, de, it, ru, zh, ja
