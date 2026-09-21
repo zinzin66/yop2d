@@ -620,7 +620,35 @@
     {"cle": "suivre_y", "type": "formule", "defaut": "true", "nom": {"fr": "Suivre en Y (true / false)", "en": "Follow Y (true / false)", "es": "Seguir en Y (true / false)", "pt": "Seguir em Y (true / false)", "de": "Y folgen (true / false)", "it": "Segui Y (true / false)", "ru": "Следовать по Y (true / false)", "zh": "跟随 Y（true / false）", "ja": "Yを追う（true / false）"}},
     {"cle": "parallaxe_x", "type": "formule", "defaut": "true", "nom": {"fr": "Parallaxe en X seulement (true / false)", "en": "Parallax X only (true / false)", "es": "Paralaje solo en X (true / false)", "pt": "Paralaxe só em X (true / false)", "de": "Parallaxe nur X (true / false)", "it": "Parallasse solo X (true / false)", "ru": "Параллакс только по X (true / false)", "zh": "仅 X 视差（true / false）", "ja": "X方向のみ視差（true / false）"}}
   ]
-    }
+    },
+    {
+  "cle": "elasticite_camera",
+  "nom": {"fr": "Élasticité de la caméra", "en": "Camera smoothing", "es": "Suavizado de cámara", "pt": "Suavização da câmera", "de": "Kamera-Glättung", "it": "Morbidezza della camera", "ru": "Плавность камеры", "zh": "相机平滑", "ja": "カメラの滑らかさ"},
+  "categorie": "cat_scene_hud",
+  "action": "elasticite_camera",
+  "champs": [
+    {"cle": "vitesse", "type": "formule", "defaut": "0.1", "nom": {"fr": "Vitesse de suivi (0.01 à 1)", "en": "Follow speed (0.01 to 1)", "es": "Velocidad de seguimiento (0.01 a 1)", "pt": "Velocidade de seguimento (0.01 a 1)", "de": "Folgegeschwindigkeit (0.01 bis 1)", "it": "Velocità di inseguimento (da 0.01 a 1)", "ru": "Скорость слежения (0.01–1)", "zh": "跟随速度（0.01 到 1）", "ja": "追従速度（0.01〜1）"}}
+  ]
+},
+{
+  "cle": "tremblement_camera",
+  "nom": {"fr": "Tremblement de la caméra", "en": "Camera shake", "es": "Temblor de cámara", "pt": "Tremor da câmera", "de": "Kamera-Wackeln", "it": "Tremolio della camera", "ru": "Тряска камеры", "zh": "相机抖动", "ja": "カメラの振動"},
+  "categorie": "cat_scene_hud",
+  "action": "tremblement_camera",
+  "champs": [
+    {"cle": "intensite", "type": "formule", "defaut": "10", "nom": {"fr": "Intensité", "en": "Strength", "es": "Intensidad", "pt": "Intensidade", "de": "Stärke", "it": "Intensità", "ru": "Сила", "zh": "强度", "ja": "強さ"}},
+    {"cle": "duree", "type": "formule", "defaut": "500", "nom": {"fr": "Durée (ms)", "en": "Duration (ms)", "es": "Duración (ms)", "pt": "Duração (ms)", "de": "Dauer (ms)", "it": "Durata (ms)", "ru": "Длительность (мс)", "zh": "持续时间（毫秒）", "ja": "長さ（ミリ秒）"}}
+  ]
+},
+{
+  "cle": "vibration",
+  "nom": {"fr": "Vibration", "en": "Vibration", "es": "Vibración", "pt": "Vibração", "de": "Vibration", "it": "Vibrazione", "ru": "Вибрация", "zh": "振动", "ja": "バイブレーション"},
+  "categorie": "cat_scene_hud",
+  "action": "vibration",
+  "champs": [
+    {"cle": "duree", "type": "formule", "defaut": "100", "nom": {"fr": "Durée (ms)", "en": "Duration (ms)", "es": "Duración (ms)", "pt": "Duração (ms)", "de": "Dauer (ms)", "it": "Durata (ms)", "ru": "Длительность (мс)", "zh": "持续时间（毫秒）", "ja": "長さ（ミリ秒）"}}
+  ]
+}
   ]
 }
 // bas 1
