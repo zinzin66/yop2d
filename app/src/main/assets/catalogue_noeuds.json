@@ -853,6 +853,28 @@
   "champs": [
     {"cle": "evenement", "type": "texte", "defaut": "", "nom": {"fr": "Nom de l'événement", "en": "Event name", "es": "Nombre del evento", "pt": "Nome do evento", "de": "Ereignisname", "it": "Nome dell'evento", "ru": "Имя события", "zh": "事件名称", "ja": "イベント名"}}
   ]
+}'
+    {
+  "cle": "nombre_aleatoire",
+  "nom": {"fr": "Nombre aléatoire", "en": "Random number", "es": "Número aleatorio", "pt": "Número aleatório", "de": "Zufallszahl", "it": "Numero casuale", "ru": "Случайное число", "zh": "随机数", "ja": "ランダムな数"},
+  "categorie": "cat_variables_inventaire",
+  "action": "modifier_variable",
+  "objet": true,
+  "variable": true,
+  "champs": [
+    {"cle": "valeur", "type": "formule", "defaut": "random(1, 6)", "nom": {"fr": "Valeur : random(min, max)", "en": "Value: random(min, max)", "es": "Valor: random(min, max)", "pt": "Valor: random(min, max)", "de": "Wert: random(min, max)", "it": "Valore: random(min, max)", "ru": "Значение: random(min, max)", "zh": "值：random(min, max)", "ja": "値：random(min, max)"}}
+  ]
+},
+{
+  "cle": "ajouter_au_texte",
+  "nom": {"fr": "Ajouter au texte", "en": "Append to text", "es": "Añadir al texto", "pt": "Adicionar ao texto", "de": "Text anhängen", "it": "Aggiungi al testo", "ru": "Добавить к тексту", "zh": "追加到文本", "ja": "テキストに追加"},
+  "categorie": "cat_textes_dialogues",
+  "action": "ajouter_variable",
+  "objet": true,
+  "variable": true,
+  "champs": [
+    {"cle": "valeur", "type": "texte", "defaut": "", "nom": {"fr": "Texte à ajouter", "en": "Text to add", "es": "Texto a añadir", "pt": "Texto a adicionar", "de": "Anzuhängender Text", "it": "Testo da aggiungere", "ru": "Добавляемый текст", "zh": "要追加的文本", "ja": "追加するテキスト"}}
+  ]
 }
     ]
 }
