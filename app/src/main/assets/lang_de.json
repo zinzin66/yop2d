@@ -1,5 +1,8 @@
 {
   "app_nom": "Yop2D",
+  "reglages_titre_cadence": "Spieltakt (Schritte pro Sekunde)",
+"reglages_cadence_auto": "Auto",
+"reglages_cadence_aide": "60: gleiche Geschwindigkeit auf jedem Bildschirm. Auto: folgt dem Bildschirm (schneller bei 90 oder 120 Hz).",
   "menu_jouer": "Spielen",
   "menu_editeur": "Editor",
   "bouton_ok": "OK",
@@ -659,7 +662,14 @@
 "insp_btn_couleur_fond_prog": "Hintergrundfarbe",
 "noeud_modifier_progression": "Fortschritt festlegen",
 "param_nouvelle_valeur": "Neuer Wert",
-"insp_couleur_aucune": "Keine"
+"insp_couleur_aucune": "Keine",
+  "noeud_extraire_propriete": "Eigenschaft extrahieren",
+"param_propriete": "Zu extrahierende Eigenschaft",
+"noeud_extraire_propriete": "Eigenschaft extrahieren",
+  "noeud_event_maintenu_objet": "Objekt gehalten",
+  "noeud_fin_clic_sur_objet": "Klick auf Objekt beendet",
+"param_propriete": "Zu extrahierende Eigenschaft"
+
   
   
   

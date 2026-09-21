@@ -66,6 +66,7 @@ public class RunnerActivity extends Activity {
             }
         }
 
+        ConfigurationJeu.charger(cheminProjet);   // résolution et cadence du jeu exporté (reglages.json)
         chargerDonneesJeu();
 
         if (sceneActive != null) {
@@ -95,9 +96,6 @@ public class RunnerActivity extends Activity {
         handlersActifs.clear();
     }
 // bas 1
-    
-
-
 // haut 2
     private void chargerDonneesJeu() {
         try {

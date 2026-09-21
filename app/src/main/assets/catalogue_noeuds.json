@@ -1,0 +1,654 @@
+// haut 1
+{
+  "libelles": {
+    "Aucun": { "fr": "Aucun", "en": "None", "es": "Ninguno", "pt": "Nenhum", "de": "Keiner", "it": "Nessuno", "ru": "Нет", "zh": "无", "ja": "なし" },
+    "Noir et Blanc": { "fr": "Noir et Blanc", "en": "Black and White", "es": "Blanco y negro", "pt": "Preto e branco", "de": "Schwarzweiß", "it": "Bianco e nero", "ru": "Чёрно-белый", "zh": "黑白", "ja": "白黒" },
+    "Sepia": { "fr": "Sepia", "en": "Sepia", "es": "Sepia", "pt": "Sépia", "de": "Sepia", "it": "Seppia", "ru": "Сепия", "zh": "棕褐色", "ja": "セピア" },
+    "Inversion": { "fr": "Inversion", "en": "Invert", "es": "Invertir", "pt": "Inverter", "de": "Invertieren", "it": "Inverti", "ru": "Инверсия", "zh": "反色", "ja": "反転" },
+    "Additif": { "fr": "Additif", "en": "Additive", "es": "Aditivo", "pt": "Aditivo", "de": "Additiv", "it": "Additivo", "ru": "Аддитивный", "zh": "叠加", "ja": "加算" },
+    "Multiplicatif": { "fr": "Multiplicatif", "en": "Multiply", "es": "Multiplicar", "pt": "Multiplicar", "de": "Multiplizieren", "it": "Moltiplica", "ru": "Умножение", "zh": "正片叠底", "ja": "乗算" },
+    "Ecran": { "fr": "Écran", "en": "Screen", "es": "Pantalla", "pt": "Tela", "de": "Bildschirm", "it": "Scherma", "ru": "Экран", "zh": "滤色", "ja": "スクリーン" },
+    "Horizontal": { "fr": "Horizontal", "en": "Horizontal", "es": "Horizontal", "pt": "Horizontal", "de": "Horizontal", "it": "Orizzontale", "ru": "По горизонтали", "zh": "水平", "ja": "水平" },
+    "Vertical": { "fr": "Vertical", "en": "Vertical", "es": "Vertical", "pt": "Vertical", "de": "Vertikal", "it": "Verticale", "ru": "По вертикали", "zh": "垂直", "ja": "垂直" },
+    "Activer": { "fr": "Activer", "en": "Enable", "es": "Activar", "pt": "Ativar", "de": "Aktivieren", "it": "Attiva", "ru": "Включить", "zh": "启用", "ja": "有効にする" },
+    "Désactiver": { "fr": "Désactiver", "en": "Disable", "es": "Desactivar", "pt": "Desativar", "de": "Deaktivieren", "it": "Disattiva", "ru": "Отключить", "zh": "禁用", "ja": "無効にする" },
+    "Angle de départ": { "fr": "Angle de départ", "en": "Start angle", "es": "Ángulo inicial", "pt": "Ângulo inicial", "de": "Startwinkel", "it": "Angolo iniziale", "ru": "Начальный угол", "zh": "起始角度", "ja": "開始角度" },
+    "Vers la cible": { "fr": "Vers la cible", "en": "Toward target", "es": "Hacia el objetivo", "pt": "Em direção ao alvo", "de": "Zum Ziel", "it": "Verso il bersaglio", "ru": "К цели", "zh": "朝向目标", "ja": "ターゲットへ" }
+  },
+ "categories": {
+    "cat_temps": {"fr": "Temps", "en": "Time", "es": "Tiempo", "pt": "Tempo", "de": "Zeit", "it": "Tempo", "ru": "Время", "zh": "时间", "ja": "時間"}
+  },
+  "noeuds": [
+    {
+      "cle": "changer_scene",
+      "nom": {"fr": "Changer de scène", "en": "Go to scene", "es": "Ir a la escena", "pt": "Ir para a cena", "de": "Zur Szene wechseln", "it": "Vai alla scena", "ru": "Перейти к сцене", "zh": "切换场景", "ja": "シーンを切り替える"},
+      "categorie": "cat_scene_hud",
+      "action": "changer_scene",
+      "scene": true,
+      "sorties": []
+    },
+    {
+      "cle": "aller_scene_nom",
+      "nom": {"fr": "Aller à la scène (par son nom)", "en": "Go to scene (by name)", "es": "Ir a la escena (por nombre)", "pt": "Ir para a cena (pelo nome)", "de": "Zur Szene (nach Name)", "it": "Vai alla scena (per nome)", "ru": "Перейти к сцене (по имени)", "zh": "按名称切换场景", "ja": "名前でシーンへ移動"},
+      "categorie": "cat_scene_hud",
+      "action": "aller_scene_nom",
+      "sorties": [],
+      "champs": [
+        { "cle": "nom", "type": "texte", "defaut": "",
+          "nom": {"fr": "Nom de la scène", "en": "Scene name", "es": "Nombre de la escena", "pt": "Nome da cena", "de": "Name der Szene", "it": "Nome della scena", "ru": "Имя сцены", "zh": "场景名称", "ja": "シーン名"} }
+      ]
+    },
+    {
+      "cle": "scene_suivante",
+      "nom": {"fr": "Scène suivante", "en": "Next scene", "es": "Escena siguiente", "pt": "Cena seguinte", "de": "Nächste Szene", "it": "Scena successiva", "ru": "Следующая сцена", "zh": "下一个场景", "ja": "次のシーン"},
+      "categorie": "cat_scene_hud",
+      "action": "scene_relative",
+      "constantes": {"decalage": "1"},
+      "sorties": []
+    },
+    {
+      "cle": "scene_precedente",
+      "nom": {"fr": "Scène précédente", "en": "Previous scene", "es": "Escena anterior", "pt": "Cena anterior", "de": "Vorherige Szene", "it": "Scena precedente", "ru": "Предыдущая сцена", "zh": "上一个场景", "ja": "前のシーン"},
+      "categorie": "cat_scene_hud",
+      "action": "scene_relative",
+      "constantes": {"decalage": "-1"},
+      "sorties": []
+    },
+    {
+      "cle": "recommencer_scene",
+      "nom": {"fr": "Recommencer la scène", "en": "Restart the scene", "es": "Reiniciar la escena", "pt": "Reiniciar a cena", "de": "Szene neu starten", "it": "Ricomincia la scena", "ru": "Перезапустить сцену", "zh": "重新开始场景", "ja": "シーンをやり直す"},
+      "categorie": "cat_scene_hud",
+      "action": "recommencer_scene",
+      "sorties": []
+    },
+    {
+      "cle": "ouvrir_hud",
+      "nom": {"fr": "Ouvrir un HUD", "en": "Open a HUD", "es": "Abrir un HUD", "pt": "Abrir um HUD", "de": "HUD öffnen", "it": "Apri un HUD", "ru": "Открыть HUD", "zh": "打开 HUD", "ja": "HUDを開く"},
+      "categorie": "cat_scene_hud",
+      "action": "ouvrir_hud",
+      "scene": true
+    },
+    {
+      "cle": "fermer_hud",
+      "nom": {"fr": "Fermer le HUD", "en": "Close the HUD", "es": "Cerrar el HUD", "pt": "Fechar o HUD", "de": "HUD schließen", "it": "Chiudi l'HUD", "ru": "Закрыть HUD", "zh": "关闭 HUD", "ja": "HUDを閉じる"},
+      "categorie": "cat_scene_hud",
+      "action": "fermer_hud"
+    },
+    {
+      "cle": "placer_copie_scene",
+      "nom": {"fr": "Placer une copie d'une scène", "en": "Place a copy of a scene", "es": "Colocar una copia de una escena", "pt": "Colocar uma cópia de uma cena", "de": "Kopie einer Szene platzieren", "it": "Posiziona una copia di una scena", "ru": "Разместить копию сцены", "zh": "放置场景副本", "ja": "シーンのコピーを配置"},
+      "categorie": "cat_scene_hud",
+      "action": "placer_copie_scene",
+      "scene": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "0",
+          "nom": {"fr": "Position X", "en": "X position", "es": "Posición X", "pt": "Posição X", "de": "X-Position", "it": "Posizione X", "ru": "Позиция X", "zh": "X 位置", "ja": "X位置"} },
+        { "cle": "y", "type": "formule", "defaut": "0",
+          "nom": {"fr": "Position Y", "en": "Y position", "es": "Posición Y", "pt": "Posição Y", "de": "Y-Position", "it": "Posizione Y", "ru": "Позиция Y", "zh": "Y 位置", "ja": "Y位置"} }
+      ]
+    },
+    {
+      "cle": "detruire_copies_scene",
+      "nom": {"fr": "Détruire les copies d'une scène", "en": "Destroy the copies of a scene", "es": "Destruir las copias de una escena", "pt": "Destruir as cópias de uma cena", "de": "Kopien einer Szene zerstören", "it": "Distruggi le copie di una scena", "ru": "Уничтожить копии сцены", "zh": "销毁场景副本", "ja": "シーンのコピーを破棄"},
+      "categorie": "cat_scene_hud",
+      "action": "detruire_copies_scene",
+      "scene": true
+    },
+    {
+      "cle": "quitter_jeu",
+      "nom": {"fr": "Quitter le jeu", "en": "Quit the game", "es": "Salir del juego", "pt": "Sair do jogo", "de": "Spiel beenden", "it": "Esci dal gioco", "ru": "Выйти из игры", "zh": "退出游戏", "ja": "ゲームを終了"},
+      "categorie": "cat_scene_hud",
+      "action": "quitter_jeu",
+      "sorties": []
+    },
+    {
+      "cle": "attendre",
+      "nom": {"fr": "Attendre", "en": "Wait", "es": "Esperar", "pt": "Esperar", "de": "Warten", "it": "Attendere", "ru": "Ждать", "zh": "等待", "ja": "待つ"},
+      "categorie": "cat_temps",
+      "action": "attendre",
+      "champs": [
+        { "cle": "duree", "type": "formule", "defaut": "1",
+          "nom": {"fr": "Durée (secondes)", "en": "Duration (seconds)", "es": "Duración (segundos)", "pt": "Duração (segundos)", "de": "Dauer (Sekunden)", "it": "Durata (secondi)", "ru": "Длительность (секунды)", "zh": "时长（秒）", "ja": "時間（秒）"} }
+      ]
+    },
+    {
+      "cle": "repeter",
+      "nom": {"fr": "Répéter", "en": "Repeat", "es": "Repetir", "pt": "Repetir", "de": "Wiederholen", "it": "Ripetere", "ru": "Повторять", "zh": "重复", "ja": "繰り返す"},
+      "categorie": "cat_temps",
+      "action": "repeter",
+      "sorties": [
+        {"cle": "tout_de_suite", "nom": {"fr": "Tout de suite", "en": "Right away", "es": "Enseguida", "pt": "Imediato", "de": "Sofort", "it": "Subito", "ru": "Сразу", "zh": "立即", "ja": "すぐに"}},
+        {"cle": "a_chaque_fois", "nom": {"fr": "À chaque fois", "en": "Each time", "es": "Cada vez", "pt": "A cada vez", "de": "Jedes Mal", "it": "Ogni volta", "ru": "Каждый раз", "zh": "每次", "ja": "毎回"}},
+        {"cle": "termine", "nom": {"fr": "Terminé", "en": "Finished", "es": "Terminado", "pt": "Concluído", "de": "Fertig", "it": "Terminato", "ru": "Готово", "zh": "完成", "ja": "終了"}}
+      ],
+      "champs": [
+        { "cle": "delai", "type": "formule", "defaut": "1",
+          "nom": {"fr": "Toutes les (secondes)", "en": "Every (seconds)", "es": "Cada (segundos)", "pt": "A cada (segundos)", "de": "Alle (Sekunden)", "it": "Ogni (secondi)", "ru": "Каждые (секунды)", "zh": "每隔（秒）", "ja": "間隔（秒）"} },
+        { "cle": "repetitions", "type": "formule", "defaut": "0",
+          "nom": {"fr": "Nombre de fois (0 = sans fin)", "en": "Number of times (0 = endless)", "es": "Número de veces (0 = sin fin)", "pt": "Número de vezes (0 = sem fim)", "de": "Anzahl (0 = endlos)", "it": "Numero di volte (0 = senza fine)", "ru": "Сколько раз (0 = бесконечно)", "zh": "次数（0 = 无限）", "ja": "回数（0 = 無限）"} },
+        { "cle": "nom", "type": "texte", "defaut": "",
+          "nom": {"fr": "Nom du minuteur (facultatif)", "en": "Timer name (optional)", "es": "Nombre del temporizador (opcional)", "pt": "Nome do temporizador (opcional)", "de": "Name des Timers (optional)", "it": "Nome del timer (facoltativo)", "ru": "Имя таймера (необязательно)", "zh": "计时器名称（可选）", "ja": "タイマー名（省略可）"} }
+      ]
+    },
+    {
+      "cle": "compte_a_rebours",
+      "nom": {"fr": "Compte à rebours", "en": "Countdown", "es": "Cuenta atrás", "pt": "Contagem regressiva", "de": "Countdown", "it": "Conto alla rovescia", "ru": "Обратный отсчёт", "zh": "倒计时", "ja": "カウントダウン"},
+      "categorie": "cat_temps",
+      "action": "compte_a_rebours",
+      "objet": true,
+      "variable": true,
+      "sorties": [
+        {"cle": "chaque_seconde", "nom": {"fr": "Chaque seconde", "en": "Every second", "es": "Cada segundo", "pt": "A cada segundo", "de": "Jede Sekunde", "it": "Ogni secondo", "ru": "Каждую секунду", "zh": "每秒", "ja": "毎秒"}},
+        {"cle": "termine", "nom": {"fr": "Terminé", "en": "Finished", "es": "Terminado", "pt": "Concluído", "de": "Fertig", "it": "Terminato", "ru": "Готово", "zh": "完成", "ja": "終了"}}
+      ],
+      "champs": [
+        { "cle": "depart", "type": "formule", "defaut": "",
+          "nom": {"fr": "Départ (facultatif)", "en": "Start value (optional)", "es": "Valor inicial (opcional)", "pt": "Valor inicial (opcional)", "de": "Startwert (optional)", "it": "Valore iniziale (facoltativo)", "ru": "Начальное значение (необязательно)", "zh": "起始值（可选）", "ja": "開始値（省略可）"} },
+        { "cle": "nom", "type": "texte", "defaut": "",
+          "nom": {"fr": "Nom du minuteur (facultatif)", "en": "Timer name (optional)", "es": "Nombre del temporizador (opcional)", "pt": "Nome do temporizador (opcional)", "de": "Name des Timers (optional)", "it": "Nome del timer (facoltativo)", "ru": "Имя таймера (необязательно)", "zh": "计时器名称（可选）", "ja": "タイマー名（省略可）"} }
+      ]
+    },
+    {
+      "cle": "arreter_minuteur",
+      "nom": {"fr": "Arrêter un minuteur", "en": "Stop a timer", "es": "Detener un temporizador", "pt": "Parar um temporizador", "de": "Timer stoppen", "it": "Ferma un timer", "ru": "Остановить таймер", "zh": "停止计时器", "ja": "タイマーを止める"},
+      "categorie": "cat_temps",
+      "action": "arreter_minuteur",
+      "champs": [
+        { "cle": "nom", "type": "texte", "defaut": "",
+          "nom": {"fr": "Nom du minuteur (vide = tous)", "en": "Timer name (empty = all)", "es": "Nombre (vacío = todos)", "pt": "Nome (vazio = todos)", "de": "Name (leer = alle)", "it": "Nome (vuoto = tutti)", "ru": "Имя (пусто = все)", "zh": "名称（留空 = 全部）", "ja": "名前（空 = すべて）"} }
+      ]
+    },
+    {
+      "cle": "vitesse_jeu",
+      "nom": {"fr": "Vitesse du jeu (ralenti)", "en": "Game speed (slow motion)", "es": "Velocidad del juego (cámara lenta)", "pt": "Velocidade do jogo (câmera lenta)", "de": "Spielgeschwindigkeit (Zeitlupe)", "it": "Velocità del gioco (rallentatore)", "ru": "Скорость игры (замедление)", "zh": "游戏速度（慢动作）", "ja": "ゲーム速度（スロー）"},
+      "categorie": "cat_temps",
+      "action": "vitesse_jeu",
+      "champs": [
+        { "cle": "vitesse", "type": "formule", "defaut": "1",
+          "nom": {"fr": "Vitesse (1 = normal, 0.5 = ralenti)", "en": "Speed (1 = normal, 0.5 = slow)", "es": "Velocidad (1 = normal, 0.5 = lento)", "pt": "Velocidade (1 = normal, 0.5 = lento)", "de": "Tempo (1 = normal, 0.5 = langsam)", "it": "Velocità (1 = normale, 0.5 = lenta)", "ru": "Скорость (1 = обычная, 0.5 = медленно)", "zh": "速度（1 = 正常，0.5 = 慢）", "ja": "速度（1 = 通常、0.5 = スロー）"} }
+      ]
+    },
+    {
+      "cle": "pause_jeu",
+      "nom": {"fr": "Mettre le jeu en pause", "en": "Pause the game", "es": "Pausar el juego", "pt": "Pausar o jogo", "de": "Spiel pausieren", "it": "Metti in pausa il gioco", "ru": "Поставить игру на паузу", "zh": "暂停游戏", "ja": "ゲームを一時停止"},
+      "categorie": "cat_temps",
+      "action": "pause",
+      "constantes": {"etat": "pause"}
+    },
+    {
+      "cle": "reprendre_jeu",
+      "nom": {"fr": "Reprendre le jeu", "en": "Resume the game", "es": "Reanudar el juego", "pt": "Retomar o jogo", "de": "Spiel fortsetzen", "it": "Riprendi il gioco", "ru": "Продолжить игру", "zh": "继续游戏", "ja": "ゲームを再開"},
+      "categorie": "cat_temps",
+      "action": "pause",
+      "constantes": {"etat": "reprise"}
+    },
+    {
+      "cle": "deplacer",
+      "nomCle": "noeud_deplacer_objet",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "0", "nom": "X" },
+        { "cle": "y", "type": "formule", "defaut": "0", "nom": "Y" }
+      ]
+    },
+    {
+      "cle": "pousser",
+      "nomCle": "noeud_pousser_objet",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Ajout X", "en": "Add X", "es": "Añadir X", "pt": "Adicionar X", "de": "X hinzufügen", "it": "Aggiungi X", "ru": "Добавить X", "zh": "增加 X", "ja": "X を加算" } },
+        { "cle": "y", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Ajout Y", "en": "Add Y", "es": "Añadir Y", "pt": "Adicionar Y", "de": "Y hinzufügen", "it": "Aggiungi Y", "ru": "Добавить Y", "zh": "增加 Y", "ja": "Y を加算" } }
+      ]
+    },
+    {
+      "cle": "modifier_variable",
+      "nomCle": "noeud_modifier_variable",
+      "categorie": "cat_variables_inventaire",
+      "objet": true,
+      "variable": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "",
+          "nom": { "fr": "Valeur", "en": "Value", "es": "Valor", "pt": "Valor", "de": "Wert", "it": "Valore", "ru": "Значение", "zh": "值", "ja": "値" } }
+      ]
+    },
+    {
+      "cle": "toast",
+      "nomCle": "noeud_toast",
+      "categorie": "cat_scene_hud",
+      "champs": [
+        { "cle": "message", "type": "texte", "defaut": "",
+          "nom": { "fr": "Message", "en": "Message", "es": "Mensaje", "pt": "Mensagem", "de": "Nachricht", "it": "Messaggio", "ru": "Сообщение", "zh": "消息", "ja": "メッセージ" } }
+      ]
+    },
+    {
+      "cle": "condition",
+      "nomCle": "noeud_condition",
+      "categorie": "cat_logique_conditions",
+      "sorties": ["vrai", "faux"],
+      "champs": [
+        { "cle": "condition", "type": "formule", "defaut": "",
+          "nom": { "fr": "Condition", "en": "Condition", "es": "Condición", "pt": "Condição", "de": "Bedingung", "it": "Condizione", "ru": "Условие", "zh": "条件", "ja": "条件" } }
+      ]
+    },
+    {
+      "cle": "modifier_propriete",
+      "nom": { "fr": "Modifier une propriété", "en": "Set a property", "es": "Modificar una propiedad", "pt": "Modificar uma propriedade", "de": "Eigenschaft ändern", "it": "Modifica una proprietà", "ru": "Изменить свойство", "zh": "修改属性", "ja": "プロパティを変更" },
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "propriete", "type": "choix", "options": ["@proprietes"], "defaut": "x",
+          "nom": { "fr": "Propriété", "en": "Property", "es": "Propiedad", "pt": "Propriedade", "de": "Eigenschaft", "it": "Proprietà", "ru": "Свойство", "zh": "属性", "ja": "プロパティ" } },
+        { "cle": "valeur", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Valeur", "en": "Value", "es": "Valor", "pt": "Valor", "de": "Wert", "it": "Valore", "ru": "Значение", "zh": "值", "ja": "値" } }
+      ]
+    },
+    {
+      "cle": "rotation",
+      "nomCle": "noeud_rotation",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "rotation" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Angle (degrés)", "en": "Angle (degrees)", "es": "Ángulo (grados)", "pt": "Ângulo (graus)", "de": "Winkel (Grad)", "it": "Angolo (gradi)", "ru": "Угол (градусы)", "zh": "角度（度）", "ja": "角度（度）" } }
+      ]
+    },
+    {
+      "cle": "opacite",
+      "nomCle": "noeud_opacite",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "opacite" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "1",
+          "nom": { "fr": "Opacité (0 à 1)", "en": "Opacity (0 to 1)", "es": "Opacidad (0 a 1)", "pt": "Opacidade (0 a 1)", "de": "Deckkraft (0 bis 1)", "it": "Opacità (da 0 a 1)", "ru": "Непрозрачность (0–1)", "zh": "不透明度（0到1）", "ja": "不透明度（0〜1）" } }
+      ]
+    },
+    {
+      "cle": "visibilite",
+      "nomCle": "noeud_visibilite",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "visible" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "true",
+          "nom": { "fr": "Visible (true / false)", "en": "Visible (true / false)", "es": "Visible (true / false)", "pt": "Visível (true / false)", "de": "Sichtbar (true / false)", "it": "Visibile (true / false)", "ru": "Видимость (true / false)", "zh": "可见（true / false）", "ja": "表示（true / false）" } }
+      ]
+    },
+    {
+      "cle": "definir_tag",
+      "nomCle": "noeud_definir_tag",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "tag" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "texte", "defaut": "",
+          "nom": { "fr": "Tag", "en": "Tag", "es": "Etiqueta", "pt": "Tag", "de": "Tag", "it": "Tag", "ru": "Тег", "zh": "标签", "ja": "タグ" } }
+      ]
+    },
+    {
+      "cle": "changer_zorder",
+      "nomCle": "noeud_changer_zorder",
+      "categorie": "cat_apparence_objets",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "z" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "0", "nom": "Z" }
+      ]
+    },
+    {
+      "cle": "modifier_texte",
+      "nomCle": "noeud_modifier_texte",
+      "categorie": "cat_textes_dialogues",
+      "action": "modifier_propriete",
+      "constantes": { "propriete": "texte" },
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "texte", "defaut": "",
+          "nom": { "fr": "Nouveau texte", "en": "New text", "es": "Texto nuevo", "pt": "Novo texto", "de": "Neuer Text", "it": "Nuovo testo", "ru": "Новый текст", "zh": "新文本", "ja": "新しいテキスト" } }
+      ]
+    },
+    {
+      "cle": "ajouter_variable",
+      "nomCle": "noeud_ajouter_a_variable",
+      "categorie": "cat_variables_inventaire",
+      "objet": true,
+      "variable": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "1",
+          "nom": { "fr": "Valeur à ajouter", "en": "Value to add", "es": "Valor a añadir", "pt": "Valor a adicionar", "de": "Hinzuzufügender Wert", "it": "Valore da aggiungere", "ru": "Добавляемое значение", "zh": "要增加的值", "ja": "加算する値" } }
+      ]
+    },
+    {
+      "cle": "limiter_valeur",
+      "nomCle": "noeud_limiter_valeur",
+      "action": "limiter_variable",
+      "categorie": "cat_variables_inventaire",
+      "objet": true,
+      "variable": true,
+      "champs": [
+        { "cle": "min", "type": "formule", "defaut": "0",
+          "nom": { "fr": "Minimum", "en": "Minimum", "es": "Mínimo", "pt": "Mínimo", "de": "Minimum", "it": "Minimo", "ru": "Минимум", "zh": "最小值", "ja": "最小値" } },
+        { "cle": "max", "type": "formule", "defaut": "100",
+          "nom": { "fr": "Maximum", "en": "Maximum", "es": "Máximo", "pt": "Máximo", "de": "Maximum", "it": "Massimo", "ru": "Максимум", "zh": "最大值", "ja": "最大値" } }
+      ]
+    },
+    {
+      "cle": "modifier_taille",
+      "nomCle": "noeud_definir_taille",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_echelle",
+      "objet": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "1", "nom": "Scale X" },
+        { "cle": "y", "type": "formule", "defaut": "1", "nom": "Scale Y" }
+      ]
+    },
+    {
+      "cle": "detruire_objet",
+      "nomCle": "noeud_detruire_objet",
+      "categorie": "cat_apparence_objets",
+      "action": "detruire",
+      "objet": true
+    },
+    {
+      "cle": "detruire_par_tag",
+      "nomCle": "noeud_detruire_par_tag",
+      "categorie": "cat_apparence_objets",
+      "champs": [
+        { "cle": "tag", "type": "tag", "defaut": "Ennemi",
+          "nom": { "fr": "Tag à détruire", "en": "Tag to destroy", "es": "Etiqueta a destruir", "pt": "Tag a destruir", "de": "Zu zerstörender Tag", "it": "Tag da distruggere", "ru": "Тег для уничтожения", "zh": "要销毁的标签", "ja": "破棄するタグ" } }
+      ]
+    },
+    {
+      "cle": "changer_image",
+      "nomCle": "noeud_changer_image",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "image", "type": "image", "defaut": "",
+          "nom": { "fr": "Image", "en": "Image", "es": "Imagen", "pt": "Imagem", "de": "Bild", "it": "Immagine", "ru": "Изображение", "zh": "图像", "ja": "画像" } }
+      ]
+    },
+    {
+      "cle": "modifier_couleur",
+      "nomCle": "noeud_modifier_couleur",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "couleur", "type": "couleur", "defaut": "Noir",
+          "nom": { "fr": "Couleur", "en": "Color", "es": "Color", "pt": "Cor", "de": "Farbe", "it": "Colore", "ru": "Цвет", "zh": "颜色", "ja": "色" } }
+      ]
+    },
+    {
+      "cle": "generer_clone",
+      "nomCle": "noeud_generer_clone",
+      "categorie": "cat_apparence_objets",
+      "action": "cloner",
+      "objet": true,
+      "objetB": true
+    },
+    {
+      "cle": "filtre_couleur",
+      "nomCle": "noeud_filtre_couleur",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_filtre",
+      "objet": true,
+      "champs": [
+        { "cle": "filtre", "type": "choix", "options": ["Aucun", "Noir et Blanc", "Sepia", "Inversion"], "defaut": "Noir et Blanc",
+          "nom": {"fr": "Filtre", "en": "Filter", "es": "Filtro", "pt": "Filtro", "de": "Filter", "it": "Filtro", "ru": "Фильтр", "zh": "滤镜", "ja": "フィルター"} }
+      ]
+    },
+    {
+      "cle": "mode_affichage",
+      "nomCle": "noeud_mode_affichage",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_filtre",
+      "objet": true,
+      "champs": [
+        { "cle": "filtre", "type": "choix", "options": ["Aucun", "Additif", "Multiplicatif", "Ecran", "Inversion"], "defaut": "Aucun",
+          "nom": {"fr": "Filtre", "en": "Filter", "es": "Filtro", "pt": "Filtro", "de": "Filter", "it": "Filtro", "ru": "Фильтр", "zh": "滤镜", "ja": "フィルター"} }
+      ]
+    },
+    {
+      "cle": "miroir",
+      "nomCle": "noeud_miroir",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "axe", "type": "choix", "options": ["Horizontal", "Vertical"], "defaut": "Horizontal",
+          "nom": {"fr": "Axe", "en": "Axis", "es": "Eje", "pt": "Eixo", "de": "Achse", "it": "Asse", "ru": "Ось", "zh": "轴", "ja": "軸"} }
+      ]
+    },
+    {
+      "cle": "modifier_verrouillage",
+      "nomCle": "noeud_modifier_deplacable",
+      "categorie": "cat_apparence_objets",
+      "action": "verrouiller",
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "true",
+          "nom": {"fr": "Verrouillé (true / false)", "en": "Locked (true / false)", "es": "Bloqueado (true / false)", "pt": "Bloqueado (true / false)", "de": "Gesperrt (true / false)", "it": "Bloccato (true / false)", "ru": "Заблокирован (true / false)", "zh": "锁定（true / false）", "ja": "ロック（true / false）"} }
+      ]
+    },
+    {
+      "cle": "parallaxe",
+      "nomCle": "noeud_parallaxe",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_parallaxe",
+      "objet": true,
+      "champs": [
+        { "cle": "facteur", "type": "formule", "defaut": "1",
+          "nom": {"fr": "Facteur (ex : 0.5)", "en": "Factor (e.g. 0.5)", "es": "Factor (p. ej. 0.5)", "pt": "Fator (ex.: 0.5)", "de": "Faktor (z. B. 0.5)", "it": "Fattore (es. 0.5)", "ru": "Коэффициент (напр. 0.5)", "zh": "系数（如 0.5）", "ja": "係数（例：0.5）"} }
+      ]
+    },
+    {
+      "cle": "lier_objets",
+      "nomCle": "noeud_lier_objets",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "objetB": true
+    },
+    {
+      "cle": "surbrillance",
+      "nomCle": "noeud_surbrillance",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "etat", "type": "choix", "options": ["Activer", "Désactiver"], "defaut": "Activer",
+          "nom": {"fr": "État", "en": "State", "es": "Estado", "pt": "Estado", "de": "Zustand", "it": "Stato", "ru": "Состояние", "zh": "状态", "ja": "状態"} },
+        { "cle": "couleur", "type": "couleur", "defaut": "Jaune",
+          "nom": {"fr": "Couleur", "en": "Color", "es": "Color", "pt": "Cor", "de": "Farbe", "it": "Colore", "ru": "Цвет", "zh": "颜色", "ja": "色"} }
+      ]
+    },
+    {
+      "cle": "clignotement",
+      "nomCle": "noeud_clignotement",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "etat", "type": "choix", "options": ["Activer", "Désactiver"], "defaut": "Activer",
+          "nom": {"fr": "État", "en": "State", "es": "Estado", "pt": "Estado", "de": "Zustand", "it": "Stato", "ru": "Состояние", "zh": "状态", "ja": "状態"} },
+        { "cle": "vitesse", "type": "formule", "defaut": "500",
+          "nom": {"fr": "Vitesse (ms)", "en": "Speed (ms)", "es": "Velocidad (ms)", "pt": "Velocidade (ms)", "de": "Geschwindigkeit (ms)", "it": "Velocità (ms)", "ru": "Скорость (мс)", "zh": "速度（毫秒）", "ja": "速度（ms）"} },
+        { "cle": "duree", "type": "formule", "defaut": "0",
+          "nom": {"fr": "Durée (ms, 0 = infini)", "en": "Duration (ms, 0 = infinite)", "es": "Duración (ms, 0 = infinito)", "pt": "Duração (ms, 0 = infinito)", "de": "Dauer (ms, 0 = unendlich)", "it": "Durata (ms, 0 = infinito)", "ru": "Длительность (мс, 0 = бесконечно)", "zh": "持续时间（毫秒，0 = 无限）", "ja": "継続時間（ms、0 = 無限）"} }
+      ]
+    },
+    {
+      "cle": "generer_clone_position",
+      "nomCle": "noeud_generer_clone_position",
+      "categorie": "cat_apparence_objets",
+      "action": "cloner_position",
+      "objetB": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "0", "nom": "X" },
+        { "cle": "y", "type": "formule", "defaut": "0", "nom": "Y" }
+      ]
+    },
+    {
+      "cle": "tirer",
+      "nomCle": "noeud_tirer_nom",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "objetB": true,
+      "champs": [
+        { "cle": "modele", "type": "texte", "defaut": "",
+          "nom": {"fr": "Nom du modèle", "en": "Model name", "es": "Nombre del modelo", "pt": "Nome do modelo", "de": "Modellname", "it": "Nome del modello", "ru": "Имя модели", "zh": "模型名称", "ja": "モデル名"} },
+        { "cle": "direction", "type": "choix", "options": ["Angle de départ", "Vers la cible"], "defaut": "Angle de départ",
+          "nom": {"fr": "Direction", "en": "Direction", "es": "Dirección", "pt": "Direção", "de": "Richtung", "it": "Direzione", "ru": "Направление", "zh": "方向", "ja": "方向"} },
+        { "cle": "vitesse", "type": "formule", "defaut": "10",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+      ]
+    },
+    {
+      "cle": "arreter",
+      "nomCle": "noeud_arreter",
+      "categorie": "cat_mouvements_ia",
+      "action": "arreter_objet",
+      "objet": true
+    },
+    {
+      "cle": "stopper_mouvements",
+      "nomCle": "noeud_stopper_mouvements",
+      "categorie": "cat_mouvements_ia",
+      "objet": true
+    },
+    {
+      "cle": "avancer_continu",
+      "nomCle": "noeud_avancer_en_continu",
+      "categorie": "cat_mouvements_ia",
+      "objet": true,
+      "champs": [
+        { "cle": "vitesse", "type": "formule", "defaut": "5",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+      ]
+    },
+    {
+      "cle": "poursuivre",
+      "nomCle": "noeud_poursuivre_un_objet",
+      "categorie": "cat_mouvements_ia",
+      "action": "poursuivre",
+      "constantes": { "fuite": "false" },
+      "objet": true,
+      "objetB": true,
+      "champs": [
+        { "cle": "vitesse", "type": "formule", "defaut": "5",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+      ]
+    },
+    {
+      "cle": "fuir",
+      "nomCle": "noeud_fuir_un_objet",
+      "categorie": "cat_mouvements_ia",
+      "action": "poursuivre",
+      "constantes": { "fuite": "true" },
+      "objet": true,
+      "objetB": true,
+      "champs": [
+        { "cle": "vitesse", "type": "formule", "defaut": "5",
+          "nom": {"fr": "Vitesse", "en": "Speed", "es": "Velocidad", "pt": "Velocidade", "de": "Geschwindigkeit", "it": "Velocità", "ru": "Скорость", "zh": "速度", "ja": "速度"} }
+      ]
+    },
+    {
+      "cle": "modifier_progression",
+      "nomCle": "noeud_modifier_progression",
+      "categorie": "cat_apparence_objets",
+      "action": "definir_progression",
+      "objet": true,
+      "champs": [
+        { "cle": "valeur", "type": "formule", "defaut": "100",
+          "nom": {"fr": "Nouvelle progression", "en": "New progress", "es": "Nuevo progreso", "pt": "Novo progresso", "de": "Neuer Fortschritt", "it": "Nuovo progresso", "ru": "Новый прогресс", "zh": "新进度", "ja": "新しい進捗"} }
+      ]
+    },
+    {
+      "cle": "traverser_ecran",
+      "nomCle": "noeud_traverser_ecran",
+      "categorie": "cat_apparence_objets",
+      "objet": true
+    },
+    {
+      "cle": "garder_dans_ecran",
+      "nomCle": "noeud_garder_ecran",
+      "categorie": "cat_apparence_objets",
+      "objet": true,
+      "champs": [
+        { "cle": "marge", "type": "formule", "defaut": "0",
+          "nom": {"fr": "Marge", "en": "Margin", "es": "Margen", "pt": "Margem", "de": "Rand", "it": "Margine", "ru": "Отступ", "zh": "边距", "ja": "余白"} }
+      ]
+    },
+    {
+      "cle": "journal",
+      "nom": { "fr": "Écrire dans le journal", "en": "Write to log", "es": "Escribir en el registro", "pt": "Escrever no registo", "de": "In das Protokoll schreiben", "it": "Scrivi nel registro", "ru": "Записать в журнал", "zh": "写入日志", "ja": "ログに書き込む" },
+      "categorie": "cat_scene_hud",
+      "action": "journaliser",
+      "champs": [
+        { "cle": "message", "type": "texte", "defaut": "",
+          "nom": {"fr": "Message", "en": "Message", "es": "Mensaje", "pt": "Mensagem", "de": "Nachricht", "it": "Messaggio", "ru": "Сообщение", "zh": "消息", "ja": "メッセージ"} }
+      ]
+    },
+    {
+  "cle": "si_joystick",
+  "nom": {"fr": "Si joystick", "en": "If joystick", "es": "Si joystick", "pt": "Se joystick", "de": "Wenn Joystick", "it": "Se joystick", "ru": "Если джойстик", "zh": "如果摇杆", "ja": "ジョイスティックが"},
+  "categorie": "cat_logique_conditions",
+  "action": "si_joystick",
+  "sorties": [
+    {"cle": "haut", "nom": {"fr": "Haut", "en": "Up", "es": "Arriba", "pt": "Cima", "de": "Oben", "it": "Su", "ru": "Вверх", "zh": "上", "ja": "上"}},
+    {"cle": "bas", "nom": {"fr": "Bas", "en": "Down", "es": "Abajo", "pt": "Baixo", "de": "Unten", "it": "Giù", "ru": "Вниз", "zh": "下", "ja": "下"}},
+    {"cle": "gauche", "nom": {"fr": "Gauche", "en": "Left", "es": "Izquierda", "pt": "Esquerda", "de": "Links", "it": "Sinistra", "ru": "Влево", "zh": "左", "ja": "左"}},
+    {"cle": "droite", "nom": {"fr": "Droite", "en": "Right", "es": "Derecha", "pt": "Direita", "de": "Rechts", "it": "Destra", "ru": "Вправо", "zh": "右", "ja": "右"}},
+    {"cle": "repos", "nom": {"fr": "Repos", "en": "Idle", "es": "Reposo", "pt": "Repouso", "de": "Ruhe", "it": "Riposo", "ru": "Покой", "zh": "静止", "ja": "静止"}}
+  ]
+    },
+    {
+  "cle": "fixer_camera",
+  "nom": {"fr": "Fixer la caméra", "en": "Follow with camera", "es": "Fijar la cámara", "pt": "Fixar a câmera", "de": "Kamera fixieren", "it": "Fissa la camera", "ru": "Закрепить камеру", "zh": "锁定相机", "ja": "カメラを固定"},
+  "categorie": "cat_scene_hud",
+  "action": "fixer_camera",
+  "objet": true,
+  "champs": [
+    {"cle": "suivre_x", "type": "formule", "defaut": "true", "nom": {"fr": "Suivre en X (true / false)", "en": "Follow X (true / false)", "es": "Seguir en X (true / false)", "pt": "Seguir em X (true / false)", "de": "X folgen (true / false)", "it": "Segui X (true / false)", "ru": "Следовать по X (true / false)", "zh": "跟随 X（true / false）", "ja": "Xを追う（true / false）"}},
+    {"cle": "suivre_y", "type": "formule", "defaut": "true", "nom": {"fr": "Suivre en Y (true / false)", "en": "Follow Y (true / false)", "es": "Seguir en Y (true / false)", "pt": "Seguir em Y (true / false)", "de": "Y folgen (true / false)", "it": "Segui Y (true / false)", "ru": "Следовать по Y (true / false)", "zh": "跟随 Y（true / false）", "ja": "Yを追う（true / false）"}},
+    {"cle": "parallaxe_x", "type": "formule", "defaut": "true", "nom": {"fr": "Parallaxe en X seulement (true / false)", "en": "Parallax X only (true / false)", "es": "Paralaje solo en X (true / false)", "pt": "Paralaxe só em X (true / false)", "de": "Parallaxe nur X (true / false)", "it": "Parallasse solo X (true / false)", "ru": "Параллакс только по X (true / false)", "zh": "仅 X 视差（true / false）", "ja": "X方向のみ視差（true / false）"}}
+  ]
+    },
+    {
+  "cle": "elasticite_camera",
+  "nom": {"fr": "Élasticité de la caméra", "en": "Camera smoothing", "es": "Suavizado de cámara", "pt": "Suavização da câmera", "de": "Kamera-Glättung", "it": "Morbidezza della camera", "ru": "Плавность камеры", "zh": "相机平滑", "ja": "カメラの滑らかさ"},
+  "categorie": "cat_scene_hud",
+  "action": "elasticite_camera",
+  "champs": [
+    {"cle": "vitesse", "type": "formule", "defaut": "0.1", "nom": {"fr": "Vitesse de suivi (0.01 à 1)", "en": "Follow speed (0.01 to 1)", "es": "Velocidad de seguimiento (0.01 a 1)", "pt": "Velocidade de seguimento (0.01 a 1)", "de": "Folgegeschwindigkeit (0.01 bis 1)", "it": "Velocità di inseguimento (da 0.01 a 1)", "ru": "Скорость слежения (0.01–1)", "zh": "跟随速度（0.01 到 1）", "ja": "追従速度（0.01〜1）"}}
+  ]
+},
+{
+  "cle": "tremblement_camera",
+  "nom": {"fr": "Tremblement de la caméra", "en": "Camera shake", "es": "Temblor de cámara", "pt": "Tremor da câmera", "de": "Kamera-Wackeln", "it": "Tremolio della camera", "ru": "Тряска камеры", "zh": "相机抖动", "ja": "カメラの振動"},
+  "categorie": "cat_scene_hud",
+  "action": "tremblement_camera",
+  "champs": [
+    {"cle": "intensite", "type": "formule", "defaut": "10", "nom": {"fr": "Intensité", "en": "Strength", "es": "Intensidad", "pt": "Intensidade", "de": "Stärke", "it": "Intensità", "ru": "Сила", "zh": "强度", "ja": "強さ"}},
+    {"cle": "duree", "type": "formule", "defaut": "500", "nom": {"fr": "Durée (ms)", "en": "Duration (ms)", "es": "Duración (ms)", "pt": "Duração (ms)", "de": "Dauer (ms)", "it": "Durata (ms)", "ru": "Длительность (мс)", "zh": "持续时间（毫秒）", "ja": "長さ（ミリ秒）"}}
+  ]
+},
+{
+  "cle": "vibration",
+  "nom": {"fr": "Vibration", "en": "Vibration", "es": "Vibración", "pt": "Vibração", "de": "Vibration", "it": "Vibrazione", "ru": "Вибрация", "zh": "振动", "ja": "バイブレーション"},
+  "categorie": "cat_scene_hud",
+  "action": "vibration",
+  "champs": [
+    {"cle": "duree", "type": "formule", "defaut": "100", "nom": {"fr": "Durée (ms)", "en": "Duration (ms)", "es": "Duración (ms)", "pt": "Duração (ms)", "de": "Dauer (ms)", "it": "Durata (ms)", "ru": "Длительность (мс)", "zh": "持续时间（毫秒）", "ja": "長さ（ミリ秒）"}}
+  ]
+}
+  ]
+}
+// bas 1
