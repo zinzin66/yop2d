@@ -80,6 +80,9 @@ public class ActionsMoteur {
             case "jouer_son": return ActionsAudio.jouerSon(n);
             case "jouer_musique": return ActionsAudio.jouerMusique(n);
             case "arreter_musique": return ActionsAudio.arreterMusique(n);
+            case "afficher_dialogue": return ActionsAppels.afficherDialogue(n);
+            case "appeler_fonction": return ActionsAppels.appelerFonction(n);
+            case "appeler_evenement": return ActionsAppels.appelerEvenement(n);
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
