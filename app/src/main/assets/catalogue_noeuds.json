@@ -825,8 +825,6 @@
   "nom": {"fr": "Arrêter la musique", "en": "Stop music", "es": "Detener música", "pt": "Parar música", "de": "Musik stoppen", "it": "Ferma la musica", "ru": "Остановить музыку", "zh": "停止音乐", "ja": "音楽を停止"},
   "categorie": "cat_audio",
   "action": "arreter_musique"
-}
-  ]
 },
 {
   "cle": "afficher_dialogue",
@@ -855,5 +853,7 @@
   "champs": [
     {"cle": "evenement", "type": "texte", "defaut": "", "nom": {"fr": "Nom de l'événement", "en": "Event name", "es": "Nombre del evento", "pt": "Nome do evento", "de": "Ereignisname", "it": "Nome dell'evento", "ru": "Имя события", "zh": "事件名称", "ja": "イベント名"}}
   ]
+}
+    ]
 }
 // bas 1
