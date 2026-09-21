@@ -608,6 +608,18 @@
     {"cle": "droite", "nom": {"fr": "Droite", "en": "Right", "es": "Derecha", "pt": "Direita", "de": "Rechts", "it": "Destra", "ru": "Вправо", "zh": "右", "ja": "右"}},
     {"cle": "repos", "nom": {"fr": "Repos", "en": "Idle", "es": "Reposo", "pt": "Repouso", "de": "Ruhe", "it": "Riposo", "ru": "Покой", "zh": "静止", "ja": "静止"}}
   ]
+    },
+    {
+  "cle": "fixer_camera",
+  "nom": {"fr": "Fixer la caméra", "en": "Follow with camera", "es": "Fijar la cámara", "pt": "Fixar a câmera", "de": "Kamera fixieren", "it": "Fissa la camera", "ru": "Закрепить камеру", "zh": "锁定相机", "ja": "カメラを固定"},
+  "categorie": "cat_scene_hud",
+  "action": "fixer_camera",
+  "objet": true,
+  "champs": [
+    {"cle": "suivre_x", "type": "formule", "defaut": "true", "nom": {"fr": "Suivre en X (true / false)", "en": "Follow X (true / false)", "es": "Seguir en X (true / false)", "pt": "Seguir em X (true / false)", "de": "X folgen (true / false)", "it": "Segui X (true / false)", "ru": "Следовать по X (true / false)", "zh": "跟随 X（true / false）", "ja": "Xを追う（true / false）"}},
+    {"cle": "suivre_y", "type": "formule", "defaut": "true", "nom": {"fr": "Suivre en Y (true / false)", "en": "Follow Y (true / false)", "es": "Seguir en Y (true / false)", "pt": "Seguir em Y (true / false)", "de": "Y folgen (true / false)", "it": "Segui Y (true / false)", "ru": "Следовать по Y (true / false)", "zh": "跟随 Y（true / false）", "ja": "Yを追う（true / false）"}},
+    {"cle": "parallaxe_x", "type": "formule", "defaut": "true", "nom": {"fr": "Parallaxe en X seulement (true / false)", "en": "Parallax X only (true / false)", "es": "Paralaje solo en X (true / false)", "pt": "Paralaxe só em X (true / false)", "de": "Parallaxe nur X (true / false)", "it": "Parallasse solo X (true / false)", "ru": "Параллакс только по X (true / false)", "zh": "仅 X 视差（true / false）", "ja": "X方向のみ視差（true / false）"}}
+  ]
     }
   ]
 }
