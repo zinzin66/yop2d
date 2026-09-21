@@ -229,6 +229,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         bandeauHaut.addView(separateurVertical());
 // bas 1
+
 // haut 2
         ConfigurationJeu.charger(cheminProjet);   // résolution et cadence de CE projet (reglages.json)
         listeScenes = new ArrayList<>();
@@ -667,9 +668,14 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         scrollCouleurs.setLayoutParams(lpScrollCouleurs);
         layoutDialog.addView(scrollCouleurs);
 
+        // Le contenu défile : sur un petit écran (téléphone), on peut atteindre tous les réglages
+        ScrollView defilementReglages = new ScrollView(this);
+        defilementReglages.setBackgroundColor(Palette.fondPanneaux);
+        defilementReglages.addView(layoutDialog);
+
         android.app.AlertDialog dialogue = new android.app.AlertDialog.Builder(this)
                 .setTitle(Traducteur.get("reglages_titre_menu"))
-                .setView(layoutDialog)
+                .setView(defilementReglages)
                 .setPositiveButton(Traducteur.get("bouton_valider"), null)
                 .setNegativeButton(Traducteur.get("bouton_annuler"), (d, w) -> d.cancel())
                 .create();
@@ -721,6 +727,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         }
     }
 // bas 2
+    
 // haut 3
     // ici
     private void afficherMenuScene(View ancre) {

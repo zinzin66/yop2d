@@ -20,6 +20,88 @@
   },
   "noeuds": [
     {
+      "cle": "changer_scene",
+      "nom": {"fr": "Changer de scène", "en": "Go to scene", "es": "Ir a la escena", "pt": "Ir para a cena", "de": "Zur Szene wechseln", "it": "Vai alla scena", "ru": "Перейти к сцене", "zh": "切换场景", "ja": "シーンを切り替える"},
+      "categorie": "cat_scene_hud",
+      "action": "changer_scene",
+      "scene": true,
+      "sorties": []
+    },
+    {
+      "cle": "aller_scene_nom",
+      "nom": {"fr": "Aller à la scène (par son nom)", "en": "Go to scene (by name)", "es": "Ir a la escena (por nombre)", "pt": "Ir para a cena (pelo nome)", "de": "Zur Szene (nach Name)", "it": "Vai alla scena (per nome)", "ru": "Перейти к сцене (по имени)", "zh": "按名称切换场景", "ja": "名前でシーンへ移動"},
+      "categorie": "cat_scene_hud",
+      "action": "aller_scene_nom",
+      "sorties": [],
+      "champs": [
+        { "cle": "nom", "type": "texte", "defaut": "",
+          "nom": {"fr": "Nom de la scène", "en": "Scene name", "es": "Nombre de la escena", "pt": "Nome da cena", "de": "Name der Szene", "it": "Nome della scena", "ru": "Имя сцены", "zh": "场景名称", "ja": "シーン名"} }
+      ]
+    },
+    {
+      "cle": "scene_suivante",
+      "nom": {"fr": "Scène suivante", "en": "Next scene", "es": "Escena siguiente", "pt": "Cena seguinte", "de": "Nächste Szene", "it": "Scena successiva", "ru": "Следующая сцена", "zh": "下一个场景", "ja": "次のシーン"},
+      "categorie": "cat_scene_hud",
+      "action": "scene_relative",
+      "constantes": {"decalage": "1"},
+      "sorties": []
+    },
+    {
+      "cle": "scene_precedente",
+      "nom": {"fr": "Scène précédente", "en": "Previous scene", "es": "Escena anterior", "pt": "Cena anterior", "de": "Vorherige Szene", "it": "Scena precedente", "ru": "Предыдущая сцена", "zh": "上一个场景", "ja": "前のシーン"},
+      "categorie": "cat_scene_hud",
+      "action": "scene_relative",
+      "constantes": {"decalage": "-1"},
+      "sorties": []
+    },
+    {
+      "cle": "recommencer_scene",
+      "nom": {"fr": "Recommencer la scène", "en": "Restart the scene", "es": "Reiniciar la escena", "pt": "Reiniciar a cena", "de": "Szene neu starten", "it": "Ricomincia la scena", "ru": "Перезапустить сцену", "zh": "重新开始场景", "ja": "シーンをやり直す"},
+      "categorie": "cat_scene_hud",
+      "action": "recommencer_scene",
+      "sorties": []
+    },
+    {
+      "cle": "ouvrir_hud",
+      "nom": {"fr": "Ouvrir un HUD", "en": "Open a HUD", "es": "Abrir un HUD", "pt": "Abrir um HUD", "de": "HUD öffnen", "it": "Apri un HUD", "ru": "Открыть HUD", "zh": "打开 HUD", "ja": "HUDを開く"},
+      "categorie": "cat_scene_hud",
+      "action": "ouvrir_hud",
+      "scene": true
+    },
+    {
+      "cle": "fermer_hud",
+      "nom": {"fr": "Fermer le HUD", "en": "Close the HUD", "es": "Cerrar el HUD", "pt": "Fechar o HUD", "de": "HUD schließen", "it": "Chiudi l'HUD", "ru": "Закрыть HUD", "zh": "关闭 HUD", "ja": "HUDを閉じる"},
+      "categorie": "cat_scene_hud",
+      "action": "fermer_hud"
+    },
+    {
+      "cle": "placer_copie_scene",
+      "nom": {"fr": "Placer une copie d'une scène", "en": "Place a copy of a scene", "es": "Colocar una copia de una escena", "pt": "Colocar uma cópia de uma cena", "de": "Kopie einer Szene platzieren", "it": "Posiziona una copia di una scena", "ru": "Разместить копию сцены", "zh": "放置场景副本", "ja": "シーンのコピーを配置"},
+      "categorie": "cat_scene_hud",
+      "action": "placer_copie_scene",
+      "scene": true,
+      "champs": [
+        { "cle": "x", "type": "formule", "defaut": "0",
+          "nom": {"fr": "Position X", "en": "X position", "es": "Posición X", "pt": "Posição X", "de": "X-Position", "it": "Posizione X", "ru": "Позиция X", "zh": "X 位置", "ja": "X位置"} },
+        { "cle": "y", "type": "formule", "defaut": "0",
+          "nom": {"fr": "Position Y", "en": "Y position", "es": "Posición Y", "pt": "Posição Y", "de": "Y-Position", "it": "Posizione Y", "ru": "Позиция Y", "zh": "Y 位置", "ja": "Y位置"} }
+      ]
+    },
+    {
+      "cle": "detruire_copies_scene",
+      "nom": {"fr": "Détruire les copies d'une scène", "en": "Destroy the copies of a scene", "es": "Destruir las copias de una escena", "pt": "Destruir as cópias de uma cena", "de": "Kopien einer Szene zerstören", "it": "Distruggi le copie di una scena", "ru": "Уничтожить копии сцены", "zh": "销毁场景副本", "ja": "シーンのコピーを破棄"},
+      "categorie": "cat_scene_hud",
+      "action": "detruire_copies_scene",
+      "scene": true
+    },
+    {
+      "cle": "quitter_jeu",
+      "nom": {"fr": "Quitter le jeu", "en": "Quit the game", "es": "Salir del juego", "pt": "Sair do jogo", "de": "Spiel beenden", "it": "Esci dal gioco", "ru": "Выйти из игры", "zh": "退出游戏", "ja": "ゲームを終了"},
+      "categorie": "cat_scene_hud",
+      "action": "quitter_jeu",
+      "sorties": []
+    },
+    {
       "cle": "attendre",
       "nom": {"fr": "Attendre", "en": "Wait", "es": "Esperar", "pt": "Esperar", "de": "Warten", "it": "Attendere", "ru": "Ждать", "zh": "等待", "ja": "待つ"},
       "categorie": "cat_temps",
@@ -513,7 +595,60 @@
         { "cle": "message", "type": "texte", "defaut": "",
           "nom": {"fr": "Message", "en": "Message", "es": "Mensaje", "pt": "Mensagem", "de": "Nachricht", "it": "Messaggio", "ru": "Сообщение", "zh": "消息", "ja": "メッセージ"} }
       ]
-    }
+    },
+    {
+  "cle": "si_joystick",
+  "nom": {"fr": "Si joystick", "en": "If joystick", "es": "Si joystick", "pt": "Se joystick", "de": "Wenn Joystick", "it": "Se joystick", "ru": "Если джойстик", "zh": "如果摇杆", "ja": "ジョイスティックが"},
+  "categorie": "cat_logique_conditions",
+  "action": "si_joystick",
+  "sorties": [
+    {"cle": "haut", "nom": {"fr": "Haut", "en": "Up", "es": "Arriba", "pt": "Cima", "de": "Oben", "it": "Su", "ru": "Вверх", "zh": "上", "ja": "上"}},
+    {"cle": "bas", "nom": {"fr": "Bas", "en": "Down", "es": "Abajo", "pt": "Baixo", "de": "Unten", "it": "Giù", "ru": "Вниз", "zh": "下", "ja": "下"}},
+    {"cle": "gauche", "nom": {"fr": "Gauche", "en": "Left", "es": "Izquierda", "pt": "Esquerda", "de": "Links", "it": "Sinistra", "ru": "Влево", "zh": "左", "ja": "左"}},
+    {"cle": "droite", "nom": {"fr": "Droite", "en": "Right", "es": "Derecha", "pt": "Direita", "de": "Rechts", "it": "Destra", "ru": "Вправо", "zh": "右", "ja": "右"}},
+    {"cle": "repos", "nom": {"fr": "Repos", "en": "Idle", "es": "Reposo", "pt": "Repouso", "de": "Ruhe", "it": "Riposo", "ru": "Покой", "zh": "静止", "ja": "静止"}}
+  ]
+    },
+    {
+  "cle": "fixer_camera",
+  "nom": {"fr": "Fixer la caméra", "en": "Follow with camera", "es": "Fijar la cámara", "pt": "Fixar a câmera", "de": "Kamera fixieren", "it": "Fissa la camera", "ru": "Закрепить камеру", "zh": "锁定相机", "ja": "カメラを固定"},
+  "categorie": "cat_scene_hud",
+  "action": "fixer_camera",
+  "objet": true,
+  "champs": [
+    {"cle": "suivre_x", "type": "formule", "defaut": "true", "nom": {"fr": "Suivre en X (true / false)", "en": "Follow X (true / false)", "es": "Seguir en X (true / false)", "pt": "Seguir em X (true / false)", "de": "X folgen (true / false)", "it": "Segui X (true / false)", "ru": "Следовать по X (true / false)", "zh": "跟随 X（true / false）", "ja": "Xを追う（true / false）"}},
+    {"cle": "suivre_y", "type": "formule", "defaut": "true", "nom": {"fr": "Suivre en Y (true / false)", "en": "Follow Y (true / false)", "es": "Seguir en Y (true / false)", "pt": "Seguir em Y (true / false)", "de": "Y folgen (true / false)", "it": "Segui Y (true / false)", "ru": "Следовать по Y (true / false)", "zh": "跟随 Y（true / false）", "ja": "Yを追う（true / false）"}},
+    {"cle": "parallaxe_x", "type": "formule", "defaut": "true", "nom": {"fr": "Parallaxe en X seulement (true / false)", "en": "Parallax X only (true / false)", "es": "Paralaje solo en X (true / false)", "pt": "Paralaxe só em X (true / false)", "de": "Parallaxe nur X (true / false)", "it": "Parallasse solo X (true / false)", "ru": "Параллакс только по X (true / false)", "zh": "仅 X 视差（true / false）", "ja": "X方向のみ視差（true / false）"}}
+  ]
+    },
+    {
+  "cle": "elasticite_camera",
+  "nom": {"fr": "Élasticité de la caméra", "en": "Camera smoothing", "es": "Suavizado de cámara", "pt": "Suavização da câmera", "de": "Kamera-Glättung", "it": "Morbidezza della camera", "ru": "Плавность камеры", "zh": "相机平滑", "ja": "カメラの滑らかさ"},
+  "categorie": "cat_scene_hud",
+  "action": "elasticite_camera",
+  "champs": [
+    {"cle": "vitesse", "type": "formule", "defaut": "0.1", "nom": {"fr": "Vitesse de suivi (0.01 à 1)", "en": "Follow speed (0.01 to 1)", "es": "Velocidad de seguimiento (0.01 a 1)", "pt": "Velocidade de seguimento (0.01 a 1)", "de": "Folgegeschwindigkeit (0.01 bis 1)", "it": "Velocità di inseguimento (da 0.01 a 1)", "ru": "Скорость слежения (0.01–1)", "zh": "跟随速度（0.01 到 1）", "ja": "追従速度（0.01〜1）"}}
+  ]
+},
+{
+  "cle": "tremblement_camera",
+  "nom": {"fr": "Tremblement de la caméra", "en": "Camera shake", "es": "Temblor de cámara", "pt": "Tremor da câmera", "de": "Kamera-Wackeln", "it": "Tremolio della camera", "ru": "Тряска камеры", "zh": "相机抖动", "ja": "カメラの振動"},
+  "categorie": "cat_scene_hud",
+  "action": "tremblement_camera",
+  "champs": [
+    {"cle": "intensite", "type": "formule", "defaut": "10", "nom": {"fr": "Intensité", "en": "Strength", "es": "Intensidad", "pt": "Intensidade", "de": "Stärke", "it": "Intensità", "ru": "Сила", "zh": "强度", "ja": "強さ"}},
+    {"cle": "duree", "type": "formule", "defaut": "500", "nom": {"fr": "Durée (ms)", "en": "Duration (ms)", "es": "Duración (ms)", "pt": "Duração (ms)", "de": "Dauer (ms)", "it": "Durata (ms)", "ru": "Длительность (мс)", "zh": "持续时间（毫秒）", "ja": "長さ（ミリ秒）"}}
+  ]
+},
+{
+  "cle": "vibration",
+  "nom": {"fr": "Vibration", "en": "Vibration", "es": "Vibración", "pt": "Vibração", "de": "Vibration", "it": "Vibrazione", "ru": "Вибрация", "zh": "振动", "ja": "バイブレーション"},
+  "categorie": "cat_scene_hud",
+  "action": "vibration",
+  "champs": [
+    {"cle": "duree", "type": "formule", "defaut": "100", "nom": {"fr": "Durée (ms)", "en": "Duration (ms)", "es": "Duración (ms)", "pt": "Duração (ms)", "de": "Dauer (ms)", "it": "Durata (ms)", "ru": "Длительность (мс)", "zh": "持续时间（毫秒）", "ja": "長さ（ミリ秒）"}}
+  ]
+}
   ]
 }
 // bas 1

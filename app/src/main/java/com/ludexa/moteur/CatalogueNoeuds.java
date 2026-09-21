@@ -24,8 +24,9 @@ import java.util.Map;
 //   "categorie"  clé de traduction d'une catégorie existante
 //   "nomCle"     clé de traduction déjà existante du titre       (sinon "nom" ci-dessous)
 //   "nom"        titre : un texte, ou {"fr": "...", "en": "..."}
-//   "objet", "objetB", "variable"   true = le nœud a un bouton "Cible objet A / B / variable"
-//   "sorties"    ["suivant"] par défaut ; ["vrai","faux"] pour une condition. Une sortie peut aussi porter
+//   "objet", "objetB", "variable", "scene"   true = le nœud a un bouton "Cible objet A / B / variable / scène"
+//   "sorties"    ["suivant"] par défaut ; ["vrai","faux"] pour une condition ; [] = aucune sortie (le nœud termine
+//                le script, par exemple « Changer de scène »). Une sortie peut aussi porter
 //                sa traduction : {"cle": "termine", "nom": {"fr": "Terminé", "en": "Finished"}}
 //   "constantes" champs fixes, non modifiables, ex : {"propriete": "rotation"}
 //   "champs"     [{"cle","type","defaut","nom","options"}]
@@ -49,7 +50,7 @@ public class CatalogueNoeuds {
         public String cleNom;        // clé de traduction du titre
         public String categorie;     // clé de traduction de la catégorie
         public String action;
-        public boolean objet, objetB, variable;
+        public boolean objet, objetB, variable, scene;
         public Map<String, String> constantes = new LinkedHashMap<>();   // champs fixes (non modifiables), ex : propriete = rotation
         public List<String> sorties = new ArrayList<>();   // noms des ports de sortie, ex : "port_suivant"
         public List<Champ> champs = new ArrayList<>();
@@ -136,6 +137,7 @@ public class CatalogueNoeuds {
             d.objet = n.optBoolean("objet", false);
             d.objetB = n.optBoolean("objetB", false);
             d.variable = n.optBoolean("variable", false);
+            d.scene = n.optBoolean("scene", false);
             JSONObject constantes = n.optJSONObject("constantes");
             if (constantes != null) {
                 Iterator<String> noms = constantes.keys();
@@ -154,7 +156,7 @@ public class CatalogueNoeuds {
             }
 
             JSONArray sorties = n.optJSONArray("sorties");
-            if (sorties == null || sorties.length() == 0) {
+            if (sorties == null) {
                 d.sorties.add("port_suivant");
             } else {
                 for (int k = 0; k < sorties.length(); k++) {

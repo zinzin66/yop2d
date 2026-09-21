@@ -595,7 +595,12 @@ public class Evaluateur {
         if (bas.equals("implique")) return objetImplique();
         ObjetBase o = trouverObjet(nom, 1);
         if (o != null) return o;
-        if (!crochets && bas.equals("pi")) return Math.PI;
+        if (!crochets) {
+            if (bas.equals("pi")) return Math.PI;
+            // valeurs du jeu : elles passent après les variables et les objets (une variable "temps" reste prioritaire)
+            if (bas.equals("temps")) return HorlogeJeu.tempsJeu;
+            if (bas.equals("vitesse")) return (double) HorlogeJeu.vitesse;
+        }
         v = trouverVariable(nom, ctx, 2);
         if (v != null) return valeurDe(v);
         o = trouverObjet(nom, 2);
@@ -609,7 +614,63 @@ public class Evaluateur {
         return o;
     }
 
+    // ecran.largeur et ecran.hauteur : la taille de l'écran de jeu (réglée dans le menu Réglages)
+    private static Object lireProprieteEcran(String propriete) {
+        String p = normaliser(propriete);
+        if (p.equals("largeur")) return (double) ConfigurationJeu.LARGEUR_JEU;
+        if (p.equals("hauteur")) return (double) ConfigurationJeu.HAUTEUR_JEU;
+        throw new ErreurFormule("« ecran » n'a pas de « " + propriete + " » : utilise ecran.largeur ou ecran.hauteur");
+    }
+
+    // doigt.x, doigt.y et doigt.appuye : le premier doigt posé sur l'écran de jeu (0,0 = coin en haut à gauche)
+    private static Object lireProprieteDoigt(String propriete) {
+        String p = normaliser(propriete);
+        if (p.equals("x")) return (double) GestionnaireControles.doigtX;
+        if (p.equals("y")) return (double) GestionnaireControles.doigtY;
+        if (p.equals("appuye")) return GestionnaireControles.doigtAppuye ? Boolean.TRUE : Boolean.FALSE;
+        throw new ErreurFormule("« doigt » n'a pas de « " + propriete + " » : utilise doigt.x, doigt.y ou doigt.appuye");
+    }
+
+    // joystick.x, joystick.y, joystick.force, joystick.angle et joystick.actif
+    // x et y vont de -1 à 1 (0 = au repos, le bas de l'écran est positif), force de 0 à 1,
+    // angle de 0 à 360 degrés (0 = droite, 90 = bas), et vaut 0 au repos : utilise joystick.actif pour savoir s'il est touché
+    private static Object lireProprieteJoystick(String propriete) {
+        String p = normaliser(propriete);
+        double jx = GestionnaireControles.joyDirX;
+        double jy = GestionnaireControles.joyDirY;
+        if (p.equals("x")) return jx;
+        if (p.equals("y")) return jy;
+        if (p.equals("force")) return Math.min(1.0, Math.sqrt(jx * jx + jy * jy));
+        if (p.equals("actif")) return (jx != 0 || jy != 0) ? Boolean.TRUE : Boolean.FALSE;
+        if (p.equals("angle")) {
+            if (jx == 0 && jy == 0) return 0.0;
+            double deg = Math.toDegrees(Math.atan2(jy, jx));
+            return deg < 0 ? deg + 360.0 : deg;
+        }
+        throw new ErreurFormule("« joystick » n'a pas de « " + propriete + " » : utilise joystick.x, joystick.y, joystick.force, joystick.angle ou joystick.actif");
+    }
+
+    // camera.x et camera.y : la position de la caméra dans le monde (coin en haut à gauche de ce que l'écran montre)
+    private static Object lireProprieteCamera(String propriete) {
+        String p = normaliser(propriete);
+        if (p.equals("x")) return (double) GestionnaireControles.cameraX;
+        if (p.equals("y")) return (double) GestionnaireControles.cameraY;
+        throw new ErreurFormule("« camera » n'a pas de « " + propriete + " » : utilise camera.x ou camera.y");
+    }
+
     private static Object lireProprieteObjet(String nomObjet, String propriete) {
+        if (normaliser(nomObjet).equals("ecran") && trouverObjet(nomObjet, 1) == null) {
+            return lireProprieteEcran(propriete);
+        }
+        if (normaliser(nomObjet).equals("doigt") && trouverObjet(nomObjet, 1) == null) {
+            return lireProprieteDoigt(propriete);
+        }
+        if (normaliser(nomObjet).equals("joystick") && trouverObjet(nomObjet, 1) == null) {
+            return lireProprieteJoystick(propriete);
+        }
+        if (normaliser(nomObjet).equals("camera") && trouverObjet(nomObjet, 1) == null) {
+            return lireProprieteCamera(propriete);
+        }
         ObjetBase o = normaliser(nomObjet).equals("implique") ? objetImplique() : trouverObjet(nomObjet);
         if (o == null) throw new ErreurFormule("Objet introuvable : « " + nomObjet + " »");
         Object valeur = ProprietesObjet.lire(o, propriete);
@@ -743,13 +804,3 @@ public class Evaluateur {
     }
 }
 // bas 3
-
-
-
-
-
-
-
-  
-
-

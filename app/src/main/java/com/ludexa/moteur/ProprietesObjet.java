@@ -12,10 +12,11 @@ public class ProprietesObjet {
     // Noms proposés à l'utilisateur (panneau d'aide), dans cet ordre.
     public static final List<String> NOMS = Arrays.asList(
             "x", "y", "largeur", "hauteur", "rotation", "opacite", "visible",
-            "echelleX", "echelleY", "vitesseX", "vitesseY", "texte", "tag", "nom", "progression", "z");
+            "echelleX", "echelleY", "vitesseX", "vitesseY", "texte", "tag", "nom", "progression", "z", "touche");
 
     // Propriétés que l'on peut aussi MODIFIER. Le nom reste en lecture seule :
     // le renommage passe par l'inspecteur, qui vérifie les doublons.
+    // "touche" est aussi en lecture seule : c'est le doigt qui la règle.
     public static final List<String> NOMS_MODIFIABLES = Arrays.asList(
             "x", "y", "largeur", "hauteur", "rotation", "opacite", "visible",
             "echelleX", "echelleY", "vitesseX", "vitesseY", "texte", "tag", "progression", "z");
@@ -40,6 +41,7 @@ public class ProprietesObjet {
             case "nom": return "nom";
             case "progression": case "progressionactuelle": return "progression";
             case "z": case "zorder": return "z";
+            case "touche": return "touche";
             default: return null;
         }
     }
@@ -69,6 +71,7 @@ public class ProprietesObjet {
             case "nom": return o.nom != null ? o.nom : "";
             case "progression": return (double) o.progressionActuelle;
             case "z": return (double) o.zOrder;
+            case "touche": return o.estTouche;
             default: return null;
         }
     }

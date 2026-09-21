@@ -67,6 +67,7 @@ public class VueJeu extends View {
         NoeudBase.sceneActiveCourante = this.sceneActive;
         NoeudBase.sceneHudActiveCourante = this.sceneHudActive;
         GestionnaireEtat.viderCache();
+        GestionnaireEtat.memoriserEtatInitial(scene);   // état de départ de la scène, pour « Recommencer la scène »
 
         if (scene != null) chargerAnimationsGlobales(scene.objets);
         if (sceneHud != null) chargerAnimationsGlobales(sceneHud.objets);
@@ -212,6 +213,8 @@ public class VueJeu extends View {
 
         this.sceneActive = nouvelleScene;
         NoeudBase.sceneActiveCourante = this.sceneActive;
+        GestionnaireControles.reinitialiserCamera();   // la caméra repart de zéro : la nouvelle scène la règle à son démarrage
+        GestionnaireEtat.memoriserEtatInitial(nouvelleScene);   // premier passage : on garde l'état de départ
         GestionnaireEtat.restaurerEtat(this.sceneActive);
         chargerAnimationsGlobales(nouvelleScene.objets);
 
@@ -240,6 +243,17 @@ public class VueJeu extends View {
         } else {
             this.moteur = null; 
         }
+    }
+
+    // Recommencer la scène : ses objets, leurs positions et ses variables reviennent à leur état de départ,
+    // puis la scène redémarre. Les variables globales ne sont pas touchées.
+    public void recommencerScene() {
+        if (this.sceneActive == null) return;
+        if (!GestionnaireEtat.reinitialiserScene(this.sceneActive)) {
+            logDiag("ALERTE Recommencer la scène : état de départ introuvable, la scène est seulement relancée");
+        }
+        HorlogeJeu.reinitialiser();   // minuteurs, pause et vitesse repartent aussi de zéro
+        chargerNouvelleScene(this.sceneActive);
     }
 
     private java.util.Set<String> pilesInstanciationEnCours = new java.util.HashSet<>();
@@ -631,7 +645,7 @@ public class VueJeu extends View {
     }
 // bas 3
 
-  // haut 4
+// haut 4
     private boolean pointDansObjet(float xVue, float yVue, float xMonde, float yMonde, ObjetBase obj) {
         boolean isHud = (sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(obj));
         List<ObjetBase> contexte = isHud ? sceneHudActive.objets : sceneActive.objets;
@@ -765,6 +779,21 @@ public class VueJeu extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        // ----- NOUVEAU : début (suivi du premier doigt pour les formules doigt.x, doigt.y, doigt.appuye) -----
+        int actionDoigt = event.getActionMasked();
+        if (actionDoigt == MotionEvent.ACTION_DOWN) {
+            GestionnaireControles.doigtAppuye = true;
+        }
+        if (actionDoigt == MotionEvent.ACTION_UP || actionDoigt == MotionEvent.ACTION_CANCEL) {
+            GestionnaireControles.doigtAppuye = false;
+        }
+        if (event.getPointerCount() > 0) {
+            // le premier doigt posé reste toujours l'indice 0 tant qu'il est sur l'écran
+            GestionnaireControles.doigtX = (event.getX(0) - decalageX) / echelle;
+            GestionnaireControles.doigtY = (event.getY(0) - decalageY) / echelle;
+        }
+        // ----- NOUVEAU : fin -----
+
         boolean touchJoystick = false;
         boolean touchAction = false;
         

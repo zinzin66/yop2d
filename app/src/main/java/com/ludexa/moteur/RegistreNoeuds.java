@@ -31,6 +31,7 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_au_clic_sur_objet"), Traducteur.get("cat_evenements"), "NoeudEventClicObjet"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_fin_clic_sur_objet"), Traducteur.get("cat_evenements"), "NoeudEventFinClicObjet"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_event_maintenu_objet"), Traducteur.get("cat_evenements"), "NoeudEventMaintenuObjet"));
+        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_event_doigt_appuye"), Traducteur.get("cat_evenements"), "NoeudEventDoigtAppuye"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_debut_de_glisser"), Traducteur.get("cat_evenements"), "NoeudEventDebutGlisser"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_fin_de_glisser"), Traducteur.get("cat_evenements"), "NoeudEventFinGlisser"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_collision_ab"), Traducteur.get("cat_evenements"), "NoeudEventCollisionAB"));
