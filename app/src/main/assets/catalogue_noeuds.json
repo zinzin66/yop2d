@@ -901,6 +901,31 @@
   "champs": [
     {"cle": "delai", "type": "formule", "defaut": "0.5", "nom": {"fr": "Délai (secondes)", "en": "Delay (seconds)", "es": "Retraso (segundos)", "pt": "Atraso (segundos)", "de": "Verzögerung (Sekunden)", "it": "Ritardo (secondi)", "ru": "Задержка (секунды)", "zh": "延迟（秒）", "ja": "遅延（秒）"}}
   ]
+},
+    {
+  "cle": "ajouter_inventaire",
+  "nom": {"fr": "Ajouter à l'inventaire", "en": "Add to inventory", "es": "Añadir al inventario", "pt": "Adicionar ao inventário", "de": "Zum Inventar hinzufügen", "it": "Aggiungi all'inventario", "ru": "Добавить в инвентарь", "zh": "加入物品栏", "ja": "インベントリに追加"},
+  "categorie": "cat_variables_inventaire",
+  "action": "ajouter_inventaire",
+  "objet": true,
+  "variable": true
+},
+{
+  "cle": "retirer_inventaire",
+  "nom": {"fr": "Retirer de l'inventaire", "en": "Remove from inventory", "es": "Quitar del inventario", "pt": "Remover do inventário", "de": "Aus dem Inventar entfernen", "it": "Rimuovi dall'inventario", "ru": "Убрать из инвентаря", "zh": "从物品栏移除", "ja": "インベントリから削除"},
+  "categorie": "cat_variables_inventaire",
+  "action": "retirer_inventaire",
+  "objet": true,
+  "variable": true
+},
+{
+  "cle": "si_dans_inventaire",
+  "nom": {"fr": "Si dans l'inventaire", "en": "If in inventory", "es": "Si está en el inventario", "pt": "Se está no inventário", "de": "Wenn im Inventar", "it": "Se è nell'inventario", "ru": "Если в инвентаре", "zh": "如果在物品栏中", "ja": "インベントリにあるなら"},
+  "categorie": "cat_variables_inventaire",
+  "action": "si_dans_inventaire",
+  "objet": true,
+  "variable": true,
+  "sorties": ["vrai", "faux", {"cle": "ensuite", "nom": {"fr": "Ensuite", "en": "Then", "es": "Después", "pt": "Depois", "de": "Danach", "it": "Poi", "ru": "Затем", "zh": "然后", "ja": "その後"}}]
 }
     ]
 }
