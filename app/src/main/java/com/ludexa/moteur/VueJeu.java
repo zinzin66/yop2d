@@ -645,7 +645,7 @@ public class VueJeu extends View {
     }
 // bas 3
 
-  // haut 4
+// haut 4
     private boolean pointDansObjet(float xVue, float yVue, float xMonde, float yMonde, ObjetBase obj) {
         boolean isHud = (sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(obj));
         List<ObjetBase> contexte = isHud ? sceneHudActive.objets : sceneActive.objets;
@@ -779,6 +779,21 @@ public class VueJeu extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        // ----- NOUVEAU : début (suivi du premier doigt pour les formules doigt.x, doigt.y, doigt.appuye) -----
+        int actionDoigt = event.getActionMasked();
+        if (actionDoigt == MotionEvent.ACTION_DOWN) {
+            GestionnaireControles.doigtAppuye = true;
+        }
+        if (actionDoigt == MotionEvent.ACTION_UP || actionDoigt == MotionEvent.ACTION_CANCEL) {
+            GestionnaireControles.doigtAppuye = false;
+        }
+        if (event.getPointerCount() > 0) {
+            // le premier doigt posé reste toujours l'indice 0 tant qu'il est sur l'écran
+            GestionnaireControles.doigtX = (event.getX(0) - decalageX) / echelle;
+            GestionnaireControles.doigtY = (event.getY(0) - decalageY) / echelle;
+        }
+        // ----- NOUVEAU : fin -----
+
         boolean touchJoystick = false;
         boolean touchAction = false;
         
