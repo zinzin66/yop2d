@@ -77,6 +77,9 @@ public class ActionsMoteur {
             case "elasticite_camera": return ActionsControles.elasticiteCamera(n);
             case "tremblement_camera": return ActionsControles.tremblementCamera(n);
             case "vibration": return ActionsControles.vibration(n);
+            case "jouer_son": return ActionsAudio.jouerSon(n);
+            case "jouer_musique": return ActionsAudio.jouerMusique(n);
+            case "arreter_musique": return ActionsAudio.arreterMusique(n);
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
