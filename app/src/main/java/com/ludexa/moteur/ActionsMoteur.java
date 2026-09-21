@@ -58,6 +58,7 @@ public class ActionsMoteur {
             case "detruire_copies_scene": return ActionsScene.detruireCopiesScene(n);
             case "quitter_jeu": return ActionsScene.quitterJeu(n);
             case "si_joystick": return ActionsControles.siJoystick(n);
+            case "fixer_camera": return ActionsControles.fixerCamera(n);
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
