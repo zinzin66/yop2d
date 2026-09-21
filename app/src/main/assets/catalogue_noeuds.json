@@ -595,6 +595,19 @@
         { "cle": "message", "type": "texte", "defaut": "",
           "nom": {"fr": "Message", "en": "Message", "es": "Mensaje", "pt": "Mensagem", "de": "Nachricht", "it": "Messaggio", "ru": "Сообщение", "zh": "消息", "ja": "メッセージ"} }
       ]
+    },
+    {
+  "cle": "si_joystick",
+  "nom": {"fr": "Si joystick", "en": "If joystick", "es": "Si joystick", "pt": "Se joystick", "de": "Wenn Joystick", "it": "Se joystick", "ru": "Если джойстик", "zh": "如果摇杆", "ja": "ジョイスティックが"},
+  "categorie": "cat_logique_conditions",
+  "action": "si_joystick",
+  "sorties": [
+    {"cle": "haut", "nom": {"fr": "Haut", "en": "Up", "es": "Arriba", "pt": "Cima", "de": "Oben", "it": "Su", "ru": "Вверх", "zh": "上", "ja": "上"}},
+    {"cle": "bas", "nom": {"fr": "Bas", "en": "Down", "es": "Abajo", "pt": "Baixo", "de": "Unten", "it": "Giù", "ru": "Вниз", "zh": "下", "ja": "下"}},
+    {"cle": "gauche", "nom": {"fr": "Gauche", "en": "Left", "es": "Izquierda", "pt": "Esquerda", "de": "Links", "it": "Sinistra", "ru": "Влево", "zh": "左", "ja": "左"}},
+    {"cle": "droite", "nom": {"fr": "Droite", "en": "Right", "es": "Derecha", "pt": "Direita", "de": "Rechts", "it": "Destra", "ru": "Вправо", "zh": "右", "ja": "右"}},
+    {"cle": "repos", "nom": {"fr": "Repos", "en": "Idle", "es": "Reposo", "pt": "Repouso", "de": "Ruhe", "it": "Riposo", "ru": "Покой", "zh": "静止", "ja": "静止"}}
+  ]
     }
   ]
 }
