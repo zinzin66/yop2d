@@ -1425,8 +1425,7 @@ public class VueJeu extends View {
         }
     }
 // bas 5
-
-    // haut 6
+// haut 6
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -1434,6 +1433,10 @@ public class VueJeu extends View {
         // L'horloge du jeu dit combien de "pas de jeu" jouer à cette image : 0 en pause ou en ralenti,
         // 1 normalement, 2 ou plus si le jeu est accéléré. Elle déclenche aussi les minuteurs arrivés à échéance.
         int pasDeJeu = HorlogeJeu.imageSuivante();
+
+        // ----- NOUVEAU : début (les « Glisser vers » en cours avancent selon le temps de jeu : pause et ralenti compris) -----
+        DeplacementsGlisses.avancer();
+        // ----- NOUVEAU : fin -----
 
         for (int pas = 0; pas < pasDeJeu; pas++) {
             if (GestionnaireControles.modeAventureActif && (GestionnaireControles.joyDirX != 0 || GestionnaireControles.joyDirY != 0)) {
@@ -1587,4 +1590,3 @@ public class VueJeu extends View {
     }
 }
 // bas 6
-         
