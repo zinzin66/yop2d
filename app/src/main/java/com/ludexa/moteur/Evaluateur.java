@@ -650,6 +650,14 @@ public class Evaluateur {
         throw new ErreurFormule("« joystick » n'a pas de « " + propriete + " » : utilise joystick.x, joystick.y, joystick.force, joystick.angle ou joystick.actif");
     }
 
+    // camera.x et camera.y : la position de la caméra dans le monde (coin en haut à gauche de ce que l'écran montre)
+    private static Object lireProprieteCamera(String propriete) {
+        String p = normaliser(propriete);
+        if (p.equals("x")) return (double) GestionnaireControles.cameraX;
+        if (p.equals("y")) return (double) GestionnaireControles.cameraY;
+        throw new ErreurFormule("« camera » n'a pas de « " + propriete + " » : utilise camera.x ou camera.y");
+    }
+
     private static Object lireProprieteObjet(String nomObjet, String propriete) {
         if (normaliser(nomObjet).equals("ecran") && trouverObjet(nomObjet, 1) == null) {
             return lireProprieteEcran(propriete);
@@ -659,6 +667,9 @@ public class Evaluateur {
         }
         if (normaliser(nomObjet).equals("joystick") && trouverObjet(nomObjet, 1) == null) {
             return lireProprieteJoystick(propriete);
+        }
+        if (normaliser(nomObjet).equals("camera") && trouverObjet(nomObjet, 1) == null) {
+            return lireProprieteCamera(propriete);
         }
         ObjetBase o = normaliser(nomObjet).equals("implique") ? objetImplique() : trouverObjet(nomObjet);
         if (o == null) throw new ErreurFormule("Objet introuvable : « " + nomObjet + " »");
