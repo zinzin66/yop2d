@@ -49,6 +49,11 @@ public class ActionsMoteur {
             case "sautiller": ActionsMouvements.sautiller(n); return null;
             case "orienter_vers": ActionsMouvements.orienterVers(n); return null;
             case "glisser_vers": ActionsMouvements.glisserVers(n); return null;
+            case "jouer_animation": return ActionsAnimations.jouer(n);
+            case "arreter_animation": return ActionsAnimations.arreter(n);
+            case "pause_animation": return ActionsAnimations.pause(n);
+            case "reprendre_animation": return ActionsAnimations.reprendre(n);
+            case "vitesse_animation": return ActionsAnimations.vitesse(n);
             case "si_au_sol": return ActionsMouvements.siAuSol(n);
             case "si_en_mouvement": return ActionsMouvements.siEnMouvement(n);
             case "journaliser": ActionsOutils.journaliser(n); return null;
