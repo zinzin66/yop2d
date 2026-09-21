@@ -578,7 +578,6 @@ public class Evaluateur {
 
 // bas 2
 
-
 // haut 3
     // ------------------------------------------------------------------
     // CALCULS
@@ -632,12 +631,34 @@ public class Evaluateur {
         throw new ErreurFormule("« doigt » n'a pas de « " + propriete + " » : utilise doigt.x, doigt.y ou doigt.appuye");
     }
 
+    // joystick.x, joystick.y, joystick.force, joystick.angle et joystick.actif
+    // x et y vont de -1 à 1 (0 = au repos, le bas de l'écran est positif), force de 0 à 1,
+    // angle de 0 à 360 degrés (0 = droite, 90 = bas), et vaut 0 au repos : utilise joystick.actif pour savoir s'il est touché
+    private static Object lireProprieteJoystick(String propriete) {
+        String p = normaliser(propriete);
+        double jx = GestionnaireControles.joyDirX;
+        double jy = GestionnaireControles.joyDirY;
+        if (p.equals("x")) return jx;
+        if (p.equals("y")) return jy;
+        if (p.equals("force")) return Math.min(1.0, Math.sqrt(jx * jx + jy * jy));
+        if (p.equals("actif")) return (jx != 0 || jy != 0) ? Boolean.TRUE : Boolean.FALSE;
+        if (p.equals("angle")) {
+            if (jx == 0 && jy == 0) return 0.0;
+            double deg = Math.toDegrees(Math.atan2(jy, jx));
+            return deg < 0 ? deg + 360.0 : deg;
+        }
+        throw new ErreurFormule("« joystick » n'a pas de « " + propriete + " » : utilise joystick.x, joystick.y, joystick.force, joystick.angle ou joystick.actif");
+    }
+
     private static Object lireProprieteObjet(String nomObjet, String propriete) {
         if (normaliser(nomObjet).equals("ecran") && trouverObjet(nomObjet, 1) == null) {
             return lireProprieteEcran(propriete);
         }
         if (normaliser(nomObjet).equals("doigt") && trouverObjet(nomObjet, 1) == null) {
             return lireProprieteDoigt(propriete);
+        }
+        if (normaliser(nomObjet).equals("joystick") && trouverObjet(nomObjet, 1) == null) {
+            return lireProprieteJoystick(propriete);
         }
         ObjetBase o = normaliser(nomObjet).equals("implique") ? objetImplique() : trouverObjet(nomObjet);
         if (o == null) throw new ErreurFormule("Objet introuvable : « " + nomObjet + " »");
@@ -772,4 +793,3 @@ public class Evaluateur {
     }
 }
 // bas 3
-    
