@@ -41,6 +41,13 @@ public class ActionsMoteur {
             case "definir_progression": ActionsMouvements.definirProgression(n); return null;
             case "traverser_ecran": ActionsMouvements.traverserEcran(n); return null;
             case "garder_dans_ecran": ActionsMouvements.garderDansEcran(n); return null;
+            case "changer_rebond": ActionsMouvements.changerRebond(n); return null;
+            case "force_angle": ActionsMouvements.forceAngle(n); return null;
+            case "impulsion": ActionsMouvements.impulsion(n); return null;
+            case "activer_physique": ActionsMouvements.activerPhysique(n); return null;
+            case "modifier_deplacable": ActionsMouvements.modifierDeplacable(n); return null;
+            case "sautiller": ActionsMouvements.sautiller(n); return null;
+            case "orienter_vers": ActionsMouvements.orienterVers(n); return null;
             case "journaliser": ActionsOutils.journaliser(n); return null;
             case "attendre": return ActionsTemps.attendre(n);
             case "repeter": return ActionsTemps.repeter(n);
