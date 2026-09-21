@@ -229,7 +229,7 @@
       "cle": "condition",
       "nomCle": "noeud_condition",
       "categorie": "cat_logique_conditions",
-      "sorties": ["vrai", "faux"],
+      "sorties": ["vrai", "faux", {"cle": "ensuite", "nom": {"fr": "Ensuite", "en": "Then", "es": "Después", "pt": "Depois", "de": "Danach", "it": "Poi", "ru": "Затем", "zh": "然后", "ja": "その後"}}],
       "champs": [
         { "cle": "condition", "type": "formule", "defaut": "",
           "nom": { "fr": "Condition", "en": "Condition", "es": "Condición", "pt": "Condição", "de": "Bedingung", "it": "Condizione", "ru": "Условие", "zh": "条件", "ja": "条件" } }
@@ -874,6 +874,32 @@
   "variable": true,
   "champs": [
     {"cle": "valeur", "type": "texte", "defaut": "", "nom": {"fr": "Texte à ajouter", "en": "Text to add", "es": "Texto a añadir", "pt": "Texto a adicionar", "de": "Anzuhängender Text", "it": "Testo da aggiungere", "ru": "Добавляемый текст", "zh": "要追加的文本", "ja": "追加するテキスト"}}
+  ]
+},
+    {
+  "cle": "sequence",
+  "nom": {"fr": "Séquence", "en": "Sequence", "es": "Secuencia", "pt": "Sequência", "de": "Sequenz", "it": "Sequenza", "ru": "Последовательность", "zh": "顺序", "ja": "シーケンス"},
+  "categorie": "cat_logique_conditions",
+  "action": "sequence",
+  "sorties": [
+    {"cle": "1", "nom": {"fr": "1", "en": "1", "es": "1", "pt": "1", "de": "1", "it": "1", "ru": "1", "zh": "1", "ja": "1"}},
+    {"cle": "2", "nom": {"fr": "2", "en": "2", "es": "2", "pt": "2", "de": "2", "it": "2", "ru": "2", "zh": "2", "ja": "2"}},
+    {"cle": "3", "nom": {"fr": "3", "en": "3", "es": "3", "pt": "3", "de": "3", "it": "3", "ru": "3", "zh": "3", "ja": "3"}},
+    {"cle": "4", "nom": {"fr": "4", "en": "4", "es": "4", "pt": "4", "de": "4", "it": "4", "ru": "4", "zh": "4", "ja": "4"}}
+  ]
+},
+{
+  "cle": "cooldown",
+  "nom": {"fr": "Cooldown", "en": "Cooldown", "es": "Enfriamiento", "pt": "Recarga", "de": "Abklingzeit", "it": "Ricarica", "ru": "Перезарядка", "zh": "冷却", "ja": "クールダウン"},
+  "categorie": "cat_logique_conditions",
+  "action": "cooldown",
+  "objet": true,
+  "sorties": [
+    {"cle": "pret", "nom": {"fr": "Prêt", "en": "Ready", "es": "Listo", "pt": "Pronto", "de": "Bereit", "it": "Pronto", "ru": "Готово", "zh": "就绪", "ja": "準備完了"}},
+    {"cle": "attente", "nom": {"fr": "Pas encore", "en": "Not yet", "es": "Aún no", "pt": "Ainda não", "de": "Noch nicht", "it": "Non ancora", "ru": "Пока нет", "zh": "还没", "ja": "まだ"}}
+  ],
+  "champs": [
+    {"cle": "delai", "type": "formule", "defaut": "0.5", "nom": {"fr": "Délai (secondes)", "en": "Delay (seconds)", "es": "Retraso (segundos)", "pt": "Atraso (segundos)", "de": "Verzögerung (Sekunden)", "it": "Ritardo (secondi)", "ru": "Задержка (секунды)", "zh": "延迟（秒）", "ja": "遅延（秒）"}}
   ]
 }
     ]
