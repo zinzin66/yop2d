@@ -1,7 +1,7 @@
 // haut 1
 package com.ludexa.moteur;
 
-// Ce que font les nœuds liés aux commandes tactiles (joystick, bouton d'action).
+// Ce que font les nœuds liés aux commandes tactiles (joystick, bouton d'action) et à la caméra.
 // Ils sont décrits dans assets/catalogue_noeuds.json.
 //
 // Une action retourne le nom du port de sortie à suivre, ou null pour la sortie normale.
@@ -19,6 +19,21 @@ public class ActionsControles {
         // la direction dominante l'emporte (le bas de l'écran est positif)
         if (Math.abs(x) > Math.abs(y)) return x > 0 ? "port_droite" : "port_gauche";
         return y > 0 ? "port_bas" : "port_haut";
+    }
+
+    // Nœud « Fixer la caméra » : la caméra suit l'objet choisi.
+    // Sans objet choisi, la caméra ne suit plus rien.
+    static String fixerCamera(NoeudGenerique n) {
+        ObjetBase cible = n.getCibleObjet();
+        if (cible == null) {
+            GestionnaireControles.cameraCibleId = null;
+            return null;
+        }
+        GestionnaireControles.cameraCibleId = cible.id;
+        GestionnaireControles.cameraSuitAxeX = n.booleen("suivre_x");
+        GestionnaireControles.cameraSuitAxeY = n.booleen("suivre_y");
+        GestionnaireControles.parallaxeUniquementX = n.booleen("parallaxe_x");
+        return null;
     }
 }
 // bas 1
