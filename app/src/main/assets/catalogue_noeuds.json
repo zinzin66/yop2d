@@ -756,6 +756,49 @@
     {"cle": "vrai", "nom": {"fr": "Vrai", "en": "True", "es": "Verdadero", "pt": "Verdadeiro", "de": "Wahr", "it": "Vero", "ru": "Да", "zh": "是", "ja": "はい"}},
     {"cle": "faux", "nom": {"fr": "Faux", "en": "False", "es": "Falso", "pt": "Falso", "de": "Falsch", "it": "Falso", "ru": "Нет", "zh": "否", "ja": "いいえ"}}
   ]
+},
+    {
+  "cle": "jouer_animation",
+  "nom": {"fr": "Jouer l'animation", "en": "Play animation", "es": "Reproducir animación", "pt": "Reproduzir animação", "de": "Animation abspielen", "it": "Riproduci animazione", "ru": "Запустить анимацию", "zh": "播放动画", "ja": "アニメを再生"},
+  "categorie": "cat_animations",
+  "action": "jouer_animation",
+  "objet": true,
+  "champs": [
+    {"cle": "animation", "type": "animation", "defaut": "", "nom": {"fr": "Animation", "en": "Animation", "es": "Animación", "pt": "Animação", "de": "Animation", "it": "Animazione", "ru": "Анимация", "zh": "动画", "ja": "アニメーション"}},
+    {"cle": "vitesse", "type": "formule", "defaut": "8", "nom": {"fr": "Vitesse (images/seconde)", "en": "Speed (frames/second)", "es": "Velocidad (cuadros/segundo)", "pt": "Velocidade (quadros/segundo)", "de": "Tempo (Bilder/Sekunde)", "it": "Velocità (fotogrammi/secondo)", "ru": "Скорость (кадров/сек)", "zh": "速度（帧/秒）", "ja": "速さ（コマ/秒）"}},
+    {"cle": "boucle", "type": "formule", "defaut": "false", "nom": {"fr": "En boucle (true / false)", "en": "Loop (true / false)", "es": "En bucle (true / false)", "pt": "Em loop (true / false)", "de": "Wiederholen (true / false)", "it": "In loop (true / false)", "ru": "По кругу (true / false)", "zh": "循环（true / false）", "ja": "ループ（true / false）"}}
+  ]
+},
+{
+  "cle": "arreter_animation",
+  "nom": {"fr": "Arrêter l'animation", "en": "Stop animation", "es": "Detener animación", "pt": "Parar animação", "de": "Animation stoppen", "it": "Ferma animazione", "ru": "Остановить анимацию", "zh": "停止动画", "ja": "アニメを停止"},
+  "categorie": "cat_animations",
+  "action": "arreter_animation",
+  "objet": true
+},
+{
+  "cle": "pause_animation",
+  "nom": {"fr": "Pause de l'animation", "en": "Pause animation", "es": "Pausar animación", "pt": "Pausar animação", "de": "Animation pausieren", "it": "Metti in pausa l'animazione", "ru": "Пауза анимации", "zh": "暂停动画", "ja": "アニメを一時停止"},
+  "categorie": "cat_animations",
+  "action": "pause_animation",
+  "objet": true
+},
+{
+  "cle": "reprendre_animation",
+  "nom": {"fr": "Reprendre l'animation", "en": "Resume animation", "es": "Reanudar animación", "pt": "Retomar animação", "de": "Animation fortsetzen", "it": "Riprendi animazione", "ru": "Продолжить анимацию", "zh": "继续动画", "ja": "アニメを再開"},
+  "categorie": "cat_animations",
+  "action": "reprendre_animation",
+  "objet": true
+},
+{
+  "cle": "vitesse_animation",
+  "nom": {"fr": "Vitesse de l'animation", "en": "Animation speed", "es": "Velocidad de animación", "pt": "Velocidade da animação", "de": "Animationstempo", "it": "Velocità animazione", "ru": "Скорость анимации", "zh": "动画速度", "ja": "アニメの速さ"},
+  "categorie": "cat_animations",
+  "action": "vitesse_animation",
+  "objet": true,
+  "champs": [
+    {"cle": "vitesse", "type": "formule", "defaut": "8", "nom": {"fr": "Vitesse (images/seconde)", "en": "Speed (frames/second)", "es": "Velocidad (cuadros/segundo)", "pt": "Velocidade (quadros/segundo)", "de": "Tempo (Bilder/Sekunde)", "it": "Velocità (fotogrammi/secondo)", "ru": "Скорость (кадров/сек)", "zh": "速度（帧/秒）", "ja": "速さ（コマ/秒）"}}
+  ]
 }
   ]
 }
