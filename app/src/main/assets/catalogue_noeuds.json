@@ -648,6 +648,80 @@
   "champs": [
     {"cle": "duree", "type": "formule", "defaut": "100", "nom": {"fr": "Durée (ms)", "en": "Duration (ms)", "es": "Duración (ms)", "pt": "Duração (ms)", "de": "Dauer (ms)", "it": "Durata (ms)", "ru": "Длительность (мс)", "zh": "持续时间（毫秒）", "ja": "長さ（ミリ秒）"}}
   ]
+},
+    {
+  "cle": "changer_rebond",
+  "nom": {"fr": "Changer le rebond", "en": "Set bounce", "es": "Cambiar el rebote", "pt": "Mudar o quique", "de": "Abprall ändern", "it": "Cambia il rimbalzo", "ru": "Изменить отскок", "zh": "设置弹跳", "ja": "バウンドを変更"},
+  "categorie": "cat_mouvements_ia",
+  "action": "changer_rebond",
+  "objet": true,
+  "champs": [
+    {"cle": "rebond", "type": "formule", "defaut": "0.5", "nom": {"fr": "Rebond (0 à 1)", "en": "Bounce (0 to 1)", "es": "Rebote (0 a 1)", "pt": "Quique (0 a 1)", "de": "Abprall (0 bis 1)", "it": "Rimbalzo (da 0 a 1)", "ru": "Отскок (0–1)", "zh": "弹跳（0 到 1）", "ja": "バウンド（0〜1）"}}
+  ]
+},
+{
+  "cle": "force_angle",
+  "nom": {"fr": "Pousser selon un angle", "en": "Push at an angle", "es": "Empujar según un ángulo", "pt": "Empurrar em um ângulo", "de": "In einem Winkel schieben", "it": "Spingi con un angolo", "ru": "Толкнуть под углом", "zh": "按角度推动", "ja": "角度を付けて押す"},
+  "categorie": "cat_mouvements_ia",
+  "action": "force_angle",
+  "objet": true,
+  "champs": [
+    {"cle": "angle", "type": "formule", "defaut": "0", "nom": {"fr": "Angle (0 = droite, 90 = bas)", "en": "Angle (0 = right, 90 = down)", "es": "Ángulo (0 = derecha, 90 = abajo)", "pt": "Ângulo (0 = direita, 90 = baixo)", "de": "Winkel (0 = rechts, 90 = unten)", "it": "Angolo (0 = destra, 90 = giù)", "ru": "Угол (0 = вправо, 90 = вниз)", "zh": "角度（0 = 右，90 = 下）", "ja": "角度（0 = 右、90 = 下）"}},
+    {"cle": "force", "type": "formule", "defaut": "10", "nom": {"fr": "Force", "en": "Force", "es": "Fuerza", "pt": "Força", "de": "Kraft", "it": "Forza", "ru": "Сила", "zh": "力度", "ja": "力"}}
+  ]
+},
+{
+  "cle": "impulsion",
+  "nom": {"fr": "Impulsion (saut)", "en": "Impulse (jump)", "es": "Impulso (salto)", "pt": "Impulso (salto)", "de": "Impuls (Sprung)", "it": "Impulso (salto)", "ru": "Импульс (прыжок)", "zh": "冲力（跳跃）", "ja": "インパルス（ジャンプ）"},
+  "categorie": "cat_mouvements_ia",
+  "action": "impulsion",
+  "objet": true,
+  "champs": [
+    {"cle": "force", "type": "formule", "defaut": "-15", "nom": {"fr": "Force verticale (négatif = monte)", "en": "Vertical force (negative = up)", "es": "Fuerza vertical (negativo = sube)", "pt": "Força vertical (negativo = sobe)", "de": "Vertikale Kraft (negativ = hoch)", "it": "Forza verticale (negativo = sale)", "ru": "Вертикальная сила (минус = вверх)", "zh": "垂直力（负数 = 向上）", "ja": "縦方向の力（マイナス = 上）"}}
+  ]
+},
+{
+  "cle": "activer_physique",
+  "nom": {"fr": "Activer la physique", "en": "Enable physics", "es": "Activar la física", "pt": "Ativar a física", "de": "Physik aktivieren", "it": "Attiva la fisica", "ru": "Включить физику", "zh": "启用物理", "ja": "物理を有効にする"},
+  "categorie": "cat_mouvements_ia",
+  "action": "activer_physique",
+  "objet": true,
+  "champs": [
+    {"cle": "tombe", "type": "formule", "defaut": "true", "nom": {"fr": "Tombe (true / false)", "en": "Falls (true / false)", "es": "Cae (true / false)", "pt": "Cai (true / false)", "de": "Fällt (true / false)", "it": "Cade (true / false)", "ru": "Падает (true / false)", "zh": "会下落（true / false）", "ja": "落ちる（true / false）"}}
+  ]
+},
+{
+  "cle": "modifier_deplacable",
+  "nom": {"fr": "Rendre déplaçable", "en": "Set draggable", "es": "Hacer arrastrable", "pt": "Tornar arrastável", "de": "Verschiebbar machen", "it": "Rendi trascinabile", "ru": "Сделать перетаскиваемым", "zh": "设为可拖动", "ja": "ドラッグ可能にする"},
+  "categorie": "cat_mouvements_ia",
+  "action": "modifier_deplacable",
+  "objet": true,
+  "champs": [
+    {"cle": "deplacable", "type": "formule", "defaut": "true", "nom": {"fr": "Déplaçable au doigt (true / false)", "en": "Draggable by finger (true / false)", "es": "Arrastrable con el dedo (true / false)", "pt": "Arrastável com o dedo (true / false)", "de": "Mit dem Finger verschiebbar (true / false)", "it": "Trascinabile col dito (true / false)", "ru": "Перетаскивается пальцем (true / false)", "zh": "可用手指拖动（true / false）", "ja": "指でドラッグ可能（true / false）"}}
+  ]
+},
+{
+  "cle": "sautiller",
+  "nom": {"fr": "Sautiller", "en": "Bounce around", "es": "Saltar", "pt": "Saltitar", "de": "Hüpfen", "it": "Saltellare", "ru": "Подпрыгивать", "zh": "蹦跳", "ja": "ぴょんぴょん跳ねる"},
+  "categorie": "cat_mouvements_ia",
+  "action": "sautiller",
+  "objet": true,
+  "champs": [
+    {"cle": "intensite", "type": "formule", "defaut": "10", "nom": {"fr": "Intensité (0 = arrêter)", "en": "Strength (0 = stop)", "es": "Intensidad (0 = parar)", "pt": "Intensidade (0 = parar)", "de": "Stärke (0 = stoppen)", "it": "Intensità (0 = ferma)", "ru": "Сила (0 = остановить)", "zh": "强度（0 = 停止）", "ja": "強さ（0 = 停止）"}},
+    {"cle": "duree", "type": "formule", "defaut": "500", "nom": {"fr": "Durée (ms)", "en": "Duration (ms)", "es": "Duración (ms)", "pt": "Duração (ms)", "de": "Dauer (ms)", "it": "Durata (ms)", "ru": "Длительность (мс)", "zh": "持续时间（毫秒）", "ja": "長さ（ミリ秒）"}},
+    {"cle": "infini", "type": "formule", "defaut": "false", "nom": {"fr": "Continue tant que ça bouge (true / false)", "en": "Keep going while moving (true / false)", "es": "Continúa mientras se mueve (true / false)", "pt": "Continua enquanto se move (true / false)", "de": "Läuft weiter, solange es sich bewegt (true / false)", "it": "Continua finché si muove (true / false)", "ru": "Пока движется (true / false)", "zh": "移动时持续（true / false）", "ja": "動いている間続ける（true / false）"}}
+  ]
+},
+{
+  "cle": "orienter_vers",
+  "nom": {"fr": "Orienter vers", "en": "Face towards", "es": "Orientar hacia", "pt": "Virar para", "de": "Ausrichten auf", "it": "Orienta verso", "ru": "Повернуть к", "zh": "朝向", "ja": "向きを合わせる"},
+  "categorie": "cat_mouvements_ia",
+  "action": "orienter_vers",
+  "objet": true,
+  "objetB": true,
+  "champs": [
+    {"cle": "decalage", "type": "formule", "defaut": "0", "nom": {"fr": "Décalage d'angle (degrés)", "en": "Angle offset (degrees)", "es": "Desfase de ángulo (grados)", "pt": "Deslocamento de ângulo (graus)", "de": "Winkelversatz (Grad)", "it": "Scarto d'angolo (gradi)", "ru": "Смещение угла (градусы)", "zh": "角度偏移（度）", "ja": "角度のずれ（度）"}}
+  ]
 }
   ]
 }
