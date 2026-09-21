@@ -48,6 +48,7 @@ public class ActionsMoteur {
             case "modifier_deplacable": ActionsMouvements.modifierDeplacable(n); return null;
             case "sautiller": ActionsMouvements.sautiller(n); return null;
             case "orienter_vers": ActionsMouvements.orienterVers(n); return null;
+            case "glisser_vers": ActionsMouvements.glisserVers(n); return null;
             case "si_au_sol": return ActionsMouvements.siAuSol(n);
             case "si_en_mouvement": return ActionsMouvements.siEnMouvement(n);
             case "journaliser": ActionsOutils.journaliser(n); return null;
