@@ -59,6 +59,9 @@ public class ActionsMoteur {
             case "quitter_jeu": return ActionsScene.quitterJeu(n);
             case "si_joystick": return ActionsControles.siJoystick(n);
             case "fixer_camera": return ActionsControles.fixerCamera(n);
+            case "elasticite_camera": return ActionsControles.elasticiteCamera(n);
+            case "tremblement_camera": return ActionsControles.tremblementCamera(n);
+            case "vibration": return ActionsControles.vibration(n);
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
