@@ -9,6 +9,13 @@ public class GestionnaireControles {
     public static boolean isActionPressed = false;
     public static boolean isActionJustPressed = false;
 
+    // --- Doigt (premier doigt posé sur l'écran de jeu) ---
+    // Position dans l'écran de jeu : 0,0 = coin en haut à gauche, sans tenir compte de la caméra.
+    // Lues par les formules : doigt.x, doigt.y, doigt.appuye
+    public static float doigtX = 0f;
+    public static float doigtY = 0f;
+    public static boolean doigtAppuye = false;
+
     // --- Système de Caméra ---
     public static String cameraCibleId = null;
     public static float cameraX = 0f;
@@ -31,6 +38,9 @@ public class GestionnaireControles {
         joyDirY = 0f;
         isActionPressed = false;
         isActionJustPressed = false;
+        doigtX = 0f;
+        doigtY = 0f;
+        doigtAppuye = false;
         reinitialiserCamera();
     }
 
