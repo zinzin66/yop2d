@@ -88,6 +88,9 @@ public class ActionsMoteur {
             case "ajouter_inventaire": return ActionsInventaire.ajouter(n);
             case "retirer_inventaire": return ActionsInventaire.retirer(n);
             case "si_dans_inventaire": return ActionsInventaire.siDansInventaire(n);
+            case "creer_objet": return ActionsObjets2.creerObjet(n);
+            case "combinaison": return ActionsObjets2.combinaison(n);
+            case "si_hors_ecran": return ActionsObjets2.siHorsEcran(n);
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
