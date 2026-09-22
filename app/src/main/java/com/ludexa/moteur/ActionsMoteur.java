@@ -86,6 +86,7 @@ public class ActionsMoteur {
             case "sequence": return ActionsLogique.sequence(n);
             case "cooldown": return ActionsLogique.cooldown(n);
             case "si_sinon": return ActionsLogique.siSinon(n);
+            case "selon_valeur": return ActionsLogique.selonValeur(n);
             case "ajouter_inventaire": return ActionsInventaire.ajouter(n);
             case "retirer_inventaire": return ActionsInventaire.retirer(n);
             case "si_dans_inventaire": return ActionsInventaire.siDansInventaire(n);
