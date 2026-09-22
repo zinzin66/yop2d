@@ -13,7 +13,7 @@ public class NoeudEventCollisionTag extends NoeudBase {
     public NoeudEventCollisionTag() {
         super(
                 genererId(),
-                "Si objet touche Tag",
+                "noeud_si_objet_touche_tag",
                 "Événements"
         );
 

@@ -9,7 +9,7 @@ public class NoeudEventDebutGlisser extends NoeudBase {
     private ObjetBase objetCible;
 
     public NoeudEventDebutGlisser() {
-        super(genererId(), "Début de Glisser", "Événements");
+        super(genererId(), "noeud_debut_de_glisser", "Événements");
         this.ajouterPort(new Port("Suivant", Port.TYPE_EXECUTION_SORTIE));
     }
 

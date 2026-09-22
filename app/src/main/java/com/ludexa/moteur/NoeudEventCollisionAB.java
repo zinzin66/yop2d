@@ -10,7 +10,7 @@ public class NoeudEventCollisionAB extends NoeudBase {
     private boolean etaitEnCollision = false;
 
     public NoeudEventCollisionAB() {
-        super(genererId(), "Collision A/B", "Événements");
+        super(genererId(), "noeud_collision_ab", "Événements");
         this.ajouterPort(new Port("Collision", Port.TYPE_EXECUTION_SORTIE));
     }
 

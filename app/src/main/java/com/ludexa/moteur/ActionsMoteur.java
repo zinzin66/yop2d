@@ -85,12 +85,17 @@ public class ActionsMoteur {
             case "appeler_evenement": return ActionsAppels.appelerEvenement(n);
             case "sequence": return ActionsLogique.sequence(n);
             case "cooldown": return ActionsLogique.cooldown(n);
+            case "si_sinon": return ActionsLogique.siSinon(n);
+            case "selon_valeur": return ActionsLogique.selonValeur(n);
             case "ajouter_inventaire": return ActionsInventaire.ajouter(n);
             case "retirer_inventaire": return ActionsInventaire.retirer(n);
             case "si_dans_inventaire": return ActionsInventaire.siDansInventaire(n);
             case "creer_objet": return ActionsObjets2.creerObjet(n);
             case "combinaison": return ActionsObjets2.combinaison(n);
             case "si_hors_ecran": return ActionsObjets2.siHorsEcran(n);
+            case "sauvegarder_etat": return ActionsPartie.sauvegarderEtat(n);
+            case "restaurer_etat": return ActionsPartie.restaurerEtat(n);
+            case "fondu": return ActionsPartie.fondu(n);
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }

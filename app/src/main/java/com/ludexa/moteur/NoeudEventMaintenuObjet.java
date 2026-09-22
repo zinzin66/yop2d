@@ -6,7 +6,7 @@ public class NoeudEventMaintenuObjet extends NoeudEventChaqueImage {
 
     public NoeudEventMaintenuObjet() {
         super();
-        this.nom = Traducteur.get("noeud_event_maintenu_objet");
+        this.nom = "noeud_event_maintenu_objet";
     }
 
     @Override

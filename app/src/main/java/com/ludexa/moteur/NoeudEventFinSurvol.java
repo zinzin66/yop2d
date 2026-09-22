@@ -7,10 +7,10 @@ import java.util.List;
 public class NoeudEventFinSurvol extends NoeudBase {
 
     private transient ObjetBase cible;
-    // SUPPRIMÉ : private String nomCibleObjet;[span_13](start_span)[span_13](end_span)
+    // SUPPRIMÉ : private String nomCibleObjet;
 
     public NoeudEventFinSurvol() {
-        super(genererId(), "Fin de Survol", "Événements");
+        super(genererId(), "noeud_fin_de_survol", "Événements");
         this.ajouterPort(new Port("Suivant", Port.TYPE_EXECUTION_SORTIE));
     }
 
