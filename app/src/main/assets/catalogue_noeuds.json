@@ -926,8 +926,6 @@
   "objet": true,
   "variable": true,
   "sorties": ["vrai", "faux", {"cle": "ensuite", "nom": {"fr": "Ensuite", "en": "Then", "es": "Después", "pt": "Depois", "de": "Danach", "it": "Poi", "ru": "Затем", "zh": "然后", "ja": "その後"}}]
-}
-    ]
 },
 {
   "cle": "creer_objet",
@@ -960,6 +958,8 @@
   "sorties": ["vrai", "faux", {"cle": "ensuite", "nom": {"fr": "Ensuite", "en": "Then", "es": "Después", "pt": "Depois", "de": "Danach", "it": "Poi", "ru": "Затем", "zh": "然后", "ja": "その後"}}],
   "champs": [
     {"cle": "marge", "type": "formule", "defaut": "100", "nom": {"fr": "Marge (pixels)", "en": "Margin (pixels)", "es": "Margen (píxeles)", "pt": "Margem (pixels)", "de": "Rand (Pixel)", "it": "Margine (pixel)", "ru": "Отступ (пиксели)", "zh": "边距（像素）", "ja": "余白（ピクセル）"}}
+  ]
+}
   ]
 }
 // bas 1
