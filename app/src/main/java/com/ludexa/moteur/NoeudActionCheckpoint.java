@@ -18,7 +18,8 @@ public class NoeudActionCheckpoint extends NoeudBase {
                 java.lang.reflect.Field sceneField = contexteApplication.getClass().getField("sceneActive");
                 Scene s = (Scene) sceneField.get(contexteApplication);
                 if (s != null) {
-                    GestionnaireEtat.sauvegarderEtat(s);
+                    // NOUVEAU : la sauvegarde inclut désormais aussi les variables globales
+                    GestionnaireEtat.sauvegarderEtat(s, NoeudBase.getVariablesGlobalesDisponibles());
                 }
             } catch (Exception e) {}
         }
