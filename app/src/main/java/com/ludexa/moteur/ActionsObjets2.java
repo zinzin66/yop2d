@@ -3,6 +3,9 @@ package com.ludexa.moteur;
 
 // Ce que font les nœuds Créer un objet, Combinaison d'objets et Si hors écran.
 // Ils sont décrits dans assets/catalogue_noeuds.json.
+// Le clonage et la destruction réutilisent ActionsObjets.creerClone() et ActionsObjets.detruireObjet(),
+// les mêmes méthodes fiables que le reste du moteur (elles trouvent la bonne scène, HUD compris,
+// et neutralisent l'objet avant de le retirer).
 //
 // Une action retourne le nom du port de sortie à suivre, ou null pour la sortie normale.
 public class ActionsObjets2 {
@@ -17,21 +20,21 @@ public class ActionsObjets2 {
         if (projet != null) DiagLogger.log(projet, "ALERTE " + nomNoeud + " : " + message);
     }
 
-    // Nœud « Créer un objet » : clone l'objet choisi (cible A, le modèle) à la position donnée, dans la scène active.
+    // Nœud « Créer un objet » : clone l'objet choisi (cible A, le modèle) à la position donnée.
     static String creerObjet(NoeudGenerique n) {
         ObjetBase modele = n.getCibleObjet();
-        Scene scene = NoeudBase.sceneActiveCourante;
         if (modele == null) {
             alerte("creer_objet", "aucun objet modèle choisi (cible A)");
             return null;
         }
-        if (scene == null || scene.objets == null) return null;
-        ObjetBase clone = modele.clonerProfond();
-        clone.id = java.util.UUID.randomUUID().toString();
+        ObjetBase clone = ActionsObjets.creerClone(modele);
+        if (clone == null) {
+            alerte("creer_objet", "aucune scène disponible pour créer l'objet");
+            return null;
+        }
         clone.x = (float) n.nombre("x");
         clone.y = (float) n.nombre("y");
-        clone.zOrder = scene.prochainZOrder();
-        scene.ajouterObjet(clone);
+        MoteurLogique.dernierObjetImplique = clone;
         return null;
     }
 
@@ -57,15 +60,17 @@ public class ActionsObjets2 {
             return null;
         }
 
-        ObjetBase clone = modele.clonerProfond();
-        clone.id = java.util.UUID.randomUUID().toString();
-        clone.x = objA.x;
-        clone.y = objA.y;
-        clone.visible = true;
-        clone.zOrder = scene.prochainZOrder();
-        scene.objets.add(clone);
-        scene.objets.remove(objA);
-        scene.objets.remove(objB);
+        float x = objA.x;
+        float y = objA.y;
+        ActionsObjets.detruireObjet(objA);
+        ActionsObjets.detruireObjet(objB);
+
+        ObjetBase clone = ActionsObjets.creerClone(modele);
+        if (clone != null) {
+            clone.x = x;
+            clone.y = y;
+            MoteurLogique.dernierObjetImplique = clone;
+        }
         return null;
     }
 
