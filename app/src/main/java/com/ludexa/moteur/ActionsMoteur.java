@@ -91,6 +91,9 @@ public class ActionsMoteur {
             case "creer_objet": return ActionsObjets2.creerObjet(n);
             case "combinaison": return ActionsObjets2.combinaison(n);
             case "si_hors_ecran": return ActionsObjets2.siHorsEcran(n);
+            case "sauvegarder_etat": return ActionsPartie.sauvegarderEtat(n);
+            case "restaurer_etat": return ActionsPartie.restaurerEtat(n);
+            case "fondu": return ActionsPartie.fondu(n);
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }
