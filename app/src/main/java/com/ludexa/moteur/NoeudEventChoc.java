@@ -10,7 +10,7 @@ public class NoeudEventChoc extends NoeudBase {
     private String nomCibleObjet;
 
     public NoeudEventChoc() {
-        super(genererId(), "Au Choc (Physique)", "Événements");
+        super(genererId(), "noeud_au_choc_physique", "Événements");
         this.ajouterPort(new Port("Sortie", Port.TYPE_EXECUTION_SORTIE));
     }
 
@@ -59,4 +59,3 @@ public class NoeudEventChoc extends NoeudBase {
     }
 }
 // bas 1
-
