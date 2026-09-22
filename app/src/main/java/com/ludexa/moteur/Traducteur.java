@@ -1,4 +1,4 @@
-// haut 1 sept
+// haut 1
 package com.ludexa.moteur;
 
 import android.content.Context;
@@ -52,11 +52,11 @@ public class Traducteur {
             }
 
             Log.d(TAG, "Dictionnaire " + langueActuelle + " chargé.");
-            DiagLogger.log("Traducteur : " + compteur + " clés chargées avec succès pour la langue \"" + langueActuelle + "\".");
+            DiagLogger.log("Traducteur", compteur + " clés chargées avec succès pour la langue \"" + langueActuelle + "\".");
 
         } catch (Exception e) {
             Log.e(TAG, "Erreur fichier de langue : " + nomFichier, e);
-            DiagLogger.log("Traducteur : ECHEC chargement de " + nomFichier + " -> " + e.getClass().getSimpleName() + " : " + e.getMessage());
+            DiagLogger.log("Traducteur", "ECHEC chargement de " + nomFichier + " -> " + e.getClass().getSimpleName() + " : " + e.getMessage());
         }
     }
 
