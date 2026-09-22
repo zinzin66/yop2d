@@ -617,7 +617,7 @@ public class EditeurNoeudDialog extends Dialog {
 
     private void ecrireDansChamp(String texte) {
         inserer(texte);
-    }
+    
     }
 
     private void demanderTexte(String titre, String valeurInitiale) {
