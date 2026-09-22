@@ -6,7 +6,7 @@ public class NoeudEventDoigtAppuye extends NoeudEventChaqueImage {
 
     public NoeudEventDoigtAppuye() {
         super();
-        this.nom = Traducteur.get("noeud_event_doigt_appuye");
+        this.nom = "noeud_event_doigt_appuye";
     }
 
     @Override
