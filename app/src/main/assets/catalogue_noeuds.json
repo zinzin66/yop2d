@@ -928,5 +928,38 @@
   "sorties": ["vrai", "faux", {"cle": "ensuite", "nom": {"fr": "Ensuite", "en": "Then", "es": "Después", "pt": "Depois", "de": "Danach", "it": "Poi", "ru": "Затем", "zh": "然后", "ja": "その後"}}]
 }
     ]
+},
+{
+  "cle": "creer_objet",
+  "nom": {"fr": "Créer un objet", "en": "Create object", "es": "Crear objeto", "pt": "Criar objeto", "de": "Objekt erstellen", "it": "Crea oggetto", "ru": "Создать объект", "zh": "创建对象", "ja": "オブジェクトを作成"},
+  "categorie": "cat_apparence_objets",
+  "action": "creer_objet",
+  "objet": true,
+  "champs": [
+    {"cle": "x", "type": "formule", "defaut": "0", "nom": {"fr": "Position X", "en": "X position", "es": "Posición X", "pt": "Posição X", "de": "X-Position", "it": "Posizione X", "ru": "Позиция X", "zh": "X 位置", "ja": "X位置"}},
+    {"cle": "y", "type": "formule", "defaut": "0", "nom": {"fr": "Position Y", "en": "Y position", "es": "Posición Y", "pt": "Posição Y", "de": "Y-Position", "it": "Posizione Y", "ru": "Позиция Y", "zh": "Y 位置", "ja": "Y位置"}}
+  ]
+},
+{
+  "cle": "combinaison",
+  "nom": {"fr": "Combinaison d'objets", "en": "Combine objects", "es": "Combinar objetos", "pt": "Combinar objetos", "de": "Objekte kombinieren", "it": "Combina oggetti", "ru": "Объединить объекты", "zh": "组合对象", "ja": "オブジェクトを合成"},
+  "categorie": "cat_variables_inventaire",
+  "action": "combinaison",
+  "objet": true,
+  "objetB": true,
+  "champs": [
+    {"cle": "resultat", "type": "texte", "defaut": "", "nom": {"fr": "Nom de l'objet résultat", "en": "Result object name", "es": "Nombre del objeto resultado", "pt": "Nome do objeto resultante", "de": "Name des Ergebnisobjekts", "it": "Nome dell'oggetto risultato", "ru": "Имя объекта-результата", "zh": "结果对象名称", "ja": "結果オブジェクトの名前"}}
+  ]
+},
+{
+  "cle": "si_hors_ecran",
+  "nom": {"fr": "Si hors écran", "en": "If off-screen", "es": "Si fuera de pantalla", "pt": "Se fora da tela", "de": "Wenn außerhalb des Bildschirms", "it": "Se fuori schermo", "ru": "Если за пределами экрана", "zh": "如果在屏幕外", "ja": "画面外にいるなら"},
+  "categorie": "cat_logique_conditions",
+  "action": "si_hors_ecran",
+  "objet": true,
+  "sorties": ["vrai", "faux", {"cle": "ensuite", "nom": {"fr": "Ensuite", "en": "Then", "es": "Después", "pt": "Depois", "de": "Danach", "it": "Poi", "ru": "Затем", "zh": "然后", "ja": "その後"}}],
+  "champs": [
+    {"cle": "marge", "type": "formule", "defaut": "100", "nom": {"fr": "Marge (pixels)", "en": "Margin (pixels)", "es": "Margen (píxeles)", "pt": "Margem (pixels)", "de": "Rand (Pixel)", "it": "Margine (pixel)", "ru": "Отступ (пиксели)", "zh": "边距（像素）", "ja": "余白（ピクセル）"}}
+  ]
 }
 // bas 1
