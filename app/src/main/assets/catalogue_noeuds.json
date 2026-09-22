@@ -3413,6 +3413,114 @@
           }
         }
       ]
+    },
+    {
+      "cle": "si_sinon",
+      "nom": {
+        "fr": "Si / Sinon",
+        "en": "If / Else",
+        "es": "Si / Si no",
+        "pt": "Se / Senão",
+        "de": "Wenn / Sonst",
+        "it": "Se / Altrimenti",
+        "ru": "Если / Иначе",
+        "zh": "如果 / 否则",
+        "ja": "もし / それ以外"
+      },
+      "categorie": "cat_logique_conditions",
+      "action": "si_sinon",
+      "sorties": [
+        {
+          "cle": "si",
+          "nom": {
+            "fr": "Si",
+            "en": "If",
+            "es": "Si",
+            "pt": "Se",
+            "de": "Wenn",
+            "it": "Se",
+            "ru": "Если",
+            "zh": "如果",
+            "ja": "もし"
+          }
+        },
+        {
+          "cle": "sinon_si",
+          "nom": {
+            "fr": "Sinon si",
+            "en": "Else if",
+            "es": "Si no, si",
+            "pt": "Senão se",
+            "de": "Sonst wenn",
+            "it": "Altrimenti se",
+            "ru": "Иначе если",
+            "zh": "否则如果",
+            "ja": "そうでなければもし"
+          }
+        },
+        {
+          "cle": "sinon",
+          "nom": {
+            "fr": "Sinon",
+            "en": "Else",
+            "es": "Si no",
+            "pt": "Senão",
+            "de": "Sonst",
+            "it": "Altrimenti",
+            "ru": "Иначе",
+            "zh": "否则",
+            "ja": "それ以外"
+          }
+        },
+        {
+          "cle": "ensuite",
+          "nom": {
+            "fr": "Ensuite",
+            "en": "Then",
+            "es": "Después",
+            "pt": "Depois",
+            "de": "Danach",
+            "it": "Poi",
+            "ru": "Затем",
+            "zh": "然后",
+            "ja": "その後"
+          }
+        }
+      ],
+      "champs": [
+        {
+          "cle": "condition1",
+          "type": "formule",
+          "defaut": "",
+          "nom": {
+            "fr": "Si (condition)",
+            "en": "If (condition)",
+            "es": "Si (condición)",
+            "pt": "Se (condição)",
+            "de": "Wenn (Bedingung)",
+            "it": "Se (condizione)",
+            "ru": "Если (условие)",
+            "zh": "如果（条件）",
+            "ja": "もし（条件）"
+          }
+        },
+        {
+          "cle": "condition2",
+          "type": "formule",
+          "defaut": "",
+          "nom": {
+            "fr": "Sinon si (condition)",
+            "en": "Else if (condition)",
+            "es": "Si no, si (condición)",
+            "pt": "Senão se (condição)",
+            "de": "Sonst wenn (Bedingung)",
+            "it": "Altrimenti se (condizione)",
+            "ru": "Иначе если (условие)",
+            "zh": "否则如果（条件）",
+            "ja": "そうでなければもし（条件）"
+          }
+        }
+      ]
     }
   ]
 }
