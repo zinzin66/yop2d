@@ -26,9 +26,10 @@ public class NoeudGenerique extends NoeudBase {
         this.cle = cle;
         this.definition = CatalogueNoeuds.trouver(cle);
         if (definition == null) throw new IllegalArgumentException("Nœud inconnu dans le catalogue : " + cle);
-        // NOUVEAU : cleNom est une CLÉ de traduction (ex : "noeud_creer_objet"), jamais le texte affiché.
-        // Sans Traducteur.get(), le nœud affichait cette clé brute sur le canvas, dans toutes les langues.
-        this.nom = Traducteur.get(definition.cleNom);
+        // cleNom est une CLÉ de traduction (ex : "noeud_creer_objet") : c'est CanvasBlueprint qui la traduit
+        // à l'affichage (Traducteur.get(noeud.nom)), pas ici. Ça permet au nom de suivre un changement de langue
+        // en direct, sans recréer le nœud.
+        this.nom = definition.cleNom;
         ajouterPort(new Port("port_entrer", Port.TYPE_EXECUTION_ENTREE));
         for (String sortie : definition.sorties) ajouterPort(new Port(sortie, Port.TYPE_EXECUTION_SORTIE));
         for (CatalogueNoeuds.Champ c : definition.champs) valeurs.put(c.nomParam, c.defaut);
