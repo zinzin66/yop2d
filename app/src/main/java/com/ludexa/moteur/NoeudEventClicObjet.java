@@ -9,7 +9,7 @@ public class NoeudEventClicObjet extends NoeudBase {
     private ObjetBase objetCible;
 
     public NoeudEventClicObjet() {
-        super(genererId(), "Au Clic sur Objet", "Événements");
+        super(genererId(), "noeud_au_clic_sur_objet", "Événements");
         this.ajouterPort(new Port("Suivant", Port.TYPE_EXECUTION_SORTIE));
     }
 
