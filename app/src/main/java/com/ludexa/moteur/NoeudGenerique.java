@@ -13,6 +13,9 @@ import java.util.Map;
 // nomCibleVariable) : la fenêtre d'édition, la sauvegarde et les prefabs les gèrent donc déjà.
 public class NoeudGenerique extends NoeudBase {
 
+    // NOUVEAU : sortie « Ensuite » : si le nœud en déclare une dans le catalogue, elle est suivie après la sortie choisie.
+    private static final String PORT_ENSUITE = "port_ensuite";
+
     public final String cle;
     private final CatalogueNoeuds.Definition definition;
     private final Map<String, String> valeurs = new LinkedHashMap<>();
@@ -48,7 +51,12 @@ public class NoeudGenerique extends NoeudBase {
         }
         if (Evaluateur.derniereErreur != null) alerte(Evaluateur.derniereErreur);
         if (sortie == null && !definition.sorties.isEmpty()) sortie = definition.sorties.get(0);
-        if (sortie != null) propagerExecution(sortie);   // un nœud sans sortie termine le script
+        if (sortie != null) {
+            propagerExecution(sortie);   // un nœud sans sortie termine le script
+            // ----- NOUVEAU : début (sortie « Ensuite », jamais pour un nœud qui attend encore) -----
+            if (!PORT_ENSUITE.equals(sortie) && !ActionsTemps.AUCUNE_SUITE.equals(sortie)) propagerExecution(PORT_ENSUITE);
+            // ----- NOUVEAU : fin -----
+        }
     }
 
     private void signaler(RuntimeException e) {

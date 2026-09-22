@@ -82,5 +82,123 @@ public class ActionsMouvements {
         if (objet.y < minY) objet.y = minY;
         if (objet.y > maxY) objet.y = maxY;
     }
+
+    // ------------------------------------------------------------------
+    // PHYSIQUE ET MOUVEMENT
+    // ------------------------------------------------------------------
+
+    // Règle le rebond de l'objet (0 = ne rebondit pas, 1 = rebondit fort).
+    static void changerRebond(NoeudGenerique n) {
+        ObjetBase objet = n.getCibleObjet();
+        if (objet == null) return;
+        objet.rebond = (float) n.nombre("rebond");
+    }
+
+    // Pousse l'objet dans une direction (angle en degrés : 0 = droite, 90 = bas) avec une force.
+    static void forceAngle(NoeudGenerique n) {
+        ObjetBase objet = n.getCibleObjet();
+        if (objet == null) return;
+        double angle = Math.toRadians(n.nombre("angle"));
+        double force = n.nombre("force");
+        objet.intentionDeplacementX += (float) (Math.cos(angle) * force);
+        objet.intentionDeplacementY += (float) (Math.sin(angle) * force);
+    }
+
+    // Projette l'objet vers le haut (valeur négative) ou vers le bas (valeur positive), et le rend libre.
+    static void impulsion(NoeudGenerique n) {
+        ObjetBase objet = n.getCibleObjet();
+        if (objet == null) return;
+        objet.vitesseY = (float) n.nombre("force");
+        objet.estStatique = false;
+        objet.estPhysique = true;
+    }
+
+    // Rend l'objet physique. tombe = true : il tombe ; tombe = false : il reste fixe (comme un sol).
+    static void activerPhysique(NoeudGenerique n) {
+        ObjetBase objet = n.getCibleObjet();
+        if (objet == null) return;
+        objet.estPhysique = true;
+        objet.estStatique = !n.booleen("tombe");
+    }
+
+    // Autorise ou interdit de faire glisser l'objet avec le doigt.
+    static void modifierDeplacable(NoeudGenerique n) {
+        ObjetBase objet = n.getCibleObjet();
+        if (objet == null) return;
+        objet.estDeplacable = n.booleen("deplacable");
+    }
+
+    // Petit rebond visuel. Une intensité de 0 ou moins l'arrête. "infini" : il continue tant que l'objet bouge.
+    static void sautiller(NoeudGenerique n) {
+        ObjetBase objet = n.getCibleObjet();
+        if (objet == null) return;
+        float intensite = (float) n.nombre("intensite");
+        if (intensite <= 0f) {
+            objet.sautillementActif = false;
+            return;
+        }
+        objet.sautillementActif = true;
+        objet.sautillementIntensite = intensite;
+        objet.sautillementDureeMs = (long) n.nombre("duree");
+        objet.sautillementInfiniMouvement = n.booleen("infini");
+        objet.tempsDebutSautillement = System.currentTimeMillis();
+    }
+
+    // Tourne l'objet A vers l'objet B. Le décalage (degrés) corrige le sens de l'image (0 = elle regarde à droite).
+    static void orienterVers(NoeudGenerique n) {
+        ObjetBase a = n.getCibleObjet();
+        ObjetBase b = n.getCibleObjetB();
+        if (a == null || b == null) return;
+        float dx = (b.x + b.largeur / 2f) - (a.x + a.largeur / 2f);
+        float dy = (b.y + b.hauteur / 2f) - (a.y + a.hauteur / 2f);
+        double angle = Math.toDegrees(Math.atan2(dy, dx));
+        a.rotation = (float) (angle + n.nombre("decalage"));
+    }
+
+    // Fait glisser l'objet jusqu'à (x, y) pendant la durée donnée (secondes de jeu : pause et ralenti compris).
+    // Le nœud ne bloque pas la suite : pour attendre l'arrivée, ajoute un « Attendre » de la même durée.
+    static void glisserVers(NoeudGenerique n) {
+        ObjetBase objet = n.getCibleObjet();
+        if (objet == null) return;
+        float x = (float) n.nombre("x");
+        float y = (float) n.nombre("y");
+        double duree = n.nombre("duree");
+        DeplacementsGlisses.demarrer(objet, x, y, duree);
+    }
+
+    // ------------------------------------------------------------------
+    // CONDITIONS : elles retournent le nom de la sortie à suivre
+    // ------------------------------------------------------------------
+
+    // Nœud « Si au sol » : vrai quand le bas de l'objet touche le haut d'un objet fixe et visible (un sol, une plateforme).
+    static String siAuSol(NoeudGenerique n) {
+        ObjetBase objet = n.getCibleObjet();
+        Scene scene = NoeudBase.sceneActiveCourante;
+        boolean auSol = false;
+        if (objet != null && scene != null && scene.objets != null) {
+            float basObjet = objet.y + objet.hauteur;
+            float tolerance = 5f; // marge pour considérer que l'objet est "posé"
+            for (ObjetBase autre : scene.objets) {
+                if (autre == objet || !autre.visible || !autre.estStatique) continue;
+                boolean auDessus = (objet.x < autre.x + autre.largeur) && (objet.x + objet.largeur > autre.x);
+                boolean toucheLeHaut = (basObjet >= autre.y - tolerance) && (basObjet <= autre.y + tolerance);
+                if (auDessus && toucheLeHaut) {
+                    auSol = true;
+                    break;
+                }
+            }
+        }
+        return auSol ? "port_vrai" : "port_faux";
+    }
+
+    // Nœud « Si en mouvement » : vrai quand l'objet a bougé depuis l'image précédente.
+    static String siEnMouvement(NoeudGenerique n) {
+        ObjetBase objet = n.getCibleObjet();
+        boolean enMouvement = false;
+        if (objet != null) {
+            enMouvement = Math.abs(objet.x - objet.ancienneX) > 0.5f || Math.abs(objet.y - objet.ancienneY) > 0.5f;
+        }
+        return enMouvement ? "port_vrai" : "port_faux";
+    }
 }
 // bas 1
