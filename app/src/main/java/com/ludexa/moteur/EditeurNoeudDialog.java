@@ -997,7 +997,7 @@ public class EditeurNoeudDialog extends Dialog {
                     && noeud.getNomsParametres().contains("Valeur de comparaison");
         }
 
-        if (noeud instanceof NoeudEventCollisionAB || noeud instanceof NoeudConditionSiObjetToucheZone) {
+        if (noeud instanceof NoeudEventCollisionAB) {
             txtResume.setVisibility(View.VISIBLE);
             txtResume.setText(Traducteur.get("resume_interaction") + " : "
                     + nomObjetAffiche(noeud.nomCibleObjet, noeud.getCibleObjet()) + " <-> "
