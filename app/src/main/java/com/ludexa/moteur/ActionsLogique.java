@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-// Ce que font les nœuds de logique : Séquence et Cooldown.
+// Ce que font les nœuds de logique : Séquence, Cooldown, Si / Sinon et Selon la valeur.
 // Ils sont décrits dans assets/catalogue_noeuds.json.
 //
 // Une action retourne le nom du port de sortie à suivre, ou null pour la sortie normale.
@@ -40,6 +40,25 @@ public class ActionsLogique {
             return "port_pret";
         }
         return "port_attente";
+    }
+
+    // Nœud « Si / Sinon » : teste condition1, sinon condition2, sinon la troisième sortie.
+    static String siSinon(NoeudGenerique n) {
+        if (n.booleen("condition1")) return "port_si";
+        if (n.booleen("condition2")) return "port_sinon_si";
+        return "port_sinon";
+    }
+
+    // Nœud « Selon la valeur » : compare le champ "valeur" à chacun des 6 cas (val1 à val6), dans l'ordre,
+    // et suit la première sortie qui correspond. Un cas laissé vide est ignoré (jamais comparé).
+    // Aucune correspondance -> sortie "Aucun".
+    static String selonValeur(NoeudGenerique n) {
+        String valeur = n.texte("valeur");
+        for (int i = 1; i <= 6; i++) {
+            if (n.texteBrut("val" + i).trim().isEmpty()) continue;
+            if (valeur.equals(n.texte("val" + i))) return "port_" + i;
+        }
+        return "port_aucun";
     }
 }
 // bas 1

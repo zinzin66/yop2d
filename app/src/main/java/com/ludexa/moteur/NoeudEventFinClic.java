@@ -8,7 +8,7 @@ public class NoeudEventFinClic extends NoeudBase {
 
     public NoeudEventFinClic() {
         // ID généré, nom, catégorie
-        super(genererId(), "Fin de Clic", "Événement");
+        super(genererId(), "noeud_fin_de_clic", "Événement");
         
         // Un nœud d'événement n'a généralement qu'un port de sortie d'exécution
         this.ajouterPort(new Port("Suivant", Port.TYPE_EXECUTION_SORTIE));
@@ -54,4 +54,3 @@ public class NoeudEventFinClic extends NoeudBase {
     }
 }
 // bas 1
-

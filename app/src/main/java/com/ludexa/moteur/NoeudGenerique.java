@@ -13,7 +13,8 @@ import java.util.Map;
 // nomCibleVariable) : la fenêtre d'édition, la sauvegarde et les prefabs les gèrent donc déjà.
 public class NoeudGenerique extends NoeudBase {
 
-    // NOUVEAU : sortie « Ensuite » : si le nœud en déclare une dans le catalogue, elle est suivie après la sortie choisie.
+    // Sortie « Ensuite » : si le nœud en déclare une dans le catalogue, elle est suivie après la sortie choisie
+    // (jamais pour un nœud qui attend encore, comme "Attendre" ou "Répéter").
     private static final String PORT_ENSUITE = "port_ensuite";
 
     public final String cle;
@@ -29,6 +30,9 @@ public class NoeudGenerique extends NoeudBase {
         this.cle = cle;
         this.definition = CatalogueNoeuds.trouver(cle);
         if (definition == null) throw new IllegalArgumentException("Nœud inconnu dans le catalogue : " + cle);
+        // cleNom est une CLÉ de traduction (ex : "noeud_creer_objet") : c'est CanvasBlueprint qui la traduit
+        // à l'affichage (Traducteur.get(noeud.nom)), pas ici. Ça permet au nom de suivre un changement de langue
+        // en direct, sans recréer le nœud.
         this.nom = definition.cleNom;
         ajouterPort(new Port("port_entrer", Port.TYPE_EXECUTION_ENTREE));
         for (String sortie : definition.sorties) ajouterPort(new Port(sortie, Port.TYPE_EXECUTION_SORTIE));
@@ -53,9 +57,8 @@ public class NoeudGenerique extends NoeudBase {
         if (sortie == null && !definition.sorties.isEmpty()) sortie = definition.sorties.get(0);
         if (sortie != null) {
             propagerExecution(sortie);   // un nœud sans sortie termine le script
-            // ----- NOUVEAU : début (sortie « Ensuite », jamais pour un nœud qui attend encore) -----
+            // Sortie « Ensuite », suivie après la sortie choisie (jamais pour un nœud qui attend encore)
             if (!PORT_ENSUITE.equals(sortie) && !ActionsTemps.AUCUNE_SUITE.equals(sortie)) propagerExecution(PORT_ENSUITE);
-            // ----- NOUVEAU : fin -----
         }
     }
 

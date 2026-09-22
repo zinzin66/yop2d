@@ -9,7 +9,7 @@ public class NoeudEventEntreeZone extends NoeudBase {
     private ObjetBase cible;
 
     public NoeudEventEntreeZone() {
-        super(genererId(), "Entrée de zone", "Evenement");
+        super(genererId(), "noeud_entree_de_zone", "Evenement");
         this.ajouterPort(new Port("Executer", Port.TYPE_EXECUTION_SORTIE));
     }
 

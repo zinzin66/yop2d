@@ -15,7 +15,7 @@ public class NoeudEventSortieZone extends NoeudBase {
     private transient boolean etaitEnCollision = false;
 
     public NoeudEventSortieZone() {
-        super(genererId(), "Sortie de zone", "Événements");
+        super(genererId(), "noeud_sortie_de_zone", "Événements");
         this.ajouterPort(new Port("Suivant", Port.TYPE_EXECUTION_SORTIE));
     }
     

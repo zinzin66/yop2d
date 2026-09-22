@@ -209,13 +209,17 @@ public class VueJeu extends View {
 
     public void chargerNouvelleScene(Scene nouvelleScene) {
         if (nouvelleScene == null) return;
-        if (this.sceneActive != null) GestionnaireEtat.sauvegarderEtat(this.sceneActive);
+        // ----- NOUVEAU : la sauvegarde automatique de scène inclut désormais aussi les variables globales -----
+        if (this.sceneActive != null) GestionnaireEtat.sauvegarderEtat(this.sceneActive, NoeudBase.getVariablesGlobalesDisponibles());
+        // ----- NOUVEAU : fin -----
 
         this.sceneActive = nouvelleScene;
         NoeudBase.sceneActiveCourante = this.sceneActive;
         GestionnaireControles.reinitialiserCamera();   // la caméra repart de zéro : la nouvelle scène la règle à son démarrage
         GestionnaireEtat.memoriserEtatInitial(nouvelleScene);   // premier passage : on garde l'état de départ
-        GestionnaireEtat.restaurerEtat(this.sceneActive);
+        // ----- NOUVEAU : idem à la restauration -----
+        GestionnaireEtat.restaurerEtat(this.sceneActive, NoeudBase.getVariablesGlobalesDisponibles());
+        // ----- NOUVEAU : fin -----
         chargerAnimationsGlobales(nouvelleScene.objets);
 
         deballerPrefabs(this.sceneActive);
@@ -1436,6 +1440,10 @@ public class VueJeu extends View {
 
         // ----- NOUVEAU : début (les « Glisser vers » en cours avancent selon le temps de jeu : pause et ralenti compris) -----
         DeplacementsGlisses.avancer();
+        // ----- NOUVEAU : fin -----
+
+        // ----- NOUVEAU : début (les « Fondu » en cours avancent selon le temps de jeu : pause et ralenti compris) -----
+        FondusEnCours.avancer();
         // ----- NOUVEAU : fin -----
 
         for (int pas = 0; pas < pasDeJeu; pas++) {
