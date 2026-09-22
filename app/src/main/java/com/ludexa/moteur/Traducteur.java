@@ -1,10 +1,11 @@
-// haut 1
+// haut 1 sept
 package com.ludexa.moteur;
 
 import android.content.Context;
 import android.util.Log;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -27,23 +28,35 @@ public class Traducteur {
 
         try {
             InputStream is = context.getAssets().open(nomFichier);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
+
+            // Lecture robuste : on ne fait plus confiance à is.available() (peu fiable
+            // pour un fichier compressé dans l'application) ni à un seul appel à read().
+            // On lit par petits blocs jusqu'à ce qu'il n'y ait vraiment plus rien.
+            ByteArrayOutputStream tampon = new ByteArrayOutputStream();
+            byte[] bloc = new byte[4096];
+            int lu;
+            while ((lu = is.read(bloc)) != -1) {
+                tampon.write(bloc, 0, lu);
+            }
             is.close();
-            
-            String jsonString = new String(buffer, StandardCharsets.UTF_8);
+
+            String jsonString = new String(tampon.toByteArray(), StandardCharsets.UTF_8);
             JSONObject jsonObject = new JSONObject(jsonString);
-            
+
             Iterator<String> keys = jsonObject.keys();
+            int compteur = 0;
             while (keys.hasNext()) {
                 String key = keys.next();
                 dictionnaire.put(key, jsonObject.getString(key));
+                compteur++;
             }
+
             Log.d(TAG, "Dictionnaire " + langueActuelle + " chargé.");
-            
+            DiagLogger.log("Traducteur : " + compteur + " clés chargées avec succès pour la langue \"" + langueActuelle + "\".");
+
         } catch (Exception e) {
             Log.e(TAG, "Erreur fichier de langue : " + nomFichier, e);
+            DiagLogger.log("Traducteur : ECHEC chargement de " + nomFichier + " -> " + e.getClass().getSimpleName() + " : " + e.getMessage());
         }
     }
 
