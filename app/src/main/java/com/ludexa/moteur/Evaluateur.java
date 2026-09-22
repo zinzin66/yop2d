@@ -577,7 +577,6 @@ public class Evaluateur {
     }
 
 // bas 2
-
 // haut 3
     // ------------------------------------------------------------------
     // CALCULS
@@ -729,6 +728,27 @@ public class Evaluateur {
         throw new ErreurFormule(nom + "() attend deux objets : " + nom + "(player, ennemi) ou quatre nombres (x1,y1,x2,y2)");
     }
 
+    // true si les rectangles des deux objets se recouvrent (mêmes coordonnées x,y,largeur,hauteur que le moteur de collision)
+    private static boolean seChevauchent(ObjetBase a, ObjetBase b) {
+        return a.x < b.x + b.largeur && a.x + a.largeur > b.x && a.y < b.y + b.hauteur && a.y + a.hauteur > b.y;
+    }
+
+    // Liste des objets de la scène active (et du HUD s'il est ouvert), hors l'objet donné, filtrés par tag si fourni.
+    private static java.util.List<ObjetBase> candidats(ObjetBase exclure, String tag) {
+        java.util.List<ObjetBase> liste = new java.util.ArrayList<>();
+        String tagVoulu = (tag == null || tag.trim().isEmpty()) ? null : tag.trim();
+        Scene[] scenes = {NoeudBase.sceneActiveCourante, NoeudBase.sceneHudActiveCourante};
+        for (Scene s : scenes) {
+            if (s == null || s.objets == null) continue;
+            for (ObjetBase o : s.objets) {
+                if (o == exclure) continue;
+                if (tagVoulu != null && (o.tag == null || !o.tag.equals(tagVoulu))) continue;
+                liste.add(o);
+            }
+        }
+        return liste;
+    }
+
     private static Object appelerFonction(String nom, Object[] a) {
         switch (nom) {
             case "random": {
@@ -798,9 +818,38 @@ public class Evaluateur {
                 double deg = Math.toDegrees(Math.atan2(p[3] - p[1], p[2] - p[0]));
                 return deg < 0 ? deg + 360.0 : deg;
             }
+            case "chevauche": {
+                verifierNombreArguments(nom, a, 2, 2);
+                if (!(a[0] instanceof ObjetBase) || !(a[1] instanceof ObjetBase)) {
+                    throw new ErreurFormule("chevauche() attend deux objets : chevauche(player, zone)");
+                }
+                return seChevauchent((ObjetBase) a[0], (ObjetBase) a[1]);
+            }
+            case "plus_proche": {
+                verifierNombreArguments(nom, a, 1, 2);
+                if (!(a[0] instanceof ObjetBase)) throw new ErreurFormule("plus_proche() attend un objet de départ : plus_proche(player, \"ennemi\")");
+                ObjetBase depart = (ObjetBase) a[0];
+                String tag = a.length == 2 ? enTexte(a[1]) : null;
+                ObjetBase meilleur = null;
+                double meilleureDist = Double.MAX_VALUE;
+                for (ObjetBase o : candidats(depart, tag)) {
+                    double d = Math.hypot(centreX(o) - centreX(depart), centreY(o) - centreY(depart));
+                    if (d < meilleureDist) { meilleureDist = d; meilleur = o; }
+                }
+                if (meilleur == null) throw new ErreurFormule("plus_proche() : aucun objet trouvé" + (tag != null ? " avec le tag « " + tag + " »" : ""));
+                return meilleur;
+            }
+            case "au_hasard": {
+                verifierNombreArguments(nom, a, 0, 1);
+                String tag = a.length == 1 ? enTexte(a[0]) : null;
+                java.util.List<ObjetBase> liste = candidats(null, tag);
+                if (liste.isEmpty()) throw new ErreurFormule("au_hasard() : aucun objet trouvé" + (tag != null ? " avec le tag « " + tag + " »" : ""));
+                return liste.get(RNG.nextInt(liste.size()));
+            }
             default:
                 throw new ErreurFormule("Fonction inconnue : " + nom);
         }
     }
 }
 // bas 3
+
