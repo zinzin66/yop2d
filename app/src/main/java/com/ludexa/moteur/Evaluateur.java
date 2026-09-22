@@ -384,7 +384,7 @@ public class Evaluateur {
 
     private static final List<String> FONCTIONS = java.util.Arrays.asList(
             "random", "abs", "sqrt", "sin", "cos", "round", "floor", "ceil", "int", "entier",
-            "min", "max", "clamp", "distance", "angle");
+            "min", "max", "clamp", "distance", "angle", "chevauche", "plus_proche", "au_hasard");
 
     private static class Analyseur {
         private final List<Jeton> j;
