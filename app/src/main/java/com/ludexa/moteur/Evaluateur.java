@@ -298,7 +298,7 @@ public class Evaluateur {
 // bas 1
 
 
-  // haut 2
+// haut 2
     // ------------------------------------------------------------------
     // LECTURE DU TEXTE : découpage en morceaux (jetons)
     // ------------------------------------------------------------------
@@ -554,11 +554,19 @@ public class Evaluateur {
                         while (prendreOp(",")) args.add(ou());
                         if (!prendreOp(")")) throw new ErreurFormule("Il manque la parenthèse ) de " + t.texte);
                     }
-                    return c -> {
+                    final Expr appel = c -> {
                         Object[] valeurs = new Object[args.size()];
                         for (int i = 0; i < valeurs.length; i++) valeurs[i] = args.get(i).eval(c);
                         return appelerFonction(f, valeurs);
                     };
+                    // NOUVEAU : une fonction qui renvoie un objet peut être suivie de .propriete
+                    // (ex : plus_proche(player, "ennemi").nom, au_hasard("piece").x)
+                    if (estOp(".") && p + 1 < j.size() && j.get(p + 1).type == Jeton.NOM) {
+                        p++; // le point
+                        final String propriete = j.get(p++).texte;
+                        return c -> lireProprieteDeValeur(appel.eval(c), propriete);
+                    }
+                    return appel;
                 }
                 // propriété : objet.propriete
                 if (estOp(".") && p + 1 < j.size() && j.get(p + 1).type == Jeton.NOM) {
@@ -577,6 +585,7 @@ public class Evaluateur {
     }
 
 // bas 2
+
 // haut 3
     // ------------------------------------------------------------------
     // CALCULS
