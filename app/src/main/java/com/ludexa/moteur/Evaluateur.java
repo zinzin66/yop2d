@@ -585,7 +585,6 @@ public class Evaluateur {
     }
 
 // bas 2
-
 // haut 3
     // ------------------------------------------------------------------
     // CALCULS
@@ -681,6 +680,12 @@ public class Evaluateur {
         }
         ObjetBase o = normaliser(nomObjet).equals("implique") ? objetImplique() : trouverObjet(nomObjet);
         if (o == null) throw new ErreurFormule("Objet introuvable : « " + nomObjet + " »");
+        return lireProprieteDeObjet(o, propriete);
+    }
+
+    // NOUVEAU : lit une propriété (ou une variable locale) directement sur un objet déjà en main,
+    // sans le rechercher par son nom (utilisé par objet.propriete ET par fonction(...).propriete).
+    private static Object lireProprieteDeObjet(ObjetBase o, String propriete) {
         Object valeur = ProprietesObjet.lire(o, propriete);
         if (valeur != null) return valeur;
         for (int mode = 0; mode < 3; mode++) {
@@ -688,6 +693,15 @@ public class Evaluateur {
             if (v != null) return valeurDe(v);
         }
         throw new ErreurFormule("« " + o.nom + " » n'a ni propriété ni variable « " + propriete + " »");
+    }
+
+    // NOUVEAU : lit une propriété sur le résultat d'une fonction (ex : plus_proche(player, "ennemi").nom).
+    // Ce résultat doit être un objet.
+    private static Object lireProprieteDeValeur(Object valeur, String propriete) {
+        if (!(valeur instanceof ObjetBase)) {
+            throw new ErreurFormule("On ne peut lire « ." + propriete + " » que sur un objet (le résultat n'en est pas un)");
+        }
+        return lireProprieteDeObjet((ObjetBase) valeur, propriete);
     }
 
     private static Object additionner(Object a, Object b) {
@@ -861,4 +875,3 @@ public class Evaluateur {
     }
 }
 // bas 3
-
