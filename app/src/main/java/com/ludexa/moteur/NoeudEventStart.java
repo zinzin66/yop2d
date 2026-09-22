@@ -7,7 +7,7 @@ public class NoeudEventStart extends NoeudBase {
 
     public NoeudEventStart() {
         // ID généré, nom, catégorie
-        super(genererId(), "Début", "Événement");
+        super(genererId(), "noeud_au_demarrage", "Événement");
         
         // Un nœud de départ n'a généralement qu'un port de sortie d'exécution
         this.ajouterPort(new Port("Suivant", Port.TYPE_EXECUTION_SORTIE));
