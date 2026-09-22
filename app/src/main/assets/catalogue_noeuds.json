@@ -3521,6 +3521,112 @@
           }
         }
       ]
+    },
+    {
+      "cle": "selon_valeur",
+      "nom": {
+        "fr": "Selon la valeur",
+        "en": "By value",
+        "es": "Según el valor",
+        "pt": "Conforme o valor",
+        "de": "Je nach Wert",
+        "it": "In base al valore",
+        "ru": "По значению",
+        "zh": "按值",
+        "ja": "値によって"
+      },
+      "categorie": "cat_logique_conditions",
+      "action": "selon_valeur",
+      "sorties": [
+        {"cle": "1", "nom": {"fr": "1", "en": "1", "es": "1", "pt": "1", "de": "1", "it": "1", "ru": "1", "zh": "1", "ja": "1"}},
+        {"cle": "2", "nom": {"fr": "2", "en": "2", "es": "2", "pt": "2", "de": "2", "it": "2", "ru": "2", "zh": "2", "ja": "2"}},
+        {"cle": "3", "nom": {"fr": "3", "en": "3", "es": "3", "pt": "3", "de": "3", "it": "3", "ru": "3", "zh": "3", "ja": "3"}},
+        {"cle": "4", "nom": {"fr": "4", "en": "4", "es": "4", "pt": "4", "de": "4", "it": "4", "ru": "4", "zh": "4", "ja": "4"}},
+        {"cle": "5", "nom": {"fr": "5", "en": "5", "es": "5", "pt": "5", "de": "5", "it": "5", "ru": "5", "zh": "5", "ja": "5"}},
+        {"cle": "6", "nom": {"fr": "6", "en": "6", "es": "6", "pt": "6", "de": "6", "it": "6", "ru": "6", "zh": "6", "ja": "6"}},
+        {
+          "cle": "aucun",
+          "nom": {
+            "fr": "Aucun",
+            "en": "None",
+            "es": "Ninguno",
+            "pt": "Nenhum",
+            "de": "Keiner",
+            "it": "Nessuno",
+            "ru": "Нет",
+            "zh": "无",
+            "ja": "なし"
+          }
+        },
+        {
+          "cle": "ensuite",
+          "nom": {
+            "fr": "Ensuite",
+            "en": "Then",
+            "es": "Después",
+            "pt": "Depois",
+            "de": "Danach",
+            "it": "Poi",
+            "ru": "Затем",
+            "zh": "然后",
+            "ja": "その後"
+          }
+        }
+      ],
+      "champs": [
+        {
+          "cle": "valeur",
+          "type": "formule",
+          "defaut": "",
+          "nom": {
+            "fr": "Valeur à tester",
+            "en": "Value to test",
+            "es": "Valor a probar",
+            "pt": "Valor a testar",
+            "de": "Zu prüfender Wert",
+            "it": "Valore da verificare",
+            "ru": "Проверяемое значение",
+            "zh": "要检测的值",
+            "ja": "検査する値"
+          }
+        },
+        {
+          "cle": "val1",
+          "type": "texte",
+          "defaut": "",
+          "nom": {"fr": "Cas 1", "en": "Case 1", "es": "Caso 1", "pt": "Caso 1", "de": "Fall 1", "it": "Caso 1", "ru": "Случай 1", "zh": "情况 1", "ja": "ケース 1"}
+        },
+        {
+          "cle": "val2",
+          "type": "texte",
+          "defaut": "",
+          "nom": {"fr": "Cas 2", "en": "Case 2", "es": "Caso 2", "pt": "Caso 2", "de": "Fall 2", "it": "Caso 2", "ru": "Случай 2", "zh": "情况 2", "ja": "ケース 2"}
+        },
+        {
+          "cle": "val3",
+          "type": "texte",
+          "defaut": "",
+          "nom": {"fr": "Cas 3", "en": "Case 3", "es": "Caso 3", "pt": "Caso 3", "de": "Fall 3", "it": "Caso 3", "ru": "Случай 3", "zh": "情况 3", "ja": "ケース 3"}
+        },
+        {
+          "cle": "val4",
+          "type": "texte",
+          "defaut": "",
+          "nom": {"fr": "Cas 4", "en": "Case 4", "es": "Caso 4", "pt": "Caso 4", "de": "Fall 4", "it": "Caso 4", "ru": "Случай 4", "zh": "情况 4", "ja": "ケース 4"}
+        },
+        {
+          "cle": "val5",
+          "type": "texte",
+          "defaut": "",
+          "nom": {"fr": "Cas 5", "en": "Case 5", "es": "Caso 5", "pt": "Caso 5", "de": "Fall 5", "it": "Caso 5", "ru": "Случай 5", "zh": "情况 5", "ja": "ケース 5"}
+        },
+        {
+          "cle": "val6",
+          "type": "texte",
+          "defaut": "",
+          "nom": {"fr": "Cas 6", "en": "Case 6", "es": "Caso 6", "pt": "Caso 6", "de": "Fall 6", "it": "Caso 6", "ru": "Случай 6", "zh": "情况 6", "ja": "ケース 6"}
+        }
+      ]
     }
   ]
 }
