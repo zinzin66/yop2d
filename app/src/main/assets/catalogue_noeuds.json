@@ -959,7 +959,31 @@
   "champs": [
     {"cle": "marge", "type": "formule", "defaut": "100", "nom": {"fr": "Marge (pixels)", "en": "Margin (pixels)", "es": "Margen (píxeles)", "pt": "Margem (pixels)", "de": "Rand (Pixel)", "it": "Margine (pixel)", "ru": "Отступ (пиксели)", "zh": "边距（像素）", "ja": "余白（ピクセル）"}}
   ]
+},
+{
+  "cle": "sauvegarder_etat",
+  "nom": {"fr": "Sauvegarder l'état", "en": "Save state", "es": "Guardar estado", "pt": "Salvar estado", "de": "Zustand speichern", "it": "Salva stato", "ru": "Сохранить состояние", "zh": "保存状态", "ja": "状態を保存"},
+  "categorie": "cat_scene_hud",
+  "action": "sauvegarder_etat"
+},
+{
+  "cle": "restaurer_etat",
+  "nom": {"fr": "Restaurer l'état", "en": "Restore state", "es": "Restaurar estado", "pt": "Restaurar estado", "de": "Zustand wiederherstellen", "it": "Ripristina stato", "ru": "Восстановить состояние", "zh": "恢复状态", "ja": "状態を復元"},
+  "categorie": "cat_scene_hud",
+  "action": "restaurer_etat"
+},
+{
+  "cle": "fondu",
+  "nom": {"fr": "Fondu", "en": "Fade", "es": "Fundido", "pt": "Esmaecer", "de": "Überblendung", "it": "Dissolvenza", "ru": "Затухание", "zh": "淡入淡出", "ja": "フェード"},
+  "categorie": "cat_apparence_objets",
+  "action": "fondu",
+  "objet": true,
+  "champs": [
+    {"cle": "cible", "type": "formule", "defaut": "0", "nom": {"fr": "Opacité cible (0 à 1)", "en": "Target opacity (0 to 1)", "es": "Opacidad objetivo (0 a 1)", "pt": "Opacidade alvo (0 a 1)", "de": "Zielopazität (0 bis 1)", "it": "Opacità finale (0-1)", "ru": "Целевая прозрачность (0–1)", "zh": "目标不透明度（0 到 1）", "ja": "目標の不透明度（0〜1）"}},
+    {"cle": "duree", "type": "formule", "defaut": "1", "nom": {"fr": "Durée (secondes)", "en": "Duration (seconds)", "es": "Duración (segundos)", "pt": "Duração (segundos)", "de": "Dauer (Sekunden)", "it": "Durata (secondi)", "ru": "Длительность (секунды)", "zh": "持续时间（秒）", "ja": "長さ（秒）"}}
+  ]
 }
     ]
 }
 // bas 1
+
