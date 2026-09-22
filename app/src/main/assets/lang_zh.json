@@ -1,5 +1,8 @@
 {
   "app_nom": "Yop2D",
+  "reglages_titre_cadence": "游戏节奏（每秒步数）",
+"reglages_cadence_auto": "自动",
+"reglages_cadence_aide": "60：所有屏幕速度一致。自动：跟随屏幕（90 或 120 Hz 屏幕上更快）。",
   "menu_jouer": "运行",
   "menu_editeur": "编辑器",
   "bouton_ok": "确定",
@@ -658,7 +661,12 @@
 "insp_btn_couleur_fond_prog": "背景颜色",
 "noeud_modifier_progression": "设置进度",
 "param_nouvelle_valeur": "新值",
-"insp_couleur_aucune": "无"
+"insp_couleur_aucune": "无",
+  "noeud_extraire_propriete": "提取属性",
+  "noeud_event_maintenu_objet": "按住物体",
+  "noeud_fin_clic_sur_objet": "松开物体",
+"param_propriete": "要提取的属性"
+  
   
   
   
