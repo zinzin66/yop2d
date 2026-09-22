@@ -960,6 +960,6 @@
     {"cle": "marge", "type": "formule", "defaut": "100", "nom": {"fr": "Marge (pixels)", "en": "Margin (pixels)", "es": "Margen (píxeles)", "pt": "Margem (pixels)", "de": "Rand (Pixel)", "it": "Margine (pixel)", "ru": "Отступ (пиксели)", "zh": "边距（像素）", "ja": "余白（ピクセル）"}}
   ]
 }
-  ]
+    ]
 }
 // bas 1
