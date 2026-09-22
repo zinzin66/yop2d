@@ -7,7 +7,7 @@ import java.util.List;
 public class NoeudEventBoutonAction extends NoeudBase {
     
     public NoeudEventBoutonAction() {
-        super(genererId(), "Au Clic Action (Aventure)", "Evenement");
+        super(genererId(), "noeud_au_clic_action_aventure", "Evenement");
         this.ajouterPort(new Port("Executer", Port.TYPE_EXECUTION_SORTIE));
     }
 

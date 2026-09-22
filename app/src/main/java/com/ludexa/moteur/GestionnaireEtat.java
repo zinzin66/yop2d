@@ -15,6 +15,9 @@ public class GestionnaireEtat {
     private static Map<String, String> cacheObjets = new HashMap<>();
     private static Map<String, String> cacheVariables = new HashMap<>();
 
+    // NOUVEAU : sauvegarde des variables globales (une seule, pas par scène : elles sont communes à tout le jeu)
+    private static String cacheVariablesGlobales = null;
+
     // État de DÉPART de chaque scène, mémorisé la première fois qu'elle devient la scène active :
     // c'est lui que retrouve le nœud "Recommencer la scène".
     private static Map<String, String> departObjets = new HashMap<>();
@@ -25,6 +28,7 @@ public class GestionnaireEtat {
     public static void viderCache() {
         cacheObjets.clear();
         cacheVariables.clear();
+        cacheVariablesGlobales = null;
         departObjets.clear();
         departVariables.clear();
     }
@@ -53,7 +57,8 @@ public class GestionnaireEtat {
         return true;
     }
 
-    public static void sauvegarderEtat(Scene scene) {
+    // Sauvegarde les objets et variables locales de la scène, ainsi que les variables globales (communes à tout le jeu).
+    public static void sauvegarderEtat(Scene scene, List<Variable> variablesGlobales) {
         if (scene == null || scene.id == null) return;
         
         // On sauvegarde la liste des objets
@@ -63,9 +68,19 @@ public class GestionnaireEtat {
         // On sauvegarde les variables locales
         String jsonVariables = gson.toJson(scene.variablesLocales);
         cacheVariables.put(scene.id, jsonVariables);
+
+        // NOUVEAU : on sauvegarde les variables globales
+        cacheVariablesGlobales = gson.toJson(variablesGlobales);
     }
 
-    public static void restaurerEtat(Scene scene) {
+    // true si une sauvegarde existe déjà pour cette scène (pour signaler proprement l'absence de sauvegarde).
+    public static boolean aUneSauvegarde(Scene scene) {
+        return scene != null && scene.id != null && cacheObjets.containsKey(scene.id);
+    }
+
+    // Restaure les objets et variables locales de la scène, ainsi que les variables globales.
+    // "variablesGlobales" est la liste actuelle du jeu : elle est vidée puis remplie avec la sauvegarde.
+    public static void restaurerEtat(Scene scene, List<Variable> variablesGlobales) {
         if (scene == null || scene.id == null) return;
 
         // Restauration des objets s'ils existent dans le cache
@@ -85,6 +100,17 @@ public class GestionnaireEtat {
             List<Variable> variablesRestaurees = gson.fromJson(jsonVariables, typeListVariables);
             if (variablesRestaurees != null) {
                 scene.variablesLocales = variablesRestaurees;
+            }
+        }
+
+        // NOUVEAU : restauration des variables globales (remplace le contenu de la liste en place,
+        // pour que tout le monde garde la même référence de liste)
+        if (cacheVariablesGlobales != null && variablesGlobales != null) {
+            Type typeListVariables = new TypeToken<ArrayList<Variable>>(){}.getType();
+            List<Variable> globalesRestaurees = gson.fromJson(cacheVariablesGlobales, typeListVariables);
+            if (globalesRestaurees != null) {
+                variablesGlobales.clear();
+                variablesGlobales.addAll(globalesRestaurees);
             }
         }
     }

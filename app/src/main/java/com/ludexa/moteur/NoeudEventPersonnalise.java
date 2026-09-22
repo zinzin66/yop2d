@@ -9,7 +9,7 @@ public class NoeudEventPersonnalise extends NoeudBase {
     private String nomEvenement = "Mon_Calcul";
 
     public NoeudEventPersonnalise() {
-        super(genererId(), "Événement Local", "Événements");
+        super(genererId(), "noeud_evenement_local", "Événements");
         // CORRECTION : On utilise le terme standard "Suivant"
         this.ajouterPort(new Port("Suivant", Port.TYPE_EXECUTION_SORTIE));
     }

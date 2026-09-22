@@ -13,7 +13,7 @@ public class NoeudEventVariableChange extends NoeudBase {
     private boolean estInitialise = false;
 
     public NoeudEventVariableChange() {
-        super(genererId(), "Quand Variable Change", "Événements");
+        super(genererId(), "noeud_quand_variable_change", "Événements");
         this.ajouterPort(new Port("Suivant", Port.TYPE_EXECUTION_SORTIE));
     }
 
