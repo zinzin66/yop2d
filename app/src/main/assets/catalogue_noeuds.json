@@ -16,7 +16,8 @@
     "Vers la cible": { "fr": "Vers la cible", "en": "Toward target", "es": "Hacia el objetivo", "pt": "Em direção ao alvo", "de": "Zum Ziel", "it": "Verso il bersaglio", "ru": "К цели", "zh": "朝向目标", "ja": "ターゲットへ" }
   },
  "categories": {
-    "cat_temps": {"fr": "Temps", "en": "Time", "es": "Tiempo", "pt": "Tempo", "de": "Zeit", "it": "Tempo", "ru": "Время", "zh": "时间", "ja": "時間"}
+    "cat_temps": {"fr": "Temps", "en": "Time", "es": "Tiempo", "pt": "Tempo", "de": "Zeit", "it": "Tempo", "ru": "Время", "zh": "时间", "ja": "時間"},
+   "cat_audio": {"fr": "Audio", "en": "Audio", "es": "Audio", "pt": "Áudio", "de": "Audio", "it": "Audio", "ru": "Звук", "zh": "音频", "ja": "オーディオ"}
   },
   "noeuds": [
     {
@@ -228,7 +229,7 @@
       "cle": "condition",
       "nomCle": "noeud_condition",
       "categorie": "cat_logique_conditions",
-      "sorties": ["vrai", "faux"],
+      "sorties": ["vrai", "faux", {"cle": "ensuite", "nom": {"fr": "Ensuite", "en": "Then", "es": "Después", "pt": "Depois", "de": "Danach", "it": "Poi", "ru": "Затем", "zh": "然后", "ja": "その後"}}],
       "champs": [
         { "cle": "condition", "type": "formule", "defaut": "",
           "nom": { "fr": "Condition", "en": "Condition", "es": "Condición", "pt": "Condição", "de": "Bedingung", "it": "Condizione", "ru": "Условие", "zh": "条件", "ja": "条件" } }
@@ -648,7 +649,284 @@
   "champs": [
     {"cle": "duree", "type": "formule", "defaut": "100", "nom": {"fr": "Durée (ms)", "en": "Duration (ms)", "es": "Duración (ms)", "pt": "Duração (ms)", "de": "Dauer (ms)", "it": "Durata (ms)", "ru": "Длительность (мс)", "zh": "持续时间（毫秒）", "ja": "長さ（ミリ秒）"}}
   ]
-}
+},
+    {
+  "cle": "changer_rebond",
+  "nom": {"fr": "Changer le rebond", "en": "Set bounce", "es": "Cambiar el rebote", "pt": "Mudar o quique", "de": "Abprall ändern", "it": "Cambia il rimbalzo", "ru": "Изменить отскок", "zh": "设置弹跳", "ja": "バウンドを変更"},
+  "categorie": "cat_mouvements_ia",
+  "action": "changer_rebond",
+  "objet": true,
+  "champs": [
+    {"cle": "rebond", "type": "formule", "defaut": "0.5", "nom": {"fr": "Rebond (0 à 1)", "en": "Bounce (0 to 1)", "es": "Rebote (0 a 1)", "pt": "Quique (0 a 1)", "de": "Abprall (0 bis 1)", "it": "Rimbalzo (da 0 a 1)", "ru": "Отскок (0–1)", "zh": "弹跳（0 到 1）", "ja": "バウンド（0〜1）"}}
   ]
+},
+{
+  "cle": "force_angle",
+  "nom": {"fr": "Pousser selon un angle", "en": "Push at an angle", "es": "Empujar según un ángulo", "pt": "Empurrar em um ângulo", "de": "In einem Winkel schieben", "it": "Spingi con un angolo", "ru": "Толкнуть под углом", "zh": "按角度推动", "ja": "角度を付けて押す"},
+  "categorie": "cat_mouvements_ia",
+  "action": "force_angle",
+  "objet": true,
+  "champs": [
+    {"cle": "angle", "type": "formule", "defaut": "0", "nom": {"fr": "Angle (0 = droite, 90 = bas)", "en": "Angle (0 = right, 90 = down)", "es": "Ángulo (0 = derecha, 90 = abajo)", "pt": "Ângulo (0 = direita, 90 = baixo)", "de": "Winkel (0 = rechts, 90 = unten)", "it": "Angolo (0 = destra, 90 = giù)", "ru": "Угол (0 = вправо, 90 = вниз)", "zh": "角度（0 = 右，90 = 下）", "ja": "角度（0 = 右、90 = 下）"}},
+    {"cle": "force", "type": "formule", "defaut": "10", "nom": {"fr": "Force", "en": "Force", "es": "Fuerza", "pt": "Força", "de": "Kraft", "it": "Forza", "ru": "Сила", "zh": "力度", "ja": "力"}}
+  ]
+},
+{
+  "cle": "impulsion",
+  "nom": {"fr": "Impulsion (saut)", "en": "Impulse (jump)", "es": "Impulso (salto)", "pt": "Impulso (salto)", "de": "Impuls (Sprung)", "it": "Impulso (salto)", "ru": "Импульс (прыжок)", "zh": "冲力（跳跃）", "ja": "インパルス（ジャンプ）"},
+  "categorie": "cat_mouvements_ia",
+  "action": "impulsion",
+  "objet": true,
+  "champs": [
+    {"cle": "force", "type": "formule", "defaut": "-15", "nom": {"fr": "Force verticale (négatif = monte)", "en": "Vertical force (negative = up)", "es": "Fuerza vertical (negativo = sube)", "pt": "Força vertical (negativo = sobe)", "de": "Vertikale Kraft (negativ = hoch)", "it": "Forza verticale (negativo = sale)", "ru": "Вертикальная сила (минус = вверх)", "zh": "垂直力（负数 = 向上）", "ja": "縦方向の力（マイナス = 上）"}}
+  ]
+},
+{
+  "cle": "activer_physique",
+  "nom": {"fr": "Activer la physique", "en": "Enable physics", "es": "Activar la física", "pt": "Ativar a física", "de": "Physik aktivieren", "it": "Attiva la fisica", "ru": "Включить физику", "zh": "启用物理", "ja": "物理を有効にする"},
+  "categorie": "cat_mouvements_ia",
+  "action": "activer_physique",
+  "objet": true,
+  "champs": [
+    {"cle": "tombe", "type": "formule", "defaut": "true", "nom": {"fr": "Tombe (true / false)", "en": "Falls (true / false)", "es": "Cae (true / false)", "pt": "Cai (true / false)", "de": "Fällt (true / false)", "it": "Cade (true / false)", "ru": "Падает (true / false)", "zh": "会下落（true / false）", "ja": "落ちる（true / false）"}}
+  ]
+},
+{
+  "cle": "modifier_deplacable",
+  "nom": {"fr": "Rendre déplaçable", "en": "Set draggable", "es": "Hacer arrastrable", "pt": "Tornar arrastável", "de": "Verschiebbar machen", "it": "Rendi trascinabile", "ru": "Сделать перетаскиваемым", "zh": "设为可拖动", "ja": "ドラッグ可能にする"},
+  "categorie": "cat_mouvements_ia",
+  "action": "modifier_deplacable",
+  "objet": true,
+  "champs": [
+    {"cle": "deplacable", "type": "formule", "defaut": "true", "nom": {"fr": "Déplaçable au doigt (true / false)", "en": "Draggable by finger (true / false)", "es": "Arrastrable con el dedo (true / false)", "pt": "Arrastável com o dedo (true / false)", "de": "Mit dem Finger verschiebbar (true / false)", "it": "Trascinabile col dito (true / false)", "ru": "Перетаскивается пальцем (true / false)", "zh": "可用手指拖动（true / false）", "ja": "指でドラッグ可能（true / false）"}}
+  ]
+},
+{
+  "cle": "sautiller",
+  "nom": {"fr": "Sautiller", "en": "Bounce around", "es": "Saltar", "pt": "Saltitar", "de": "Hüpfen", "it": "Saltellare", "ru": "Подпрыгивать", "zh": "蹦跳", "ja": "ぴょんぴょん跳ねる"},
+  "categorie": "cat_mouvements_ia",
+  "action": "sautiller",
+  "objet": true,
+  "champs": [
+    {"cle": "intensite", "type": "formule", "defaut": "10", "nom": {"fr": "Intensité (0 = arrêter)", "en": "Strength (0 = stop)", "es": "Intensidad (0 = parar)", "pt": "Intensidade (0 = parar)", "de": "Stärke (0 = stoppen)", "it": "Intensità (0 = ferma)", "ru": "Сила (0 = остановить)", "zh": "强度（0 = 停止）", "ja": "強さ（0 = 停止）"}},
+    {"cle": "duree", "type": "formule", "defaut": "500", "nom": {"fr": "Durée (ms)", "en": "Duration (ms)", "es": "Duración (ms)", "pt": "Duração (ms)", "de": "Dauer (ms)", "it": "Durata (ms)", "ru": "Длительность (мс)", "zh": "持续时间（毫秒）", "ja": "長さ（ミリ秒）"}},
+    {"cle": "infini", "type": "formule", "defaut": "false", "nom": {"fr": "Continue tant que ça bouge (true / false)", "en": "Keep going while moving (true / false)", "es": "Continúa mientras se mueve (true / false)", "pt": "Continua enquanto se move (true / false)", "de": "Läuft weiter, solange es sich bewegt (true / false)", "it": "Continua finché si muove (true / false)", "ru": "Пока движется (true / false)", "zh": "移动时持续（true / false）", "ja": "動いている間続ける（true / false）"}}
+  ]
+},
+{
+  "cle": "orienter_vers",
+  "nom": {"fr": "Orienter vers", "en": "Face towards", "es": "Orientar hacia", "pt": "Virar para", "de": "Ausrichten auf", "it": "Orienta verso", "ru": "Повернуть к", "zh": "朝向", "ja": "向きを合わせる"},
+  "categorie": "cat_mouvements_ia",
+  "action": "orienter_vers",
+  "objet": true,
+  "objetB": true,
+  "champs": [
+    {"cle": "decalage", "type": "formule", "defaut": "0", "nom": {"fr": "Décalage d'angle (degrés)", "en": "Angle offset (degrees)", "es": "Desfase de ángulo (grados)", "pt": "Deslocamento de ângulo (graus)", "de": "Winkelversatz (Grad)", "it": "Scarto d'angolo (gradi)", "ru": "Смещение угла (градусы)", "zh": "角度偏移（度）", "ja": "角度のずれ（度）"}}
+  ]
+},
+    {
+  "cle": "glisser_vers",
+  "nom": {"fr": "Glisser vers", "en": "Glide to", "es": "Deslizar hacia", "pt": "Deslizar para", "de": "Gleiten nach", "it": "Scivola verso", "ru": "Скользить к", "zh": "滑向", "ja": "スライド移動"},
+  "categorie": "cat_mouvements_ia",
+  "action": "glisser_vers",
+  "objet": true,
+  "champs": [
+    {"cle": "x", "type": "formule", "defaut": "0", "nom": {"fr": "Position X", "en": "X position", "es": "Posición X", "pt": "Posição X", "de": "X-Position", "it": "Posizione X", "ru": "Позиция X", "zh": "X 位置", "ja": "X位置"}},
+    {"cle": "y", "type": "formule", "defaut": "0", "nom": {"fr": "Position Y", "en": "Y position", "es": "Posición Y", "pt": "Posição Y", "de": "Y-Position", "it": "Posizione Y", "ru": "Позиция Y", "zh": "Y 位置", "ja": "Y位置"}},
+    {"cle": "duree", "type": "formule", "defaut": "1", "nom": {"fr": "Durée (secondes)", "en": "Duration (seconds)", "es": "Duración (segundos)", "pt": "Duração (segundos)", "de": "Dauer (Sekunden)", "it": "Durata (secondi)", "ru": "Длительность (секунды)", "zh": "持续时间（秒）", "ja": "長さ（秒）"}}
+  ]
+},
+{
+  "cle": "si_au_sol",
+  "nom": {"fr": "Si au sol", "en": "If on ground", "es": "Si está en el suelo", "pt": "Se está no chão", "de": "Wenn am Boden", "it": "Se è a terra", "ru": "Если на земле", "zh": "如果在地面", "ja": "地面にいるなら"},
+  "categorie": "cat_logique_conditions",
+  "action": "si_au_sol",
+  "objet": true,
+  "sorties": [
+    {"cle": "vrai", "nom": {"fr": "Vrai", "en": "True", "es": "Verdadero", "pt": "Verdadeiro", "de": "Wahr", "it": "Vero", "ru": "Да", "zh": "是", "ja": "はい"}},
+    {"cle": "faux", "nom": {"fr": "Faux", "en": "False", "es": "Falso", "pt": "Falso", "de": "Falsch", "it": "Falso", "ru": "Нет", "zh": "否", "ja": "いいえ"}}
+  ]
+},
+{
+  "cle": "si_en_mouvement",
+  "nom": {"fr": "Si en mouvement", "en": "If moving", "es": "Si se mueve", "pt": "Se está em movimento", "de": "Wenn in Bewegung", "it": "Se in movimento", "ru": "Если движется", "zh": "如果在移动", "ja": "動いているなら"},
+  "categorie": "cat_logique_conditions",
+  "action": "si_en_mouvement",
+  "objet": true,
+  "sorties": [
+    {"cle": "vrai", "nom": {"fr": "Vrai", "en": "True", "es": "Verdadero", "pt": "Verdadeiro", "de": "Wahr", "it": "Vero", "ru": "Да", "zh": "是", "ja": "はい"}},
+    {"cle": "faux", "nom": {"fr": "Faux", "en": "False", "es": "Falso", "pt": "Falso", "de": "Falsch", "it": "Falso", "ru": "Нет", "zh": "否", "ja": "いいえ"}}
+  ]
+},
+    {
+  "cle": "jouer_animation",
+  "nom": {"fr": "Jouer l'animation", "en": "Play animation", "es": "Reproducir animación", "pt": "Reproduzir animação", "de": "Animation abspielen", "it": "Riproduci animazione", "ru": "Запустить анимацию", "zh": "播放动画", "ja": "アニメを再生"},
+  "categorie": "cat_animations",
+  "action": "jouer_animation",
+  "objet": true,
+  "champs": [
+    {"cle": "animation", "type": "animation", "defaut": "", "nom": {"fr": "Animation", "en": "Animation", "es": "Animación", "pt": "Animação", "de": "Animation", "it": "Animazione", "ru": "Анимация", "zh": "动画", "ja": "アニメーション"}},
+    {"cle": "vitesse", "type": "formule", "defaut": "8", "nom": {"fr": "Vitesse (images/seconde)", "en": "Speed (frames/second)", "es": "Velocidad (cuadros/segundo)", "pt": "Velocidade (quadros/segundo)", "de": "Tempo (Bilder/Sekunde)", "it": "Velocità (fotogrammi/secondo)", "ru": "Скорость (кадров/сек)", "zh": "速度（帧/秒）", "ja": "速さ（コマ/秒）"}},
+    {"cle": "boucle", "type": "formule", "defaut": "false", "nom": {"fr": "En boucle (true / false)", "en": "Loop (true / false)", "es": "En bucle (true / false)", "pt": "Em loop (true / false)", "de": "Wiederholen (true / false)", "it": "In loop (true / false)", "ru": "По кругу (true / false)", "zh": "循环（true / false）", "ja": "ループ（true / false）"}}
+  ]
+},
+{
+  "cle": "arreter_animation",
+  "nom": {"fr": "Arrêter l'animation", "en": "Stop animation", "es": "Detener animación", "pt": "Parar animação", "de": "Animation stoppen", "it": "Ferma animazione", "ru": "Остановить анимацию", "zh": "停止动画", "ja": "アニメを停止"},
+  "categorie": "cat_animations",
+  "action": "arreter_animation",
+  "objet": true
+},
+{
+  "cle": "pause_animation",
+  "nom": {"fr": "Pause de l'animation", "en": "Pause animation", "es": "Pausar animación", "pt": "Pausar animação", "de": "Animation pausieren", "it": "Metti in pausa l'animazione", "ru": "Пауза анимации", "zh": "暂停动画", "ja": "アニメを一時停止"},
+  "categorie": "cat_animations",
+  "action": "pause_animation",
+  "objet": true
+},
+{
+  "cle": "reprendre_animation",
+  "nom": {"fr": "Reprendre l'animation", "en": "Resume animation", "es": "Reanudar animación", "pt": "Retomar animação", "de": "Animation fortsetzen", "it": "Riprendi animazione", "ru": "Продолжить анимацию", "zh": "继续动画", "ja": "アニメを再開"},
+  "categorie": "cat_animations",
+  "action": "reprendre_animation",
+  "objet": true
+},
+{
+  "cle": "vitesse_animation",
+  "nom": {"fr": "Vitesse de l'animation", "en": "Animation speed", "es": "Velocidad de animación", "pt": "Velocidade da animação", "de": "Animationstempo", "it": "Velocità animazione", "ru": "Скорость анимации", "zh": "动画速度", "ja": "アニメの速さ"},
+  "categorie": "cat_animations",
+  "action": "vitesse_animation",
+  "objet": true,
+  "champs": [
+    {"cle": "vitesse", "type": "formule", "defaut": "8", "nom": {"fr": "Vitesse (images/seconde)", "en": "Speed (frames/second)", "es": "Velocidad (cuadros/segundo)", "pt": "Velocidade (quadros/segundo)", "de": "Tempo (Bilder/Sekunde)", "it": "Velocità (fotogrammi/secondo)", "ru": "Скорость (кадров/сек)", "zh": "速度（帧/秒）", "ja": "速さ（コマ/秒）"}}
+  ]
+},
+    {
+  "cle": "jouer_son",
+  "nom": {"fr": "Jouer un son", "en": "Play sound", "es": "Reproducir sonido", "pt": "Tocar som", "de": "Sound abspielen", "it": "Riproduci suono", "ru": "Воспроизвести звук", "zh": "播放音效", "ja": "効果音を再生"},
+  "categorie": "cat_audio",
+  "action": "jouer_son",
+  "champs": [
+    {"cle": "fichier", "type": "son", "defaut": "", "nom": {"fr": "Fichier son", "en": "Sound file", "es": "Archivo de sonido", "pt": "Arquivo de som", "de": "Sounddatei", "it": "File audio", "ru": "Звуковой файл", "zh": "音效文件", "ja": "音声ファイル"}}
+  ]
+},
+{
+  "cle": "jouer_musique",
+  "nom": {"fr": "Jouer la musique", "en": "Play music", "es": "Reproducir música", "pt": "Tocar música", "de": "Musik abspielen", "it": "Riproduci musica", "ru": "Включить музыку", "zh": "播放音乐", "ja": "音楽を再生"},
+  "categorie": "cat_audio",
+  "action": "jouer_musique",
+  "champs": [
+    {"cle": "fichier", "type": "son", "defaut": "", "nom": {"fr": "Fichier musique", "en": "Music file", "es": "Archivo de música", "pt": "Arquivo de música", "de": "Musikdatei", "it": "File musicale", "ru": "Музыкальный файл", "zh": "音乐文件", "ja": "音楽ファイル"}},
+    {"cle": "boucle", "type": "formule", "defaut": "true", "nom": {"fr": "En boucle (true / false)", "en": "Loop (true / false)", "es": "En bucle (true / false)", "pt": "Em loop (true / false)", "de": "Wiederholen (true / false)", "it": "In loop (true / false)", "ru": "По кругу (true / false)", "zh": "循环（true / false）", "ja": "ループ（true / false）"}}
+  ]
+},
+{
+  "cle": "arreter_musique",
+  "nom": {"fr": "Arrêter la musique", "en": "Stop music", "es": "Detener música", "pt": "Parar música", "de": "Musik stoppen", "it": "Ferma la musica", "ru": "Остановить музыку", "zh": "停止音乐", "ja": "音楽を停止"},
+  "categorie": "cat_audio",
+  "action": "arreter_musique"
+},
+{
+  "cle": "afficher_dialogue",
+  "nom": {"fr": "Afficher un dialogue", "en": "Show dialogue", "es": "Mostrar diálogo", "pt": "Mostrar diálogo", "de": "Dialog anzeigen", "it": "Mostra dialogo", "ru": "Показать диалог", "zh": "显示对话", "ja": "ダイアログを表示"},
+  "categorie": "cat_textes_dialogues",
+  "action": "afficher_dialogue",
+  "objet": true,
+  "champs": [
+    {"cle": "cle", "type": "dialogue", "defaut": "", "nom": {"fr": "Clé du dialogue", "en": "Dialogue key", "es": "Clave del diálogo", "pt": "Chave do diálogo", "de": "Dialogschlüssel", "it": "Chiave del dialogo", "ru": "Ключ диалога", "zh": "对话键", "ja": "ダイアログのキー"}}
+  ]
+},
+{
+  "cle": "appeler_fonction",
+  "nom": {"fr": "Appeler une fonction", "en": "Call function", "es": "Llamar función", "pt": "Chamar função", "de": "Funktion aufrufen", "it": "Chiama funzione", "ru": "Вызвать функцию", "zh": "调用函数", "ja": "関数を呼ぶ"},
+  "categorie": "cat_logique_conditions",
+  "action": "appeler_fonction",
+  "champs": [
+    {"cle": "fonction", "type": "fonction", "defaut": "", "nom": {"fr": "Fonction", "en": "Function", "es": "Función", "pt": "Função", "de": "Funktion", "it": "Funzione", "ru": "Функция", "zh": "函数", "ja": "関数"}}
+  ]
+},
+{
+  "cle": "appeler_evenement",
+  "nom": {"fr": "Appeler un événement", "en": "Call event", "es": "Llamar evento", "pt": "Chamar evento", "de": "Ereignis aufrufen", "it": "Chiama evento", "ru": "Вызвать событие", "zh": "调用事件", "ja": "イベントを呼ぶ"},
+  "categorie": "cat_logique_conditions",
+  "action": "appeler_evenement",
+  "champs": [
+    {"cle": "evenement", "type": "texte", "defaut": "", "nom": {"fr": "Nom de l'événement", "en": "Event name", "es": "Nombre del evento", "pt": "Nome do evento", "de": "Ereignisname", "it": "Nome dell'evento", "ru": "Имя события", "zh": "事件名称", "ja": "イベント名"}}
+  ]
+},
+    {
+  "cle": "nombre_aleatoire",
+  "nom": {"fr": "Nombre aléatoire", "en": "Random number", "es": "Número aleatorio", "pt": "Número aleatório", "de": "Zufallszahl", "it": "Numero casuale", "ru": "Случайное число", "zh": "随机数", "ja": "ランダムな数"},
+  "categorie": "cat_variables_inventaire",
+  "action": "modifier_variable",
+  "objet": true,
+  "variable": true,
+  "champs": [
+    {"cle": "valeur", "type": "formule", "defaut": "random(1, 6)", "nom": {"fr": "Valeur : random(min, max)", "en": "Value: random(min, max)", "es": "Valor: random(min, max)", "pt": "Valor: random(min, max)", "de": "Wert: random(min, max)", "it": "Valore: random(min, max)", "ru": "Значение: random(min, max)", "zh": "值：random(min, max)", "ja": "値：random(min, max)"}}
+  ]
+},
+{
+  "cle": "ajouter_au_texte",
+  "nom": {"fr": "Ajouter au texte", "en": "Append to text", "es": "Añadir al texto", "pt": "Adicionar ao texto", "de": "Text anhängen", "it": "Aggiungi al testo", "ru": "Добавить к тексту", "zh": "追加到文本", "ja": "テキストに追加"},
+  "categorie": "cat_textes_dialogues",
+  "action": "ajouter_variable",
+  "objet": true,
+  "variable": true,
+  "champs": [
+    {"cle": "valeur", "type": "texte", "defaut": "", "nom": {"fr": "Texte à ajouter", "en": "Text to add", "es": "Texto a añadir", "pt": "Texto a adicionar", "de": "Anzuhängender Text", "it": "Testo da aggiungere", "ru": "Добавляемый текст", "zh": "要追加的文本", "ja": "追加するテキスト"}}
+  ]
+},
+    {
+  "cle": "sequence",
+  "nom": {"fr": "Séquence", "en": "Sequence", "es": "Secuencia", "pt": "Sequência", "de": "Sequenz", "it": "Sequenza", "ru": "Последовательность", "zh": "顺序", "ja": "シーケンス"},
+  "categorie": "cat_logique_conditions",
+  "action": "sequence",
+  "sorties": [
+    {"cle": "1", "nom": {"fr": "1", "en": "1", "es": "1", "pt": "1", "de": "1", "it": "1", "ru": "1", "zh": "1", "ja": "1"}},
+    {"cle": "2", "nom": {"fr": "2", "en": "2", "es": "2", "pt": "2", "de": "2", "it": "2", "ru": "2", "zh": "2", "ja": "2"}},
+    {"cle": "3", "nom": {"fr": "3", "en": "3", "es": "3", "pt": "3", "de": "3", "it": "3", "ru": "3", "zh": "3", "ja": "3"}},
+    {"cle": "4", "nom": {"fr": "4", "en": "4", "es": "4", "pt": "4", "de": "4", "it": "4", "ru": "4", "zh": "4", "ja": "4"}}
+  ]
+},
+{
+  "cle": "cooldown",
+  "nom": {"fr": "Cooldown", "en": "Cooldown", "es": "Enfriamiento", "pt": "Recarga", "de": "Abklingzeit", "it": "Ricarica", "ru": "Перезарядка", "zh": "冷却", "ja": "クールダウン"},
+  "categorie": "cat_logique_conditions",
+  "action": "cooldown",
+  "objet": true,
+  "sorties": [
+    {"cle": "pret", "nom": {"fr": "Prêt", "en": "Ready", "es": "Listo", "pt": "Pronto", "de": "Bereit", "it": "Pronto", "ru": "Готово", "zh": "就绪", "ja": "準備完了"}},
+    {"cle": "attente", "nom": {"fr": "Pas encore", "en": "Not yet", "es": "Aún no", "pt": "Ainda não", "de": "Noch nicht", "it": "Non ancora", "ru": "Пока нет", "zh": "还没", "ja": "まだ"}}
+  ],
+  "champs": [
+    {"cle": "delai", "type": "formule", "defaut": "0.5", "nom": {"fr": "Délai (secondes)", "en": "Delay (seconds)", "es": "Retraso (segundos)", "pt": "Atraso (segundos)", "de": "Verzögerung (Sekunden)", "it": "Ritardo (secondi)", "ru": "Задержка (секунды)", "zh": "延迟（秒）", "ja": "遅延（秒）"}}
+  ]
+},
+    {
+  "cle": "ajouter_inventaire",
+  "nom": {"fr": "Ajouter à l'inventaire", "en": "Add to inventory", "es": "Añadir al inventario", "pt": "Adicionar ao inventário", "de": "Zum Inventar hinzufügen", "it": "Aggiungi all'inventario", "ru": "Добавить в инвентарь", "zh": "加入物品栏", "ja": "インベントリに追加"},
+  "categorie": "cat_variables_inventaire",
+  "action": "ajouter_inventaire",
+  "objet": true,
+  "variable": true
+},
+{
+  "cle": "retirer_inventaire",
+  "nom": {"fr": "Retirer de l'inventaire", "en": "Remove from inventory", "es": "Quitar del inventario", "pt": "Remover do inventário", "de": "Aus dem Inventar entfernen", "it": "Rimuovi dall'inventario", "ru": "Убрать из инвентаря", "zh": "从物品栏移除", "ja": "インベントリから削除"},
+  "categorie": "cat_variables_inventaire",
+  "action": "retirer_inventaire",
+  "objet": true,
+  "variable": true
+},
+{
+  "cle": "si_dans_inventaire",
+  "nom": {"fr": "Si dans l'inventaire", "en": "If in inventory", "es": "Si está en el inventario", "pt": "Se está no inventário", "de": "Wenn im Inventar", "it": "Se è nell'inventario", "ru": "Если в инвентаре", "zh": "如果在物品栏中", "ja": "インベントリにあるなら"},
+  "categorie": "cat_variables_inventaire",
+  "action": "si_dans_inventaire",
+  "objet": true,
+  "variable": true,
+  "sorties": ["vrai", "faux", {"cle": "ensuite", "nom": {"fr": "Ensuite", "en": "Then", "es": "Después", "pt": "Depois", "de": "Danach", "it": "Poi", "ru": "Затем", "zh": "然后", "ja": "その後"}}]
+}
+    ]
 }
 // bas 1

@@ -41,6 +41,21 @@ public class ActionsMoteur {
             case "definir_progression": ActionsMouvements.definirProgression(n); return null;
             case "traverser_ecran": ActionsMouvements.traverserEcran(n); return null;
             case "garder_dans_ecran": ActionsMouvements.garderDansEcran(n); return null;
+            case "changer_rebond": ActionsMouvements.changerRebond(n); return null;
+            case "force_angle": ActionsMouvements.forceAngle(n); return null;
+            case "impulsion": ActionsMouvements.impulsion(n); return null;
+            case "activer_physique": ActionsMouvements.activerPhysique(n); return null;
+            case "modifier_deplacable": ActionsMouvements.modifierDeplacable(n); return null;
+            case "sautiller": ActionsMouvements.sautiller(n); return null;
+            case "orienter_vers": ActionsMouvements.orienterVers(n); return null;
+            case "glisser_vers": ActionsMouvements.glisserVers(n); return null;
+            case "jouer_animation": return ActionsAnimations.jouer(n);
+            case "arreter_animation": return ActionsAnimations.arreter(n);
+            case "pause_animation": return ActionsAnimations.pause(n);
+            case "reprendre_animation": return ActionsAnimations.reprendre(n);
+            case "vitesse_animation": return ActionsAnimations.vitesse(n);
+            case "si_au_sol": return ActionsMouvements.siAuSol(n);
+            case "si_en_mouvement": return ActionsMouvements.siEnMouvement(n);
             case "journaliser": ActionsOutils.journaliser(n); return null;
             case "attendre": return ActionsTemps.attendre(n);
             case "repeter": return ActionsTemps.repeter(n);
@@ -62,6 +77,17 @@ public class ActionsMoteur {
             case "elasticite_camera": return ActionsControles.elasticiteCamera(n);
             case "tremblement_camera": return ActionsControles.tremblementCamera(n);
             case "vibration": return ActionsControles.vibration(n);
+            case "jouer_son": return ActionsAudio.jouerSon(n);
+            case "jouer_musique": return ActionsAudio.jouerMusique(n);
+            case "arreter_musique": return ActionsAudio.arreterMusique(n);
+            case "afficher_dialogue": return ActionsAppels.afficherDialogue(n);
+            case "appeler_fonction": return ActionsAppels.appelerFonction(n);
+            case "appeler_evenement": return ActionsAppels.appelerEvenement(n);
+            case "sequence": return ActionsLogique.sequence(n);
+            case "cooldown": return ActionsLogique.cooldown(n);
+            case "ajouter_inventaire": return ActionsInventaire.ajouter(n);
+            case "retirer_inventaire": return ActionsInventaire.retirer(n);
+            case "si_dans_inventaire": return ActionsInventaire.siDansInventaire(n);
             default: throw new IllegalStateException("Action inconnue : " + action);
         }
     }

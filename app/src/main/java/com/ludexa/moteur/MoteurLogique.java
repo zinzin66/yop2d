@@ -1,6 +1,7 @@
 // haut 1 02 09 2026 bis
 package com.ludexa.moteur;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class MoteurLogique {
@@ -13,8 +14,14 @@ public class MoteurLogique {
     // Throttle pour éviter le spam de logs à chaque frame (cause de plantage)
     private long dernierLogCollisionCheck = 0;
 
+    // Les moteurs en vie (celui de la scène, celui du HUD) : sert à retrouver le script d'un nœud pour « Appeler un événement ».
+    // Références faibles : un moteur abandonné (changement de scène) peut être libéré normalement.
+    private static final java.util.List<WeakReference<MoteurLogique>> moteursVivants = new java.util.ArrayList<>();
+
     public MoteurLogique(Blueprint blueprint) {
         this.blueprintActif = blueprint;
+        purgerMoteursLibres();
+        moteursVivants.add(new WeakReference<>(this));
     }
 
     public void setCheminProjet(String cheminProjet) {
@@ -41,6 +48,61 @@ public class MoteurLogique {
                 it.remove();
             }
         }
+    }
+    // --------------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------------
+    // ÉVÉNEMENTS LOCAUX : « Appeler un événement » retrouve le script du nœud appelant, puis l'événement par son nom.
+    // --------------------------------------------------------------------------------
+
+    private static void purgerMoteursLibres() {
+        java.util.Iterator<WeakReference<MoteurLogique>> it = moteursVivants.iterator();
+        while (it.hasNext()) {
+            if (it.next().get() == null) it.remove();
+        }
+    }
+
+    // Le moteur dont le script contient ce nœud (le même objet, pas une copie) ; null si aucun.
+    private static MoteurLogique moteurDe(NoeudBase noeud) {
+        if (noeud == null) return null;
+        for (WeakReference<MoteurLogique> ref : new java.util.ArrayList<>(moteursVivants)) {
+            MoteurLogique moteur = ref.get();
+            if (moteur == null || moteur.blueprintActif == null || moteur.blueprintActif.noeuds == null) continue;
+            for (NoeudBase n : new java.util.ArrayList<>(moteur.blueprintActif.noeuds)) {
+                if (n == noeud) return moteur;
+            }
+        }
+        return null;
+    }
+
+    // Noms des événements locaux du script qui contient ce nœud ; null si on ne retrouve pas ce script
+    // (par exemple un nœud placé dans une fonction).
+    public static java.util.List<String> nomsEvenementsLocaux(NoeudBase appelant) {
+        MoteurLogique moteur = moteurDe(appelant);
+        if (moteur == null) return null;
+        java.util.List<String> noms = new java.util.ArrayList<>();
+        for (NoeudBase n : new java.util.ArrayList<>(moteur.blueprintActif.noeuds)) {
+            if (n instanceof NoeudEventPersonnalise) noms.add(((NoeudEventPersonnalise) n).getNomEvenement());
+        }
+        return noms;
+    }
+
+    // Lance l'événement local de ce nom, dans le même script que le nœud appelant.
+    // Les majuscules et les espaces autour du nom sont ignorés. Retourne false si le script ou l'événement est introuvable.
+    public static boolean appelerEvenementLocal(NoeudBase appelant, String nom) {
+        MoteurLogique moteur = moteurDe(appelant);
+        if (moteur == null || nom == null) return false;
+        String voulu = nom.trim();
+        for (NoeudBase n : new java.util.ArrayList<>(moteur.blueprintActif.noeuds)) {
+            if (n instanceof NoeudEventPersonnalise) {
+                String nomN = ((NoeudEventPersonnalise) n).getNomEvenement();
+                if (nomN != null && voulu.equalsIgnoreCase(nomN.trim())) {
+                    n.executer();
+                    return true;
+                }
+            }
+        }
+        return false;
     }
     // --------------------------------------------------------------------------------
 
