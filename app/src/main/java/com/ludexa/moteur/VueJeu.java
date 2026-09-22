@@ -1438,6 +1438,10 @@ public class VueJeu extends View {
         DeplacementsGlisses.avancer();
         // ----- NOUVEAU : fin -----
 
+        // ----- NOUVEAU : début (les « Fondu » en cours avancent selon le temps de jeu : pause et ralenti compris) -----
+        FondusEnCours.avancer();
+        // ----- NOUVEAU : fin -----
+
         for (int pas = 0; pas < pasDeJeu; pas++) {
             if (GestionnaireControles.modeAventureActif && (GestionnaireControles.joyDirX != 0 || GestionnaireControles.joyDirY != 0)) {
                 ObjetBase joystickObj = trouverObjetParType("joystick");
