@@ -616,8 +616,9 @@ public class EditeurNoeudDialog extends Dialog {
     }
 
     private void ecrireDansChamp(String texte) {
-        inserer(texte);
-    
+    if (champActif == null) return;
+    champSaisie.setText(texte);
+    champSaisie.setSelection(champSaisie.getText().length());
     }
 
     private void demanderTexte(String titre, String valeurInitiale) {
