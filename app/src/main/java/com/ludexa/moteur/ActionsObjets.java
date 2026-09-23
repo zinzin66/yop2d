@@ -190,23 +190,22 @@ public class ActionsObjets {
 
         String direction = n.texteBrut("direction");
         float angle = depart.rotation;
-        if ("→".equals(direction)) {
-            angle = 0f;
-        } else if ("↓".equals(direction)) {
-            angle = 90f;
-        } else if ("←".equals(direction)) {
-            angle = 180f;
-        } else if ("↑".equals(direction)) {
-            angle = -90f;
-        } else if ("Vers la cible".equals(direction)) {
+        if ("Vers la cible".equals(direction)) {
             ObjetBase cible = n.getCibleObjetB();
             if (cible != null) {
                 float dx = (cible.x + cible.largeur / 2f) - (clone.x + clone.largeur / 2f);
                 float dy = (cible.y + cible.hauteur / 2f) - (clone.y + clone.hauteur / 2f);
                 angle = (float) Math.toDegrees(Math.atan2(dy, dx));
             }
+        } else {
+            // Essaie de lire un angle numérique (0 / 90 / 180 / 270...).
+            // Si ce n'est pas un nombre (ex : "Angle de départ"), on garde l'angle de l'objet A.
+            try {
+                angle = Float.parseFloat(direction.trim());
+            } catch (Exception e) {
+                // rien à faire : angle reste celui de depart.rotation
+            }
         }
-        // sinon ("Angle de départ" ou valeur inconnue) : angle déjà réglé sur depart.rotation
 
         clone.rotation = angle;
         clone.vitesseAvanceContinue = (float) vitesse;
