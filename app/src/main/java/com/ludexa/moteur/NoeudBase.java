@@ -225,6 +225,40 @@ public abstract class NoeudBase {
         return null; 
     }
     
+    // --- CIBLE PAR TAG ---
+    // Si la cible "Objet A" commence par "tag:", le nœud vise TOUS les objets portant ce tag.
+    public static final String PREFIXE_TAG = "tag:";
+
+    public boolean cibleEstUnTag() {
+        return nomCibleObjet != null && nomCibleObjet.startsWith(PREFIXE_TAG);
+    }
+
+    public String getTagCible() {
+        return cibleEstUnTag() ? nomCibleObjet.substring(PREFIXE_TAG.length()).trim() : "";
+    }
+
+    // Liste de tous les objets de la scène active qui portent le tag visé (copie : sûre même si un objet est détruit pendant la boucle)
+    public java.util.List<ObjetBase> getObjetsDuTagCible() {
+        java.util.List<ObjetBase> resultat = new java.util.ArrayList<>();
+        String tag = getTagCible();
+        if (tag.isEmpty() || contexteApplication == null) return resultat;
+        try {
+            java.lang.reflect.Field sceneField = contexteApplication.getClass().getField("sceneActive");
+            Scene scene = (Scene) sceneField.get(contexteApplication);
+            if (scene != null && scene.objets != null) {
+                for (ObjetBase obj : new java.util.ArrayList<>(scene.objets)) {
+                    if (obj.tag != null && tag.equals(obj.tag.trim())) resultat.add(obj);
+                }
+            }
+        } catch (Exception e) {}
+        return resultat;
+    }
+
+    // Pose / retire temporairement la cible pendant la boucle sur les objets du tag
+    public void forcerCibleTemporaire(ObjetBase objet) {
+        this.cibleObjetResolue = objet;
+    }
+
     public boolean requiertCibleObjetB() { return false; }
     public void setCibleObjetB(ObjetBase objet) {}
 
@@ -331,6 +365,3 @@ public abstract class NoeudBase {
     }
 }
 // bas 2
-
-
-
