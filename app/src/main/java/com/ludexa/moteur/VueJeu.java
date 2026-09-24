@@ -649,7 +649,8 @@ public class VueJeu extends View {
     }
 // bas 3
 
-// haut 4
+
+  // haut 4
     private boolean pointDansObjet(float xVue, float yVue, float xMonde, float yMonde, ObjetBase obj) {
         boolean isHud = (sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(obj));
         List<ObjetBase> contexte = isHud ? sceneHudActive.objets : sceneActive.objets;
@@ -781,9 +782,14 @@ public class VueJeu extends View {
         return super.onGenericMotionEvent(event);
     }
 
+    // PLUSIEURS DOIGTS : chaque doigt garde l'objet qu'il a touché (clé = identifiant du doigt).
+    // Permet par exemple de maintenir "avancer" avec un doigt et de taper "sauter" avec un autre.
+    private final java.util.HashMap<Integer, ObjetBase> objetsSousDoigts = new java.util.HashMap<>();
+    private int doigtDuGlissement = -1;   // identifiant du doigt qui fait glisser objetEnGlissement
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        // ----- NOUVEAU : début (suivi du premier doigt pour les formules doigt.x, doigt.y, doigt.appuye) -----
+        // ----- suivi du premier doigt pour les formules doigt.x, doigt.y, doigt.appuye -----
         int actionDoigt = event.getActionMasked();
         if (actionDoigt == MotionEvent.ACTION_DOWN) {
             GestionnaireControles.doigtAppuye = true;
@@ -796,7 +802,6 @@ public class VueJeu extends View {
             GestionnaireControles.doigtX = (event.getX(0) - decalageX) / echelle;
             GestionnaireControles.doigtY = (event.getY(0) - decalageY) / echelle;
         }
-        // ----- NOUVEAU : fin -----
 
         boolean touchJoystick = false;
         boolean touchAction = false;
@@ -863,101 +868,129 @@ public class VueJeu extends View {
         
         if (touchJoystick || touchAction) {
             objetEnGlissement = null;
+            doigtDuGlissement = -1;
             return true; 
         }
 
-        float xVue = (event.getX() - decalageX) / echelle;
-        float yVue = (event.getY() - decalageY) / echelle;
-        float xMonde = xVue + GestionnaireControles.cameraX;
-        float yMonde = yVue + GestionnaireControles.cameraY;
+        // ----- UN DOIGT SE POSE (le premier OU un doigt de plus) -----
+        if (actionDoigt == MotionEvent.ACTION_DOWN || actionDoigt == MotionEvent.ACTION_POINTER_DOWN) {
+            int index = event.getActionIndex();
+            int idDoigt = event.getPointerId(index);
+            float xVue = (event.getX(index) - decalageX) / echelle;
+            float yVue = (event.getY(index) - decalageY) / echelle;
+            float xMonde = xVue + GestionnaireControles.cameraX;
+            float yMonde = yVue + GestionnaireControles.cameraY;
 
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            objetEnGlissement = trouverObjetSousPoint(xVue, yVue, false);
-            lastXJeu = xMonde;
-            lastYJeu = yMonde;
-            
-            if (objetEnGlissement != null) objetEnGlissement.estTouche = true;
-            
-            if (objetEnGlissement != null) {
-                MoteurLogique.dernierObjetImplique = objetEnGlissement;
+            ObjetBase touche = trouverObjetSousPoint(xVue, yVue, false);
+            if (touche != null) {
+                touche.estTouche = true;
+                objetsSousDoigts.put(idDoigt, touche);
+                MoteurLogique.dernierObjetImplique = touche;
 
-                // --- MODIFICATION : DÉCLENCHEMENT DU CLIC IMMÉDIAT (APPUI) ---
-                if (sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(objetEnGlissement) && this.moteurHud != null) {
-                    this.moteurHud.executerEvenementSurObjet(NoeudEventClicObjet.class, objetEnGlissement);
-                } else if (sceneActive != null && sceneActive.objets != null && sceneActive.objets.contains(objetEnGlissement) && this.moteur != null) {
-                    this.moteur.executerEvenementSurObjet(NoeudEventClicObjet.class, objetEnGlissement);
-                }
-                
-                if (sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(objetEnGlissement) && this.moteurHud != null) {
-                    this.moteurHud.executerEvenementSurObjet(NoeudEventDebutGlisser.class, objetEnGlissement);
-                    lastXJeu = xVue; lastYJeu = yVue; 
-                } else if (sceneActive != null && sceneActive.objets != null && sceneActive.objets.contains(objetEnGlissement) && this.moteur != null) {
-                    this.moteur.executerEvenementSurObjet(NoeudEventDebutGlisser.class, objetEnGlissement);
+                // Clic immédiat (appui)
+                declencherSurObjet(NoeudEventClicObjet.class, touche);
+
+                // Un seul objet glissé à la fois : le premier doigt qui en touche un
+                if (objetEnGlissement == null) {
+                    objetEnGlissement = touche;
+                    doigtDuGlissement = idDoigt;
+                    boolean surHud = estDansHud(touche);
+                    lastXJeu = surHud ? xVue : xMonde;
+                    lastYJeu = surHud ? yVue : yMonde;
+                    declencherSurObjet(NoeudEventDebutGlisser.class, touche);
                 }
             }
-        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-            if (objetEnGlissement != null && objetEnGlissement.estDeplacable) {
-                boolean isHudDrag = sceneHudActive != null && sceneHudActive.objets.contains(objetEnGlissement);
-                float newX = isHudDrag ? xVue : xMonde;
-                float newY = isHudDrag ? yVue : yMonde;
-                
-                float deltaX = newX - lastXJeu;
-                float deltaY = newY - lastYJeu;
-                
-                deplacerAvecCollision(objetEnGlissement, deltaX, deltaY, isHudDrag ? sceneHudActive.objets : sceneActive.objets);
-                
-                lastXJeu = newX;
-                lastYJeu = newY;
+
+        // ----- UN DOIGT BOUGE -----
+        } else if (actionDoigt == MotionEvent.ACTION_MOVE) {
+            if (objetEnGlissement != null && objetEnGlissement.estDeplacable && doigtDuGlissement != -1) {
+                int index = event.findPointerIndex(doigtDuGlissement);
+                if (index >= 0) {
+                    float xVue = (event.getX(index) - decalageX) / echelle;
+                    float yVue = (event.getY(index) - decalageY) / echelle;
+                    boolean isHudDrag = estDansHud(objetEnGlissement);
+                    float newX = isHudDrag ? xVue : xVue + GestionnaireControles.cameraX;
+                    float newY = isHudDrag ? yVue : yVue + GestionnaireControles.cameraY;
+
+                    deplacerAvecCollision(objetEnGlissement, newX - lastXJeu, newY - lastYJeu, isHudDrag ? sceneHudActive.objets : sceneActive.objets);
+
+                    lastXJeu = newX;
+                    lastYJeu = newY;
+                }
             } else {
+                // Survol : suivi du premier doigt, comme avant
+                float xVue = (event.getX(0) - decalageX) / echelle;
+                float yVue = (event.getY(0) - decalageY) / echelle;
                 ObjetBase objSurvole = trouverObjetSousPoint(xVue, yVue, false);
                 if (objSurvole != dernierObjetSurvole) {
                     if (dernierObjetSurvole != null) {
                         MoteurLogique.dernierObjetImplique = dernierObjetSurvole;
-                        if (sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(dernierObjetSurvole) && this.moteurHud != null) {
-                            this.moteurHud.executerEvenementSurObjet(NoeudEventFinSurvol.class, dernierObjetSurvole);
-                        } else if (sceneActive != null && sceneActive.objets != null && sceneActive.objets.contains(dernierObjetSurvole) && this.moteur != null) {
-                            this.moteur.executerEvenementSurObjet(NoeudEventFinSurvol.class, dernierObjetSurvole);
-                        }
+                        declencherSurObjet(NoeudEventFinSurvol.class, dernierObjetSurvole);
                     }
                     if (objSurvole != null) {
                         MoteurLogique.dernierObjetImplique = objSurvole;
-                        if (sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(objSurvole) && this.moteurHud != null) {
-                            this.moteurHud.executerEvenementSurObjet(NoeudEventSurvolObjet.class, objSurvole);
-                        } else if (sceneActive != null && sceneActive.objets != null && sceneActive.objets.contains(objSurvole) && this.moteur != null) {
-                            this.moteur.executerEvenementSurObjet(NoeudEventSurvolObjet.class, objSurvole);
-                        }
+                        declencherSurObjet(NoeudEventSurvolObjet.class, objSurvole);
                     }
                     dernierObjetSurvole = objSurvole;
                 }
             }
-        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+
+        // ----- UN DOIGT SE LÈVE (le dernier OU un parmi plusieurs) -----
+        } else if (actionDoigt == MotionEvent.ACTION_UP || actionDoigt == MotionEvent.ACTION_POINTER_UP) {
+            int index = event.getActionIndex();
+            int idDoigt = event.getPointerId(index);
+            float xVue = (event.getX(index) - decalageX) / echelle;
+            float yVue = (event.getY(index) - decalageY) / echelle;
+
             ObjetBase objClick = trouverObjetSousPoint(xVue, yVue, false);
             if (objClick != null && !objClick.estDesactive) {
                 MoteurLogique.dernierObjetImplique = objClick;
-                // --- MODIFICATION : DÉCLENCHEMENT DE LA FIN DE CLIC (RELÂCHEMENT) ---
-                if (sceneHudActive != null && sceneHudActive.objets.contains(objClick) && this.moteurHud != null) {
-                    this.moteurHud.executerEvenementSurObjet(NoeudEventFinClicObjet.class, objClick);
-                } else if (sceneActive != null && sceneActive.objets.contains(objClick) && this.moteur != null) {
-                    this.moteur.executerEvenementSurObjet(NoeudEventFinClicObjet.class, objClick);
-                }
+                declencherSurObjet(NoeudEventFinClicObjet.class, objClick);
             }
             if (this.moteur != null) this.moteur.executerEvenement(NoeudEventFinClic.class);
 
-            if (objetEnGlissement != null) {
+            // L'objet tenu par CE doigt n'est plus touché (sauf si un autre doigt le tient encore)
+            ObjetBase lache = objetsSousDoigts.remove(idDoigt);
+            if (lache != null && !objetsSousDoigts.containsValue(lache)) lache.estTouche = false;
+
+            if (idDoigt == doigtDuGlissement && objetEnGlissement != null) {
                 MoteurLogique.dernierObjetImplique = objetEnGlissement;
-                if (sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(objetEnGlissement) && this.moteurHud != null) {
-                    this.moteurHud.executerEvenementSurObjet(NoeudEventFinGlisser.class, objetEnGlissement);
-                } else if (sceneActive != null && sceneActive.objets != null && sceneActive.objets.contains(objetEnGlissement) && this.moteur != null) {
-                    this.moteur.executerEvenementSurObjet(NoeudEventFinGlisser.class, objetEnGlissement);
-                }
-                objetEnGlissement.estTouche = false;
+                declencherSurObjet(NoeudEventFinGlisser.class, objetEnGlissement);
+                objetEnGlissement = null;
+                doigtDuGlissement = -1;
             }
+
+            if (actionDoigt == MotionEvent.ACTION_UP) relacherTousLesDoigts();
+
+        // ----- GESTE ANNULÉ PAR ANDROID -----
+        } else if (actionDoigt == MotionEvent.ACTION_CANCEL) {
+            relacherTousLesDoigts();
             objetEnGlissement = null;
+            doigtDuGlissement = -1;
         }
         return true;
     }
+
+    // Plus aucun doigt sur l'écran : plus aucun objet n'est "touché"
+    private void relacherTousLesDoigts() {
+        for (ObjetBase o : objetsSousDoigts.values()) if (o != null) o.estTouche = false;
+        objetsSousDoigts.clear();
+    }
+
+    private boolean estDansHud(ObjetBase o) {
+        return sceneHudActive != null && sceneHudActive.objets != null && sceneHudActive.objets.contains(o);
+    }
+
+    // Envoie un événement au bon script : celui du HUD si l'objet est dans le HUD, sinon celui de la scène
+    private void declencherSurObjet(Class<? extends NoeudBase> typeEvenement, ObjetBase o) {
+        if (estDansHud(o) && this.moteurHud != null) {
+            this.moteurHud.executerEvenementSurObjet(typeEvenement, o);
+        } else if (sceneActive != null && sceneActive.objets != null && sceneActive.objets.contains(o) && this.moteur != null) {
+            this.moteur.executerEvenementSurObjet(typeEvenement, o);
+        }
+    }
 // bas 4
-                                   
+    
         
 // haut 5
     private void dessinerImage(Canvas canvas, ObjetBase objet, String cheminAAfficher) {
