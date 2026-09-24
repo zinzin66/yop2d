@@ -283,7 +283,9 @@ public class InterfaceBlueprint extends Activity {
 
 // haut 3
 
-    // Colle un script au format JSON (celui que produit le bouton Sauvegarder) : il REMPLACE le script de la scène.
+    // Colle un script au format JSON (celui que produit le bouton Sauvegarder).
+    // "Remplacer" : le script collé remplace celui de la scène.
+    // "Ajouter"   : les nœuds collés s'ajoutent au script existant (identifiants renommés si besoin, placés en dessous).
     private void afficherImportJson() {
         final android.widget.EditText saisie = new android.widget.EditText(this);
         saisie.setHint("{ \"noeuds\": [ ... ], \"liens\": [ ... ] }");
@@ -292,7 +294,17 @@ public class InterfaceBlueprint extends Activity {
         new android.app.AlertDialog.Builder(this)
                 .setTitle("Importer un script (JSON)")
                 .setView(saisie)
-                .setPositiveButton("OK", (d, w) -> {
+                .setPositiveButton("Ajouter", (d, w) -> {
+                    String texte = saisie.getText().toString().trim();
+                    if (texte.isEmpty()) return;
+                    String fusion = fusionnerScripts(blueprintActif != null ? blueprintActif.toJson() : null, texte);
+                    if (fusion == null) return;
+                    blueprintActif = Blueprint.fromJson(fusion, canvasBlueprint.sceneActive);
+                    canvasBlueprint.setBlueprint(blueprintActif);
+                    canvasBlueprint.invalidate();
+                    sauvegarderBlueprintLocal();
+                })
+                .setNeutralButton("Remplacer", (d, w) -> {
                     String texte = saisie.getText().toString().trim();
                     if (texte.isEmpty()) return;
                     blueprintActif = Blueprint.fromJson(texte, canvasBlueprint.sceneActive);
@@ -303,7 +315,89 @@ public class InterfaceBlueprint extends Activity {
                 .setNegativeButton(Traducteur.get("bouton_annuler"), null)
                 .show();
     }
-    
+
+    // Ajoute les nœuds et liens de "texteNouveau" à ceux de "texteExistant".
+    // Renvoie le JSON fusionné, ou null en cas d'erreur (détail écrit dans le journal).
+    private String fusionnerScripts(String texteExistant, String texteNouveau) {
+        try {
+            org.json.JSONObject nouveau = new org.json.JSONObject(texteNouveau);
+            org.json.JSONArray nouveauxNoeuds = nouveau.optJSONArray("noeuds");
+            org.json.JSONArray nouveauxLiens = nouveau.optJSONArray("liens");
+            if (nouveauxNoeuds == null) nouveauxNoeuds = new org.json.JSONArray();
+            if (nouveauxLiens == null) nouveauxLiens = new org.json.JSONArray();
+
+            org.json.JSONObject existant = (texteExistant != null && !texteExistant.trim().isEmpty())
+                    ? new org.json.JSONObject(texteExistant) : new org.json.JSONObject();
+            org.json.JSONArray noeuds = existant.optJSONArray("noeuds");
+            org.json.JSONArray liens = existant.optJSONArray("liens");
+            if (noeuds == null) noeuds = new org.json.JSONArray();
+            if (liens == null) liens = new org.json.JSONArray();
+
+            // 1. Identifiants déjà pris + bas du script existant
+            Set<String> idsPris = new HashSet<>();
+            double basExistant = Double.NEGATIVE_INFINITY;
+            double gaucheExistant = Double.POSITIVE_INFINITY;
+            for (int i = 0; i < noeuds.length(); i++) {
+                org.json.JSONObject n = noeuds.getJSONObject(i);
+                idsPris.add(n.optString("id"));
+                basExistant = Math.max(basExistant, n.optDouble("y", 0));
+                gaucheExistant = Math.min(gaucheExistant, n.optDouble("x", 0));
+            }
+
+            // 2. Haut et gauche du morceau collé (pour le déplacer d'un bloc, sans déformer sa disposition)
+            double hautNouveau = Double.POSITIVE_INFINITY;
+            double gaucheNouveau = Double.POSITIVE_INFINITY;
+            for (int i = 0; i < nouveauxNoeuds.length(); i++) {
+                org.json.JSONObject n = nouveauxNoeuds.getJSONObject(i);
+                hautNouveau = Math.min(hautNouveau, n.optDouble("y", 0));
+                gaucheNouveau = Math.min(gaucheNouveau, n.optDouble("x", 0));
+            }
+            double decalageY = 0, decalageX = 0;
+            if (noeuds.length() > 0 && nouveauxNoeuds.length() > 0) {
+                decalageY = (basExistant + 400) - hautNouveau;
+                decalageX = gaucheExistant - gaucheNouveau;
+            }
+
+            // 3. Renommer les identifiants collés déjà pris, puis ajouter les nœuds décalés
+            java.util.Map<String, String> renommage = new java.util.HashMap<>();
+            for (int i = 0; i < nouveauxNoeuds.length(); i++) {
+                org.json.JSONObject n = nouveauxNoeuds.getJSONObject(i);
+                String ancienId = n.optString("id");
+                String nouvelId = ancienId;
+                int k = 2;
+                while (nouvelId.isEmpty() || idsPris.contains(nouvelId)) {
+                    nouvelId = (ancienId.isEmpty() ? "n" : ancienId) + "_" + k;
+                    k++;
+                }
+                idsPris.add(nouvelId);
+                renommage.put(ancienId, nouvelId);
+                n.put("id", nouvelId);
+                n.put("x", n.optDouble("x", 0) + decalageX);
+                n.put("y", n.optDouble("y", 0) + decalageY);
+                noeuds.put(n);
+            }
+
+            // 4. Ajouter les liens collés, avec les identifiants renommés
+            for (int i = 0; i < nouveauxLiens.length(); i++) {
+                org.json.JSONObject l = nouveauxLiens.getJSONObject(i);
+                String dep = l.optString("idDepart");
+                String arr = l.optString("idArrivee");
+                if (renommage.containsKey(dep)) l.put("idDepart", renommage.get(dep));
+                if (renommage.containsKey(arr)) l.put("idArrivee", renommage.get(arr));
+                liens.put(l);
+            }
+
+            existant.put("noeuds", noeuds);
+            existant.put("liens", liens);
+            DiagLogger.log(cheminProjet, "IMPORT_AJOUT : " + nouveauxNoeuds.length() + " noeud(s) et "
+                    + nouveauxLiens.length() + " lien(s) ajoutes");
+            return existant.toString();
+        } catch (Exception e) {
+            DiagLogger.log(cheminProjet, "IMPORT_AJOUT erreur : " + e);
+            return null;
+        }
+    }
+
     private void sauvegarderBlueprintLocal() {
         try {
             File file;
@@ -432,6 +526,9 @@ public class InterfaceBlueprint extends Activity {
         return sb.toString();
     }
 // bas 3
+    
+
+ 
 // haut 4
     private void genererCheminLogique(NoeudBase noeudDepart, String portDeclencheur, String indentation, StringBuilder res, Set<String> noeudsVisites) {
         if (noeudDepart == null || blueprintActif.liens == null) return;
