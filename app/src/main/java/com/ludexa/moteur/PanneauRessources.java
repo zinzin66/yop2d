@@ -68,7 +68,9 @@ public class PanneauRessources extends LinearLayout {
             if (!rootFonctionsDir.exists()) rootFonctionsDir.mkdirs(); 
         }
 
-        paramsOuvert = new FrameLayout.LayoutParams(dp(260), FrameLayout.LayoutParams.MATCH_PARENT);
+        // Panneau plus étroit sur téléphone (voir estPetitEcran, bloc 2)
+        int largeurPanneau = estPetitEcran() ? 200 : 260;
+        paramsOuvert = new FrameLayout.LayoutParams(dp(largeurPanneau), FrameLayout.LayoutParams.MATCH_PARENT);
         paramsOuvert.gravity = Gravity.START | Gravity.TOP;
         paramsFerme = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         paramsFerme.gravity = Gravity.START | Gravity.TOP;
@@ -95,7 +97,8 @@ public class PanneauRessources extends LinearLayout {
 
         LinearLayout contenuScroll = new LinearLayout(context);
         contenuScroll.setOrientation(LinearLayout.VERTICAL);
-        contenuScroll.setPadding(dp(8), dp(8), dp(8), dp(8));
+        int margeContenu = estPetitEcran() ? 4 : 8;
+        contenuScroll.setPadding(dp(margeContenu), dp(margeContenu), dp(margeContenu), dp(margeContenu));
 
         contenuScroll.addView(creerSectionScenes(context));
         contenuScroll.addView(creerSectionArborescence(context));
@@ -125,9 +128,16 @@ public class PanneauRessources extends LinearLayout {
         entetePanneau.setBackgroundColor(Palette.enTeteDialogues);
     }
 // bas 1
-// haut 2
+
+    // haut 2
     private int dp(int valeur) {
         return (int) (valeur * getResources().getDisplayMetrics().density);
+    }
+
+    // Téléphone en paysage : écran de moins de 500 dp de haut -> panneau plus compact
+    private boolean estPetitEcran() {
+        android.util.DisplayMetrics m = getResources().getDisplayMetrics();
+        return (m.heightPixels / m.density) < 500;
     }
 
     private android.graphics.drawable.GradientDrawable fond(int couleurFond, int couleurBordure, int rayon) {
@@ -139,20 +149,29 @@ public class PanneauRessources extends LinearLayout {
     }
 
     private void styliserTitreSection(Button btn) {
+        boolean petit = estPetitEcran();
         btn.setBackgroundColor(Color.TRANSPARENT);
         btn.setTextColor(Palette.texteSelectionne);
-        btn.setTextSize(16f);
+        btn.setTextSize(petit ? 13f : 16f);
         btn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
         btn.setTypeface(null, android.graphics.Typeface.BOLD);
-        btn.setPadding(dp(8), dp(16), dp(8), dp(8));
+        if (petit) {
+            btn.setPadding(dp(6), dp(6), dp(6), dp(4));
+            btn.setMinHeight(0);
+            btn.setMinimumHeight(0);
+        } else {
+            btn.setPadding(dp(8), dp(16), dp(8), dp(8));
+        }
         btn.setAllCaps(false);
     }
 
     private void styliserContenuSection(LinearLayout contenu) {
+        boolean petit = estPetitEcran();
         contenu.setBackground(fond(Palette.fondNormal, Palette.bordure, 8));
-        contenu.setPadding(dp(8), dp(8), dp(8), dp(8));
+        int marge = petit ? 4 : 8;
+        contenu.setPadding(dp(marge), dp(marge), dp(marge), dp(marge));
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(0, 0, 0, dp(12));
+        lp.setMargins(0, 0, 0, dp(petit ? 6 : 12));
         contenu.setLayoutParams(lp);
     }
 
@@ -182,7 +201,6 @@ public class PanneauRessources extends LinearLayout {
         champ.setLayoutParams(lp);
     }
 // bas 2
-
 // haut 3
     private View creerSectionScenes(Context context) {
         LinearLayout section = new LinearLayout(context);
@@ -301,10 +319,27 @@ public class PanneauRessources extends LinearLayout {
         }
     }
 
+    // Petit bouton d'état (œil, cadenas) à droite du nom d'un objet
+    private ImageView creerBoutonEtat(int idIcone, int couleur, boolean petit) {
+        ImageView b = new ImageView(getContext());
+        b.setImageResource(idIcone);
+        b.setColorFilter(couleur);
+        b.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        int taille = dp(petit ? 28 : 34);
+        int marge = dp(petit ? 6 : 7);
+        b.setPadding(marge, marge, marge, marge);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(taille, taille);
+        lp.setMargins(dp(2), 0, 0, 0);
+        b.setLayoutParams(lp);
+        b.setClickable(true);
+        return b;
+    }
+
     public void rafraichirArborescence() {
         if (conteneurArborescence == null) return;
         conteneurArborescence.removeAllViews();
 
+        boolean petit = estPetitEcran();
         InterfaceEditeur editeur = (InterfaceEditeur) getContext();
         if (editeur.sceneActive != null && editeur.sceneActive.objets != null) {
             for (int i = 0; i < editeur.sceneActive.objets.size(); i++) {
@@ -313,7 +348,7 @@ public class PanneauRessources extends LinearLayout {
                 LinearLayout ligne = new LinearLayout(getContext());
                 ligne.setOrientation(LinearLayout.HORIZONTAL);
                 ligne.setGravity(Gravity.CENTER_VERTICAL);
-                ligne.setPadding(dp(10), dp(9), dp(10), dp(9));
+                ligne.setPadding(dp(petit ? 6 : 10), dp(petit ? 2 : 5), dp(2), dp(petit ? 2 : 5));
                 if (obj == objetSelectionne) {
                     ligne.setBackground(fond(Palette.fondSelection, Palette.bordure, 8));
                 }
@@ -321,15 +356,21 @@ public class PanneauRessources extends LinearLayout {
                 ImageView icone = new ImageView(getContext());
                 icone.setImageResource(iconePourType(obj.type));
                 icone.setColorFilter(obj == objetSelectionne ? Palette.accentTeal : Palette.accentBleu);
-                LinearLayout.LayoutParams lpIcone = new LinearLayout.LayoutParams(dp(16), dp(16));
-                lpIcone.setMargins(0, 0, dp(6), 0);
+                int tailleIcone = dp(petit ? 13 : 16);
+                LinearLayout.LayoutParams lpIcone = new LinearLayout.LayoutParams(tailleIcone, tailleIcone);
+                lpIcone.setMargins(0, 0, dp(petit ? 4 : 6), 0);
                 icone.setLayoutParams(lpIcone);
                 ligne.addView(icone);
 
+                // Nom : prend toute la place restante, coupé avec « … » s'il est trop long
                 TextView txtObjet = new TextView(getContext());
                 txtObjet.setText(obj.nom);
                 txtObjet.setTextColor(obj == objetSelectionne ? Palette.texteSelectionne : Palette.texteNormal);
-                txtObjet.setTextSize(14f);
+                txtObjet.setTextSize(petit ? 12f : 14f);
+                txtObjet.setSingleLine(true);
+                txtObjet.setEllipsize(android.text.TextUtils.TruncateAt.END);
+                if (!obj.visible) txtObjet.setAlpha(0.45f);
+                txtObjet.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
                 ligne.addView(txtObjet);
 
                 if ("scene_instance".equals(obj.type) && obj.sceneLieeId != null) {
@@ -347,12 +388,39 @@ public class PanneauRessources extends LinearLayout {
                         TextView txtSceneLiee = new TextView(getContext());
                         txtSceneLiee.setText(" → " + sceneLiee.nom);
                         txtSceneLiee.setTextColor(Palette.accentBleu);
-                        txtSceneLiee.setTextSize(13f);
+                        txtSceneLiee.setTextSize(petit ? 11f : 13f);
+                        txtSceneLiee.setSingleLine(true);
                         txtSceneLiee.setPadding(dp(4), 0, 0, 0);
                         txtSceneLiee.setOnClickListener(v -> editeur.changerScene(sceneLieeFinale));
                         ligne.addView(txtSceneLiee);
                     }
                 }
+
+                // Œil : visible (œil ouvert) / masqué (œil barré, pâle)
+                ImageView oeil = creerBoutonEtat(
+                        obj.visible ? R.drawable.visibility_24px : R.drawable.visibility_off_24px,
+                        obj.visible ? Palette.iconeNormal : Palette.bordure,
+                        petit);
+                oeil.setOnClickListener(v -> {
+                    obj.visible = !obj.visible;
+                    if (obj == objetSelectionne) canvasEditeur.setObjetSelectionne(obj);   // l'inspecteur se met à jour
+                    canvasEditeur.invalidate();
+                    rafraichirArborescence();
+                });
+                ligne.addView(oeil);
+
+                // Cadenas : verrouillé (fermé, ambre) / libre (ouvert, pâle)
+                ImageView cadenas = creerBoutonEtat(
+                        obj.estVerrouille ? R.drawable.lock_24px : R.drawable.lock_open_24px,
+                        obj.estVerrouille ? Palette.accentAmbre : Palette.bordure,
+                        petit);
+                cadenas.setOnClickListener(v -> {
+                    obj.estVerrouille = !obj.estVerrouille;
+                    if (obj == objetSelectionne) canvasEditeur.setObjetSelectionne(obj);
+                    canvasEditeur.invalidate();
+                    rafraichirArborescence();
+                });
+                ligne.addView(cadenas);
 
                 ligne.setOnClickListener(v -> {
                     objetSelectionne = obj;
@@ -368,7 +436,7 @@ public class PanneauRessources extends LinearLayout {
             TextView txtVide = new TextView(getContext());
             txtVide.setText(Traducteur.get("msg_aucun_objet_scene"));
             txtVide.setTextColor(Palette.bordure);
-            txtVide.setTextSize(13f);
+            txtVide.setTextSize(petit ? 12f : 13f);
             txtVide.setPadding(dp(10), dp(10), dp(10), dp(10));
             conteneurArborescence.addView(txtVide);
         }
@@ -399,7 +467,7 @@ public class PanneauRessources extends LinearLayout {
         section.addView(btnTitre);
         return section;
     }
-// bas 4    
+// bas 4
 // haut 7
     private void afficherEditeurTexteGeant(Context context) {
         Dialog dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
