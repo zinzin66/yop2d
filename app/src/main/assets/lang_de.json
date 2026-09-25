@@ -672,4 +672,13 @@
  ,
 "stats_case": "Anonyme Statistiken",
 "stats_explication": "Bei jedem Start sendet Yop2D ein einziges anonymes Signal: die Yop2D-Version, die Android-Version und die Gerätesprache. Es werden keine persönlichen Daten und nichts aus deinen Projekten gesendet (das Land wird geschätzt, ohne eine Adresse zu speichern). So lässt sich erkennen, wie viele Menschen Yop2D nutzen, um es zu verbessern. Exportierte Spiele senden nichts."
+,
+"port_evt_suivant": "Weiter",
+"port_evt_sortie": "Ausgang",
+"port_evt_collision": "Kollision",
+"port_evt_executer": "Ausführen"
 }
+
+
+
+

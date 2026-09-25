@@ -366,6 +366,28 @@ public class CanvasBlueprint extends View {
         return null;
     }
 
+    // Texte affiché à côté d'un port. Les événements (classes Java) donnent à leurs ports un nom interne
+    // en français ("Suivant", "Sortie", "Collision", "Executer") qui sert aussi à relier les fils :
+    // on ne le change pas, on cherche seulement sa traduction "port_evt_<nom>" (ex : port_evt_suivant).
+    // Sans traduction trouvée, on garde l'affichage d'avant.
+    private String texteDuPort(Port p) {
+        if (p == null || p.nom == null) return "";
+        if (!p.nom.startsWith("port_")) {
+            String cle = "port_evt_" + normaliserNomPort(p.nom);
+            String traduit = Traducteur.get(cle);
+            if (traduit != null && !traduit.isEmpty() && !traduit.startsWith("[") && !traduit.equals(cle)) {
+                return traduit;
+            }
+        }
+        return Traducteur.get(p.nom);
+    }
+
+    // "Exécuter" -> "executer", "Suivant" -> "suivant" (sans accents, minuscules, espaces remplacés par _)
+    private static String normaliserNomPort(String nom) {
+        String sansAccents = java.text.Normalizer.normalize(nom, java.text.Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        return sansAccents.toLowerCase(java.util.Locale.ROOT).replaceAll("[^a-z0-9]+", "_");
+    }
+
     private void dessinerCourbe(Canvas canvas, Path path, float x1, float y1, float x2, float y2, Port portType) {
         path.reset();
         path.moveTo(x1, y1);
@@ -434,10 +456,10 @@ public class CanvasBlueprint extends View {
         for (int i = 0; i < maxPorts; i++) {
             float rowWidth = 60f; 
             if (i < noeud.portsEntree.size()) {
-                rowWidth += paintTextePort.measureText(Traducteur.get(noeud.portsEntree.get(i).nom));
+                rowWidth += paintTextePort.measureText(texteDuPort(noeud.portsEntree.get(i)));
             }
             if (i < noeud.portsSortie.size()) {
-                rowWidth += paintTextePort.measureText(Traducteur.get(noeud.portsSortie.get(i).nom));
+                rowWidth += paintTextePort.measureText(texteDuPort(noeud.portsSortie.get(i)));
             }
             if (rowWidth > max) max = rowWidth;
         }
@@ -515,7 +537,7 @@ public class CanvasBlueprint extends View {
             definirCouleurPort(p);
             float portY = startY + (i * 40);
             canvas.drawCircle(x, portY, 9, paintPort);
-            canvas.drawText(Traducteur.get(p.nom), x + 20, portY + 6, paintTextePort);
+            canvas.drawText(texteDuPort(p), x + 20, portY + 6, paintTextePort);
         }
         
         for (int i = 0; i < noeud.portsSortie.size(); i++) {
@@ -523,8 +545,9 @@ public class CanvasBlueprint extends View {
             definirCouleurPort(p);
             float portY = startY + (i * 40);
             canvas.drawCircle(x + largeur, portY, 9, paintPort);
-            float textWidth = paintTextePort.measureText(Traducteur.get(p.nom));
-            canvas.drawText(Traducteur.get(p.nom), x + largeur - 20 - textWidth, portY + 6, paintTextePort);
+            String textePort = texteDuPort(p);
+            float textWidth = paintTextePort.measureText(textePort);
+            canvas.drawText(textePort, x + largeur - 20 - textWidth, portY + 6, paintTextePort);
         }
         
         float currentY = y + 60 + (maxPorts * 40) + 15;

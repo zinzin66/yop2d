@@ -659,6 +659,11 @@
   ,
 "stats_case": "Anonymous statistics",
 "stats_explication": "Each time it opens, Yop2D sends a single anonymous signal: the Yop2D version, the Android version and the device language. No personal data and nothing from your projects is sent (the country is estimated without storing any address). This helps to know how many people use Yop2D and to improve it. Exported games send nothing."
+,
+"port_evt_suivant": "Next",
+"port_evt_sortie": "Out",
+"port_evt_collision": "Collision",
+"port_evt_executer": "Run"
 }
   
   

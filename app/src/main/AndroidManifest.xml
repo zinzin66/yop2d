@@ -21,19 +21,24 @@
             </intent-filter>
         </activity>
 
+        <!-- configChanges : quand la tablette tourne, Android ne détruit plus l'écran,
+             donc le travail non sauvegardé n'est plus perdu -->
         <activity
             android:name=".InterfaceEditeur"
             android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation|uiMode|density"
             android:exported="false" />
 
         <activity
             android:name=".InterfaceBlueprint"
             android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation|uiMode|density"
             android:exported="false" />
 
         <activity
             android:name=".RunnerActivity"
             android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|keyboard|keyboardHidden|navigation|uiMode|density"
             android:exported="true" />
 
     </application>

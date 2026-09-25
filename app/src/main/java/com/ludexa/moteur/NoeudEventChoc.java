@@ -4,10 +4,10 @@ package com.ludexa.moteur;
 import java.util.ArrayList;
 import java.util.List;
 
+// Événement « Au choc physique » : se déclenche quand l'objet cible subit un choc dans le moteur physique.
+// La cible est gérée par NoeudBase (case commune nomCibleObjet) : ça marche aussi dans un prefab,
+// avec « objet impliqué », et après destruction / recréation d'objets.
 public class NoeudEventChoc extends NoeudBase {
-
-    private transient ObjetBase cible;
-    private String nomCibleObjet;
 
     public NoeudEventChoc() {
         super(genererId(), "noeud_au_choc_physique", "Événements");
@@ -30,32 +30,11 @@ public class NoeudEventChoc extends NoeudBase {
 
     @Override
     public boolean requiertCibleObjet() { return true; }
-    
+
+    // On n'enregistre que le nom, dans la case commune : l'objet est retrouvé à chaque fois par NoeudBase.getCibleObjet()
     @Override
-    public void setCibleObjet(ObjetBase objet) { 
-        this.cible = objet;
+    public void setCibleObjet(ObjetBase objet) {
         this.nomCibleObjet = (objet != null) ? objet.nom : null;
-    }
-    
-    @Override
-    public ObjetBase getCibleObjet() {
-        if (cible == null && nomCibleObjet != null && contexteApplication != null) {
-            try {
-                if (contexteApplication instanceof InterfaceEditeur) {
-                    Scene s = ((InterfaceEditeur) contexteApplication).sceneActive;
-                    if (s != null && s.objets != null) {
-                        for (ObjetBase o : s.objets) if (o.nom.equals(nomCibleObjet)) cible = o;
-                    }
-                } else {
-                    java.lang.reflect.Field sceneField = contexteApplication.getClass().getField("sceneActive");
-                    Scene s = (Scene) sceneField.get(contexteApplication);
-                    if (s != null && s.objets != null) {
-                        for (ObjetBase o : s.objets) if (o.nom.equals(nomCibleObjet)) cible = o;
-                    }
-                }
-            } catch (Exception e) {}
-        }
-        return this.cible;
     }
 }
 // bas 1

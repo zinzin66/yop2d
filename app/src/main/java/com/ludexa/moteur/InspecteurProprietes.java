@@ -1,4 +1,4 @@
-// haut 1
+// haut 1 sept
 package com.ludexa.moteur;
 
 import android.app.AlertDialog;
@@ -218,6 +218,7 @@ public class InspecteurProprietes extends LinearLayout {
         cb.setLayoutParams(lp);
     }
 // bas 1
+    
 // haut 2
     private void initialiserInterface(Context context) {
         this.setOrientation(LinearLayout.VERTICAL);
@@ -509,7 +510,40 @@ public class InspecteurProprietes extends LinearLayout {
                 .setItems(noms.toArray(new String[0]), (dialog, which) -> {
                     String idChoisi = ids.get(which);
                     if (!ObjetBase.verifierBoucleParent(objetCourant.id, idChoisi, sceneActive.objets)) {
+                        // La position (x, y) d'un enfant est comptée à partir de son parent.
+                        // Pour que l'objet reste exactement au même endroit à l'écran, on additionne
+                        // les positions de tous ses anciens parents (parent, grand-parent...), puis on
+                        // retire celles de tous ses nouveaux parents.
+                        float[] decalAncien = {0f, 0f};
+                        float[] decalNouveau = {0f, 0f};
+                        for (int passe = 0; passe < 2; passe++) {
+                            String idAncetre = (passe == 0) ? objetCourant.parentId : idChoisi;
+                            float[] decal = (passe == 0) ? decalAncien : decalNouveau;
+                            int garde = 0;
+                            while (idAncetre != null && garde < 50) {
+                                garde++;
+                                ObjetBase ancetre = null;
+                                for (ObjetBase o : sceneActive.objets) {
+                                    if (o.id.equals(idAncetre)) { ancetre = o; break; }
+                                }
+                                if (ancetre == null) break;
+                                decal[0] += ancetre.x;
+                                decal[1] += ancetre.y;
+                                idAncetre = ancetre.parentId;
+                            }
+                        }
+
+                        float ancienX = objetCourant.x;
+                        float ancienY = objetCourant.y;
+                        objetCourant.x = ancienX + decalAncien[0] - decalNouveau[0];
+                        objetCourant.y = ancienY + decalAncien[1] - decalNouveau[1];
                         objetCourant.parentId = idChoisi;
+
+                        DiagLogger.log(cheminProjet, "PARENT " + objetCourant.nom
+                                + " -> " + (idChoisi == null ? "aucun" : noms.get(which))
+                                + " | avant x=" + ancienX + " y=" + ancienY
+                                + " | apres x=" + objetCourant.x + " y=" + objetCourant.y);
+
                         canvasEditeur.invalidate();
                         afficherObjet(objetCourant);
                     } else {
@@ -518,6 +552,7 @@ public class InspecteurProprietes extends LinearLayout {
                 }).show();
         });
 // bas 2
+    
 // haut 3
         blocTexte = new LinearLayout(context);
         blocTexte.setOrientation(LinearLayout.VERTICAL);
