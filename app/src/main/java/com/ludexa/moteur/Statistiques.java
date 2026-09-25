@@ -1,6 +1,7 @@
 package com.ludexa.moteur;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 
 import org.json.JSONArray;
@@ -18,11 +19,16 @@ import java.util.TimeZone;
 // Statistiques d'utilisation anonymes (Aptabase, serveur européen).
 // Envoie un seul signal "yop2d_ouvert" par ouverture de l'appli :
 // version de Yop2D, version d'Android, langue de l'appareil. Aucune donnée personnelle.
-// Le résultat (réussi / échoué) est écrit dans le journal général (appui long sur le numéro de version).
+// L'utilisateur peut désactiver l'envoi (case sur l'écran d'accueil), le choix est retenu.
+// Le résultat (réussi / échoué / désactivé) est écrit dans le journal général (appui long sur le numéro de version).
 public class Statistiques {
 
     private static final String CLE_APP = "A-EU-3140288404";
     private static final String ADRESSE = "https://eu.aptabase.com/api/v0/events";
+
+    // Réglage mémorisé sur l'appareil : statistiques activées ou non (activées par défaut)
+    private static final String FICHIER_REGLAGES = "yop2d_reglages";
+    private static final String CLE_ACTIVE = "statistiques_actives";
 
     // Empêche d'envoyer deux fois pendant la même ouverture (ex : changement de langue qui recharge l'écran)
     private static boolean dejaEnvoye = false;
@@ -32,12 +38,32 @@ public class Statistiques {
         return contexte.getApplicationContext().getFilesDir().getAbsolutePath();
     }
 
+    public static boolean estActive(Context contexte) {
+        SharedPreferences reglages = contexte.getApplicationContext()
+                .getSharedPreferences(FICHIER_REGLAGES, Context.MODE_PRIVATE);
+        return reglages.getBoolean(CLE_ACTIVE, true);
+    }
+
+    public static void definirActive(Context contexte, boolean active) {
+        SharedPreferences reglages = contexte.getApplicationContext()
+                .getSharedPreferences(FICHIER_REGLAGES, Context.MODE_PRIVATE);
+        reglages.edit().putBoolean(CLE_ACTIVE, active).apply();
+        DiagLogger.log(cheminJournal(contexte), active
+                ? "STATS activées par l'utilisateur"
+                : "STATS désactivées par l'utilisateur");
+    }
+
     public static void signalerOuverture(Context contexte) {
         if (dejaEnvoye) return;
         dejaEnvoye = true;
 
         final Context app = contexte.getApplicationContext();
         final String cheminLog = cheminJournal(app);
+
+        if (!estActive(app)) {
+            DiagLogger.log(cheminLog, "STATS non envoyées (désactivées par l'utilisateur)");
+            return;
+        }
 
         new Thread(() -> {
             HttpURLConnection connexion = null;
