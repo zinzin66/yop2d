@@ -942,12 +942,64 @@ public class CanvasEditeur extends View {
     }
 // bas 4
     
-    // haut 5
+// haut 5
+    // ----- Règle de toucher de l'éditeur de scène -----
+    // Glisser sur un objet NON sélectionné (ou sur le fond) fait défiler la scène.
+    // Taper (toucher puis relâcher sans glisser) sélectionne l'objet touché, ou désélectionne dans le vide.
+    // Seul un objet DÉJÀ sélectionné se déplace / se redimensionne au doigt.
+    // Un objet verrouillé est ignoré au doigt (on le sélectionne par l'explorateur d'objets).
+    private ObjetBase objetCandidatTap = null;   // objet sous le doigt au moment où il se pose
+    private float tapDebutX, tapDebutY;           // position du doigt au moment où il se pose
+    private boolean tapAnnule = false;            // true dès que le geste n'est plus un simple tap (glissement, zoom)
+
+    private float seuilTapPx() {
+        return 12f * getResources().getDisplayMetrics().density;
+    }
+
+    // Comme trouverObjetSousToucher, mais en ignorant les objets verrouillés
+    private ObjetBase trouverObjetSelectionnable(float xEcran, float yEcran) {
+        if (sceneActive == null) return null;
+        float[] scenePos = ecranVersScene(xEcran, yEcran);
+        float sx = scenePos[0], sy = scenePos[1];
+
+        List<ObjetBase> objetsTries = new ArrayList<>(sceneActive.objets);
+        Collections.sort(objetsTries, (o1, o2) -> Integer.compare(o1.zOrder, o2.zOrder));
+
+        for (int i = objetsTries.size() - 1; i >= 0; i--) {
+            ObjetBase objet = objetsTries.get(i);
+            if (objet.estVerrouille) continue;
+            if (!estVisibleEffectif(objet)) continue;
+
+            float[] localPos = worldToLocal(objet, sx, sy);
+            float lx = localPos[0], ly = localPos[1];
+
+            float objLargeur = ("scene_instance".equals(objet.type)) ? Math.max(50f, objet.largeur) : objet.largeur;
+            float objHauteur = ("scene_instance".equals(objet.type)) ? Math.max(50f, getHauteurReelle(objet)) : getHauteurReelle(objet);
+
+            float scaleXTol = Math.max(0.01f, Math.abs(objet.scaleX));
+            float scaleYTol = Math.max(0.01f, Math.abs(objet.scaleY));
+            float margeX = (20f / niveauZoom) / scaleXTol;
+            float margeY = (20f / niveauZoom) / scaleYTol;
+
+            if (lx >= -margeX && lx <= objLargeur + margeX && ly >= -margeY && ly <= objHauteur + margeY) return objet;
+        }
+        return null;
+    }
+
+    // Sélectionne (ou désélectionne si null) après un tap, et met à jour l'explorateur et l'inspecteur
+    private void selectionnerDepuisTap(ObjetBase obj) {
+        objetSelectionne = obj;
+        if (editeurLie != null) editeurLie.rafraichirArborescence(obj);
+        if (inspecteurLie != null) inspecteurLie.afficherObjet(obj);
+        invalidate();
+    }
+
     private int getTouchTarget(float xEcran, float yEcran) {
         float[] scenePos = ecranVersScene(xEcran, yEcran);
         float sx = scenePos[0], sy = scenePos[1];
         
-        if (objetSelectionne != null) {
+        // Poignées et corps : seulement pour l'objet déjà sélectionné, et s'il n'est pas verrouillé
+        if (objetSelectionne != null && !objetSelectionne.estVerrouille) {
             float[] pts = worldToLocal(objetSelectionne, sx, sy);
             float lx = pts[0], ly = pts[1];
             
@@ -994,14 +1046,9 @@ public class CanvasEditeur extends View {
             if (lx >= 0 && lx <= dimLargeur && ly >= 0 && ly <= dimHauteur) return 2; 
         }
         
-        ObjetBase obj = trouverObjetSousToucher(xEcran, yEcran);
-        if (obj != null) {
-            objetSelectionne = obj;
-            if (editeurLie != null) editeurLie.rafraichirArborescence(obj);
-            return 2; 
-        }
-        objetSelectionne = null;
-        if (editeurLie != null) editeurLie.rafraichirArborescence(null);
+        // Ailleurs : on ne change PAS la sélection maintenant. On retient l'objet sous le doigt ;
+        // il ne sera sélectionné qu'au relâché, si le geste était un simple tap. Sinon la scène défile.
+        objetCandidatTap = trouverObjetSelectionnable(xEcran, yEcran);
         return 0; 
     }
 
@@ -1052,15 +1099,23 @@ public class CanvasEditeur extends View {
         float x = event.getX();
         float y = event.getY();
 
-        switch (event.getAction()) {
+        // Deux doigts (zoom) : ce n'est plus un simple tap
+        if (event.getPointerCount() > 1) tapAnnule = true;
+
+        switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
+                objetCandidatTap = null;
+                tapAnnule = false;
+                tapDebutX = x;
+                tapDebutY = y;
+
                 if (isPanMode) {
                     currentMode = 1;
                 } else {
                     currentMode = getTouchTarget(x, y);
-                    if (currentMode == 0) currentMode = 1;
+                    if (currentMode == 0) currentMode = 1;   // pas sur l'objet sélectionné : défilement (ou tap)
                     
-                    if (objetSelectionne != null) {
+                    if (currentMode != 1 && objetSelectionne != null) {
                         initX = objetSelectionne.x; initY = objetSelectionne.y;
                         initW = objetSelectionne.largeur; initH = objetSelectionne.hauteur;
                         initRot = objetSelectionne.rotation;
@@ -1073,7 +1128,6 @@ public class CanvasEditeur extends View {
                         initHitboxDecalageX = objetSelectionne.hitboxDecalageX;
                         initHitboxDecalageY = objetSelectionne.hitboxDecalageY;
                     }
-                    if (inspecteurLie != null) inspecteurLie.afficherObjet(objetSelectionne);
                     invalidate();
                 }
                 lastTouchX = x; lastTouchY = y;
@@ -1081,15 +1135,21 @@ public class CanvasEditeur extends View {
 
             case MotionEvent.ACTION_MOVE:
                 if (scaleGestureDetector.isInProgress()) {
+                    tapAnnule = true;
                     lastTouchX = x; lastTouchY = y; return true;
                 }
+
+                // Le doigt a vraiment bougé : ce n'est plus un tap
+                if (Math.hypot(x - tapDebutX, y - tapDebutY) > seuilTapPx()) tapAnnule = true;
 
                 float[] scenePos = ecranVersScene(x, y);
                 float sx = scenePos[0], sy = scenePos[1];
                 
                 if (currentMode == 1) { 
-                    cameraX += (x - lastTouchX) / niveauZoom;
-                    cameraY += (y - lastTouchY) / niveauZoom;
+                    if (tapAnnule) {
+                        cameraX += (x - lastTouchX) / niveauZoom;
+                        cameraY += (y - lastTouchY) / niveauZoom;
+                    }
                 } else if (currentMode == 2 && objetSelectionne != null) { 
                     if (!objetSelectionne.estVerrouille) {
                         Matrix invParent = new Matrix();
@@ -1201,12 +1261,18 @@ public class CanvasEditeur extends View {
                 
                 lastTouchX = x; lastTouchY = y;
                 if (currentMode != 0) {
-                    if (inspecteurLie != null && objetSelectionne != null) inspecteurLie.afficherObjet(objetSelectionne);
+                    // L'inspecteur ne suit que les modifications d'objet, pas le simple défilement de la scène
+                    if (currentMode != 1 && inspecteurLie != null && objetSelectionne != null) inspecteurLie.afficherObjet(objetSelectionne);
                     invalidate();
                 }
                 return true;
 
             case MotionEvent.ACTION_UP:
+                // Simple tap hors de l'objet sélectionné : sélectionne l'objet touché, ou désélectionne dans le vide
+                if (currentMode == 1 && !isPanMode && !tapAnnule
+                        && Math.hypot(x - tapDebutX, y - tapDebutY) <= seuilTapPx()) {
+                    selectionnerDepuisTap(objetCandidatTap);
+                }
                 if (currentMode == 2 && objetSelectionne != null) {
                     if (dragStartX != objetSelectionne.x || dragStartY != objetSelectionne.y) {
                         if (editeurLie != null) {
@@ -1219,6 +1285,11 @@ public class CanvasEditeur extends View {
                     if (inspecteurLie != null) inspecteurLie.afficherObjet(objetSelectionne);
                     invalidate();
                 }
+                objetCandidatTap = null;
+                currentMode = 0; return true;
+
+            case MotionEvent.ACTION_CANCEL:
+                objetCandidatTap = null;
                 currentMode = 0; return true;
         }
         return super.onTouchEvent(event);
