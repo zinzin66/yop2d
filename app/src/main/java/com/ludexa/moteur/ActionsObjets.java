@@ -173,6 +173,7 @@ public class ActionsObjets {
         MoteurLogique.dernierObjetImplique = clone;
     }
 
+// haut 1
     // Objet A = point de départ, objet B = cible (pour "Vers la cible"), champ "modele" = nom de l'objet à tirer.
     // Le projectile avance tout seul à la vitesse donnée, dans la direction choisie.
     static void tirer(NoeudGenerique n) {
@@ -186,19 +187,29 @@ public class ActionsObjets {
         if (clone == null) return;
         clone.x = depart.x + (depart.largeur / 2f) - (clone.largeur / 2f);
         clone.y = depart.y + (depart.hauteur / 2f) - (clone.hauteur / 2f);
+
+        String direction = n.texteBrut("direction");
         float angle = depart.rotation;
-        if ("Vers la cible".equals(n.texteBrut("direction"))) {
+        if ("Vers la cible".equals(direction)) {
             ObjetBase cible = n.getCibleObjetB();
             if (cible != null) {
                 float dx = (cible.x + cible.largeur / 2f) - (clone.x + clone.largeur / 2f);
                 float dy = (cible.y + cible.hauteur / 2f) - (clone.y + clone.hauteur / 2f);
                 angle = (float) Math.toDegrees(Math.atan2(dy, dx));
             }
+        } else {
+            // Essaie de lire un angle numérique (0 / 90 / 180 / 270...).
+            // Si ce n'est pas un nombre (ex : "Angle de départ"), on garde l'angle de l'objet A.
+            try {
+                angle = Float.parseFloat(direction.trim());
+            } catch (Exception e) {
+                // rien à faire : angle reste celui de depart.rotation
+            }
         }
+
         clone.rotation = angle;
         clone.vitesseAvanceContinue = (float) vitesse;
     }
-
     // ------------------------------------------------------------------
     // EFFETS, LIENS, VERROU
     // ------------------------------------------------------------------
