@@ -669,19 +669,8 @@
   "noeud_fin_clic_sur_objet": "Fine del Clic su Oggetto",
 "param_propriete": "Proprietà da estrarre"
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+,
+"stats_case": "Statistiche anonime",
+"stats_explication": "A ogni apertura, Yop2D invia un solo segnale anonimo: la versione di Yop2D, la versione di Android e la lingua del dispositivo. Non viene inviato nessun dato personale né nulla dei tuoi progetti (il paese viene stimato senza conservare alcun indirizzo). Questo aiuta a sapere quante persone usano Yop2D e a migliorarlo. I giochi esportati non inviano nulla."
 }
 

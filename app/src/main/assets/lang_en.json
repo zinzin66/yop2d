@@ -656,23 +656,12 @@
   "noeud_event_maintenu_objet": "Object Held Down",
   "noeud_fin_clic_sur_objet": "Object Released",
 "param_propriete": "Property to extract"
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-
-
+  ,
+"stats_case": "Anonymous statistics",
+"stats_explication": "Each time it opens, Yop2D sends a single anonymous signal: the Yop2D version, the Android version and the device language. No personal data and nothing from your projects is sent (the country is estimated without storing any address). This helps to know how many people use Yop2D and to improve it. Exported games send nothing."
 }
+  
+  
+  
+  
 // bas 1

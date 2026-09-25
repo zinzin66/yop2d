@@ -475,19 +475,36 @@ public class EditeurNoeudDialog extends Dialog {
         ObjetBase objetActuel = estB ? noeud.getCibleObjetB() : noeud.getCibleObjet();
         String affiche;
         if ("__OBJET_IMPLIQUE__".equals(nomMemorise)) affiche = Traducteur.get("noeud_objet_implique_long");
+        else if (nomMemorise != null && nomMemorise.startsWith(NoeudBase.PREFIXE_TAG)) affiche = "# " + nomMemorise.substring(NoeudBase.PREFIXE_TAG.length());
         else if (nomMemorise != null && !nomMemorise.isEmpty()) affiche = nomMemorise;
         else affiche = (objetActuel != null) ? objetActuel.nom : null;
         mettreAJourAfficheurCible(afficheur, affiche);
 
         bouton.setOnClickListener(v -> {
             if (scene == null || scene.objets == null) return;
-            String[] noms = new String[scene.objets.size() + 2];
-            noms[0] = Traducteur.get("valeur_aucune");
-            noms[1] = Traducteur.get("noeud_objet_implique_long");
-            for (int i = 0; i < scene.objets.size(); i++) noms[i + 2] = scene.objets.get(i).nom;
-            afficherChoix(Traducteur.get(estB ? "noeud_choisir_cible_objet_b" : "noeud_choisir_cible_objet_a"), noms, which -> {
-                ObjetBase choisi = (which >= 2) ? scene.objets.get(which - 2) : null;
-                String nom = (which == 0) ? null : (which == 1 ? "__OBJET_IMPLIQUE__" : choisi.nom);
+
+            // Liste : Aucun, Objet impliqué, les objets de la scène, puis (Objet A seulement) les tags
+            final List<String> noms = new ArrayList<>();
+            final List<String> valeurs = new ArrayList<>();      // ce qui sera mémorisé dans le nœud
+            final List<ObjetBase> objets = new ArrayList<>();    // l'objet précis (null pour Aucun / impliqué / tag)
+
+            noms.add(Traducteur.get("valeur_aucune"));             valeurs.add(null);                   objets.add(null);
+            noms.add(Traducteur.get("noeud_objet_implique_long")); valeurs.add("__OBJET_IMPLIQUE__");   objets.add(null);
+            for (ObjetBase o : scene.objets) {
+                noms.add(o.nom); valeurs.add(o.nom); objets.add(o);
+            }
+            if (!estB) {
+                for (String tag : NoeudBase.getTagsDisponibles()) {
+                    noms.add("# " + tag);
+                    valeurs.add(NoeudBase.PREFIXE_TAG + tag);
+                    objets.add(null);
+                }
+            }
+
+            afficherChoix(Traducteur.get(estB ? "noeud_choisir_cible_objet_b" : "noeud_choisir_cible_objet_a"),
+                    noms.toArray(new String[0]), which -> {
+                ObjetBase choisi = objets.get(which);
+                String nom = valeurs.get(which);
                 if (estB) {
                     noeud.setCibleObjetB(choisi);
                     noeud.nomCibleObjetB = nom;
@@ -495,7 +512,11 @@ public class EditeurNoeudDialog extends Dialog {
                     noeud.setCibleObjet(choisi);
                     noeud.nomCibleObjet = nom;
                 }
-                mettreAJourAfficheurCible(afficheur, which == 1 ? Traducteur.get("noeud_objet_implique_long") : nom);
+                String texte;
+                if (which == 1) texte = Traducteur.get("noeud_objet_implique_long");
+                else if (nom != null && nom.startsWith(NoeudBase.PREFIXE_TAG)) texte = noms.get(which);
+                else texte = nom;
+                mettreAJourAfficheurCible(afficheur, texte);
                 mettreAJourResume();
                 mettreAJourAideChamp();
             });
@@ -616,8 +637,9 @@ public class EditeurNoeudDialog extends Dialog {
     }
 
     private void ecrireDansChamp(String texte) {
-        inserer(texte);
-    
+    if (champActif == null) return;
+    champSaisie.setText(texte);
+    champSaisie.setSelection(champSaisie.getText().length());
     }
 
     private void demanderTexte(String titre, String valeurInitiale) {
@@ -763,6 +785,7 @@ public class EditeurNoeudDialog extends Dialog {
         return noms;
     }
 // bas 2
+    
 
 // haut 3
     // ------------------------------------------------------------------
@@ -997,7 +1020,7 @@ public class EditeurNoeudDialog extends Dialog {
                     && noeud.getNomsParametres().contains("Valeur de comparaison");
         }
 
-        if (noeud instanceof NoeudEventCollisionAB || noeud instanceof NoeudConditionSiObjetToucheZone) {
+        if (noeud instanceof NoeudEventCollisionAB) {
             txtResume.setVisibility(View.VISIBLE);
             txtResume.setText(Traducteur.get("resume_interaction") + " : "
                     + nomObjetAffiche(noeud.nomCibleObjet, noeud.getCibleObjet()) + " <-> "

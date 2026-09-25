@@ -48,10 +48,25 @@ public class NoeudGenerique extends NoeudBase {
         Evaluateur.derniereErreur = null;
         verifierCibles();
         String sortie = null;
-        try {
-            sortie = ActionsMoteur.executer(definition.action, this);
-        } catch (RuntimeException e) {
-            signaler(e);
+        if (definition.objet && cibleEstUnTag()) {
+            // CIBLE PAR TAG : on exécute l'action une fois pour chaque objet portant le tag,
+            // puis on continue vers le nœud suivant UNE SEULE fois (plus bas).
+            ObjetBase cibleAvant = cibleObjetResolue;
+            for (ObjetBase obj : getObjetsDuTagCible()) {
+                cibleObjetResolue = obj;
+                try {
+                    sortie = ActionsMoteur.executer(definition.action, this);
+                } catch (RuntimeException e) {
+                    signaler(e);
+                }
+            }
+            cibleObjetResolue = cibleAvant;
+        } else {
+            try {
+                sortie = ActionsMoteur.executer(definition.action, this);
+            } catch (RuntimeException e) {
+                signaler(e);
+            }
         }
         if (Evaluateur.derniereErreur != null) alerte(Evaluateur.derniereErreur);
         if (sortie == null && !definition.sorties.isEmpty()) sortie = definition.sorties.get(0);
@@ -106,6 +121,8 @@ public class NoeudGenerique extends NoeudBase {
         if (definition.objet) {
             if (!cibleChoisie(nomCibleObjet)) {
                 if (!definition.variable) alerte("aucun objet choisi (bouton jaune de cible A)");
+            } else if (cibleEstUnTag()) {
+                if (getObjetsDuTagCible().isEmpty()) alerte("aucun objet avec le tag « " + getTagCible() + " »");
             } else if (getCibleObjet() == null) {
                 alerte("objet introuvable : « " + nomCibleObjet + " »");
             }

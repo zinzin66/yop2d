@@ -1,18 +1,25 @@
+// haut 1 sept 
 package com.ludexa.moteur;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class NoeudActionTirer extends NoeudBase {
-    
-    private String nomModele = ""; 
-    private String modeDirection; 
-    private String vitesseStr = "10.0"; 
+
+    // Nouvelles options simples, en texte brut (pas besoin de traduction, juste des flèches)
+    private static final String OPT_DROITE = "→ Droite";
+    private static final String OPT_GAUCHE = "← Gauche";
+    private static final String OPT_HAUT = "↑ Haut";
+    private static final String OPT_BAS = "↓ Bas";
+
+    private String nomModele = "";
+    private String modeDirection;
+    private String vitesseStr = "10.0";
 
     public NoeudActionTirer() {
         super(genererId(), Traducteur.get("noeud_tirer_nom"), Traducteur.get("cat_apparence_objets"));
-        
-        this.modeDirection = Traducteur.get("opt_angle_depart");
+
+        this.modeDirection = OPT_DROITE;
 
         this.ajouterPort(new Port(Traducteur.get("port_entrer"), Port.TYPE_EXECUTION_ENTREE));
         this.ajouterPort(new Port(Traducteur.get("port_suivant"), Port.TYPE_EXECUTION_SORTIE));
@@ -20,13 +27,13 @@ public class NoeudActionTirer extends NoeudBase {
 
     @Override
     public void executer() {
-        ObjetBase spawnPoint = getCibleObjet(); 
+        ObjetBase spawnPoint = getCibleObjet();
         if (spawnPoint != null && contexteApplication != null) {
             try {
                 java.lang.reflect.Field sceneField = contexteApplication.getClass().getField("sceneActive");
                 Scene s = (Scene) sceneField.get(contexteApplication);
                 if (s != null && s.objets != null) {
-                    
+
                     ObjetBase modele = null;
                     for (ObjetBase o : s.objets) {
                         if (nomModele.equals(o.nom)) {
@@ -34,31 +41,40 @@ public class NoeudActionTirer extends NoeudBase {
                             break;
                         }
                     }
-                    
+
                     if (modele != null) {
                         ObjetBase clone = modele.clonerProfond();
-                        
+
                         // 1. Positionnement au centre du point de départ
                         clone.x = spawnPoint.x + (spawnPoint.largeur / 2f) - (clone.largeur / 2f);
                         clone.y = spawnPoint.y + (spawnPoint.hauteur / 2f) - (clone.hauteur / 2f);
-                        
-                        // 2. Calcul de la rotation selon le mode
-                        if (modeDirection != null && modeDirection.equals(Traducteur.get("opt_vers_cible"))) {
-                            ObjetBase targetB = getCibleObjetB(); 
+
+                        // 2. Calcul de la rotation selon le mode choisi
+                        if (OPT_DROITE.equals(modeDirection)) {
+                            clone.rotation = 0f;
+                        } else if (OPT_BAS.equals(modeDirection)) {
+                            clone.rotation = 90f;
+                        } else if (OPT_GAUCHE.equals(modeDirection)) {
+                            clone.rotation = 180f;
+                        } else if (OPT_HAUT.equals(modeDirection)) {
+                            clone.rotation = -90f;
+                        } else if (modeDirection != null && modeDirection.equals(Traducteur.get("opt_vers_cible"))) {
+                            ObjetBase targetB = getCibleObjetB();
                             if (targetB != null) {
                                 float centreCloneX = clone.x + (clone.largeur / 2f);
                                 float centreCloneY = clone.y + (clone.hauteur / 2f);
                                 float centreCibleX = targetB.x + (targetB.largeur / 2f);
                                 float centreCibleY = targetB.y + (targetB.hauteur / 2f);
-                                
+
                                 clone.rotation = (float) Math.toDegrees(Math.atan2(centreCibleY - centreCloneY, centreCibleX - centreCloneX));
                             } else {
                                 clone.rotation = spawnPoint.rotation;
                             }
                         } else {
+                            // Repli : "Angle de départ" (ou toute ancienne valeur déjà enregistrée)
                             clone.rotation = spawnPoint.rotation;
                         }
-                        
+
                         // 3. Application de la vitesse
                         try {
                             clone.vitesseAvanceContinue = Float.parseFloat(vitesseStr);
@@ -85,12 +101,12 @@ public class NoeudActionTirer extends NoeudBase {
     }
 
     @Override
-    public List<String> getNomsParametres() { 
+    public List<String> getNomsParametres() {
         return Arrays.asList(
-            Traducteur.get("param_nom_modele"), 
+            Traducteur.get("param_nom_modele"),
             Traducteur.get("param_mode_direction"),
             Traducteur.get("param_vitesse")
-        ); 
+        );
     }
 
     @Override
@@ -109,19 +125,23 @@ public class NoeudActionTirer extends NoeudBase {
     }
 
     @Override
-    public String getTypeEditeurParametre(String nomParametre) { 
+    public String getTypeEditeurParametre(String nomParametre) {
         if (nomParametre.equals(Traducteur.get("param_nom_modele"))) return TYPE_TEXTE_ALPHABETIQUE;
-        if (nomParametre.equals(Traducteur.get("param_mode_direction"))) return TYPE_CHOIX_LISTE; 
-        if (nomParametre.equals(Traducteur.get("param_vitesse"))) return TYPE_TEXTE_LIBRE; 
-        return TYPE_TEXTE_LIBRE; 
+        if (nomParametre.equals(Traducteur.get("param_mode_direction"))) return TYPE_CHOIX_LISTE;
+        if (nomParametre.equals(Traducteur.get("param_vitesse"))) return TYPE_TEXTE_LIBRE;
+        return TYPE_TEXTE_LIBRE;
     }
-    
+
     @Override
     public List<String> getOptionsChoixListe(String nomParametre) {
         if (nomParametre.equals(Traducteur.get("param_mode_direction"))) {
             return Arrays.asList(
-                Traducteur.get("opt_angle_depart"),
-                Traducteur.get("opt_vers_cible")
+                OPT_DROITE,
+                OPT_GAUCHE,
+                OPT_HAUT,
+                OPT_BAS,
+                Traducteur.get("opt_vers_cible"),
+                Traducteur.get("opt_angle_depart")
             );
         }
         return super.getOptionsChoixListe(nomParametre);
@@ -133,3 +153,4 @@ public class NoeudActionTirer extends NoeudBase {
     @Override
     public boolean requiertCibleObjetB() { return true; }
 }
+// bas 1

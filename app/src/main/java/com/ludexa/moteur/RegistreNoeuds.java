@@ -35,7 +35,6 @@ public class RegistreNoeuds {
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_debut_de_glisser"), Traducteur.get("cat_evenements"), "NoeudEventDebutGlisser"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_fin_de_glisser"), Traducteur.get("cat_evenements"), "NoeudEventFinGlisser"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_collision_ab"), Traducteur.get("cat_evenements"), "NoeudEventCollisionAB"));
-        REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_entree_de_zone"), Traducteur.get("cat_evenements"), "NoeudEventEntreeZone"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_sortie_de_zone"), Traducteur.get("cat_evenements"), "NoeudEventSortieZone"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_au_survol"), Traducteur.get("cat_evenements"), "NoeudEventSurvolObjet"));
         REGISTRE.add(new InfoNoeud(Traducteur.get("noeud_fin_de_survol"), Traducteur.get("cat_evenements"), "NoeudEventFinSurvol"));
