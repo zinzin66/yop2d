@@ -2110,7 +2110,23 @@ public class InspecteurProprietes extends LinearLayout {
         miseAJourEnCours = false;
     }
 // bas 8
+
 // haut 9
+    // Texte à afficher pour la valeur d'une variable : une variable ENTIER s'affiche toujours sans virgule
+    // (au rechargement d'un projet, 3 revient souvent sous la forme 3.0).
+    private String texteValeurVariable(Variable var) {
+        if (var.valeur == null) return "";
+        if ("ENTIER".equals(var.type)) {
+            if (var.valeur instanceof Number) {
+                return String.valueOf(Math.round(((Number) var.valeur).doubleValue()));
+            }
+            try {
+                return String.valueOf(Math.round(Double.parseDouble(var.valeur.toString().replace(",", "."))));
+            } catch (Exception ignored) {}
+        }
+        return var.valeur.toString();
+    }
+
     private void rafraichirVariablesObjet(Context context) {
         conteneurListeVariables.removeAllViews();
         if (objetCourant == null || objetCourant.variablesLocales == null) return;
@@ -2139,16 +2155,19 @@ public class InspecteurProprietes extends LinearLayout {
                 ligne.addView(cbVar);
             } else {
                 EditText champVar = new EditText(context);
-                if ("CHIFFRE".equals(var.type) || "ENTIER".equals(var.type)) {
+                if ("CHIFFRE".equals(var.type)) {
                     champVar.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
+                } else if ("ENTIER".equals(var.type)) {
+                    // Pas de virgule pour un entier
+                    champVar.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
                 }
-                champVar.setText(var.valeur != null ? var.valeur.toString() : "");
+                champVar.setText(texteValeurVariable(var));
                 styliserChampFlexible(champVar);
                 champVar.addTextChangedListener(creerWatcherSimple(texte -> {
                     if ("CHIFFRE".equals(var.type)) {
-                        try { var.valeur = Float.parseFloat(texte); } catch(Exception ignored){}
+                        try { var.valeur = Float.parseFloat(texte.replace(",", ".")); } catch(Exception ignored){}
                     } else if ("ENTIER".equals(var.type)) {
-                        try { var.valeur = Integer.parseInt(texte); } catch(Exception ignored){}
+                        try { var.valeur = (int) Math.round(Double.parseDouble(texte.replace(",", "."))); } catch(Exception ignored){}
                     } else {
                         var.valeur = texte;
                     }
