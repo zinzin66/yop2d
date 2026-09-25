@@ -670,6 +670,13 @@
   ,
 "stats_case": "匿名統計",
 "stats_explication": "Yop2D は起動するたびに、匿名の信号を1つだけ送信します：Yop2D のバージョン、Android のバージョン、端末の言語。個人データやプロジェクトの内容は一切送信されません（国はアドレスを保存せずに推定されます）。これにより、Yop2D を使っている人数を知り、改善に役立てます。書き出したゲームは何も送信しません。"
+,
+"port_evt_suivant": "次へ",
+"port_evt_sortie": "出力",
+"port_evt_collision": "衝突",
+"port_evt_executer": "実行"
+,
+"noeud_event_doigt_appuye": "指で押している間"
 }
   
   

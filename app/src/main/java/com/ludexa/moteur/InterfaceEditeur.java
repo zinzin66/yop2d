@@ -127,7 +127,9 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         if (vueJeu != null) {
             vueJeu.ouvrirHudDynamique(scene, blueprintHud);
         }
-        Toast.makeText(this, Traducteur.get("hud_ouvert") + (scene != null ? scene.nom : Traducteur.get("valeur_aucune")), Toast.LENGTH_SHORT).show();
+        // Diagnostic dans le journal du projet (plus de Toast à l'écran)
+        DiagLogger.log(cheminProjet, "HUD ouvert : " + (scene != null ? scene.nom : "aucun")
+                + (blueprintHud != null ? "" : " (sans script)"));
     }
 
     public void fermerHUD() {
@@ -135,7 +137,7 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
         if (vueJeu != null) {
             vueJeu.setSceneHud(null);
         }
-        Toast.makeText(this, Traducteur.get("hud_ferme"), Toast.LENGTH_SHORT).show();
+        DiagLogger.log(cheminProjet, "HUD fermé");
     }
 
     public void ajouterCommande(Commande c) {
@@ -229,7 +231,6 @@ public class InterfaceEditeur extends Activity implements FournisseurDonneesJeu 
 
         bandeauHaut.addView(separateurVertical());
 // bas 1
-
 // haut 2
         ConfigurationJeu.charger(cheminProjet);   // résolution et cadence de CE projet (reglages.json)
         listeScenes = new ArrayList<>();

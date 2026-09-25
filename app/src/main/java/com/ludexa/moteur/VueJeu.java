@@ -991,8 +991,7 @@ public class VueJeu extends View {
     }
 // bas 4
     
-        
-// haut 5
+        // haut 5
     private void dessinerImage(Canvas canvas, ObjetBase objet, String cheminAAfficher) {
         if (cheminAAfficher != null && cheminProjet != null) {
             android.graphics.Bitmap bmp = cacheImages.get(cheminAAfficher);
@@ -1130,24 +1129,38 @@ public class VueJeu extends View {
 
             if (!objet.etatVisibleClignotement) continue;
             
+            // ----- Animation : les images avancent selon le temps du JEU (elles se figent en pause,
+            // ralentissent au ralenti, accélèrent en jeu accéléré). Les objets du HUD, qui continuent
+            // de tourner en pause (menus...), gardent l'horloge réelle. -----
             if (objet.animationEnCours && objet.animationActive != null && objet.animations.containsKey(objet.animationActive)) {
                 List<String> frames = objet.animations.get(objet.animationActive);
                 if (frames != null && !frames.isEmpty()) {
-                    long tempsActuel = System.currentTimeMillis();
-                    if (objet.dernierTempsFrame == 0) objet.dernierTempsFrame = tempsActuel;
-                    long ecoulement = tempsActuel - objet.dernierTempsFrame;
-                    long delaiFrame = 1000 / Math.max(1, objet.vitesseFps);
-                    if (ecoulement >= delaiFrame) {
-                        objet.frameCourante++;
+                    long tempsActuel = estDansHud(objet)
+                            ? System.currentTimeMillis()
+                            : (long) (HorlogeJeu.tempsJeu * 1000.0);
+                    // 0 = animation qui vient d'être lancée ou reprise ; plus grand que maintenant = horloge
+                    // remise à zéro (Recommencer la scène) : on recommence à compter à partir de maintenant.
+                    if (objet.dernierTempsFrame == 0 || objet.dernierTempsFrame > tempsActuel) {
                         objet.dernierTempsFrame = tempsActuel;
+                    }
+                    long delaiFrame = 1000 / Math.max(1, objet.vitesseFps);
+                    int garde = 0;
+                    while (objet.animationEnCours && tempsActuel - objet.dernierTempsFrame >= delaiFrame && garde < 10) {
+                        garde++;
+                        objet.frameCourante++;
+                        objet.dernierTempsFrame += delaiFrame;
                         if (objet.frameCourante >= frames.size()) {
-                            if (objet.boucleAnimation) objet.frameCourante = 0;
-                            else {
+                            if (objet.boucleAnimation) {
+                                objet.frameCourante = 0;
+                            } else {
                                 objet.frameCourante = frames.size() - 1;
                                 objet.animationEnCours = false;
                             }
                         }
                     }
+                    // Grosse attente (appli mise en arrière-plan...) : on ne rattrape pas, on repart de maintenant
+                    if (garde >= 10) objet.dernierTempsFrame = tempsActuel;
+                    if (objet.frameCourante < 0 || objet.frameCourante >= frames.size()) objet.frameCourante = 0;
                     objet.cheminImage = frames.get(objet.frameCourante);
                 }
             }
@@ -1471,13 +1484,11 @@ public class VueJeu extends View {
         // 1 normalement, 2 ou plus si le jeu est accéléré. Elle déclenche aussi les minuteurs arrivés à échéance.
         int pasDeJeu = HorlogeJeu.imageSuivante();
 
-        // ----- NOUVEAU : début (les « Glisser vers » en cours avancent selon le temps de jeu : pause et ralenti compris) -----
+        // Les « Glisser vers » en cours avancent selon le temps de jeu (pause et ralenti compris)
         DeplacementsGlisses.avancer();
-        // ----- NOUVEAU : fin -----
 
-        // ----- NOUVEAU : début (les « Fondu » en cours avancent selon le temps de jeu : pause et ralenti compris) -----
+        // Les « Fondu » en cours avancent selon le temps de jeu (pause et ralenti compris)
         FondusEnCours.avancer();
-        // ----- NOUVEAU : fin -----
 
         for (int pas = 0; pas < pasDeJeu; pas++) {
             if (GestionnaireControles.modeAventureActif && (GestionnaireControles.joyDirX != 0 || GestionnaireControles.joyDirY != 0)) {
@@ -1503,14 +1514,6 @@ public class VueJeu extends View {
                                 joueurCible = null; 
                             }
                         }
-                    }
-
-                    long tempsActuel = System.currentTimeMillis();
-                    if (tempsActuel - dernierLogJoystick > 500) { 
-                        logDiag("JOYSTICK cible=" + (joueurCible != null 
-                            ? joueurCible.nom + " id=" + joueurCible.id + " tag=" + joueurCible.tag + " parentId=" + joueurCible.parentId + " phys=" + joueurCible.estPhysique + " stat=" + joueurCible.estStatique + " x=" + joueurCible.x + " y=" + joueurCible.y
-                            : "NULL"));
-                        dernierLogJoystick = tempsActuel;
                     }
 
                     if (joueurCible != null) {
