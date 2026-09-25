@@ -666,17 +666,8 @@
   "noeud_event_maintenu_objet": "按住物体",
   "noeud_fin_clic_sur_objet": "松开物体",
 "param_propriete": "要提取的属性"
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+  ,
+"stats_case": "匿名统计",
+"stats_explication": "每次打开时，Yop2D 只发送一个匿名信号：Yop2D 版本、Android 版本和设备语言。不会发送任何个人数据，也不会发送你的项目内容（国家是估算得出的，不保存任何地址）。这有助于了解有多少人在使用 Yop2D，并改进它。导出的游戏不会发送任何内容。"
 }
-
+  

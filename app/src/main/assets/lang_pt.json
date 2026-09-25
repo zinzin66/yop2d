@@ -665,22 +665,10 @@
   "noeud_event_maintenu_objet": "Objeto Mantido Pressionado",
   "noeud_fin_clic_sur_objet": "Fim do Clique no Objeto",
 "param_propriete": "Propriedade a extrair"
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-
-
+  ,
+"stats_case": "Estatísticas anônimas",
+"stats_explication": "Cada vez que é aberto, o Yop2D envia um único sinal anônimo: a versão do Yop2D, a versão do Android e o idioma do aparelho. Nenhum dado pessoal nem nada dos seus projetos é enviado (o país é estimado sem guardar nenhum endereço). Isso ajuda a saber quantas pessoas usam o Yop2D e a melhorá-lo. Os jogos exportados não enviam nada."
 }
+  
+
 // bas 1

@@ -1563,10 +1563,7 @@
         {
           "cle": "direction",
           "type": "choix",
-          "options": [
-            "Angle de départ",
-            "Vers la cible"
-          ],
+          "options": ["0", "90", "180", "270", "Vers la cible", "Angle de départ"],
           "defaut": "Angle de départ",
           "nom": {
             "fr": "Direction",

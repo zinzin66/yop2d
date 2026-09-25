@@ -669,16 +669,7 @@
   "noeud_event_maintenu_objet": "Objekt gehalten",
   "noeud_fin_clic_sur_objet": "Klick auf Objekt beendet",
 "param_propriete": "Zu extrahierende Eigenschaft"
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+ ,
+"stats_case": "Anonyme Statistiken",
+"stats_explication": "Bei jedem Start sendet Yop2D ein einziges anonymes Signal: die Yop2D-Version, die Android-Version und die Gerätesprache. Es werden keine persönlichen Daten und nichts aus deinen Projekten gesendet (das Land wird geschätzt, ohne eine Adresse zu speichern). So lässt sich erkennen, wie viele Menschen Yop2D nutzen, um es zu verbessern. Exportierte Spiele senden nichts."
 }
