@@ -1815,6 +1815,7 @@ public class InspecteurProprietes extends LinearLayout {
         if (imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 // bas 7
+
 // haut 8
     private void verifierEtConfirmerRenommage(Context context) {
         if (objetCourant == null) return;
@@ -1843,6 +1844,11 @@ public class InspecteurProprietes extends LinearLayout {
     }
 
     public void afficherObjet(ObjetBase objet) {
+        // Même objet mis à jour (image, police, parent...) : on garde la position de défilement de l'inspecteur,
+        // pour ne pas revenir tout en haut après chaque modification.
+        final boolean memeObjet = (objet != null && objet == this.objetCourant);
+        final int defilementAvant = (scrollInspecteur != null) ? scrollInspecteur.getScrollY() : 0;
+
         this.objetCourant = objet;
         miseAJourEnCours = true;
 
@@ -2108,6 +2114,13 @@ public class InspecteurProprietes extends LinearLayout {
         }
 
         miseAJourEnCours = false;
+
+        // Retour à la position de défilement d'avant : tout de suite, puis une seconde fois juste après,
+        // au cas où Android fait défiler l'inspecteur en refermant la fenêtre de choix (image, police...).
+        if (memeObjet && scrollInspecteur != null) {
+            scrollInspecteur.post(() -> scrollInspecteur.scrollTo(0, defilementAvant));
+            scrollInspecteur.postDelayed(() -> scrollInspecteur.scrollTo(0, defilementAvant), 150);
+        }
     }
 // bas 8
 
