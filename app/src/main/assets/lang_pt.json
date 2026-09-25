@@ -668,6 +668,11 @@
   ,
 "stats_case": "Estatísticas anônimas",
 "stats_explication": "Cada vez que é aberto, o Yop2D envia um único sinal anônimo: a versão do Yop2D, a versão do Android e o idioma do aparelho. Nenhum dado pessoal nem nada dos seus projetos é enviado (o país é estimado sem guardar nenhum endereço). Isso ajuda a saber quantas pessoas usam o Yop2D e a melhorá-lo. Os jogos exportados não enviam nada."
+,
+"port_evt_suivant": "Próximo",
+"port_evt_sortie": "Saída",
+"port_evt_collision": "Colisão",
+"port_evt_executer": "Executar"
 }
   
 
