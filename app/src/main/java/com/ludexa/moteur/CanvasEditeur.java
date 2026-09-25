@@ -404,7 +404,8 @@ public class CanvasEditeur extends View {
         }
     }
 // bas 2
-// haut 3
+
+  // haut 3
     private void dessinerObjetBase(Canvas canvas, ObjetBase objet, List<ObjetBase> contexteObjets, int baseAlpha, boolean isRoot) {
         int alphaVal = (int) (objet.alpha * baseAlpha);
         if (alphaVal < 0) alphaVal = 0;
@@ -716,7 +717,8 @@ public class CanvasEditeur extends View {
                 canvas.drawRoundRect(poigneeDroite, rcX, rcY, paintPoignee);
                 canvas.drawRoundRect(poigneeDroite, rcX, rcY, paintPoigneeBordure);
                 
-                float rotY = t - (50f / scaleFactorY);
+                // Poignée de rotation : toujours à la même distance à l'écran au-dessus du cadre (voir ecartPoigneeRotation, bloc 5)
+                float rotY = t - ecartPoigneeRotation(scaleFactorY);
                 canvas.drawLine(cx, t, cx, rotY, paintSelection);
                 
                 float scaleFactorAvg = (scaleFactorX + scaleFactorY) / 2f;
@@ -956,6 +958,13 @@ public class CanvasEditeur extends View {
         return 12f * getResources().getDisplayMetrics().density;
     }
 
+    // Distance entre le haut du cadre et la poignée de rotation, dans les unités de l'objet :
+    // environ 90 pixels à l'écran quel que soit le zoom ou l'échelle de l'objet, pour ne jamais
+    // chevaucher la poignée d'agrandissement du haut. Utilisée par le dessin (bloc 3) et le toucher (ici).
+    private float ecartPoigneeRotation(float scaleFacteurY) {
+        return 90f / (Math.max(0.01f, niveauZoom) * Math.max(0.01f, scaleFacteurY));
+    }
+
     // Comme trouverObjetSousToucher, mais en ignorant les objets verrouillés
     private ObjetBase trouverObjetSelectionnable(float xEcran, float yEcran) {
         if (sceneActive == null) return null;
@@ -1015,7 +1024,7 @@ public class CanvasEditeur extends View {
 
             float midX = dimLargeur / 2f;
             float midY = dimHauteur / 2f;
-            float rotY = -50f / scaleY;
+            float rotY = -ecartPoigneeRotation(scaleY);
 
             if (!isModeDeplacementObjet) {
                 if (objetSelectionne.hitboxPersonnalisee) {
