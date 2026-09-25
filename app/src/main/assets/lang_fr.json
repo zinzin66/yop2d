@@ -667,5 +667,7 @@
 "port_evt_sortie": "Sortie",
 "port_evt_collision": "Collision",
 "port_evt_executer": "Exécuter"
+,
+"noeud_event_doigt_appuye": "Doigt appuyé"
 }
 // bas 1

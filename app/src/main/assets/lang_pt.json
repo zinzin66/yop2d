@@ -673,6 +673,8 @@
 "port_evt_sortie": "Saída",
 "port_evt_collision": "Colisão",
 "port_evt_executer": "Executar"
+,
+"noeud_event_doigt_appuye": "Dedo pressionado"
 }
   
 
