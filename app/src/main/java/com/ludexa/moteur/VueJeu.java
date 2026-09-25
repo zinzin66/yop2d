@@ -1475,7 +1475,6 @@ public class VueJeu extends View {
         }
     }
 // bas 5
-
 // haut 6
     @Override
     protected void onDraw(Canvas canvas) {
@@ -1485,13 +1484,11 @@ public class VueJeu extends View {
         // 1 normalement, 2 ou plus si le jeu est accéléré. Elle déclenche aussi les minuteurs arrivés à échéance.
         int pasDeJeu = HorlogeJeu.imageSuivante();
 
-        // ----- NOUVEAU : début (les « Glisser vers » en cours avancent selon le temps de jeu : pause et ralenti compris) -----
+        // Les « Glisser vers » en cours avancent selon le temps de jeu (pause et ralenti compris)
         DeplacementsGlisses.avancer();
-        // ----- NOUVEAU : fin -----
 
-        // ----- NOUVEAU : début (les « Fondu » en cours avancent selon le temps de jeu : pause et ralenti compris) -----
+        // Les « Fondu » en cours avancent selon le temps de jeu (pause et ralenti compris)
         FondusEnCours.avancer();
-        // ----- NOUVEAU : fin -----
 
         for (int pas = 0; pas < pasDeJeu; pas++) {
             if (GestionnaireControles.modeAventureActif && (GestionnaireControles.joyDirX != 0 || GestionnaireControles.joyDirY != 0)) {
@@ -1517,14 +1514,6 @@ public class VueJeu extends View {
                                 joueurCible = null; 
                             }
                         }
-                    }
-
-                    long tempsActuel = System.currentTimeMillis();
-                    if (tempsActuel - dernierLogJoystick > 500) { 
-                        logDiag("JOYSTICK cible=" + (joueurCible != null 
-                            ? joueurCible.nom + " id=" + joueurCible.id + " tag=" + joueurCible.tag + " parentId=" + joueurCible.parentId + " phys=" + joueurCible.estPhysique + " stat=" + joueurCible.estStatique + " x=" + joueurCible.x + " y=" + joueurCible.y
-                            : "NULL"));
-                        dernierLogJoystick = tempsActuel;
                     }
 
                     if (joueurCible != null) {
