@@ -152,6 +152,9 @@ public class EcranDemarrage extends Activity {
         Traducteur.initialiser(this, langueCourante); 
         RegistreNoeuds.initialiser(); 
 
+        // Statistiques anonymes : un signal "Yop2D ouvert" (jamais envoyé par un jeu exporté, qui s'arrête plus haut)
+        Statistiques.signalerOuverture(this);
+
         LinearLayout layoutPrincipal = new LinearLayout(this);
         layoutPrincipal.setOrientation(LinearLayout.HORIZONTAL);
         layoutPrincipal.setPadding(dp(16), dp(16), dp(16), dp(16));
@@ -354,6 +357,47 @@ public class EcranDemarrage extends Activity {
         }
     }
 
+    // Fenêtre de debug cachée (appui long sur le numéro de version) : journal général de l'appli,
+    // hors projet, où s'écrivent notamment les résultats d'envoi des statistiques.
+    // Texte en français en dur, comme le "Journal de debug" des projets : outil développeur uniquement.
+    private void afficherJournalGeneral() {
+        final String chemin = Statistiques.cheminJournal(this);
+        final String messageVide = "Journal général vide pour l'instant.";
+        String contenu = DiagLogger.lire(chemin);
+        if (contenu.isEmpty()) contenu = messageVide;
+
+        final TextView texteLog = new TextView(this);
+        texteLog.setText(contenu);
+        texteLog.setTextSize(12f);
+        texteLog.setTextColor(Palette.texteNormal);
+        texteLog.setPadding(dp(12), dp(12), dp(12), dp(12));
+        texteLog.setTextIsSelectable(true);
+
+        ScrollView scroll = new ScrollView(this);
+        scroll.setBackground(fond(couleurFondListe(), 6, couleurBordure(), 1));
+        scroll.addView(texteLog);
+
+        AlertDialog dialogue = new AlertDialog.Builder(this)
+                .setTitle("Journal général")
+                .setView(scroll)
+                .setPositiveButton(Traducteur.get("bouton_fermer"), null)
+                .setNeutralButton("Effacer", null)
+                .create();
+        dialogue.show();
+
+        // Effacer laisse la fenêtre ouverte
+        dialogue.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener(v -> {
+            DiagLogger.effacer(chemin);
+            texteLog.setText(messageVide);
+        });
+
+        android.view.Window window = dialogue.getWindow();
+        if (window != null) {
+            android.util.DisplayMetrics metrics = getResources().getDisplayMetrics();
+            window.setLayout((int) (metrics.widthPixels * 0.85), (int) (metrics.heightPixels * 0.75));
+        }
+    }
+
     //ici
     
     private View construireColonneGauche() {
@@ -462,6 +506,11 @@ public class EcranDemarrage extends Activity {
         version.setGravity(Gravity.CENTER);
         version.setPadding(0, dp(petitEcran ? 8 : 14), 0, 0);
         version.setTextColor(couleurTexteSecondaire());
+        // Appui long sur le numéro de version : journal général (debug développeur)
+        version.setOnLongClickListener(v -> {
+            afficherJournalGeneral();
+            return true;
+        });
         colonneGauche.addView(version);
 
         // La colonne défile si elle est plus haute que l'écran ; elle garde sa largeur de 0,9 dans la mise en page
@@ -510,7 +559,7 @@ public class EcranDemarrage extends Activity {
             e.printStackTrace();
         }
     }
-// bas 1
+// bas 1   
 
 // haut 2
     // ---------------------------------------------------------------- colonne droite (Onglets)
