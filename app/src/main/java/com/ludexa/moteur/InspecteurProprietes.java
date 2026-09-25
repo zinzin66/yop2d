@@ -1,4 +1,4 @@
-// haut 1
+// haut 1 sept
 package com.ludexa.moteur;
 
 import android.app.AlertDialog;
@@ -218,6 +218,7 @@ public class InspecteurProprietes extends LinearLayout {
         cb.setLayoutParams(lp);
     }
 // bas 1
+    
 // haut 2
     private void initialiserInterface(Context context) {
         this.setOrientation(LinearLayout.VERTICAL);
@@ -509,7 +510,40 @@ public class InspecteurProprietes extends LinearLayout {
                 .setItems(noms.toArray(new String[0]), (dialog, which) -> {
                     String idChoisi = ids.get(which);
                     if (!ObjetBase.verifierBoucleParent(objetCourant.id, idChoisi, sceneActive.objets)) {
+                        // La position (x, y) d'un enfant est comptée à partir de son parent.
+                        // Pour que l'objet reste exactement au même endroit à l'écran, on additionne
+                        // les positions de tous ses anciens parents (parent, grand-parent...), puis on
+                        // retire celles de tous ses nouveaux parents.
+                        float[] decalAncien = {0f, 0f};
+                        float[] decalNouveau = {0f, 0f};
+                        for (int passe = 0; passe < 2; passe++) {
+                            String idAncetre = (passe == 0) ? objetCourant.parentId : idChoisi;
+                            float[] decal = (passe == 0) ? decalAncien : decalNouveau;
+                            int garde = 0;
+                            while (idAncetre != null && garde < 50) {
+                                garde++;
+                                ObjetBase ancetre = null;
+                                for (ObjetBase o : sceneActive.objets) {
+                                    if (o.id.equals(idAncetre)) { ancetre = o; break; }
+                                }
+                                if (ancetre == null) break;
+                                decal[0] += ancetre.x;
+                                decal[1] += ancetre.y;
+                                idAncetre = ancetre.parentId;
+                            }
+                        }
+
+                        float ancienX = objetCourant.x;
+                        float ancienY = objetCourant.y;
+                        objetCourant.x = ancienX + decalAncien[0] - decalNouveau[0];
+                        objetCourant.y = ancienY + decalAncien[1] - decalNouveau[1];
                         objetCourant.parentId = idChoisi;
+
+                        DiagLogger.log(cheminProjet, "PARENT " + objetCourant.nom
+                                + " -> " + (idChoisi == null ? "aucun" : noms.get(which))
+                                + " | avant x=" + ancienX + " y=" + ancienY
+                                + " | apres x=" + objetCourant.x + " y=" + objetCourant.y);
+
                         canvasEditeur.invalidate();
                         afficherObjet(objetCourant);
                     } else {
@@ -518,6 +552,7 @@ public class InspecteurProprietes extends LinearLayout {
                 }).show();
         });
 // bas 2
+    
 // haut 3
         blocTexte = new LinearLayout(context);
         blocTexte.setOrientation(LinearLayout.VERTICAL);
@@ -1780,6 +1815,7 @@ public class InspecteurProprietes extends LinearLayout {
         if (imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 // bas 7
+
 // haut 8
     private void verifierEtConfirmerRenommage(Context context) {
         if (objetCourant == null) return;
@@ -1808,6 +1844,11 @@ public class InspecteurProprietes extends LinearLayout {
     }
 
     public void afficherObjet(ObjetBase objet) {
+        // Même objet mis à jour (image, police, parent...) : on garde la position de défilement de l'inspecteur,
+        // pour ne pas revenir tout en haut après chaque modification.
+        final boolean memeObjet = (objet != null && objet == this.objetCourant);
+        final int defilementAvant = (scrollInspecteur != null) ? scrollInspecteur.getScrollY() : 0;
+
         this.objetCourant = objet;
         miseAJourEnCours = true;
 
@@ -2073,9 +2114,32 @@ public class InspecteurProprietes extends LinearLayout {
         }
 
         miseAJourEnCours = false;
+
+        // Retour à la position de défilement d'avant : tout de suite, puis une seconde fois juste après,
+        // au cas où Android fait défiler l'inspecteur en refermant la fenêtre de choix (image, police...).
+        if (memeObjet && scrollInspecteur != null) {
+            scrollInspecteur.post(() -> scrollInspecteur.scrollTo(0, defilementAvant));
+            scrollInspecteur.postDelayed(() -> scrollInspecteur.scrollTo(0, defilementAvant), 150);
+        }
     }
 // bas 8
+
 // haut 9
+    // Texte à afficher pour la valeur d'une variable : une variable ENTIER s'affiche toujours sans virgule
+    // (au rechargement d'un projet, 3 revient souvent sous la forme 3.0).
+    private String texteValeurVariable(Variable var) {
+        if (var.valeur == null) return "";
+        if ("ENTIER".equals(var.type)) {
+            if (var.valeur instanceof Number) {
+                return String.valueOf(Math.round(((Number) var.valeur).doubleValue()));
+            }
+            try {
+                return String.valueOf(Math.round(Double.parseDouble(var.valeur.toString().replace(",", "."))));
+            } catch (Exception ignored) {}
+        }
+        return var.valeur.toString();
+    }
+
     private void rafraichirVariablesObjet(Context context) {
         conteneurListeVariables.removeAllViews();
         if (objetCourant == null || objetCourant.variablesLocales == null) return;
@@ -2104,16 +2168,19 @@ public class InspecteurProprietes extends LinearLayout {
                 ligne.addView(cbVar);
             } else {
                 EditText champVar = new EditText(context);
-                if ("CHIFFRE".equals(var.type) || "ENTIER".equals(var.type)) {
+                if ("CHIFFRE".equals(var.type)) {
                     champVar.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
+                } else if ("ENTIER".equals(var.type)) {
+                    // Pas de virgule pour un entier
+                    champVar.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_SIGNED);
                 }
-                champVar.setText(var.valeur != null ? var.valeur.toString() : "");
+                champVar.setText(texteValeurVariable(var));
                 styliserChampFlexible(champVar);
                 champVar.addTextChangedListener(creerWatcherSimple(texte -> {
                     if ("CHIFFRE".equals(var.type)) {
-                        try { var.valeur = Float.parseFloat(texte); } catch(Exception ignored){}
+                        try { var.valeur = Float.parseFloat(texte.replace(",", ".")); } catch(Exception ignored){}
                     } else if ("ENTIER".equals(var.type)) {
-                        try { var.valeur = Integer.parseInt(texte); } catch(Exception ignored){}
+                        try { var.valeur = (int) Math.round(Double.parseDouble(texte.replace(",", "."))); } catch(Exception ignored){}
                     } else {
                         var.valeur = texte;
                     }
