@@ -4,6 +4,10 @@ package com.ludexa.moteur;
 // Ce que font les nœuds d'animation : jouer, arrêter, mettre en pause, reprendre, changer la vitesse.
 // Ils sont décrits dans assets/catalogue_noeuds.json ; les images de l'animation sont avancées par VueJeu.
 //
+// Les images avancent selon le temps du JEU (elles se figent en pause et ralentissent au ralenti),
+// sauf pour les objets du HUD qui gardent l'horloge réelle. Ici, dernierTempsFrame = 0 veut dire
+// « commencer à compter au prochain affichage » : c'est VueJeu qui choisit la bonne horloge.
+//
 // Une action retourne le nom du port de sortie à suivre, ou null pour la sortie normale.
 public class ActionsAnimations {
 
@@ -19,7 +23,7 @@ public class ActionsAnimations {
         if (objet.animationActive == null || !nom.equals(objet.animationActive)) {
             objet.animationActive = nom;
             objet.frameCourante = 0;
-            objet.dernierTempsFrame = System.currentTimeMillis();
+            objet.dernierTempsFrame = 0;
         }
 
         int fps = (int) Math.round(n.nombre("vitesse"));
@@ -53,7 +57,7 @@ public class ActionsAnimations {
         ObjetBase objet = n.getCibleObjet();
         if (objet == null) return null;
         objet.animationEnCours = true;
-        objet.dernierTempsFrame = System.currentTimeMillis();
+        objet.dernierTempsFrame = 0;
         return null;
     }
 
