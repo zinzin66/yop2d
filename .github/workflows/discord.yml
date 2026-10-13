@@ -1,0 +1,36 @@
+# Robot DISCORD : à chaque version publiée (normale ou de test), annonce dans le salon des annonces.
+# L'adresse du salon est dans le secret DISCORD_WEBHOOK_URL (Settings > Secrets and variables > Actions).
+# Sans ce secret, le robot ne fait rien.
+name: Annonce Discord
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  annonce:
+    runs-on: ubuntu-latest
+    env:
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      NOM: ${{ github.event.release.name }}
+      ETIQUETTE: ${{ github.event.release.tag_name }}
+      LIEN: ${{ github.event.release.html_url }}
+      TEST: ${{ github.event.release.prerelease }}
+      NOTES: ${{ github.event.release.body }}
+    steps:
+      - name: Annoncer la version
+        run: |
+          if [ -z "$DISCORD_WEBHOOK_URL" ]; then echo "Pas de secret DISCORD_WEBHOOK_URL : rien à faire"; exit 0; fi
+          TITRE="${NOM:-$ETIQUETTE}"
+          if [ "$TEST" = "true" ]; then
+            ENTETE="🧪 **Test version available: $TITRE** (may contain bugs, your feedback is welcome!)"
+          else
+            ENTETE="🚀 **New Yop2D version: $TITRE**"
+          fi
+          TEXTE="$ENTETE"$'\n'"$LIEN"$'\n'"⬇️ Direct download: https://github.com/zinzin66/yop2d/releases/download/$ETIQUETTE/Yop2D.apk"
+          if [ -n "$NOTES" ]; then TEXTE="$TEXTE"$'\n\n'"${NOTES:0:1200}"; fi
+          jq -n --arg c "${TEXTE:0:1900}" '{content:$c, allowed_mentions:{parse:[]}}' > message.json
+          curl -sS -f -H "Content-Type: application/json" -d @message.json "$DISCORD_WEBHOOK_URL"
