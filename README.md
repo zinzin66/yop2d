@@ -5,8 +5,8 @@
 <h1 align="center">Yop2D</h1>
 
 <p align="center">
-  <b>A free, no-code 2D game engine for Android.</b><br>
-  Make your games directly on your tablet or phone, then export them as real Android apps.
+  <b>Make real Android games on your tablet or phone. No computer. No code. No ads.</b><br>
+  Drag visual nodes, press ▶, then export a real Android app in one tap.
 </p>
 
 <p align="center">
@@ -36,12 +36,12 @@
 - Undo / redo (scene and node editor), automatic saving, copy-paste, folders, grid snapping, several scenes, scenes placed inside other scenes (prefabs), instant test with the play button, and a "Check my game" button that spots what you forgot.
 - Tile-map editor, sprite animation editor, a music maker (4 tracks, real instruments, export to .ogg), a built-in library of images, animated characters, sounds, music and fonts.
 - Physics, behaviours (platform character, top-down, ladders, patrol…), pathfinding, particles, screen filters and transitions, camera, joystick and buttons, multi-language games.
-- **Visual-novel / dialogue games** with characters, choices, save slots, gallery and endings.
+- **Visual-novel / dialogue games** with animated characters, choices, save slots, gallery and endings.
 - 5 interactive guides and 4 step-by-step missions inside the app, 47 templates, 19 example games.
 
-## Honest summary
+## A living project
 
-Yop2D is young: it is built and supported by **one independent developer**, who updates it several times a week and answers users on Discord and Telegram. Today it is **Android only and 2D only**, the source code is closed, there is no AAB export for your own games yet, and the community is still small. It is already complete enough to make and publish small and medium 2D games without writing code.
+Yop2D is built by **one independent developer** who ships updates several times a week and answers users on Discord and Telegram. Many features come straight from user requests, so you can help decide what comes next. Today Yop2D makes **2D games for Android**; the engine is free, and its source code is closed.
 
 ## Get it and keep it up to date
 
