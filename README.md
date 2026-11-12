@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://zinzin66.github.io/Yop2d-web/testeur.html"><b>▶️ Get Yop2D (Google Play test)</b></a> ·
+  <a href="https://play.google.com/store/apps/details?id=com.ludexa.moteur"><b>▶️ Get Yop2D on Google Play</b></a> ·
   <a href="https://zinzin66.github.io/Yop2d-web/">Website</a> ·
   <a href="https://yop2d-dev.itch.io/yop2d-no-code-game-engine">itch.io</a> ·
   <a href="https://youtube.com/@yop2d">YouTube</a> ·
@@ -25,27 +25,27 @@
 ## What is Yop2D?
 
 - **100% free, never any ads.** No account needed.
-- **No code:** the game logic is built with visual nodes linked together (158 ready-to-use nodes, each explained in the [node reference](https://zinzin66.github.io/Yop2d-web/noeuds/en.html)).
-- **Works offline**, on Android 7 and later, on tablets and phones. Games can be landscape or portrait.
+- **No code:** the game logic is built with visual nodes linked together (more than 230 ready-to-use nodes, each explained in the [node reference](https://zinzin66.github.io/Yop2d-web/noeuds/en.html)).
+- **Works offline**, on **Android 8.0 and later**, on tablets and phones. Tablets are the most comfortable thanks to their larger screen; on phones the editor switches to a compact layout. Games can be landscape or portrait.
 - **Export your game as an APK** directly on your device: no computer, no server. Choose your own icon, name, version number and launch image; a new version installs over the old one.
 - **Your games belong to you:** give them away or sell them, with **no Yop2D logo or watermark**.
-- Interface, help and guides in 9 languages: English, French, Spanish, German, Italian, Portuguese, Russian, Simplified Chinese and Japanese.
+- Interface, help and guides in 9 languages: English, French, Spanish, German, Italian, Portuguese, Russian, Simplified Chinese and Japanese. Arabic is available in the app (experimental).
 
 ## What the editor already includes
 
-- Undo / redo (scene and node editor), automatic saving, copy-paste, folders, grid snapping, several scenes, scenes placed inside other scenes (prefabs), instant test with the play button, and a "Check my game" button that spots what you forgot.
-- Tile-map editor, sprite animation editor, a music maker (4 tracks, real instruments, export to .ogg), a built-in library of images, animated characters, sounds, music and fonts.
-- Physics, behaviours (platform character, top-down, ladders, patrol…), pathfinding, particles, screen filters and transitions, camera, joystick and buttons, multi-language games.
-- **Visual-novel / dialogue games** with animated characters, choices, save slots, gallery and endings.
-- 5 interactive guides and 4 step-by-step missions inside the app, 47 templates, 19 example games.
+- Undo / redo (scene and node editor), automatic saving, copy-paste, folders, grid snapping, several scenes, scenes placed inside other scenes (prefabs), instant test with the play button, node search, and a "Check my game" button that spots what you forgot.
+- Tile-map editor, sprite animation editor, a music maker (4 tracks, real instruments, export to .ogg), a sound-effect maker, and a built-in library of images, animated characters, sounds, music and fonts, plus downloadable packs.
+- Realistic physics (hinges, springs, wheels, ragdolls), behaviours (platform character, top-down, ladders, patrol…), pathfinding, particles, lights and shadows, day and night cycle, screen filters and transitions, camera, joystick and buttons, two joysticks or two fingers for two players, phone tilt and shake sensors, saves, multi-language games.
+- **Visual-novel / dialogue games** with animated characters, choices, save slots, gallery, endings and phone-chat (SMS) scenes.
+- Interactive guides and step-by-step missions inside the app, more than 60 templates, more than 30 example games.
 
 ## A living project
 
-Yop2D is built by **one independent developer** who ships updates several times a week and answers users on Discord and Telegram. Many features come straight from user requests, so you can help decide what comes next. Today Yop2D makes **2D games for Android**; the engine is free, and its source code is closed.
+Yop2D is built by **one independent developer** who ships updates often and answers users on Discord and Telegram. Many features come straight from user requests, so you can help decide what comes next. Today Yop2D makes **2D games for Android**; the engine is free, and its source code is closed.
 
 ## Get it and keep it up to date
 
-New versions arrive first in the **Google Play closed test** (join in 2 minutes: [instructions](https://zinzin66.github.io/Yop2d-web/testeur.html)). You can also get Yop2D on [itch.io](https://yop2d-dev.itch.io/yop2d-no-code-game-engine). Versions installed outside Google Play check the [Releases](https://github.com/zinzin66/yop2d/releases/latest) of this repository for updates.
+Yop2D is on **[Google Play](https://play.google.com/store/apps/details?id=com.ludexa.moteur)**, which also keeps it up to date. You can also get it on [itch.io](https://yop2d-dev.itch.io/yop2d-no-code-game-engine). Versions installed outside Google Play check the [Releases](https://github.com/zinzin66/yop2d/releases/latest) of this repository for updates.
 
 If you install an APK, Android may show a warning because the app does not come from the Play Store: this is normal for any app downloaded from a website.
 
@@ -63,11 +63,11 @@ Found a bug or have an idea? Come and talk about it on [Discord](https://discord
 
 - **100 % gratuit, jamais de publicité.**
 - **Vos jeux vous appartiennent** : donnez-les ou vendez-les, **sans logo ni filigrane** Yop2D.
-- Fonctionne **hors ligne**, sur Android 7 et plus.
-- Annuler / refaire, enregistrement automatique, éditeurs de tuiles, d'animations et de musique, jeux de dialogue (visual novel), 47 modèles, 19 exemples, guides pas à pas.
+- Fonctionne **hors ligne**, sur **Android 8 et plus**, sur tablette et sur téléphone (la tablette est plus confortable grâce à son grand écran).
+- Annuler / refaire, enregistrement automatique, éditeurs de tuiles, d'animations, de musique et de bruitages, physique réaliste, lumières, jeux de dialogue (visual novel), plus de 60 modèles, plus de 30 exemples, guides pas à pas.
 - Interface, aide et guides en 9 langues.
 - Un seul développeur indépendant, qui met le moteur à jour très souvent. Android et 2D seulement pour l'instant.
 
-**[▶️ Obtenir Yop2D (test Google Play)](https://zinzin66.github.io/Yop2d-web/testeur.html?lang=fr)** · **[Site officiel (aide, guides, FAQ)](https://zinzin66.github.io/Yop2d-web/fr/)** · **[Discord](https://discord.gg/nHqCcqHZNQ)**
+**[▶️ Obtenir Yop2D sur Google Play](https://play.google.com/store/apps/details?id=com.ludexa.moteur)** · **[Site officiel (aide, guides, FAQ)](https://zinzin66.github.io/Yop2d-web/fr/)** · **[Discord](https://discord.gg/nHqCcqHZNQ)**
 
 Ce dépôt contient seulement les versions publiées. Le moteur est gratuit, mais son code source n'est pas public.
