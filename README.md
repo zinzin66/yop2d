@@ -5,7 +5,7 @@
 <h1 align="center">Yop2D</h1>
 
 <p align="center">
-  <b>Make real Android games on your tablet or phone. No computer. No code. No ads.</b><br>
+  <b>Make real games on your phone or tablet. No computer. No code. No ads.</b><br>
   Drag visual nodes, press ▶, then export a real Android app in one tap.
 </p>
 
@@ -26,8 +26,9 @@
 
 - **100% free, never any ads.** No account needed.
 - **No code:** the game logic is built with visual nodes linked together (more than 230 ready-to-use nodes, each explained in the [node reference](https://zinzin66.github.io/Yop2d-web/noeuds/en.html)).
-- **Works offline**, on **Android 8.0 and later**, on tablets and phones. Tablets are the most comfortable thanks to their larger screen; on phones the editor switches to a compact layout. Games can be landscape or portrait.
+- **Works offline**, on **Android 8.0 and later**. **Every feature works on a phone** as well as on a tablet: the interface is made for fingers and adapts to small screens (landscape mode). A tablet is simply more comfortable thanks to its bigger screen. Games can be landscape or portrait.
 - **Export your game as an APK** directly on your device: no computer, no server. Choose your own icon, name, version number and launch image; a new version installs over the old one.
+- **Or export it as a web game** (from version 1300): one HTML file that plays in a browser on phones, tablets and computers, with nothing to install. Share it as a file or upload it to itch.io.
 - **Your games belong to you:** give them away or sell them, with **no Yop2D logo or watermark**.
 - Interface, help and guides in 9 languages: English, French, Spanish, German, Italian, Portuguese, Russian, Simplified Chinese and Japanese. Arabic is available in the app (experimental).
 
@@ -41,7 +42,7 @@
 
 ## A living project
 
-Yop2D is built by **one independent developer** who ships updates often and answers users on Discord and Telegram. Many features come straight from user requests, so you can help decide what comes next. Today Yop2D makes **2D games for Android**; the engine is free, and its source code is closed.
+Yop2D is built by **one independent developer** who ships updates often and answers users on Discord and Telegram. Many features come straight from user requests, so you can help decide what comes next. Today Yop2D makes **2D games** that run as Android apps or, from version 1300, as web games in a browser; the engine is free, and its source code is closed.
 
 ## Get it and keep it up to date
 
@@ -63,10 +64,11 @@ Found a bug or have an idea? Come and talk about it on [Discord](https://discord
 
 - **100 % gratuit, jamais de publicité.**
 - **Vos jeux vous appartiennent** : donnez-les ou vendez-les, **sans logo ni filigrane** Yop2D.
-- Fonctionne **hors ligne**, sur **Android 8 et plus**, sur tablette et sur téléphone (la tablette est plus confortable grâce à son grand écran).
+- Fonctionne **hors ligne**, sur **Android 8 et plus** : **tout marche sur téléphone** comme sur tablette (la tablette est simplement plus confortable grâce à son grand écran).
+- Vos jeux s'exportent en application Android (APK) et, à partir de la version 1300, en **jeu web** (un fichier HTML qui se joue dans un navigateur).
 - Annuler / refaire, enregistrement automatique, éditeurs de tuiles, d'animations, de musique et de bruitages, physique réaliste, lumières, jeux de dialogue (visual novel), plus de 60 modèles, plus de 30 exemples, guides pas à pas.
 - Interface, aide et guides en 9 langues.
-- Un seul développeur indépendant, qui met le moteur à jour très souvent. Android et 2D seulement pour l'instant.
+- Un seul développeur indépendant, qui met le moteur à jour très souvent. 2D seulement pour l'instant.
 
 **[▶️ Obtenir Yop2D sur Google Play](https://play.google.com/store/apps/details?id=com.ludexa.moteur)** · **[Site officiel (aide, guides, FAQ)](https://zinzin66.github.io/Yop2d-web/fr/)** · **[Discord](https://discord.gg/nHqCcqHZNQ)**
 
